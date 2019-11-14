@@ -1,4 +1,4 @@
-## 專案資料存放資料夾
+## 專案資料存放路徑
 - ViewModels：存放ViewModel，請自行以Controller名稱建立資料表存放    
 - Services：存放Controller使用的相關邏輯的class，請自行以Controller名稱建立資料表存放    
 - Utilities：存放個人使用的方法class，依下資料夾存放
@@ -15,7 +15,10 @@
 ## 存取帳號方法
 >- 在Controller中的Action
 >>- User.Identity.GetEmployee();
->>- User.Identity.GetEmployee();
+>>- User.Identity.GetSupplierAccount();
 >> 注意事項：建構子中User資料尚未建立，所以無法存取
 >- 在Razor文件
 >>- 同Action方式
+## 啟動專案問題
+> Q：[DirectoryNotFoundException: 找不到路徑 bin\roslyn\csc.exe' 的一部分
+> A：[重建專案]即可正常執行

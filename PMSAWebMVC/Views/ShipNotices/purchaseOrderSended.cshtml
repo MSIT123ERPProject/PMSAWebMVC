@@ -1,0 +1,107 @@
+﻿@model PMS_Inventory_huan.Models.PurchaseOrder
+
+@{
+    ViewBag.Title = "purchaseOrderSended";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>purchaseOrderSended</h2>
+
+<div>
+    <h4>PurchaseOrder</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderOID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderOID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiverName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiverName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiverTel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiverTel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiverMobile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiverMobile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReceiptAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReceiptAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SignStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SignStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SignFlow.OriginatorID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SupplierInfo.SupplierName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("接受訂單", "purchaseOrderAccepted", new { id = Model.PurchaseOrderID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

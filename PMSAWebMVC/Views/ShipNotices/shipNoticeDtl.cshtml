@@ -1,0 +1,165 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseOrderDtl>
+
+@{
+    ViewBag.Title = "shipNoticeDtl";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>檢視出貨明細</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table" id="dataTable">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseOrderDtlOID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PartName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PartSpec)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QtyPerUnit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPartQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OriginalUnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Discount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseUnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Qty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchasedQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GoodsInTransitQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateRequired)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CommittedArrivalDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShipDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ArrivedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Part.PartName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.POChanged.PurchaseOrderID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseOrder.SupplierCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SourceList.PartNumber)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseOrderDtlOID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PartName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PartSpec)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.QtyPerUnit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPartQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OriginalUnitPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Discount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseUnitPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Qty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchasedQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GoodsInTransitQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Total)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateRequired)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CommittedArrivalDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShipDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ArrivedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Part.PartName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.POChanged.PurchaseOrderID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseOrder.SupplierCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SourceList.PartNumber)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PurchaseOrderDtlCode }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PurchaseOrderDtlCode }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PurchaseOrderDtlCode })
+        </td>
+    </tr>
+}
+
+</table>
+
+
+@section scripts{
+    <script>
+        $("#dataTable").ready(function () {
+
+        });
+        function shipNoticeDtlDisplay() {
+            $("#dataTable").DataTable({
+                "ajax": {
+
+                },
+            });
+        }
+
+    </script>
+    }

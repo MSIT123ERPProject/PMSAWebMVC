@@ -1,0 +1,74 @@
+﻿@model PMSAWebMVC.Models.PurchaseRequisition
+
+@{
+    ViewBag.Title = "檢視請購單";
+}
+
+<h2>檢視請購單</h2>
+
+<div>
+    @*<h4>PurchaseRequisition</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseRequisitionOID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PRBeginDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PRBeginDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProcessStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProcessStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SignStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SignStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product.ProductName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product.ProductName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SignFlow.OriginatorID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("編輯", "Edit", new { id = Model.PurchaseRequisitionID }, new { @class = "btn btn-info" }) 
+    @Html.ActionLink("返回", "Index",null, new { @class = "btn btn-info" })
+</p>

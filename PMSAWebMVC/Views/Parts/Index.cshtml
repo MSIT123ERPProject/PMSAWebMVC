@@ -1,0 +1,188 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.Part>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>料件總覽</h2>
+
+<p>
+    @*@Html.ActionLink("Create New", "Create")*@
+    <a href='@Url.Action("Create","Parts")'>
+        <i class="btn btn-info">新增料件資料</i>
+    </a>
+</p>
+
+<!-- DataTables Example -->
+<div class="card mb-3">
+    <div class="card-header">
+    </div>
+    <br />
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartSpec)
+                        </th>
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.CreatedDate)
+                        </th>*@
+                        <th>
+                           料件圖片
+                            @*@Html.DisplayNameFor(model => model.PictureAdress)*@
+                        </th>
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.PictureDescription)
+                        </th>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartUnit.PartUnitName)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartSpec)
+                        </th>
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.CreatedDate)
+                        </th>*@
+                        <th>
+                            料件圖片
+                            @*@Html.DisplayNameFor(model => model.PictureAdress)*@
+                        </th>
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.PictureDescription)
+                        </th>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartUnit.PartUnitName)
+                        </th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartSpec)
+                            </td>
+                            @*<td>
+                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            </td>*@
+                            <td>
+                                <img style="height:200px; width:200px;" src='@Url.Content(item.PictureAdress)' alt="" />
+                            </td>
+                            @*<td>
+                                @Html.DisplayFor(modelItem => item.PictureDescription)
+                            </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartUnit.PartUnitName)
+                            </td>
+
+                            <td >
+
+                                <a href='@Url.Action("Edit", new { id = item.PartNumber })'>
+                                    <i class="btn btn-info">修改</i>
+                                </a>
+
+                                <a href='@Url.Action("Details", new { id = item.PartNumber })'>
+                                    <i class="btn btn-info">檢視</i>
+                                </a>
+
+                                <a name="click01" data-wc="@item.PartNumber">
+                                    <i class="btn btn-danger">刪除</i>
+                                </a>
+                               
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+</div>
+
+@section scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        function A() {
+            window.location.reload();
+        }
+
+        $("a[name='click01']").click(function () {
+            Swal.fire({
+                title: '確定要刪除 ?',
+                text: "刪除後資料將會消失 !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor:'#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '刪除',
+               
+            }).then((result) => {
+                if (result.value) {
+                   
+                    let id1 = this.dataset.wc;
+                  
+                    $.ajax({
+                        url: `@Url.Action("Delete", "Parts")`,
+                        type: 'POST',
+                        data: { id:id1 }
+
+                    }).done(function () {
+                        Swal.fire(
+                                '刪除成功 !',
+                                '此資料已被刪除',
+                                'success')
+
+                        }).fail(function () {
+                            Swal.fire(
+                                '刪除失敗 !',
+                                '此料件已被使用',
+                                'error')
+                        }).always(function () {
+                            setTimeout('A()', 2000);
+
+                        });
+
+
+                    
+                }
+            })
+        });
+    </script>
+
+
+}

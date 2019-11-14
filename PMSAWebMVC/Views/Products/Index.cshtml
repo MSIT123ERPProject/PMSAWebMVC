@@ -1,0 +1,82 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.Product>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="container">
+    <div class="carousel slide" data-ride="carousel" id="carousel-demo">
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-demo" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-demo" data-slide-to="1"></li>
+            <li data-target="#carousel-demo" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+
+            <div class="carousel-item active">
+                <img class="d-block w-100" src="https://www.taiwan.net.tw/att/1/big_scenic_spots/pic_412_8.jpg" alt="">
+            </div>
+            <div class="carousel-item">
+            <img class="d-block w-100" src="~/imgs/products/P00002-TCR ADVANCED SL 2-KOM.jpg" alt="">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="~/imgs/products/P00003-TCR ADVANCED SL 1 DISC-KOM.jpg" alt="">
+        </div>
+
+            <a href="#carousel-demo" class="carousel-control-prev" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a href="#carousel-demo" class="carousel-control-next" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductOID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PictureAdress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PictureDescription)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductOID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="@Url.Content(item.PictureAdress)" alt="">
+                </div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PictureDescription)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ProductNumber }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ProductNumber }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ProductNumber })
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,220 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.SourceListDtl>
+
+@{
+    ViewBag.Title = "貨源清單明細";
+}
+<h2>貨源清單明細</h2>
+<p>@Html.ActionLink("查詢貨源清單", "Index", null, new { @class = "btn btn-success" })</p>
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        @*@Html.ActionLink("新增貨源清單明細", "CreateDtl", null, new { @class = "btn btn-info" })*@
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceList.SourceListID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceList.Part.PartName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceList.SupplierInfo.SupplierName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QtyDemanded)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Discount)
+                            (%)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DiscountBeginDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DiscountEndDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateDate)
+                        </th>
+                        <th>動作</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceList.SourceListID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceList.Part.PartName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceList.SupplierInfo.SupplierName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QtyDemanded)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Discount)
+                            (%)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DiscountBeginDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DiscountEndDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateDate)
+                        </th>
+                        <th>動作</th>
+                    </tr>
+                </tfoot>
+                @*@{ decimal runningTotal = 0M; } // assumes Total is typeof decimal*@
+                @{ int x = 0; string y=""; } 
+                @foreach (var item in Model)
+                {
+                    //runningTotal=(-((item.Discount*100)-100)).ToString()+"%"
+                    x =Convert.ToInt32(item.Discount*100);
+                    y = x + "%";
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SourceList.SourceListID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SourceList.Part.PartName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SourceList.SupplierInfo.SupplierName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QtyDemanded)
+                        </td>
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.Discount)*@
+                            @y
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DiscountBeginDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DiscountEndDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateDate)
+                        </td>
+                        <td>
+                            @Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" }) |
+                            @Html.ActionLink("檢視", "DetailsDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" }) |
+                            <a name="click01" class="btn btn-danger" data-wc="@item.SourceListDtlOID"><i class="fa fa-close"></i> 刪除</a>
+                            @*@Html.ActionLink("刪除", "Delete", new { id = item.SourceListID })*@
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">Updated at 10/23</div>
+</div>
+@*@section scripts
+    {
+        <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#dataTable').DataTable();
+
+            });
+            $('#myInput').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+            function A() {
+                window.location.reload();
+            }
+            $("a[name = 'click01']").click(function () {
+                Swal.fire({
+                    title: '確定要刪除 ?',
+                    text: "刪除後你將沒有機會後悔 !",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: '取消',
+                    confirmButtonText: '刪除'
+                }).then((result) => {
+                    if (result.value) {
+                        let id1 = this.dataset.wc;
+                        $.ajax({
+                            url: `@Url.Action("DeleteDtl", "SourceLists")`,
+                            type: 'POST',
+                            data: { id: id1 }
+                        }).done(function () {
+                            Swal.fire(
+                                '刪除成功 !',
+                                '此資料已被刪除',
+                                'success'
+                            )
+                        }).fail(function () {
+                                alert("error");
+                            }).always(function () {
+                                setTimeout('A()', 2000);
+                            });
+                        }
+                    })
+            });
+        </script>
+
+    }*@
+
+@section scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+
+        });
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        function A() {
+            window.location.reload();
+        }
+        $("a[name = 'click01']").click(function () {
+            Swal.fire({
+                title: '確定要刪除 ?',
+                text: "刪除後你將沒有機會後悔 !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '刪除'
+            }).then((result) => {
+                if (result.value) {
+                    let id1 = this.dataset.wc;
+                    $.ajax({
+                        url: `@Url.Action("DeleteDtl", "SourceLists")`,
+                        type: 'POST',
+                        data: { id: id1 }
+                    }).done(function () {
+                        Swal.fire(
+                            '刪除成功 !',
+                            '此資料已被刪除',
+                            'success'
+                        )
+                    }).fail(function () {
+                            alert("error");
+                        }).always(function () {
+                            setTimeout('A()', 2000);
+                        });
+                    }
+                })
+        });
+    </script>
+
+}

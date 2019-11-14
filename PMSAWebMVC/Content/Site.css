@@ -1,0 +1,51 @@
+﻿body, html {
+    font-family: 'Microsoft JhengHei', Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    letter-spacing: 1px;
+}
+
+* {
+    border-radius: 0 !important;
+}
+
+i {
+    font-size: 25px;
+    margin-right: 10px;
+}
+
+a .badge {
+    display: block;
+    position: static !important;
+    margin: 0 !important;
+}
+
+a i {
+    margin: 0;
+}
+
+.alertlink > li > a {
+    padding: 0 !important;
+}
+
+footer.sticky-footer {
+    height: 60px;
+}
+
+.pt-60 {
+    padding-top: 60px;
+}
+
+.navbar {
+    border-radius: 0 30px 30px 0 !important;
+}
+
+.navbtn {
+    padding: 10px;
+    padding-right: 0px;
+    margin-left: -10px;
+    margin-right: 10px;
+    background-color: black;
+}
+
+.badge{
+    border-radius: 2px !important;
+}

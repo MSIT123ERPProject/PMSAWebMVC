@@ -1,0 +1,11 @@
+﻿@model PMSAWebMVC.Models.Models.Part
+
+@if (Model.PictureAdress != null)
+{
+    <img style="width:320px;height:240px" src="@Url.Action("ShowPhoto","Parts",new {id=Model.PartNumber })" title="@Html.DisplayFor(Model=>Model.PartNumber)" />
+}
+else
+{
+    <img src="@Url.Content("~/images/NOIMAGE/NoImage.jpg")"
+         style="width:320px;height:240px" />
+}

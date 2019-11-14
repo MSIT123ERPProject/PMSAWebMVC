@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Account" xml:space="preserve">
+    <value>アカウント</value>
+  </data>
+  <data name="Chinese" xml:space="preserve">
+    <value>中国語</value>
+  </data>
+  <data name="chokobo" xml:space="preserve">
+    <value>チョコボ</value>
+  </data>
+  <data name="InventoryManagementSupplier" xml:space="preserve">
+    <value>メーカーの在庫管理</value>
+  </data>
+  <data name="Japanese" xml:space="preserve">
+    <value>日本語</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>ログイン</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="NoStock" xml:space="preserve">
+    <value>在庫なし</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>在庫</value>
+  </data>
+  <data name="ShipNotice" xml:space="preserve">
+    <value>送り状ﾉ管理</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>注文書</value>
+  </data>
+  <data name="UnshippedOrder" xml:space="preserve">
+    <value>未出荷の注文書</value>
+  </data>
+  <data name="PurchaseOrderID" xml:space="preserve">
+    <value>発注書</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>削除する</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>編集</value>
+  </data>
+  <data name="PartNumber" xml:space="preserve">
+    <value>部品番号</value>
+  </data>
+  <data name="Ship" xml:space="preserve">
+    <value>出荷する</value>
+  </data>
+  <data name="ShipCheck" xml:space="preserve">
+    <value>出荷ｶが確認された</value>
+  </data>
+  <data name="ShipDate" xml:space="preserve">
+    <value>出荷日</value>
+  </data>
+  <data name="CompanyCode" xml:space="preserve">
+    <value>会社コード</value>
+  </data>
+  <data name="EmployeeID" xml:space="preserve">
+    <value>社員番号</value>
+  </data>
+  <data name="SupplierAccountID" xml:space="preserve">
+    <value>メーカーのアカウント</value>
+  </data>
+  <data name="ReceiverName" xml:space="preserve">
+    <value>荷受人</value>
+  </data>
+  <data name="UnitsInStock" xml:space="preserve">
+    <value>在庫数</value>
+  </data>
+  <data name="UnitsOnOrder" xml:space="preserve">
+    <value>仕入れの数量</value>
+  </data>
+  <data name="ShipmentAmount" xml:space="preserve">
+    <value>出荷の総額</value>
+  </data>
+  <data name="ShipSucceeded" xml:space="preserve">
+    <value>出荷しました</value>
+  </data>
+  <data name="StocksIsNotEnough" xml:space="preserve">
+    <value>在庫数が足りません</value>
+  </data>
+  <data name="UnitPrice" xml:space="preserve">
+    <value>単価</value>
+  </data>
+  <data name="QtyPerUnit" xml:space="preserve">
+    <value>ロット</value>
+  </data>
+  <data name="SourceListID" xml:space="preserve">
+    <value>製品のリスト</value>
+  </data>
+  <data name="SignStatus" xml:space="preserve">
+    <value>サイン状態</value>
+  </data>
+  <data name="PurchaseOrderStatus" xml:space="preserve">
+    <value>注文書の状態</value>
+  </data>
+  <data name="ReceiptAddress" xml:space="preserve">
+    <value>荷受人の住所</value>
+  </data>
+  <data name="ReceiverMobile" xml:space="preserve">
+    <value>荷受人の携帯電話</value>
+  </data>
+  <data name="ReceiverTel" xml:space="preserve">
+    <value>荷受人の電話番号</value>
+  </data>
+  <data name="Supplier" xml:space="preserve">
+    <value>メーカー</value>
+  </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>在庫の管理</value>
+  </data>
+  <data name="WarehouseInfoes" xml:space="preserve">
+    <value>在庫の情報</value>
+  </data>
+  <data name="InventoryDtls" xml:space="preserve">
+    <value>在庫の詳細</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>トップページへ</value>
+  </data>
+  <data name="processing" xml:space="preserve">
+    <value>ダウンロード中</value>
+  </data>
+  <data name="noData" xml:space="preserve">
+    <value>データが見つかりません</value>
+  </data>
+  <data name="display" xml:space="preserve">
+    <value>ディスプレイ</value>
+  </data>
+  <data name="page" xml:space="preserve">
+    <value>ページ</value>
+  </data>
+  <data name="total" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="everyPage" xml:space="preserve">
+    <value>ページごと</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="privousPage" xml:space="preserve">
+    <value>前のページへ</value>
+  </data>
+  <data name="nextPage" xml:space="preserve">
+    <value>次のページへ</value>
+  </data>
+  <data name="record" xml:space="preserve">
+    <value>記録</value>
+  </data>
+  <data name="ko" xml:space="preserve">
+    <value>個</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>セーブ</value>
+  </data>
+  <data name="status" xml:space="preserve">
+    <value>状態</value>
+  </data>
+  <data name="SafetyQty" xml:space="preserve">
+    <value>安全の在庫数</value>
+  </data>
+  <data name="EXP" xml:space="preserve">
+    <value>セーブ期限</value>
+  </data>
+  <data name="Parts" xml:space="preserve">
+    <value>パート</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>部品</value>
+  </data>
+  <data name="PartsMangement" xml:space="preserve">
+    <value>パートの管理</value>
+  </data>
+</root>

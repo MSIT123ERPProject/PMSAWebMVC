@@ -1,0 +1,80 @@
+﻿@model PMSAWebMVC.Models.Part
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Part</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PartOID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartOID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PartName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PartSpec)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartSpec)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PictureAdress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PictureAdress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PictureDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PictureDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PartUnit.PartUnitName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartUnit.PartUnitName)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

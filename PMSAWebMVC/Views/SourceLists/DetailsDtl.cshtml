@@ -1,0 +1,66 @@
+﻿@model PMSAWebMVC.Models.SourceListDtl
+
+@{
+    ViewBag.Title = "檢視貨源清單明細";
+}
+
+<h2>檢視貨源清單明細</h2>
+
+<div>
+    @*<h4>SourceListDtl</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.QtyDemanded)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QtyDemanded)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Discount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Discount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiscountBeginDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiscountBeginDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiscountEndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiscountEndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceList.PartNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SourceList.PartNumber)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("編輯", "EditDtl", new { id = Model.SourceListDtlOID }, new { @class = "btn btn-info" }) 
+    @Html.ActionLink("返回", "IndexDtl",null, new { @class = "btn btn-info" })
+</p>

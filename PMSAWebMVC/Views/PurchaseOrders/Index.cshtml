@@ -1,0 +1,124 @@
+﻿@model IEnumerable<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderIndexViewModel>
+
+@{
+    ViewBag.Title = "採購單管理";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    <a href="@Url.Action( "Create","PurchaseOrders")" class="btn btn-success"><i class="fas fa-plus"></i> 新增採購單</a>
+</p>
+@*<table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseOrderID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseOrderStatus)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseOrderID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PurchaseOrderStatus)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PurchaseOrderID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PurchaseOrderID })
+                </td>
+            </tr>
+        }
+
+    </table>*@
+
+
+
+<!-- DataTables Example -->
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        採購單
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="dataTablePO" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>採購單號</th>
+                        <th>採購日期</th>
+                        <th>供應商名稱</th>
+                        <th>來自請購號</th>
+                        <th>狀態</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>採購單號</th>
+                        <th>採購日期</th>
+                        <th>供應商名稱</th>
+                        <th>來自請購號</th>
+                        <th>狀態</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted"></div>
+</div>
+@section scripts
+{
+<script>
+        $(document).ready(function () {
+            $('#dataTablePO').DataTable(
+                {
+                    ajax: {
+                        url: "@Url.Action("GetPurchaseOrderList", "PurchaseOrders")",
+                        type: "get",
+                        datatype: "json"
+                    },
+                    language: {
+                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                    },
+                    columns: [
+                        { data: "PurchaseOrderID" },
+                        {
+                            data: "CreateDate", render: function (data, type, full, meta) {
+                                return moment(data).format("YYYY/MM/DD");
+                            }
+                        },
+                        { data: "SupplierName" },
+                        { data: "PurchaseRequisitionID" },
+                        { data: "PurchaseOrderStatus" }
+                    ],
+                    order: [[1, "desc"]],
+                }
+            );
+        });
+</script>
+}

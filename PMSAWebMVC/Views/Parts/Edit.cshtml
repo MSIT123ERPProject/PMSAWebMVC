@@ -1,0 +1,123 @@
+﻿@model PMSAWebMVC.Models.Part
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>修改料件</h2>
+
+<br />
+@using (Html.BeginForm("Edit", "Parts", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>料件資料:</h4>
+
+    <div class="card-header">
+    </div>
+    <br />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.PartNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PartNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PartNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.PartNumber)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PartName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PartName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PartName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PartSpec, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PartSpec, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PartSpec, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PartUnitOID, "料件單位", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("PartUnitOID", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.PartUnitOID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CreatedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CreatedDate, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.HiddenFor(Model => Model.CreatedDate)
+            @Html.ValidationMessageFor(model => model.CreatedDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <h3>料件圖片上傳</h3>
+        <img id="imgPreview" src="@Url.Content(Model.PictureAdress)" style="width:320px;height:240px" />
+        <input type="file" name="File1" id="File1" />
+    </div>
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.PictureAdress, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PictureAdress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PictureAdress, "", new { @class = "text-danger" })
+
+            </div>
+        </div>*@
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.PictureDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PictureDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PictureDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-info" />
+            <a href='@Url.Action("Index","Parts")'>
+                <i class="btn btn-info">返回</i>
+            </a>
+        </div>
+
+    </div>
+</div>
+}
+
+<div>
+
+   
+   
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+    function readURl(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgPreview').attr('src', e.target.result);
+
+            }
+            reader.readAsDataURL(input.files[0]);
+
+        }
+    }
+    $("#File1").change(function () {
+        readURl(this);
+    });
+</script>
+}

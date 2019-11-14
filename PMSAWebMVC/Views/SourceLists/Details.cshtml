@@ -1,0 +1,98 @@
+﻿@model PMSAWebMVC.Models.SourceList
+
+@{
+    ViewBag.Title = "檢視貨源清單";
+}
+
+<h2>檢視貨源清單</h2>
+
+<div>
+    @*<h4>SourceList</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceListOID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SourceListOID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QtyPerUnit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QtyPerUnit)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MOQ)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MOQ)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UnitPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitsInStock)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UnitsInStock)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UnitsOnOrder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UnitsOnOrder)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SafetyQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SafetyQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EXP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EXP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Part.PartName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Part.PartName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SupplierInfo.SupplierName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("編輯", "Edit", new { id = Model.SourceListID }, new { @class = "btn btn-info" }) 
+    @Html.ActionLink("返回", "Index",null, new { @class = "btn btn-info" })
+</p>

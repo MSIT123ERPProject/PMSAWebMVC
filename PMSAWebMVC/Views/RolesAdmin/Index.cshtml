@@ -1,0 +1,36 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.ApplicationRole>
+
+@{
+    ViewBag.Title = "角色管理";
+}
+
+<h2>角色管理</h2>
+
+<p>
+    <a class="btn btn-warning" href="@Url.Action("Create","RolesAdmin")">＋新增角色</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            角色名稱
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("編輯", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("明細", "Details", new { id = item.Id }) |
+                @Html.ActionLink("刪除", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,270 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.SourceList>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <h2>@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h2>
+    <!-- Topbar Search -->
+
+    @using (Html.BeginForm("Index", "SupplierStocks", FormMethod.Post, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
+    {
+
+        <div class="input-group">
+            <input name="PartNumber" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMSAWebMVC.Resources.AppResource.PartNumber aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    }
+</nav>
+<nav>
+    @*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder="用料號搜尋庫存" aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+
+                </div>
+            </div>
+        </form>*@
+</nav>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">@PMSAWebMVC.Resources.AppResource.Stock</h6>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceListID)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QtyPerUnit)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitPrice)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitsOnOrder)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitsInStock)
+                        </th>
+                        <th>
+                            @PMSAWebMVC.Resources.AppResource.Edit
+                        </th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceListID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QtyPerUnit)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitPrice)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitsOnOrder)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitsInStock)
+                        </th>
+                        <th>
+                            @PMSAWebMVC.Resources.AppResource.Edit
+                        </th>
+                    </tr>
+                </tfoot>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => item.SourceListID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PartNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QtyPerUnit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitsOnOrder)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(model => item.UnitsInStock)
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="@Url.Action( "Edit", new { id = item.SourceListID })"><i class="fa fa-edit">@PMSAWebMVC.Resources.AppResource.Edit</i></a>|
+                            <a class="btn btn-info" href="@Url.Action("Details", new { id = item.SourceListID })"><i class="fa fa-tasks">@PMSAWebMVC.Resources.AppResource.Details</i></a>
+                            @*@Html.ActionLink(PMSAWebMVC.Resources.AppResource.Edit, "Edit", new { id = item.SourceListID }, new { @class = "btn btn-primary" }) |
+                            @Html.ActionLink(PMSAWebMVC.Resources.AppResource.Details, "Details", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
+                            @*@Html.ActionLink(PMSAWebMVC.Resources.AppResource.Delete, "Delete", new { id = item.SourceListID })*@
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts
+        {
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+<!-- DataTables Example---------------------------------------------------------------------------------------------------------------- -->
+@*<div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-table"></i>
+                Data Table Example
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.SourceListOID)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PartNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Batch)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Discount)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DiscountBeginDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DiscountEndDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.CreateDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.UnitsInStock)
+                                </th>
+                                <th>
+                                    編輯
+                                </th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.SourceListOID)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PartNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Batch)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Discount)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DiscountBeginDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DiscountEndDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.CreateDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.UnitsInStock)
+                                </th>
+                                <th>
+                                    編輯
+                                </th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SourceListOID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PartNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Batch)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Discount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DiscountBeginDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DiscountEndDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CreateDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => item.UnitsInStock)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.SourceListOID }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.SourceListOID }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.SourceListOID })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+        @section scripts
+    {
+            <script>
+                $(document).ready(function () {
+                    $('#dataTable').DataTable();
+                });
+            </script>
+
+        }*@

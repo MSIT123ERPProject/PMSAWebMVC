@@ -1,0 +1,245 @@
+﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderCreateViewModel
+
+@{
+    ViewBag.Title = "新增採購單";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fab fa-wpforms"></i> 採購單
+    </div>
+    <div class="card-body">
+        <div class="form-horizontal">
+            <div class="form-group row">
+                @Html.LabelFor(m => m.SelectedPurchaseRequisitionID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.DropDownListFor(m => m.SelectedPurchaseRequisitionID, Model.PurchaseRequisitionList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SelectedPurchaseRequisitionID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="far fa-building"></i> 供應商
+    </div>
+    <div class="card-body">
+        <div class="form-horizontal">
+            <div class="form-group row">
+                @Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-list"></i> 採購細項
+        </div>
+        <div class="card-body">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-warning" id="warning">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            <div class="table-responsive" id="dataTablesContainer"></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="d-flex justify-content-center">
+            <button id="btnSubmit" type="submit" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>送出申請</button>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseOrders")';
+            let supplierList = $('#SelectedSupplierName');
+            $("#btnSubmit").prop("disabled", true);
+
+        $('#SelectedPurchaseRequisitionID').change(function() {
+            supplierList.empty();
+            $("#dataTablesContainer").html('');
+            $.getJSON(supplierListUrl, { id: $(this).val() }, function (data) {
+                if (!data) {
+                    return;
+                }
+                supplierList.append($('<option></option>').val('').text('請選擇'));
+                $.each(data, function (index, item) {
+                    supplierList.append($('<option></option>').val(item.Value).text(item.Text));
+                });
+                $("#btnSubmit").prop("disabled", true);
+            });
+            })
+
+            $('#SelectedSupplierName').change(function () {
+                $.ajax({
+                    url: "@Url.Action("GetPurchaseOrderDtlList", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: $("#SelectedPurchaseRequisitionID").val(),
+                        supplierCode: $("#SelectedSupplierName").val()
+                    },
+                }).done(function (result) {
+                    $("#dataTablesContainer").html(result);
+                    $("#warning").remove();
+                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
+
+                    //全選、全勾消
+                    $("input[name=chkAll]").change(function () {
+                        let checked = $(this).prop("checked");
+                        $("#dataTable > tbody input:checkbox").prop("checked", checked);
+                    });
+                    $("#btnSubmit").prop("disabled", false);
+                }).fail(function (e) {
+                    alert(e.responseText);
+                    });
+
+                $.fn.dataTable.ext.errMode = 'throw';
+
+                $('#dataTable').DataTable(
+                    {
+                        paging: false,
+                        ordering: false,
+                        searching: false,
+                        language: {
+                            url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                        },
+                    }
+                );
+            })
+        });
+    </script>
+}
+
+
+@*@using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>PurchaseOrder</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.PurchaseOrderID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PurchaseOrderID, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PurchaseOrderID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SupplierCode, "來自請購單號", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("PurchaseRequisitionID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SupplierCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.EmployeeID, "EmployeeID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("EmployeeID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReceiverName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ReceiverName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ReceiverName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReceiverTel, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ReceiverTel, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ReceiverTel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReceiverMobile, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ReceiverMobile, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ReceiverMobile, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReceiptAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ReceiptAddress, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ReceiptAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CreateDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CreateDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PurchaseOrderStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PurchaseOrderStatus, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PurchaseOrderStatus, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SignStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SignStatus, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SignStatus, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SignFlowOID, "SignFlowOID", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("SignFlowOID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SignFlowOID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

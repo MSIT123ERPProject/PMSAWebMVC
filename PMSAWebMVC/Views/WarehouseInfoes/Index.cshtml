@@ -1,0 +1,115 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.WarehouseInfo>
+
+@{
+    ViewBag.Title = "倉庫資訊";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        倉庫資訊
+    </div>
+    <div class="card-body">
+        <a class="btn btn-warning" href='@Url.Action("Create")'>
+            <i class="fa fa-plus"></i>新增
+        </a>
+        <div class="table-responsive">
+            <br />
+            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:15%;">@Html.DisplayNameFor(model => model.WarehouseCode)</th>
+                        <th style="width:15%;">@Html.DisplayNameFor(model => model.WarehouseName)</th>
+                        <th style="width:40%;">@Html.DisplayNameFor(model => model.Address)</th>
+                        <th style="width:22%;">編輯</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.WarehouseCode)</td>
+                            <td>@Html.DisplayFor(modelItem => item.WarehouseName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                            <td>
+                                <a class="btn btn-primary" href='@Url.Action("Edit", new { id = item.WarehouseCode })'>
+                                    <i class="fa fa-edit"></i>修改
+                                </a>|
+                                <a class="btn btn-primary" href='@Url.Action("Details", new { id = item.WarehouseCode })'>
+                                    <i class="fa fa-tasks"></i>檢視
+                                </a>|
+
+                                <a name="click01" class="btn btn-danger" data-wc="@item.WarehouseCode"><i class="fa fa-close"></i> 刪除</a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+</div>
+
+@section scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+
+        });
+
+
+
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+
+        function A() {
+            window.location.reload();
+        }
+
+        $("a[name = 'click01']").click(function () {
+            Swal.fire({
+                title: '確定要刪除 ?',
+                text: "刪除後擬將沒有機會後悔 !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '刪除'
+            }).then((result) => {
+                if (result.value) {
+                    let id1 = this.dataset.wc;
+                    $.ajax({
+                        url: `@Url.Action("Delete", "WarehouseInfoes")`,
+                        type: 'POST',
+                        data: { id: id1 }
+
+                    }).done(function () {
+
+                        Swal.fire(
+                            '刪除成功 !',
+                            '此資料已被刪除',
+                            'success'
+                        )
+                    }).fail(function () {
+                            alert("error");
+                        }).always(function () {
+                            setTimeout('A()', 2000);
+
+                        });
+
+                    }
+                })
+        });
+
+
+    </script>
+
+}

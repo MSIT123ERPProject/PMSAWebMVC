@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b08065df1a0440bd8934ebf9634068fb" Name="Diagram1">
+        <EntityTypeShape EntityType="PMSAModel.AuthRole" Width="1.5" PointX="0.75" PointY="37.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.CompanyInfo" Width="1.5" PointX="0.75" PointY="33" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.Employee" Width="1.5" PointX="3" PointY="34.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.FuncModule" Width="1.5" PointX="3.75" PointY="44.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.GenerateID" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.InventoryCategory" Width="1.5" PointX="5.25" PointY="53" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.InventoryDtl" Width="1.5" PointX="7.5" PointY="51.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.Part" Width="1.5" PointX="8.25" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PartCategory" Width="1.5" PointX="5.25" PointY="40.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PartCategoryDtl" Width="1.5" PointX="7.5" PointY="40.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PartUnit" Width="1.5" PointX="6" PointY="26.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.POChanged" Width="1.5" PointX="8.25" PointY="21.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.POChangedCategory" Width="1.5" PointX="6" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.Product" Width="1.5" PointX="8.25" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.ProductPart" Width="1.5" PointX="10.5" PointY="28.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PRPORelation" Width="1.5" PointX="15.75" PointY="47.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PRPORelationTemp" Width="1.5" PointX="12.75" PointY="42.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseOrder" Width="1.5" PointX="7.5" PointY="45.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseOrderDtl" Width="1.5" PointX="12.75" PointY="51.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseOrderDtlTemp" Width="1.5" PointX="10.5" PointY="34.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseOrderReceive" Width="1.5" PointX="15.75" PointY="51.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseOrderReceiveDtl" Width="1.5" PointX="18" PointY="56" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseOrderTemp" Width="1.5" PointX="8.25" PointY="35.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseRequisition" Width="1.5" PointX="10.5" PointY="48.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseRequisitionDtl" Width="1.5" PointX="18.75" PointY="48.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseRequisitionDtlTemp" Width="1.5" PointX="15.75" PointY="43.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.PurchaseRequisitionTemp" Width="1.5" PointX="10.5" PointY="43.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.RoleModuleList" Width="1.5" PointX="6" PointY="37.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.ShipNotice" Width="1.5" PointX="12.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.ShipNoticeDtl" Width="1.5" PointX="18" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.SignFlow" Width="1.5" PointX="5.25" PointY="60.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.SignFlowDtl" Width="1.5" PointX="10.5" PointY="53.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.SourceList" Width="1.5" PointX="8.25" PointY="61.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.SourceListDtl" Width="1.5" PointX="10.5" PointY="62.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.StockIn" Width="1.5" PointX="21" PointY="48.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.StockInDtl" Width="1.5" PointX="9.75" PointY="57.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.StockOut" Width="1.5" PointX="13.5" PointY="47.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.StockOutDtl" Width="1.5" PointX="18.75" PointY="52.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.SupplierAccount" Width="1.5" PointX="5.25" PointY="30.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.SupplierInfo" Width="1.5" PointX="3" PointY="27.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.SupplierRating" Width="1.5" PointX="0.75" PointY="28.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PMSAModel.WarehouseInfo" Width="1.5" PointX="5.25" PointY="70.625" IsExpanded="true" />
+        <AssociationConnector Association="PMSAModel.FK_Employee_AuthRole" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_RoleModuleList_AuthRole" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_Employee_CompanyInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ShipNotice_CompanyInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_InventoryDtl_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_InventoryDtl_Employee1" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PartCategory_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrder_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderReceive_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderTemp_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisition_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionTemp_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ShipNotice_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SignFlow_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SignFlowDtl_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockIn_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockOut_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SupplierAccount_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_WarehouseInfo_Employee" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_RoleModuleList_FuncModule" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_InventoryDtl_InventoryCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_InventoryDtl_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_InventoryDtl_SourceList" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_InventoryDtl_WarehouseInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockInDtl_InventoryDtl" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockOutDtl_InventoryDtl" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_Part_PartUnit" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PartCategoryDtl_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ProductPart_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtl_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtlTemp_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionDtl_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionDtlTemp_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SourceList_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockInDtl_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockOutDtl_Part" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PartCategoryDtl_PartCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_POChanged_POChangedCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtl_POChanged" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtlTemp_POChanged" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ProductPart_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisition_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionTemp_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelation_PurchaseOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelation_PurchaseOrderDtl" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelation_PurchaseRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelation_PurchaseRequisitionDtl" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelationTemp_PurchaseOrderDtlTemp" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelationTemp_PurchaseOrderTemp" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelationTemp_PurchaseRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PRPORelationTemp_PurchaseRequisitionDtl" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrder_SignFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrder_SupplierInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtl_PurchaseOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderReceive_PurchaseOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ShipNotice_PurchaseOrder" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtl_SourceList" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderReceiveDtl_PurchaseOrderDtl" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ShipNoticeDtl_PurchaseOrderDtl" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtlTemp_PurchaseOrderTemp" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderDtlTemp_SourceList" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderReceive_SignFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderReceive_SupplierAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderReceive_SupplierInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderReceiveDtl_PurchaseOrderReceive" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockIn_PurchaseOrderReceive" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseOrderTemp_SupplierInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisition_SignFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionDtl_PurchaseRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionDtl_SupplierInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionDtlTemp_PurchaseRequisitionTemp" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionDtlTemp_SupplierInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_PurchaseRequisitionTemp_SignFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ShipNotice_SupplierAccount" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_ShipNoticeDtl_ShipNotice" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SignFlowDtl_SignFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockIn_SignFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockOut_SignFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SourceList_SupplierInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SourceListDtl_SourceList" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockInDtl_StockIn" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_StockOutDtl_StockOut" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SupplierAccount_SupplierInfo" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_SupplierInfo_SupplierRating" ManuallyRouted="false" />
+        <AssociationConnector Association="PMSAModel.FK_POChanged_PurchaseOrderDtl" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,157 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseRequisitionDtl>
+
+@{
+    ViewBag.Title = "請購單明細";
+}
+
+<h2>請購單明細</h2>
+
+<p>@Html.ActionLink("查詢請購單", "Index", null, new { @class = "btn btn-success" })</p>
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        @*@Html.ActionLink("新增請購單明細", "CreateDtl", null, new { @class = "btn btn-info" })*@
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlOID)
+                            </th>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Qty)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateRequired)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Part.PartName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PurchaseRequisition.Product.ProductName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
+                        </th>
+                        <th>動作</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        @*<th>
+                                @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlOID)
+                            </th>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Qty)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateRequired)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Part.PartName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PurchaseRequisition.Product.ProductName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
+                        </th>
+                        <th>動作</th>
+                    </tr>
+                </tfoot>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    @*<td>
+            @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlOID)
+        </td>*@
+                    <th>
+                        @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlCode)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateRequired)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Part.PartName)
+                    </td>
+                    @*<td>
+            @Html.DisplayFor(modelItem => item.PurchaseRequisition.ProductNumber)
+        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PurchaseRequisition.Product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("編輯", "EditDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) |
+                        @Html.ActionLink("檢視", "DetailsDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) |
+                        <a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionDtlCode"><i class="fa fa-close"></i> 刪除</a>
+                    </td>
+                </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">Updated at 10/23</div>
+</div>
+@section scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+
+        });
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+        function A() {
+            window.location.reload();
+        }
+        $("a[name = 'click01']").click(function () {
+            Swal.fire({
+                title: '確定要刪除 ?',
+                text: "刪除後你將沒有機會後悔 !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '刪除'
+            }).then((result) => {
+                if (result.value) {
+                    let id1 = this.dataset.wc;
+                    $.ajax({
+                        url: `@Url.Action("DeleteDtl", "PurchaseRequisitions")`,
+                        type: 'POST',
+                        data: { id: id1 }
+                    }).done(function () {
+                        Swal.fire(
+                            '刪除成功 !',
+                            '此資料已被刪除',
+                            'success'
+                        )
+                    }).fail(function () {
+                            alert("error");
+                        }).always(function () {
+                            setTimeout('A()', 2000);
+                        });
+                    }
+                })
+        });
+    </script>
+
+}

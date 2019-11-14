@@ -1,0 +1,135 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseOrder>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*已出貨以及為出貨按鈕還沒做出來*@
+
+
+@Html.Raw(ViewBag.failMessage)
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>
+    <!-- Topbar Search -->
+    @using (Html.BeginForm("Index", "ShipNotices", FormMethod.Get, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
+    {
+        <div class="input-group">
+            <input name="PurchaseOrderID" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMSAWebMVC.Resources.AppResource.PurchaseOrderID aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+        <div class="input-group">
+            @*<select id="shipment" class="form-control bg-light border-0 small">
+                <option id="shipped">已出貨</option>
+                <option id="unship">已答交</option>
+                <option id="sended">已送出</option>
+            </select>*@
+            <input name="PurchaseOrderStatus" id="idSearh2" type="text" class="form-control bg-light border-0 small" placeholder=@PMSAWebMVC.Resources.AppResource.status . aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+        @*<span>
+                <div class="input-group">
+                    <select id="shipment">
+                        <option id="shipped" name="P">已答交</option>
+                        <option id="unship">未出貨</option>
+                    </select>
+                </div>
+            </span>*@
+
+
+    }
+</nav>
+
+<nav>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">@PMSAWebMVC.Resources.AppResource.ShipNotice</h6>
+        </div>
+        <div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PurchaseOrderID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ReceiverName)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.ReceiverTel)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ReceiverMobile)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ReceiptAddress)
+                            </th>
+                            <th>
+                                @PMSAWebMVC.Resources.AppResource.Edit
+                            </th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => item.PurchaseOrderID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.ReceiverName)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(model => item.ReceiverTel)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.ReceiverMobile)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.ReceiptAddress)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" href="@Url.Action( "Edit", new { id = item.PurchaseOrderID })"><i class="fa fa-edit">@PMSAWebMVC.Resources.AppResource.Ship</i></a>|
+                                <a class="btn btn-info" href="@Url.Action("Details", new { id = item.PurchaseOrderID })"><i class="fa fa-tasks">@PMSAWebMVC.Resources.AppResource.Details</i></a>
+                                @*@Html.ActionLink(PMSAWebMVC.Resources.AppResource.Ship, "Edit", new { id = item.PurchaseOrderID }, new { @class = "btn btn-primary" }) |
+                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.Details, "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-primary" })*@
+                                @*@Html.ActionLink(PMSAWebMVC.Resources.AppResource.Delete, "Delete", new { id = item.PurchaseOrderID })*@
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</nav>
+@section scripts{
+    @*想寫AJAX傳直 失敗了QQ*@
+    <script>
+                    $(document).ready(function () {
+                        $("#dataTable").DataTable();
+                        $("#shipment").bind("change", function () {
+                          @Url.Action("Index","ShipNotices")
+                                     });
+                    });
+        function shipment() {
+            $.ajax({
+                url: "@Url.Action("Index","ShipNotices")",
+                data: JSON.stringify({purchaseOrderStatus = }),
+            });
+        }
+    </script>
+
+}

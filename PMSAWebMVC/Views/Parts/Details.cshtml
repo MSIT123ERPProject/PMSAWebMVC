@@ -1,0 +1,89 @@
+﻿@model  PMSAWebMVC.Models.Part
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>料件詳細資料</h2>
+
+<div class="card-header">
+</div>
+<div>
+    <br />
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PartNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartNumber)
+        </dd>
+        <dt></dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.PartName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartName)
+        </dd>
+        <dt></dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.PartSpec)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartSpec)
+        </dd>
+
+        <dt></dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt></dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.PartUnit.PartUnitName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PartUnit.PartUnitName)
+        </dd>
+        <dt></dt>
+        <dt>
+            @*@Html.DisplayNameFor(model => model.PictureAdress)*@
+            料件圖片
+        </dt>
+
+        <dd>
+            <div class="form-group">
+                <img id="imgPreview" src="@Url.Content(Model.PictureAdress)" style="width:320px;height:240px" />
+                <input type="file" name="File1" id="File1" />
+            </div>
+        </dd>
+
+        @*<dt>
+            @Html.DisplayNameFor(model => model.PictureDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PictureDescription)
+        </dd>*@
+
+
+
+    </dl>
+</div>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <a href='@Url.Action("Edit",new {id=Model.PartNumber })'>
+            <i class="btn btn-info">修改</i>
+        </a>
+        <a href='@Url.Action("Index","Parts")'>
+            <i class="btn btn-info">返回</i>
+        </a>
+    </div>
+</div>

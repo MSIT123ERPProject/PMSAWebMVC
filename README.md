@@ -10,8 +10,8 @@
 >- 廷煥 TingHuan
 - Common：存放共用的方法class
 >- assets
->- parts：料件圖片    
->- products：產品圖片
+>>- parts：料件圖片    
+>>- products：產品圖片
 ## 存取帳號方法
 >- 在Controller中的Action
 >>- User.Identity.GetEmployee();

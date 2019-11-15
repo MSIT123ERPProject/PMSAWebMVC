@@ -10,7 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 
 
-namespace PMS_Inventory_huan.Controllers
+namespace PMSAWebMVC.Controllers
 {
     public class ShipNoticesController : BaseController
     {
@@ -53,10 +53,11 @@ namespace PMS_Inventory_huan.Controllers
         //檢視未出貨訂單明細的datatable的AJAX取資料方法
         public JsonResult GetPurchaseOrderDtl(string purchaseOrderID)
         {
-
+            //這裡面要傳過去的欄位本來還要有其他表的，但是因為join時會出現datareader尚未關閉的錯誤
+            //所以先放棄，亞辰說要另外寫一個方法計算總金額，不然會發生衝突
             var q = (
                 from pod in db.PurchaseOrderDtl.AsEnumerable()
-                where pod.PurchaseOrderID ==purchaseOrderID
+                where pod.PurchaseOrderID == purchaseOrderID
                 select new
                 {
                     pod.PurchaseOrderID,
@@ -66,8 +67,18 @@ namespace PMS_Inventory_huan.Controllers
                     pod.QtyPerUnit,
                     pod.CommittedArrivalDate,
                 });
-            var s = new {   };
-            return Json(q, JsonRequestBehavior.AllowGet);
+            //注意dataTable的資料繫結一定要這樣寫，這樣另一邊的DATA屬性才能繫結的到
+            var s = new { data = q };
+            return Json(s, JsonRequestBehavior.AllowGet);
+        }
+        //出貨明細檢視並勾選完畢後進入此方法
+        //要修改該採購單明細的實際出貨日期(ShipDate)，並新增資料到出貨明細
+        //採購單明細要一一檢查庫存是否足夠，不足則告知是哪筆訂單明細不足，並取消動作回原頁面
+        //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?
+        //如果只有部分出貨，採購單狀態??
+        public ActionResult shipCheckDtl(  )
+        {
+            return View();
         }
 
         public ActionResult Index()

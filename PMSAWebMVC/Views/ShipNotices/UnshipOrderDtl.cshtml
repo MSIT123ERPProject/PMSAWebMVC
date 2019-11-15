@@ -8,7 +8,7 @@
 <h2>出貨明細</h2>
 
 <p>
-    @Html.ActionLink("出貨", "")
+    @Html.ActionLink("出貨", "shipCheckDtl","ShipNotices",null,new { @class="btn btn-primary"})
 </p>
 <div class="card mb-3">
     <div class="card-header">
@@ -20,7 +20,7 @@
             <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
                     <tr>
-                  
+
                         <th>訂單明細編號</th>
                         <th>產品名稱</th>
                         <th>數量</th>
@@ -32,7 +32,7 @@
                 </thead>
                 <tfoot>
                     <tr>
-                       
+
                         <th>訂單明細編號</th>
                         <th>產品名稱</th>
                         <th>數量</th>
@@ -49,7 +49,7 @@
 </div>
 
 @section scripts{
-    
+
     <script>
         $(document).ready(function () {
             purchaseOrderDtlForDataTable();
@@ -69,19 +69,27 @@
                     "contentType": "application/json;charset=utf-8",
                     cache: true
                 },
+                //CONTROLLER傳過來的值，要用物件傳並且屬性名稱要是DATA
                 "columns": [
                     {
                         "data": "PurchaseOrderDtlCode",
                         orderable: false,
-                        render : function (data, type, obj, meta) {
+                        render: function (data, type, obj, meta) {
                             return '<input type="checkbox" value="' + data + '"/>';
                         }
                     },
-                    { "data": "PurchaseOrderDtlCode" },
+                    {
+                        "data": "PurchaseOrderDtlCode", "autoWidth": true
+                    },
                     { "data": "PartName" },
                     { "data": "Qty" },
                     { "data": "QtyPerUnit" },
-                    { "data":"CommittedArrivalDate"}
+                    {
+                        "data": "CommittedArrivalDate",
+                        render: function (data, type, full, meta ) {
+                                 return moment(data).format("YYYY/MM/DD");
+                        }
+                    }
                 ]
             });
         }

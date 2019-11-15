@@ -9,7 +9,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PMS_Inventory_huan.Controllers
+namespace PMSAWebMVC.Controllers
 {
     public class SupplierStocksController : BaseController
     {

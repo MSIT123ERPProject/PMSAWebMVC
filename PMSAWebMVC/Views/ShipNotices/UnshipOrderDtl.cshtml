@@ -1,0 +1,99 @@
+﻿@model  PMSAWebMVC.Models.PurchaseOrder
+
+@{
+    ViewBag.Title = "UnshipOrderDtl";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>出貨明細</h2>
+
+<p>
+    @Html.ActionLink("出貨", "shipCheckDtl","ShipNotices",null,new { @class="btn btn-primary"})
+</p>
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        出貨明細管理
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+
+                        <th>訂單明細編號</th>
+                        <th>產品名稱</th>
+                        <th>數量</th>
+                        <th>總額</th>
+                        <th>單位</th>
+                        <th>批量</th>
+                        @*<th>承諾到貨日期</th>*@
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+
+                        <th>訂單明細編號</th>
+                        <th>產品名稱</th>
+                        <th>數量</th>
+                        <th>總額</th>
+                        <th>單位</th>
+                        <th>批量</th>
+                        @*<th>承諾到貨日期</th>*@
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted"></div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            purchaseOrderDtlForDataTable();
+        });
+        //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面
+        function purchaseOrderDtlForDataTable() {
+            if ($.fn.dataTable.isDataTable("#dataTable")) {
+                $("#dataTable").DataTable().destroy();
+            }
+           let id ="@Model.PurchaseOrderID" ;
+            $("#dataTable").DataTable({
+                "ajax": {
+                    "url": `@Url.Action("GetPurchaseOrderDtl","ShipNotices")`,
+                    "type": "GET",
+                    "dataType": "json",
+                    "data": { "purchaseOrderID": id },
+                    "contentType": "application/json;charset=utf-8",
+                    cache: true
+                },
+                //CONTROLLER傳過來的值，要用物件傳並且屬性名稱要是DATA
+                "columns": [
+                    {
+                        "data": "PurchaseOrderDtlCode",
+                        orderable: false,
+                        render: function (data, type, obj, meta) {
+                            return '<input type="checkbox" value="' + data + '"/>';
+                        }
+                    },
+                    {
+                        "data": "PurchaseOrderDtlCode", "autoWidth": true
+                    },
+                    { "data": "PartName" },
+                    { "data": "Qty" },
+                    { "data": "QtyPerUnit" },
+                    {
+                        "data": "CommittedArrivalDate",
+                        render: function (data, type, full, meta ) {
+                                 return moment(data).format("YYYY/MM/DD");
+                        }
+                    }
+                ]
+            });
+        }
+
+
+    </script>
+}

@@ -7,6 +7,9 @@ using PMSAWebMVC.Models;
 
 namespace PMSAWebMVC.ViewModels.ShipNotices
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UnshipOrderDtlViewModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

@@ -6,56 +6,52 @@
 }
 
 <h2>出貨明細</h2>
-@using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post))
+@using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post,new { name="formTable" }))
 {
 
-}
-<p>
-    @Html.ActionLink("出貨", "shipCheckDtl", "ShipNotices", null, new { @class = "btn btn-primary" })
-</p>
-<div class="card mb-3">
-    <div class="card-header">
-        <i class="fas fa-table"></i>
-        出貨明細管理
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+            出貨明細管理
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>訂單明細編號</th>
+                            <th>產品名稱</th>
+                            <th>數量</th>
+                            @*<th>總額</th>*@
+                            <th>單位</th>
+                            @*<th>批量</th>*@
+                            <th>承諾到貨日期</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th>訂單明細編號</th>
+                            <th>產品名稱</th>
+                            <th>數量</th>
+                            @*<th>總額</th>*@
+                            <th>單位</th>
+                            @*<th>批量</th>*@
+                            <th>承諾到貨日期</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted"></div>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
-                <thead>
-                    <tr>
-
-                        <th>訂單明細編號</th>
-                        <th>產品名稱</th>
-                        <th>數量</th>
-                        @*<th>總額</th>*@
-                        <th>單位</th>
-                        <th>批量</th>
-                        <th>承諾到貨日期</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-
-                        <th>訂單明細編號</th>
-                        <th>產品名稱</th>
-                        <th>數量</th>
-                        @*<th>總額</th>*@
-                        <th>單位</th>
-                        <th>批量</th>
-                        <th>承諾到貨日期</th>
-                    </tr>
-                </tfoot>
-            </table>
+    <div>
+        <div>
+            <input type="submit" id="idbutton" class="btn btn-success btn-block" value="出貨" />
         </div>
     </div>
-    <div class="card-footer small text-muted"></div>
-</div>
-<div>
-    <div>
-        <button id="idbutton" class="btn btn-success btn-block">出貨</button>
-    </div>
-</div>
-
+}
 @section scripts{
 
     <script>
@@ -103,12 +99,66 @@
         }
         function PostCheckedOrderDtlData() {
             $("idbutton").click(function () {
-                let dtlList = $("input[type='checkbox']");
-                $.each(dtlList, function (index,dtl) {
-                     
-                })
-                
-                
+                let dtlList = $("input[type='checkbox']").val();
+                $.ajax({
+                    url: `@Url.Action("shipCheckDtl","ShipNotices")`,
+                    type: "POST",
+                    dataType: "json",
+                    data: $("form[name=formTable]").serialize()
+                }).done(function (response) {
+                    let result = response.json();
+                    if (result == "suceeded") {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Stocks are not enough',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                    }
+                }).fail(function () {
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ajax fail!',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                });
+
+                //想試試看用fetch寫法，但還是不太熟，先放者
+                let purchaseOrderID = @Model.PurchaseOrderID;
+                fetch(`@Url.Action("shipCheckDtl","ShipNotices")/${purchaseOrderID}`)
+                    .then(function (response) {
+                        let result = response.json();
+                        if (result == "suceeded") {
+                            return Promise.resolve();
+                        }
+                        else {
+                            return Promise.reject();
+                        }
+                    })
+                    .then(function (response) {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                    })
+                    .catch(function (err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                    });
+                ///////////////////////////////////////////////////
             });
         }
 

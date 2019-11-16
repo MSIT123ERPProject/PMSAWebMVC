@@ -47,7 +47,7 @@ namespace PMSAWebMVC.Controllers
         }
 
         //檢視未出貨訂單明細，並要可以勾選要出貨的明細，檢視該採購單所有的產品，並可以選擇出貨那些產品
-        public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]PurchaseOrder purchaseOrder)
+        public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]UnshipOrderDtlViewModel purchaseOrder)
         {
             return View(purchaseOrder);
         }
@@ -68,7 +68,7 @@ namespace PMSAWebMVC.Controllers
                     pod.QtyPerUnit,
                     pod.CommittedArrivalDate,
                 });
-            //注意dataTable的資料繫結一定要這樣寫，這樣另一邊的DATA屬性才能繫結的到
+            //注意dataTable的資料繫結一定要這樣寫，這樣另一邊column的DATA屬性才能繫結的到
             var s = new { data = q };
             return Json(s, JsonRequestBehavior.AllowGet);
         }
@@ -77,16 +77,10 @@ namespace PMSAWebMVC.Controllers
         ////出貨明細檢視並勾選完畢後進入此方法
         //要修改該採購單明細的實際出貨日期(ShipDate)，並新增資料到出貨明細
         //採購單明細要一一檢查庫存是否足夠，不足則告知是哪筆訂單明細不足，並取消動作回原頁面
-        //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?
-<<<<<<< HEAD
-        //如果只有部分出貨，採購單狀態????
-        public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
-=======
+        //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?  
         //如果只有部分出貨，採購單狀態???????
         /// </summary>
-        /// <returns></returns>
-        public ActionResult shipCheckDtl(  )
->>>>>>> Tinghuan
+        public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
         {
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
             List<PurchaseOrderDtl> orderDtls = new List<PurchaseOrderDtl>();
@@ -126,7 +120,8 @@ namespace PMSAWebMVC.Controllers
             //存進資料庫
             db.SaveChanges();
             //成功回原頁面
-            return View();
+            string suceeded = "suceeded";
+            return Json(suceeded, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Index()

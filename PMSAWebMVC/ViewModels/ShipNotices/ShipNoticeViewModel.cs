@@ -16,7 +16,7 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
            
         }
         public string PurchaseOrderID { get; set; }
-     
+        
         //此集合是用來存放訂單出貨明細檢視時，判斷有無被選取使用
         public IList<OrderDtlItemChecked> orderDtlItemCheckeds { get; set; }
 

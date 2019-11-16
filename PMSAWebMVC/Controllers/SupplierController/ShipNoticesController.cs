@@ -72,12 +72,21 @@ namespace PMSAWebMVC.Controllers
             var s = new { data = q };
             return Json(s, JsonRequestBehavior.AllowGet);
         }
-        //出貨明細檢視並勾選完畢後進入此方法
+
+        /// <summary>
+        ////出貨明細檢視並勾選完畢後進入此方法
         //要修改該採購單明細的實際出貨日期(ShipDate)，並新增資料到出貨明細
         //採購單明細要一一檢查庫存是否足夠，不足則告知是哪筆訂單明細不足，並取消動作回原頁面
         //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?
+<<<<<<< HEAD
         //如果只有部分出貨，採購單狀態????
         public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
+=======
+        //如果只有部分出貨，採購單狀態???????
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult shipCheckDtl(  )
+>>>>>>> Tinghuan
         {
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
             List<PurchaseOrderDtl> orderDtls = new List<PurchaseOrderDtl>();

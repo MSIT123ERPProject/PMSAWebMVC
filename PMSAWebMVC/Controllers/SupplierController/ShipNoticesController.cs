@@ -1,5 +1,6 @@
 ﻿using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -76,8 +77,46 @@ namespace PMSAWebMVC.Controllers
         //採購單明細要一一檢查庫存是否足夠，不足則告知是哪筆訂單明細不足，並取消動作回原頁面
         //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?
         //如果只有部分出貨，採購單狀態????
-        public ActionResult shipCheckDtl(  )
+        public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
         {
+            IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
+            List<PurchaseOrderDtl> orderDtls = new List<PurchaseOrderDtl>();
+            foreach (var dtl in OrderDtlChecked)
+            {
+                if (dtl.Checked)
+                {
+                    var q = from pod in db.PurchaseOrderDtl
+                            where pod.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode
+                            select pod;
+                    orderDtls = q.ToList();
+
+                }
+            }
+            DateTime now = DateTime.Now;
+            List<SourceList> sourceLists = new List<SourceList>();
+            //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
+            //並新增該採購單明細實際出貨日期，新增出貨明細
+            foreach (var dtl in orderDtls)
+            {
+                SourceList sourceList = db.SourceList.Find(dtl.SourceListID);
+                if (sourceList.UnitsInStock < dtl.Qty)
+                {
+                    //這裡應該要return 錯誤訊息，先寫個break
+                    break;
+                }
+                sourceList.UnitsInStock = sourceList.UnitsInStock - dtl.Qty;
+                sourceLists.Add(sourceList);
+                dtl.ShipDate = now;
+            }
+            //把資料庫中的每筆資料狀態改為追蹤
+            for (int i = 0; i < orderDtls.Count(); i++)
+            {
+                db.Entry(orderDtls[i]).State = EntityState.Modified;
+                db.Entry(sourceLists[i]).State = EntityState.Modified;
+            }
+            //存進資料庫
+            db.SaveChanges();
+            //成功回原頁面
             return View();
         }
 

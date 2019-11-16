@@ -95,7 +95,7 @@ namespace PMSAWebMVC.Controllers
             DateTime now = DateTime.Now;
             List<SourceList> sourceLists = new List<SourceList>();
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
-            //並新增該採購單明細實際出貨日期，新增出貨明細//
+            //並新增該採購單明細實際出貨日期，新增出貨明細
             foreach (var dtl in orderDtls)
             {
                 SourceList sourceList = db.SourceList.Find(dtl.SourceListID);

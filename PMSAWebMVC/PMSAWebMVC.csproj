@@ -1001,6 +1001,7 @@
     <Content Include="Views\ShipNotices\UnshipOrderDtl.cshtml" />
     <Content Include="Views\ShipNotices\Edit.cshtml" />
     <Content Include="Views\ShipNotices\Index.cshtml" />
+    <Content Include="Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

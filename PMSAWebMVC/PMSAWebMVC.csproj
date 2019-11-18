@@ -392,6 +392,7 @@
     <Compile Include="Resources\AppResource.ja.Designer.cs" />
     <Compile Include="Resources\AppResource.zh-TW.Designer.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
@@ -1012,7 +1013,6 @@
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />
     <Folder Include="Utilities\ShiYuan\" />
-    <Folder Include="Utilities\TingHuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
   </ItemGroup>

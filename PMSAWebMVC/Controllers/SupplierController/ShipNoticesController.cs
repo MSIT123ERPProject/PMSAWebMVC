@@ -21,11 +21,15 @@ namespace PMSAWebMVC.Controllers
         private PMSAEntities db;
         string supplierAccount;
         string supplierCode;
+        string POChangedCategoryCodeShipped;
+        string RequesterRoleSupplier;
         public ShipNoticesController()
         {
             db = new PMSAEntities();
             supplierCode = "S00001";
             supplierAccount = "SE00001";
+            POChangedCategoryCodeShipped = "S";
+            RequesterRoleSupplier = "S";
         }
         //此方法為幫助INDEX的DATATABLE查訂單資料
         public JsonResult GetPurchaseOrderList(string PurchaseOrderStatus)
@@ -145,20 +149,48 @@ namespace PMSAWebMVC.Controllers
                 db.ShipNoticeDtl.Add(shipNoticeDtl);
                 //把資料庫中的每筆訂單以及貨源清單資料狀態改為追蹤
                 db.Entry(dtl).State = EntityState.Modified;
-                db.Entry(sourceList).State = EntityState.Modified;  
+                db.Entry(sourceList).State = EntityState.Modified;
             }
             //存進資料庫
             db.SaveChanges();
+            //檢查該筆訂單所有產品是否都已經出貨，如果是，將該筆採購單狀態改為已出貨"S"
+            //預設先當作都已出貨
+            bool poCheck = true;
+            var q = from pod in db.PurchaseOrderDtl
+                    where pod.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID
+                    select pod;
+            foreach (var pod in q)
+            {
+                if (pod.ShipDate == null)
+                {
+                    //找到未出貨產品，代表尚未全部出貨
+                    poCheck = false;
+                }
+            }
+            //確認是否已全部出貨，如果是修改採購單狀態為已出貨(S)並新增一筆採購單異動資料
+            if ( poCheck ) {
+                db.PurchaseOrder.Find(unshipOrderDtl.PurchaseOrderID).PurchaseOrderStatus = POChangedCategoryCodeShipped;
+                POChanged pOChanged = new POChanged();
+                pOChanged.PurchaseOrderID = unshipOrderDtl.PurchaseOrderID;
+                pOChanged.POChangedCategoryCode = POChangedCategoryCodeShipped;
+                pOChanged.RequestDate = now;
+                pOChanged.RequesterRole = RequesterRoleSupplier;
+                pOChanged.RequesterID = supplierAccount;
+                db.POChanged.Add(pOChanged);
+                db.SaveChanges();
+            }
             //成功回原頁面
             TempData["message"] = "<script>alert('出貨處理成功，庫存已扣除')</script>";
             return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
         }
+
         /// <summary>
         /// UnshipOrderDtl的patialView方法
         /// 改用PARTIALVIEW寫寫看
         /// </summary>
         /// <returns></returns>
         //回傳PATIALVIEW給UnShipOrderDtl.cshtml
+        //這裡應該要檢查庫存不足，和已出貨的明細，並直接顯示在第一欄
         public ActionResult GetPurchaseOrderDtlPatialView(UnshipOrderDtlViewModel unshipOrderDtlViewModel)
         {
             var q = from pod in db.PurchaseOrderDtl.AsEnumerable()
@@ -191,7 +223,9 @@ namespace PMSAWebMVC.Controllers
                 orderDtlItemChecked.Checked = false;
                 odc.Add(orderDtlItemChecked);
             }
+
             IEnumerable<OrderDtlItem> od = null;
+
             var queryOrderitem = from pod in db.PurchaseOrderDtl
                                  join sl in db.SourceList
                                  on pod.SourceListID equals sl.SourceListID
@@ -211,7 +245,17 @@ namespace PMSAWebMVC.Controllers
                                      UnitsInStock = sl.UnitsInStock
                                  };
             od = queryOrderitem.ToList();
-
+            foreach (var orderdtl in od)
+            {
+                if (orderdtl.ShipDate == null)
+                {
+                    orderdtl.Unship = true;
+                }
+                else
+                {
+                    orderdtl.Unship = false;
+                }
+            }
             UnshipOrderDtlViewModel uodvm = new UnshipOrderDtlViewModel()
             {
                 PurchaseOrderID = unshipOrderDtlViewModel.PurchaseOrderID,
@@ -221,7 +265,8 @@ namespace PMSAWebMVC.Controllers
 
             return PartialView("_GetPurchaseOrderDtlPatialView", uodvm);
         }
-        /// //////////////////////////////////////////////////
+
+        /// 出貨管理首頁//////////////////////////////////////////////////
         public ActionResult Index()
         {
             return View();
@@ -390,35 +435,6 @@ namespace PMSAWebMVC.Controllers
             return View(po);
         }
 
-        //把訂單狀態換成文字敘述的方法
-        private string GetStatus(string purchaseOrderStatus)
-        {
-            //N = 新增,P = 送出,C = 異動中,E = 答交,D = 整筆訂單取消,S = 出貨,R = 點交,O = 逾期,Z = 結案
-            switch (purchaseOrderStatus)
-            {
-                case "N":
-                    return "新增";
-                case "P":
-                    return "送出";
-                case "C":
-                    return "異動中";
-                case "E":
-                    return "答交";
-                case "D":
-                    return "取消";
-                case "S":
-                    return "出貨";
-                case "R":
-                    return "點交";
-                case "O":
-                    return "逾期";
-                case "Z":
-                    return "結案";
-                default:
-                    return "";
-            }
-
-        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -53,6 +53,8 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         public Nullable<System.DateTime> DateRequired { get; set; }
         [Display(Name = "庫存")]
         public int UnitsInStock { get; set; }
+        //此布林值是用來判斷是否已經出貨，false為已出貨，true為未出貨
+        public bool Unship { get; set; }
     }
 
     //此類別是用來存放訂單出貨明細檢視時，判斷有無被選取使用

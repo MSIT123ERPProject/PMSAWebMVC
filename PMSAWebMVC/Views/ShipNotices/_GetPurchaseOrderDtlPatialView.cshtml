@@ -12,7 +12,7 @@
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().QtyPerUnit)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().CommittedArrivalDate)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().UnitsInStock)</th>
-            <th>@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().IsEnough)</th>
+            <th>訂單明細狀態</th>
         </tr>
     </thead>
     <tbody>
@@ -20,16 +20,26 @@
         {
             <tr>
                 <td>
-                    @if (Model.orderDtlItemCheckeds[i].IsEnough)
+                    @if (Model.orderDtlItems.ElementAt(i).Unship)
                     {
-                        @Html.CheckBoxFor(x => x.orderDtlItemCheckeds[i].Checked)
-                        @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
-                        @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
-                        @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                        if (Model.orderDtlItemCheckeds[i].IsEnough)
+                        {
+
+                            @Html.CheckBoxFor(x => x.orderDtlItemCheckeds[i].Checked)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                        }
+                        else
+                        { 
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                        }
                     }
                     else
-                    {
-                        @Html.Label("無法出貨")
+                    { 
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
@@ -55,13 +65,20 @@
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).UnitsInStock)
                 </td>
                 <td>
-                    @if (Model.orderDtlItemCheckeds[i].IsEnough)
+                    @if (Model.orderDtlItems.ElementAt(i).Unship)
                     {
-                        @Html.Label("庫存足夠")
+                        if (Model.orderDtlItemCheckeds[i].IsEnough)
+                        {
+                            @Html.Label("庫存足夠")
+                        }
+                        else
+                        {
+                            @Html.Label("庫存不足")
+                        }
                     }
                     else
                     {
-                        @Html.Label("庫存不足")
+                            @Html.Label("已出貨")
                     }
                 </td>
             </tr>

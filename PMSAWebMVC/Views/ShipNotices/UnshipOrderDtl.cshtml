@@ -63,7 +63,9 @@
 
     <script>
         $(document).ready(function () {
+            //想要用DataTable的AJAX方法，但是資料無法POST到CONTROLLER
            //purchaseOrderDtlForDataTable();
+            //改用partialView
             purchaseOrderDtlForPartialView();
         });
         //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面 partialView方法
@@ -101,8 +103,9 @@
             //    })
         }
 
-        @*先註解*@
+        @*先註解*@ 
         //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面  ajax方法
+        //因為不知道要怎麼把有勾選的集合取出來並傳給controller
         @*function purchaseOrderDtlForDataTable() {
             if ($.fn.dataTable.isDataTable("#dataTableOrderDtl")) {
                 $("#dataTableOrderDtl").DataTable().destroy();

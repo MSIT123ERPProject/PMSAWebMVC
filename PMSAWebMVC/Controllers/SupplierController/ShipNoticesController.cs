@@ -74,18 +74,18 @@ namespace PMSAWebMVC.Controllers
         }
 
         /// <summary>
-        ////出貨明細檢視並勾選完畢後進入此方法
+        ////出貨明細檢視並勾選完畢後進入此方法(出貨按鈕)
         //要修改該採購單明細的實際出貨日期(ShipDate)，並新增資料到出貨明細
         //採購單明細要一一檢查庫存是否足夠，不足則告知是哪筆訂單明細不足，並取消動作回原頁面
-        //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?
-        //如果只有部分出貨，採購單狀態????
         /// </summary>
         [HttpPost]
         public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
-
         {
+            //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
+            //用來存放確定有要出貨的LIST(有勾選)
             List<PurchaseOrderDtl> orderDtls = new List<PurchaseOrderDtl>();
+            //檢查是否有勾選出貨，true為有勾，有則放進orderDtls
             foreach (var dtl in OrderDtlChecked)
             {
                 if (dtl.Checked)
@@ -132,9 +132,10 @@ namespace PMSAWebMVC.Controllers
                     shipNotice.CompanyCode = db.Employee.Find(shipNotice.EmployeeID).CompanyCode;
                     shipNotice.SupplierAccountID = supplierAccount;
                     db.ShipNotice.Add(shipNotice);
+                    //先把新增的出貨通知資料存進資料庫
                     db.SaveChanges();
                 }
-                //新增出貨明細 保存期限先不填 //防呆還沒做
+                //新增出貨明細 保存期限先不填 
                 ShipNoticeDtl shipNoticeDtl = new ShipNoticeDtl();
                 shipNoticeDtl.ShipNoticeID = db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault().ShipNoticeID;
                 shipNoticeDtl.PurchaseOrderDtlCode = dtl.PurchaseOrderDtlCode;
@@ -157,10 +158,9 @@ namespace PMSAWebMVC.Controllers
         /// 改用PARTIALVIEW寫寫看
         /// </summary>
         /// <returns></returns>
+        //回傳PATIALVIEW給UnShipOrderDtl.cshtml
         public ActionResult GetPurchaseOrderDtlPatialView(UnshipOrderDtlViewModel unshipOrderDtlViewModel)
         {
-            //PurchaseOrder po = db.PurchaseOrder.Find(unshipOrderDtlViewModel.PurchaseOrderID);
-            //
             var q = from pod in db.PurchaseOrderDtl.AsEnumerable()
                     join sl in db.SourceList on pod.SourceListID equals sl.SourceListID
                     where pod.PurchaseOrderID == unshipOrderDtlViewModel.PurchaseOrderID
@@ -268,7 +268,7 @@ namespace PMSAWebMVC.Controllers
         }
         //======================================================================================
         /// <summary>
-        ///  出貨確認********************更改寫法這裡之後可能不會用，因為出貨要改為個別出貨
+        ///  出貨確認//此方法不會用因為方法寫錯，因為出貨要改為個別出貨
         /// </summary>
         /// <param name="shipNotice"></param>
         /// <returns></returns>

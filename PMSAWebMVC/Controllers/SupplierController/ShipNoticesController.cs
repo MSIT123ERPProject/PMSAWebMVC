@@ -108,7 +108,7 @@ namespace PMSAWebMVC.Controllers
                 if (sourceList.UnitsInStock < dtl.Qty)
                 {
                     //這裡要return 錯誤訊息，並且回到原頁面
-                    TempData["message"] = "<script>alert('庫存不足')</script>";
+                    TempData["message"] = "<script>Swal.fire({  icon: 'error',  title: 'Oops...',  text: '庫存不足!',  footer: '<a href>Why do I have this issue?</a>'})</script>";
                     return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
                 }
                 //扣除該料件貨源清單的庫存以及訂單數量
@@ -117,11 +117,14 @@ namespace PMSAWebMVC.Controllers
                 {
                     sourceList.UnitsOnOrder = 0;
                 }
-                sourceList.UnitsOnOrder = sourceList.UnitsOnOrder - dtl.Qty;
+                else
+                {
+                    sourceList.UnitsOnOrder = sourceList.UnitsOnOrder - dtl.Qty;
+                }
                 sourceLists.Add(sourceList);
                 dtl.ShipDate = now;
                 //新增出貨通知 應該在這 先檢查是否有該筆出貨通知(因為有可能分開出貨，所以同筆訂單後出貨的就不用在增加出貨通知，只要增加出貨明細即可)
-                if (!db.ShipNotice.Contains(db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault()))
+                if (db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault() == null)
                 {
                     //新增出貨通知//感覺應該要在外面再加一個迴圈做出貨通知以及出貨明細
                     ShipNotice shipNotice = new ShipNotice();
@@ -144,7 +147,8 @@ namespace PMSAWebMVC.Controllers
                 shipNoticeDtl.ShipNoticeID = db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault().ShipNoticeID;
                 shipNoticeDtl.PurchaseOrderDtlCode = dtl.PurchaseOrderDtlCode;
                 shipNoticeDtl.ShipQty = dtl.Qty;
-                shipNoticeDtl.ShipAmount = dtl.Qty * sourceList.UnitPrice * dtl.QtyPerUnit;
+                //金額為數量*單價*折扣*批量
+                shipNoticeDtl.ShipAmount = Convert.ToInt32(dtl.Qty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
                 //把新出貨明細資料加進資料庫
                 db.ShipNoticeDtl.Add(shipNoticeDtl);
                 //把資料庫中的每筆訂單以及貨源清單資料狀態改為追蹤
@@ -168,8 +172,12 @@ namespace PMSAWebMVC.Controllers
                 }
             }
             //確認是否已全部出貨，如果是修改採購單狀態為已出貨(S)並新增一筆採購單異動資料
-            if ( poCheck ) {
+            //採購單明細的POChangedOID欄位也要更新
+            if (poCheck)
+            {
+                //改採購單狀態
                 db.PurchaseOrder.Find(unshipOrderDtl.PurchaseOrderID).PurchaseOrderStatus = POChangedCategoryCodeShipped;
+                //新增採購單異動總表
                 POChanged pOChanged = new POChanged();
                 pOChanged.PurchaseOrderID = unshipOrderDtl.PurchaseOrderID;
                 pOChanged.POChangedCategoryCode = POChangedCategoryCodeShipped;
@@ -178,9 +186,35 @@ namespace PMSAWebMVC.Controllers
                 pOChanged.RequesterID = supplierAccount;
                 db.POChanged.Add(pOChanged);
                 db.SaveChanges();
+                //更新採購單明細POChangedOID欄位
+                //2019 11/20 23:06 下方註解掉的程式碼不知道為甚麼會發生無法辨識此方法，無法放入站存區，所以只好分開來寫
+                //int a = db.POChanged.Last(x => (x.RequesterRole == RequesterRoleSupplier) && (x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID)).POChangedOID;
+                
+                //先找出最新一筆採購單異動資料且是供應商的
+                var poc = db.POChanged.Where(x => (x.RequesterRole == RequesterRoleSupplier) && (x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID));
+                DateTime dt = poc.FirstOrDefault().RequestDate;
+                int pOChangedOID = poc.FirstOrDefault().POChangedOID;
+                foreach (var pocD in poc)
+                {
+                    if (pocD.RequestDate > dt)
+                    {
+                        dt = pocD.RequestDate;
+                        pOChangedOID = pocD.POChangedOID;
+                    }
+                }
+                //然後把找出來的採購單異動總表最新的POChangedOID更新至採購單明細POChangedOID欄位中
+                var podQueryForPOChangedOID = from pod in db.PurchaseOrderDtl
+                                              where pod.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID
+                                              select pod;
+                foreach (var pod in podQueryForPOChangedOID)
+                {
+                    pod.POChangedOID = pOChangedOID;
+                    db.Entry(pod).State = EntityState.Modified;
+                }
+                db.SaveChanges();
             }
             //成功回原頁面
-            TempData["message"] = "<script>alert('出貨處理成功，庫存已扣除')</script>";
+            TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '出貨處理成功，庫存已扣除',showConfirmButton: false,timer: 1500})</script>";
             return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
         }
 
@@ -330,6 +364,7 @@ namespace PMSAWebMVC.Controllers
             ViewBag.amount = amount;
             return View(po);
         }
+
         //按下確定出貨之後，ajax呼叫此方法修改貨源清單庫存數量及訂單數量並且新增一筆出貨通知
         //出貨通知明細部分還沒有做
         [HttpGet]

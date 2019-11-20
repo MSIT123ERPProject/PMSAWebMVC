@@ -78,7 +78,7 @@
                 type: "GET",
                 data: { PurchaseOrderID :id },
             }).done(function (result) {
-                alert("ajax done");
+                alert("訂單明細載入成功");
                 $("#divTable").html('');
                 $("#divTable").html(result);
                 //全選、全勾消
@@ -87,7 +87,12 @@
                     $("#dataTableUOD>tbody input:checkbox").prop("checked", checked);
                 });
             }).fail(function () {
-                alert("ajax fail");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '訂單明細載入失敗',
+                    footer: '<a href>Why do I have this issue?</a>'
+                })
             });
             $("#dataTableUOD").DataTable(
                 {

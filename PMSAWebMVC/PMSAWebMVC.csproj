@@ -822,10 +822,6 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
-    <Content Include="Handlers\RESXManager\JQuerySpellCheckerHandler.ashx" />
-    <Content Include="Handlers\RESXManager\DownloadFile.ashx" />
-    <Content Include="Handlers\RESXManager\AutoTranslation.ashx" />
-    <Content Include="config\RESXManager.config" />
     <Content Include="Scripts\DataTables\i18n\chinese-traditional.json" />
     <EntityDeploy Include="Models\PMSAModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
@@ -834,6 +830,10 @@
     <Content Include="Models\PMSAModel.edmx.diagram">
       <DependentUpon>PMSAModel.edmx</DependentUpon>
     </Content>
+    <Content Include="Handlers\RESXManager\JQuerySpellCheckerHandler.ashx" />
+    <Content Include="Handlers\RESXManager\DownloadFile.ashx" />
+    <Content Include="Handlers\RESXManager\AutoTranslation.ashx" />
+    <Content Include="config\RESXManager.config" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -934,7 +934,6 @@
     <Content Include="webfonts\fa-brands-400.woff" />
     <Content Include="webfonts\fa-brands-400.ttf" />
     <Content Include="webfonts\fa-brands-400.eot" />
-    <Content Include="Templates\RESXManager\ResxManagerGlobalTemplate.Master" />
     <Content Include="Views\Account\SupLogin.cshtml" />
     <Content Include="Views\Account\_LoginLayout.cshtml" />
     <Content Include="Views\InventoryDtls\Create.cshtml" />
@@ -1003,6 +1002,7 @@
     <Content Include="Views\ShipNotices\Edit.cshtml" />
     <Content Include="Views\ShipNotices\Index.cshtml" />
     <Content Include="Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
+    <Content Include="Templates\RESXManager\ResxManagerGlobalTemplate.Master" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1027,45 +1027,27 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Pages\RESXManager\App_LocalResources\FileManagement.aspx.resx" />
     <Content Include="Pages\RESXManager\App_LocalResources\RegionalSettings.aspx.resx" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Pages\RESXManager\App_LocalResources\FileManagement.aspx.resx" />
     <Content Include="Pages\RESXManager\App_LocalResources\Editor.aspx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Controls\RESXManager\Labels\App_LocalResources\LabelsSearchResult.ascx.resx" />
-    <Content Include="Controls\RESXManager\Labels\App_LocalResources\LabelsSearchResultItem.ascx.resx" />
     <Content Include="Controls\RESXManager\Labels\App_LocalResources\LabelsSearchResultList.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Controls\RESXManager\FilterControls\App_LocalResources\SearchByUrl.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Controls\RESXManager\Labels\App_LocalResources\LabelsSearchResultItem.ascx.resx" />
+    <Content Include="Controls\RESXManager\Labels\App_LocalResources\LabelsSearchResult.ascx.resx" />
     <Content Include="Controls\RESXManager\FilterControls\App_LocalResources\SearchByText.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Controls\RESXManager\FilterControls\App_LocalResources\SearchByUrl.ascx.resx" />
     <Content Include="Controls\RESXManager\FilterControls\App_LocalResources\SearchByBrowsing.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Controls\RESXManager\App_LocalResources\RegionalSettings.ascx.resx" />
     <Content Include="Controls\RESXManager\App_LocalResources\ToolTabs.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Controls\RESXManager\App_LocalResources\Labels.ascx.resx" />
+    <Content Include="Controls\RESXManager\App_LocalResources\FileManagement.ascx.resx" />
     <Content Include="App_GlobalResources\RESXManagerGlobal.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>RESXManagerGlobal.designer.cs</LastGenOutput>
     </Content>
-    <Content Include="Controls\RESXManager\App_LocalResources\FileManagement.ascx.resx" />
-    <Content Include="Controls\RESXManager\App_LocalResources\Labels.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_GlobalResources\ControlNames.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>ControlNames.designer.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\AppResource.ja.resx" />
     <EmbeddedResource Include="Resources\AppResource.resx" />
     <EmbeddedResource Include="Resources\AppResource.zh-TW.resx" />

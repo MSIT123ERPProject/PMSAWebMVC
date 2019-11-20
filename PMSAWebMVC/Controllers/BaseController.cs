@@ -37,6 +37,9 @@ namespace PMSAWebMVC.Controllers
                 c.Expires.AddDays(30);
                 Response.Cookies.Add(c);
             }
+            if (cultureName == "" || cultureName == null) {
+                cultureName = "zh-TW";
+            }
             Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(cultureName);
             return base.BeginExecuteCore(callback, state);
         }

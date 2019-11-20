@@ -37,12 +37,15 @@ namespace PMSAWebMVC
                         "~/Scripts/sbTemplate/sb-admin.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqDataTables").Include(
-                "~/Scripts/DataTables/jquery.dataTables.js",  
-                "~/Scripts/DataTables/dataTables.bootstrap4.js",     
-                "~/Scripts/moment.js"));
+                "~/Scripts/DataTables/jquery.dataTables.js",
+                "~/Scripts/DataTables/dataTables.bootstrap4.js",
+                "~/Scripts/moment.js",
+                "~/Scripts/tablesaw/tablesaw.jquery.js",
+                 "~/Scripts/tablesaw/tablesaw-init.js"));
 
             bundles.Add(new StyleBundle("~/Content/dataTablescss").Include(
-                "~/Content/DataTables/css/dataTables.bootstrap4.css"));
+                "~/Content/DataTables/css/dataTables.bootstrap4.css",
+                "~/Content/tablesaw/tablesaw.css"));
 
             //sweetAlert
             bundles.Add(new ScriptBundle("~/bundles/sweetalertJS").Include(

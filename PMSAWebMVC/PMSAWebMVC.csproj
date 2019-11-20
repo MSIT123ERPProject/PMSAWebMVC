@@ -602,6 +602,8 @@
     <Content Include="Content\svg-with-js.min.css" />
     <Content Include="Content\sweetAlert\sweetalert2.css" />
     <Content Include="Content\sweetAlert\sweetalert2.min.css" />
+    <Content Include="Content\tablesaw\dependencies\qunit.css" />
+    <Content Include="Content\tablesaw\tablesaw.css" />
     <Content Include="Content\v4-shims.css" />
     <Content Include="Content\v4-shims.min.css" />
     <Content Include="Controls\RESXManager\FileManagement.ascx" />
@@ -937,6 +939,12 @@
     <Content Include="Scripts\sweetAlert\sweetalert2.all.min.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.min.js" />
+    <Content Include="Scripts\tablesaw\dependencies\jquery.js" />
+    <Content Include="Scripts\tablesaw\dependencies\naturalsort.js" />
+    <Content Include="Scripts\tablesaw\dependencies\qunit.js" />
+    <Content Include="Scripts\tablesaw\tablesaw-init.js" />
+    <Content Include="Scripts\tablesaw\tablesaw.jquery.js" />
+    <Content Include="Scripts\tablesaw\tablesaw.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />

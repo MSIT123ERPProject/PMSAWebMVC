@@ -8,6 +8,7 @@ using System.Web.Routing;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize]
     public class BaseController : Controller
     {
         protected override void OnResultExecuting(ResultExecutingContext filterContext)

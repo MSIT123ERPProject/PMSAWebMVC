@@ -9,23 +9,26 @@ namespace PMSAWebMVC
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                "~/Scripts/jquery.validate*"));
 
             // 使用開發版本的 Modernizr 進行開發並學習。然後，當您
             // 準備好可進行生產時，請使用 https://modernizr.com 的建置工具，只挑選您需要的測試。
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+                "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/umd/popper.js",
-                      "~/Scripts/bootstrap.js"));
+                    //"~/Scripts/umd/popper.js",
+                    "~/Scripts/MDB/popper.js",
+                    "~/Scripts/bootstrap.js",
+                    "~/Scripts/MDB/mdb.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
                       "~/Content/fontawesome-all.css",
+                      "~/Content/bootstrap.css",
+                      "~/Content/MDB/css/mdb.css",
                       "~/Content/sbTemplate/sb-admin.css",
                       "~/Content/Site.css"));
 
@@ -34,12 +37,15 @@ namespace PMSAWebMVC
                         "~/Scripts/sbTemplate/sb-admin.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqDataTables").Include(
-                        "~/Scripts/DataTables/jquery.dataTables.js",
-                        "~/Scripts/DataTables/dataTables.bootstrap4.js",
-                        "~/Scripts/moment.js"));
+                "~/Scripts/DataTables/jquery.dataTables.js",
+                "~/Scripts/DataTables/dataTables.bootstrap4.js",
+                "~/Scripts/moment.js",
+                "~/Scripts/tablesaw/tablesaw.jquery.js",
+                 "~/Scripts/tablesaw/tablesaw-init.js"));
 
             bundles.Add(new StyleBundle("~/Content/dataTablescss").Include(
-                      "~/Content/DataTables/css/dataTables.bootstrap4.css"));
+                "~/Content/DataTables/css/dataTables.bootstrap4.css",
+                "~/Content/tablesaw/tablesaw.css"));
 
             //sweetAlert
             bundles.Add(new ScriptBundle("~/bundles/sweetalertJS").Include(

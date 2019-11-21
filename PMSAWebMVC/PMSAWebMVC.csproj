@@ -211,6 +211,7 @@
     <Compile Include="Controllers\RolesAdminController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
     <Compile Include="Controllers\SourceListsController.cs" />
+    <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierStocksController.cs" />
     <Compile Include="Controllers\UsersAdminController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
@@ -1154,6 +1155,7 @@
     <Content Include="Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
+    <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

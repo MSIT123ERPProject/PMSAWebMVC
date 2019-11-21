@@ -1,0 +1,87 @@
+﻿@model PMSAWebMVC.ViewModels.ShipNotices.UnshipOrderDtlViewModel
+
+@Html.HiddenFor(model => model.PurchaseOrderID)
+
+<table class="table table-striped table-bordered" id="dataTableUOD" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th><input type="checkbox" name="chkAll" />@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().Checked)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PurchaseOrderDtlCode)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PartName)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().Qty)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().QtyPerUnit)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().CommittedArrivalDate)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().UnitsInStock)</th>
+            <th>訂單明細狀態</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.orderDtlItems.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @if (Model.orderDtlItems.ElementAt(i).Unship)
+                    {
+                        if (Model.orderDtlItemCheckeds[i].IsEnough)
+                        {
+
+                            @Html.CheckBoxFor(x => x.orderDtlItemCheckeds[i].Checked)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                        }
+                        else
+                        { 
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
+                            @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                        }
+                    }
+                    else
+                    { 
+                        @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
+                        @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
+                        @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
+                        @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).PurchaseOrderDtlCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).PartName)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).QtyPerUnit)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).CommittedArrivalDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).UnitsInStock)
+                </td>
+                <td>
+                    @if (Model.orderDtlItems.ElementAt(i).Unship)
+                    {
+                        if (Model.orderDtlItemCheckeds[i].IsEnough)
+                        {
+                            @Html.Label("庫存足夠")
+                        }
+                        else
+                        {
+                            @Html.Label("庫存不足")
+                        }
+                    }
+                    else
+                    {
+                            @Html.Label("已出貨")
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

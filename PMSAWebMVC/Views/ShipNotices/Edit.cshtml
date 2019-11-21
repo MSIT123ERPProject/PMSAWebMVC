@@ -1,4 +1,4 @@
-﻿@model PMSAWebMVC.ViewModels.ShipNotices.PurchaseOrderViewModel
+﻿@model PMSAWebMVC.Models.PurchaseOrder
 
 @{
     ViewBag.Title = "Edit";
@@ -63,7 +63,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                @*@Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipCheck, "shipCheck","ShipNotices", new {  purchaseOrderID = Model.PurchaseOrderID })*@
+                @*@Html.ActionLink(PMS_Inventory_huan.Resources.AppResource.ShipCheck, "shipCheck","ShipNotices", new {  purchaseOrderID = Model.PurchaseOrderID })*@
                 @*<button type="submit">Submit</button>*@
                 <a><input id="submit" onclick="check()" name="submit" type="submit" value=@PMSAWebMVC.Resources.AppResource.ShipCheck class="btn btn-primary" /></a>
             </div>
@@ -80,10 +80,10 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
     $(document).ready(function () {
-              $("#failMessage").html(@Model.failMessage)
+             
     });
     </script>
-    @*<script>Swal.fire(`@PMSAWebMVC.Resources.AppResource.NoStock`)</script>*@
+    @*<script>Swal.fire(`@PMS_Inventory_huan.Resources.AppResource.NoStock`)</script>*@
     @*<script>
             function check() {
                 $ajax({

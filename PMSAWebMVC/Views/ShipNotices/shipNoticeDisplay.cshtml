@@ -1,0 +1,26 @@
+﻿@model PMSAWebMVC.Models.PurchaseOrder
+@{
+    ViewBag.Title = "shipNoticeDisplay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>shipNoticeDisplay</h2>
+
+<div class="form-horizontal">
+    <h4>
+        出貨單檢視
+    </h4>
+    <hr />
+ <div class="form-group">
+     @Html.DisplayNameFor( model=>model.PurchaseOrderID )
+     <div>
+         @Html.DisplayFor( model=>model.PurchaseOrderID )
+     </div>
+ </div>
+ <div class="form-group">
+
+ </div>
+ <div class="form-group">
+
+ </div>
+</div>

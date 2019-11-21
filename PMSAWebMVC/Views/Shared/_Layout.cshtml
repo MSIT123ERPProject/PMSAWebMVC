@@ -9,10 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/dataTablescss")
+    @Styles.Render("~/Content/form")
+    @Styles.Render("~/Content/DataTables")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/sweetalertJS")
-    @Styles.Render("~/bundles/sweetalertCSS")
     @RenderSection("styles", required: false)
     <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
     @*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
@@ -176,24 +175,9 @@
     </a>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/allpluginjs")
-    @Scripts.Render("~/bundles/jqDataTables")
+    @Scripts.Render("~/bundles/js")
+    @Scripts.Render("~/bundles/form")
+    @Scripts.Render("~/bundles/DataTables")
     @RenderSection("scripts", required: false)
-    <script>
-        $('#dataTable').dataTable({
-            "language": {
-                "processing": "@PMSAWebMVC.Resources.AppResource.processing",
-                "emptyTable": "@PMSAWebMVC.Resources.AppResource.noData",
-                "info": "@PMSAWebMVC.Resources.AppResource.display _PAGE_ @PMSAWebMVC.Resources.AppResource.page -@PMSAWebMVC.Resources.AppResource.total _PAGES_ @PMSAWebMVC.Resources.AppResource.page",
-                "lengthMenu": "@PMSAWebMVC.Resources.AppResource.everyPage _MENU_ @PMSAWebMVC.Resources.AppResource.ko @PMSAWebMVC.Resources.AppResource.record",
-                "search": "@PMSAWebMVC.Resources.AppResource.search:",
-                "paginate": {
-                    "previous": "@PMSAWebMVC.Resources.AppResource.privousPage",
-                    "next": "@PMSAWebMVC.Resources.AppResource.nextPage"
-                }
-            }
-        });
-    </script>
 </body>
 </html>

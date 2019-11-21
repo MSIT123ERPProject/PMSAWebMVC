@@ -6,69 +6,125 @@
 }
 
 <h2>出貨明細</h2>
-@using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post))
+@if (TempData["message"] != null)
+{
+        @Html.Raw(TempData["message"])
+}
+@using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
 {
 
-}
-<p>
-    @Html.ActionLink("出貨", "shipCheckDtl", "ShipNotices", null, new { @class = "btn btn-primary" })
-</p>
-<div class="card mb-3">
-    <div class="card-header">
-        <i class="fas fa-table"></i>
-        出貨明細管理
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+            出貨明細管理
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" id="divTable">
+
+                @*先改用partialView寫寫看*@
+                @*<table class="table table-striped table-bordered" id="dataTableOrderDtl" cellspacing="0" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>全選</th>
+                                <th>採購單編號</th>
+                                <th>訂單明細編號</th>
+                                <th>產品名稱</th>
+                                <th>數量</th>
+                                <th>單位</th>
+                                <th>承諾到貨日期</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>全選</th>
+                                <th>採購單編號</th>
+                                <th>訂單明細編號</th>
+                                <th>產品名稱</th>
+                                <th>數量</th>
+                                <th>單位</th>
+                                <th>承諾到貨日期</th>
+                            </tr>
+                        </tfoot>
+                    </table>*@
+            </div>
+        </div>
+        <div class="card-footer small text-muted"></div>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
-                <thead>
-                    <tr>
-
-                        <th>訂單明細編號</th>
-                        <th>產品名稱</th>
-                        <th>數量</th>
-                        @*<th>總額</th>*@
-                        <th>單位</th>
-                        <th>批量</th>
-                        <th>承諾到貨日期</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-
-                        <th>訂單明細編號</th>
-                        <th>產品名稱</th>
-                        <th>數量</th>
-                        @*<th>總額</th>*@
-                        <th>單位</th>
-                        <th>批量</th>
-                        <th>承諾到貨日期</th>
-                    </tr>
-                </tfoot>
-            </table>
+    <div>
+        <div>
+            <input type="submit" id="idbutton" class="btn btn-success btn-block" value="出貨" />
         </div>
     </div>
-    <div class="card-footer small text-muted"></div>
-</div>
-<div>
-    <div>
-        <button id="idbutton" class="btn btn-success btn-block">出貨</button>
-    </div>
-</div>
-
+}
 @section scripts{
 
     <script>
         $(document).ready(function () {
-            purchaseOrderDtlForDataTable();
+            //想要用DataTable的AJAX方法，但是資料無法POST到CONTROLLER
+           //purchaseOrderDtlForDataTable();
+            //改用partialView
+            purchaseOrderDtlForPartialView();
         });
-        //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面
-        function purchaseOrderDtlForDataTable() {
-            if ($.fn.dataTable.isDataTable("#dataTable")) {
-                $("#dataTable").DataTable().destroy();
+        //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面 partialView方法
+        function purchaseOrderDtlForPartialView() {
+
+            let id = "@Model.PurchaseOrderID";
+            let queryId = `@Url.Action("GetPurchaseOrderDtlPatialView","ShipNotices")` + "?PurchaseOrderID=" + id;
+            $.ajax({
+                url: `@Url.Action("GetPurchaseOrderDtlPatialView","ShipNotices")`,
+                type: "GET",
+                data: { PurchaseOrderID :id },
+            }).done(function (result) {
+                alert("訂單明細載入成功");
+                $("#divTable").html('');
+                $("#divTable").html(result);
+                //全選、全勾消
+                $("input[name=chkAll]").change(function () {
+                    let checked = $(this).prop("checked");
+                    $("#dataTableUOD>tbody input:checkbox").prop("checked", checked);
+                });
+            }).fail(function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '訂單明細載入失敗',
+                    footer: '<a href>Why do I have this issue?</a>'
+                })
+            });
+            $("#dataTableUOD").DataTable(
+                {
+                        language: {
+                            url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                        },
+                    }
+            );
+            //fetch方法會回傳PROMISE物件，不知道要兂麼把他轉乘HTML元素，而用JQUERY的AJAX方法回傳後會是直接的一個HTML元素
+            //fetch(queryId)
+            //    .then(function (response) {
+            //        alert("response is " + response);
+            //        if (response != null) {
+
+            //            return Promise.resolve(response.json());
+            //        }
+            //    }).then(function (response) {
+            //        alert("response suceeded" + response);
+
+            //        $("#divTable").empty();
+            //        $("#divTable").html(response);
+            //    }).catch(function (err) {
+            //        alert("error response is null" + err);
+            //    })
+        }
+
+        @*先註解*@
+        //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面  ajax方法
+        //因為不知道要怎麼把有勾選的集合取出來並傳給controller
+        @*function purchaseOrderDtlForDataTable() {
+            if ($.fn.dataTable.isDataTable("#dataTableOrderDtl")) {
+                $("#dataTableOrderDtl").DataTable().destroy();
             }
            let id ="@Model.PurchaseOrderID" ;
-            $("#dataTable").DataTable({
+            $("#dataTableOrderDtl").DataTable({
                 "ajax": {
                     "url": `@Url.Action("GetPurchaseOrderDtl","ShipNotices")`,
                     "type": "GET",
@@ -86,6 +142,7 @@
                             return '<input type="checkbox" value="' + data + '"/>';
                         }
                     },
+                    { "data":"PurchaseOrderID"},
                     {
                         "data": "PurchaseOrderDtlCode", "autoWidth": true
                     },
@@ -100,17 +157,74 @@
                     }
                 ]
             });
-        }
-        function PostCheckedOrderDtlData() {
+        }*@
+
+        @*出貨按鈕AJAX的寫法但是資料傳不進shipCheckDtl的方法，所以改用PARTIALVIEW寫寫看*@
+        @*先註解*@
+        @*function PostCheckedOrderDtlData() {
             $("idbutton").click(function () {
-                let dtlList = $("input[type='checkbox']");
-                $.each(dtlList, function (index,dtl) {
-                     
-                })
-                
-                
+                let dtlList = $("input[type='checkbox']").val();
+                $.ajax({
+                    url: `@Url.Action("shipCheckDtl","ShipNotices")`,
+                    type: "POST",
+                    dataType: "json",
+                    data: $("form[name=formTable]").serialize()
+                }).done(function (response) {
+                    let result = response.json();
+                    if (result == "suceeded") {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Stocks are not enough',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                    }
+                }).fail(function () {
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ajax fail!',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                });
+
+                //想試試看用fetch寫法，但還是不太熟，先放者
+                let purchaseOrderID = @Model.PurchaseOrderID;
+                fetch(`@Url.Action("shipCheckDtl","ShipNotices")/${purchaseOrderID}`)
+                    .then(function (response) {
+                        let result = response.json();
+                        if (result == "suceeded") {
+                            return Promise.resolve();
+                        }
+                        else {
+                            return Promise.reject();
+                        }
+                    })
+                    .then(function (response) {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                    })
+                    .catch(function (err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                    });
+                ///////////////////////////////////////////////////
             });
-        }
+        }*@
 
     </script>
 }

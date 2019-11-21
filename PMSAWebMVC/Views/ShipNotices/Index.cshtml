@@ -145,7 +145,8 @@
                     { "data": "ReceiverTel" },
                     { "data": "ReceiverMobile" },
                     { "data": "ReceiptAddress" },
-                    {       /*按鈕程式碼想寫在這，但失敗了*/   /* 20191107 09:12 成功了，原因在於return字串沒有正確的打好，必須注意雙引號以及單引號  */
+                    {    /*按鈕程式碼想寫在這，但失敗了*/   /* 20191107 09:12 成功了，原因在於return字串沒有正確的打好，必須注意雙引號以及單引號  */
+                        //之後可以把修改庫存的頁面改成SWEETALERT的彈出視窗
                         "data": "PurchaseOrderID",
                         "render": function (data, type, row, meta) {
                             if (row.PurchaseOrderStatus == "P") {

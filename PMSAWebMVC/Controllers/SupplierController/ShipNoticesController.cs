@@ -1,5 +1,6 @@
 ﻿using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.Utilities.TingHuan;
 using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,17 @@ namespace PMSAWebMVC.Controllers
         private PMSAEntities db;
         string supplierAccount;
         string supplierCode;
+        string POChangedCategoryCodeShipped;
+        string RequesterRoleSupplier;
+        ShipNoticesUtilities utilities = new ShipNoticesUtilities();
         public ShipNoticesController()
         {
+            
             db = new PMSAEntities();
             supplierCode = "S00001";
             supplierAccount = "SE00001";
+            POChangedCategoryCodeShipped = "S";
+            RequesterRoleSupplier = "S";
         }
         //此方法為幫助INDEX的DATATABLE查訂單資料
         public JsonResult GetPurchaseOrderList(string PurchaseOrderStatus)
@@ -47,7 +54,7 @@ namespace PMSAWebMVC.Controllers
         }
 
         //檢視未出貨訂單明細，並要可以勾選要出貨的明細，檢視該採購單所有的產品，並可以選擇出貨那些產品
-        public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]PurchaseOrder purchaseOrder)
+        public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]UnshipOrderDtlViewModel purchaseOrder)
         {
             return View(purchaseOrder);
         }
@@ -56,7 +63,7 @@ namespace PMSAWebMVC.Controllers
         {
             //這裡面要傳過去的欄位本來還要有其他表的，但是因為join時會出現datareader尚未關閉的錯誤
             //所以先放棄，亞辰說要另外寫一個方法計算總金額，不然會發生衝突
-            var q = (
+            var q =
                 from pod in db.PurchaseOrderDtl.AsEnumerable()
                 where pod.PurchaseOrderID == purchaseOrderID
                 select new
@@ -67,16 +74,17 @@ namespace PMSAWebMVC.Controllers
                     pod.Qty,
                     pod.QtyPerUnit,
                     pod.CommittedArrivalDate,
-                });
-            //注意dataTable的資料繫結一定要這樣寫，這樣另一邊的DATA屬性才能繫結的到
+                };
+            //注意dataTable的資料繫結一定要這樣寫，這樣另一邊column的DATA屬性才能繫結的到
             var s = new { data = q };
             return Json(s, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
-        ////出貨明細檢視並勾選完畢後進入此方法
+        ////出貨明細檢視並勾選完畢後進入此方法(出貨按鈕)
         //要修改該採購單明細的實際出貨日期(ShipDate)，並新增資料到出貨明細
         //採購單明細要一一檢查庫存是否足夠，不足則告知是哪筆訂單明細不足，並取消動作回原頁面
+<<<<<<< HEAD
         //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?
 <<<<<<< HEAD
         //如果只有部分出貨，採購單狀態???????
@@ -87,48 +95,232 @@ namespace PMSAWebMVC.Controllers
         //如果只有部分出貨，採購單狀態????
         public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
 >>>>>>> 200e42fdf3bf84c30db5255fa3604fc451d1b27e
+=======
+        /// </summary>
+        [HttpPost]
+        public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
+>>>>>>> 30e731774eb1f4e10f4bd2144dbd0367b4b776f3
         {
+            //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
+            //用來存放確定有要出貨的LIST(有勾選)
             List<PurchaseOrderDtl> orderDtls = new List<PurchaseOrderDtl>();
+            //檢查是否有勾選出貨，true為有勾，有則放進orderDtls
             foreach (var dtl in OrderDtlChecked)
             {
                 if (dtl.Checked)
                 {
-                    var q = from pod in db.PurchaseOrderDtl
-                            where pod.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode
-                            select pod;
-                    orderDtls = q.ToList();
-
+                    PurchaseOrderDtl purchaseOrderDtl = db.PurchaseOrderDtl.Find(dtl.PurchaseOrderDtlCode);
+                    orderDtls.Add(purchaseOrderDtl);
                 }
             }
             DateTime now = DateTime.Now;
-            List<SourceList> sourceLists = new List<SourceList>();
+            List<SourceList> sourceLists = new List<SourceList>(); //這個LIST目前沒有用
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
-            //並新增該採購單明細實際出貨日期，新增出貨明細
+            //並新增該採購單明細實際出貨日期，新增出貨明細//
             foreach (var dtl in orderDtls)
             {
                 SourceList sourceList = db.SourceList.Find(dtl.SourceListID);
                 if (sourceList.UnitsInStock < dtl.Qty)
                 {
-                    //這裡應該要return 錯誤訊息，先寫個break
-                    break;
+                    //這裡要return 錯誤訊息，並且回到原頁面
+                    TempData["message"] = "<script>Swal.fire({  icon: 'error',  title: 'Oops...',  text: '庫存不足!',  footer: '<a href>Why do I have this issue?</a>'})</script>";
+                    return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
                 }
+                //扣除該料件貨源清單的庫存以及訂單數量
                 sourceList.UnitsInStock = sourceList.UnitsInStock - dtl.Qty;
-                sourceLists.Add(sourceList);
+                if (sourceList.UnitsOnOrder < dtl.Qty)
+                {
+                    sourceList.UnitsOnOrder = 0;
+                }
+                else
+                {
+                    sourceList.UnitsOnOrder = sourceList.UnitsOnOrder - dtl.Qty;
+                }
+                sourceLists.Add(sourceList);    
+                //新增出貨通知 應該在這 先檢查是否有該筆出貨通知(因為有可能分開出貨，所以同筆訂單後出貨的就不用在增加出貨通知，只要增加出貨明細即可)
+                if (db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault() == null)
+                {
+                    //新增出貨通知//感覺應該要在外面再加一個迴圈做出貨通知以及出貨明細
+                    ShipNotice shipNotice = new ShipNotice();
+                    string snId = $"SN-{now:yyyyMMdd}-";
+                    int count = db.ShipNotice.Where(x => x.ShipNoticeID.StartsWith(snId)).Count();
+                    count++;
+                    snId = $"{snId}{count:000}";
+                    shipNotice.ShipNoticeID = snId;
+                    shipNotice.PurchaseOrderID = unshipOrderDtl.PurchaseOrderID;
+                    shipNotice.ShipDate = now;
+                    shipNotice.EmployeeID = db.PurchaseOrder.Find(unshipOrderDtl.PurchaseOrderID).EmployeeID;
+                    shipNotice.CompanyCode = db.Employee.Find(shipNotice.EmployeeID).CompanyCode;
+                    shipNotice.SupplierAccountID = supplierAccount;
+                    db.ShipNotice.Add(shipNotice);
+                    //先把新增的出貨通知資料存進資料庫
+                    db.SaveChanges();
+                }
+                //新增出貨明細 保存期限先不填 
+                ShipNoticeDtl shipNoticeDtl = new ShipNoticeDtl();
+                shipNoticeDtl.ShipNoticeID = db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault().ShipNoticeID;
+                shipNoticeDtl.PurchaseOrderDtlCode = dtl.PurchaseOrderDtlCode;
+                shipNoticeDtl.ShipQty = dtl.Qty;
+                //金額為數量*單價*折扣*批量
+                shipNoticeDtl.ShipAmount = Convert.ToInt32(dtl.Qty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
+                //不管是採購單明細或是採購單有異動都要新增採購單異動總表
+                //新增採購單異動總表(明細)
+                POChanged pOChanged = new POChanged();
+                pOChanged.PurchaseOrderID = unshipOrderDtl.PurchaseOrderID;
+                pOChanged.POChangedCategoryCode = POChangedCategoryCodeShipped;
+                pOChanged.RequestDate = now;
+                pOChanged.DateRequired = dtl.DateRequired;
+                pOChanged.RequesterRole = RequesterRoleSupplier;
+                pOChanged.RequesterID = supplierAccount;
+                pOChanged.PurchaseOrderDtlCode = dtl.PurchaseOrderDtlCode;
+                pOChanged.Qty = dtl.Qty;
+                db.POChanged.Add(pOChanged);
+                db.SaveChanges();
+                //新增採購單明細出貨日期欄位以及POchangedOID欄位
                 dtl.ShipDate = now;
-            }
-            //把資料庫中的每筆資料狀態改為追蹤
-            for (int i = 0; i < orderDtls.Count(); i++)
-            {
-                db.Entry(orderDtls[i]).State = EntityState.Modified;
-                db.Entry(sourceLists[i]).State = EntityState.Modified;
+                //更新採購單明細POChangedOID欄位
+                //找出最新一筆採購單異動資料且是供應商的
+                dtl.POChangedOID = utilities.FindPOChangedOIDByDtlCode( RequesterRoleSupplier,dtl.PurchaseOrderDtlCode ); 
+                //把新出貨明細資料加進資料庫
+                db.ShipNoticeDtl.Add(shipNoticeDtl);
+                //把資料庫中的每筆訂單明細以及貨源清單資料狀態改為追蹤
+                db.Entry(dtl).State = EntityState.Modified;
+                db.Entry(sourceList).State = EntityState.Modified;
             }
             //存進資料庫
             db.SaveChanges();
+            //檢查該筆訂單所有產品是否都已經出貨，如果是，將該筆採購單狀態改為已出貨"S"
+            //預設先當作都已出貨
+            bool poCheck = true;
+            var q = from pod in db.PurchaseOrderDtl
+                    where pod.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID
+                    select pod;
+            foreach (var pod in q)
+            {
+                if (pod.ShipDate == null)
+                {
+                    //找到未出貨產品，代表尚未全部出貨
+                    poCheck = false;
+                }
+            }
+            //確認是否已全部出貨，如果是修改採購單狀態為已出貨(S)並新增一筆採購單異動資料
+            //採購單明細的POChangedOID欄位也要更新
+            if (poCheck)
+            {
+                //改採購單狀態
+                db.PurchaseOrder.Find(unshipOrderDtl.PurchaseOrderID).PurchaseOrderStatus = POChangedCategoryCodeShipped;
+                //新增採購單異動總表
+                POChanged pOChanged = new POChanged();
+                pOChanged.PurchaseOrderID = unshipOrderDtl.PurchaseOrderID;
+                pOChanged.POChangedCategoryCode = POChangedCategoryCodeShipped;
+                pOChanged.RequestDate = now;
+                pOChanged.RequesterRole = RequesterRoleSupplier;
+                pOChanged.RequesterID = supplierAccount;
+                db.POChanged.Add(pOChanged);
+                db.SaveChanges();
+                //然後把找出來的採購單異動總表最新的POChangedOID更新至採購單明細POChangedOID欄位中
+                var podQueryForPOChangedOID = from pod in db.PurchaseOrderDtl
+                                              where pod.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID
+                                              select pod;
+                int pOChangedOID = utilities.FindPOChangedOID(RequesterRoleSupplier,unshipOrderDtl.PurchaseOrderID);
+                foreach (var pod in podQueryForPOChangedOID)
+                {
+                    pod.POChangedOID = pOChangedOID;
+                    db.Entry(pod).State = EntityState.Modified;
+                }
+                db.SaveChanges();
+                TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '出貨處理成功，庫存已扣除',showConfirmButton: false,timer: 1500})</script>";
+            }
             //成功回原頁面
-            return View();
+            TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '已全部出貨',showConfirmButton: false,timer: 1500})</script>";
+            return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
+        }
+        //出貨按鈕ACTION結束在這
+
+        /// <summary>
+        /// UnshipOrderDtl的patialView方法
+        /// 改用PARTIALVIEW寫寫看
+        /// </summary>
+        /// <returns></returns>
+        //回傳PATIALVIEW給UnShipOrderDtl.cshtml
+        //這裡應該要檢查庫存不足，和已出貨的明細，並直接顯示在第一欄
+        public ActionResult GetPurchaseOrderDtlPatialView(UnshipOrderDtlViewModel unshipOrderDtlViewModel)
+        {
+            var q = from pod in db.PurchaseOrderDtl.AsEnumerable()
+                    join sl in db.SourceList on pod.SourceListID equals sl.SourceListID
+                    where pod.PurchaseOrderID == unshipOrderDtlViewModel.PurchaseOrderID
+                    select new
+                    {
+                        pod.PurchaseOrderID,
+                        pod.PurchaseOrderDtlOID,
+                        pod.PurchaseOrderDtlCode,
+                        pod.Qty,
+                        sl.UnitsInStock
+                    };
+            IList<OrderDtlItemChecked> odc = new List<OrderDtlItemChecked>();
+            foreach (var item in q)
+            {
+                OrderDtlItemChecked orderDtlItemChecked = new OrderDtlItemChecked();
+                orderDtlItemChecked.PurchaseOrderDtlOID = item.PurchaseOrderDtlOID;
+                orderDtlItemChecked.PurchaseOrderDtlCode = item.PurchaseOrderDtlCode;
+                //顯示庫存是否足夠
+                if (item.UnitsInStock >= item.Qty)
+                {
+                    orderDtlItemChecked.IsEnough = true;
+                }
+                else
+                {
+                    orderDtlItemChecked.IsEnough = false;
+                }
+                //預設為沒有勾選
+                orderDtlItemChecked.Checked = false;
+                odc.Add(orderDtlItemChecked);
+            }
+
+            IEnumerable<OrderDtlItem> od = null;
+
+            var queryOrderitem = from pod in db.PurchaseOrderDtl
+                                 join sl in db.SourceList
+                                 on pod.SourceListID equals sl.SourceListID
+                                 where pod.PurchaseOrderID == unshipOrderDtlViewModel.PurchaseOrderID
+                                 select new OrderDtlItem
+                                 {
+                                     PurchaseOrderDtlOID = pod.PurchaseOrderDtlOID,
+                                     PurchaseOrderDtlCode = pod.PurchaseOrderDtlCode,
+                                     PartName = pod.PartName,
+                                     QtyPerUnit = pod.QtyPerUnit,
+                                     TotalPartQty = pod.TotalPartQty,
+                                     Qty = pod.Qty,
+                                     SourceListID = pod.SourceListID,
+                                     CommittedArrivalDate = pod.CommittedArrivalDate,
+                                     ShipDate = pod.ShipDate,
+                                     DateRequired = pod.DateRequired,
+                                     UnitsInStock = sl.UnitsInStock
+                                 };
+            od = queryOrderitem.ToList();
+            foreach (var orderdtl in od)
+            {
+                if (orderdtl.ShipDate == null)
+                {
+                    orderdtl.Unship = true;
+                }
+                else
+                {
+                    orderdtl.Unship = false;
+                }
+            }
+            UnshipOrderDtlViewModel uodvm = new UnshipOrderDtlViewModel()
+            {
+                PurchaseOrderID = unshipOrderDtlViewModel.PurchaseOrderID,
+                orderDtlItems = od,
+                orderDtlItemCheckeds = odc
+            };
+
+            return PartialView("_GetPurchaseOrderDtlPatialView", uodvm);
         }
 
+        /// 出貨管理首頁//////////////////////////////////////////////////
         public ActionResult Index()
         {
             return View();
@@ -175,7 +367,7 @@ namespace PMSAWebMVC.Controllers
         }
         //======================================================================================
         /// <summary>
-        ///  出貨確認********************更改寫法這裡之後可能不會用，因為出貨要改為個別出貨
+        ///  出貨確認//此方法不會用因為方法寫錯，因為出貨要改為個別出貨
         /// </summary>
         /// <param name="shipNotice"></param>
         /// <returns></returns>
@@ -192,6 +384,7 @@ namespace PMSAWebMVC.Controllers
             ViewBag.amount = amount;
             return View(po);
         }
+
         //按下確定出貨之後，ajax呼叫此方法修改貨源清單庫存數量及訂單數量並且新增一筆出貨通知
         //出貨通知明細部分還沒有做
         [HttpGet]
@@ -297,35 +490,6 @@ namespace PMSAWebMVC.Controllers
             return View(po);
         }
 
-        //把訂單狀態換成文字敘述的方法
-        private string GetStatus(string purchaseOrderStatus)
-        {
-            //N = 新增,P = 送出,C = 異動中,E = 答交,D = 整筆訂單取消,S = 出貨,R = 點交,O = 逾期,Z = 結案
-            switch (purchaseOrderStatus)
-            {
-                case "N":
-                    return "新增";
-                case "P":
-                    return "送出";
-                case "C":
-                    return "異動中";
-                case "E":
-                    return "答交";
-                case "D":
-                    return "取消";
-                case "S":
-                    return "出貨";
-                case "R":
-                    return "點交";
-                case "O":
-                    return "逾期";
-                case "Z":
-                    return "結案";
-                default:
-                    return "";
-            }
-
-        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

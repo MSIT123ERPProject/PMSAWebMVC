@@ -44,63 +44,6 @@ namespace PMSAWebMVC.Controllers
             return View("~/Views/Shared/Deny.cshtml");
         }
 
-        ////多語系
-        ////此時就可以設定使用者的偏好語系於Cookie中，提供後續網站語系識別的依據。
-        ////以下在HomeController中建立一個 SetCulture Action 來處理這段事務。
-        //public ActionResult SetCulture(string culture, string returnUrl)
-        //{
-        //    // Validate input 
-        //    culture = CultureHelper.GetImplementedCulture(culture);
-
-        //    // Save culture in a cookie 
-        //    HttpCookie cookie = Request.Cookies["_culture"];
-
-        //    if (cookie != null)
-        //    {
-        //        // update cookie value 
-        //        cookie.Value = culture;
-        //    }
-        //    else
-        //    {
-        //        // create cookie value 
-        //        cookie = new HttpCookie("_culture");
-        //        cookie.Value = culture;
-        //        cookie.Expires = DateTime.Now.AddYears(1);
-        //    }
-
-        //    Response.Cookies.Add(cookie);
-        //    return RedirectToAction("Index","Home");
-        //}
-
-        ////取得語系資料
-        ////剛剛我們將語系資訊放置在Cookie中，因此在伺服端接收到Request時就可以查看該Cookie資訊，並且依據該資訊來設定調整目前的CurrentCulture及CurrentUICulture。
-        //public class MvcApplication : System.Web.HttpApplication
-        //{
-        //    protected void Application_Start()
-        //    {
-        //        AreaRegistration.RegisterAllAreas();
-        //        FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-        //        RouteConfig.RegisterRoutes(RouteTable.Routes);
-        //        BundleConfig.RegisterBundles(BundleTable.Bundles);
-        //    }
-
-        //    protected void Application_BeginRequest(Object sender, EventArgs e)
-        //    {
-        //        HttpCookie cultureCookie = Request.Cookies["_culture"];
-        //        if (cultureCookie != null)
-        //        {
-        //            // get culture name
-        //            var cultureInfoName = CultureHelper.GetImplementedCulture(cultureCookie.Value);
-
-        //            // set culture
-        //            System.Threading.Thread.CurrentThread.CurrentCulture =
-        //            new System.Globalization.CultureInfo(cultureInfoName);
-        //            System.Threading.Thread.CurrentThread.CurrentUICulture =
-        //            new System.Globalization.CultureInfo(cultureInfoName);
-
-        //        }
-        //    }
-        //}
     }
 
 }

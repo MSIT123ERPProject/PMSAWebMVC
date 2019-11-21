@@ -3,7 +3,7 @@
 @Html.HiddenFor(m => m.PurchaseOrderOID)
 @Html.HiddenFor(m => m.PurchaseRequisitionID)
 
-<table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+<table class="table table-striped table-bordered tablesaw tablesaw-stack" data-tablesaw-mode="stack" id="dataTable" cellspacing="0" style="width:100%">
     <thead>
         <tr>
             <th><input type="checkbox" name="chkAll" />@Html.DisplayNameFor(model => model.CheckedResultSetVM.FirstOrDefault().Checked)</th>

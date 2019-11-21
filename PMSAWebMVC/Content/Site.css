@@ -3,9 +3,9 @@
     letter-spacing: 1px;
 }
 
-* {
+/** {
     border-radius: 0 !important;
-}
+}*/
 
 i {
     font-size: 25px;

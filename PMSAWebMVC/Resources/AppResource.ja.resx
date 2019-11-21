@@ -297,4 +297,10 @@
   <data name="PartsMangement" xml:space="preserve">
     <value>パートの管理</value>
   </data>
+  <data name="SourceListOID" xml:space="preserve">
+    <value>ソースリストシリアル番号</value>
+  </data>
+  <data name="CreateDate" xml:space="preserve">
+    <value>アーカイブ日</value>
+  </data>
 </root>

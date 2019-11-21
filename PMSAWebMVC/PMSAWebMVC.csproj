@@ -209,9 +209,9 @@
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
     <Compile Include="Controllers\RolesAdminController.cs" />
-    <Compile Include="Controllers\ShipNoticesController.cs" />
+    <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
     <Compile Include="Controllers\SourceListsController.cs" />
-    <Compile Include="Controllers\SupplierStocksController.cs" />
+    <Compile Include="Controllers\SupplierController\SupplierStocksController.cs" />
     <Compile Include="Controllers\UsersAdminController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -395,6 +395,7 @@
     <Compile Include="Resources\AppResource.ja.Designer.cs" />
     <Compile Include="Resources\AppResource.zh-TW.Designer.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
@@ -1061,11 +1062,6 @@
     <Content Include="Views\RolesAdmin\Edit.cshtml" />
     <Content Include="Views\RolesAdmin\Index.cshtml" />
     <Content Include="Views\Shared\_LanguagePartial.cshtml" />
-    <Content Include="Views\ShipNotices\Create.cshtml" />
-    <Content Include="Views\ShipNotices\Delete.cshtml" />
-    <Content Include="Views\ShipNotices\Details.cshtml" />
-    <Content Include="Views\ShipNotices\Edit.cshtml" />
-    <Content Include="Views\ShipNotices\Index.cshtml" />
     <Content Include="Views\SourceLists\Create.cshtml" />
     <Content Include="Views\SourceLists\CreateDtl.cshtml" />
     <Content Include="Views\SourceLists\CreateDtl2.cshtml" />
@@ -1075,12 +1071,9 @@
     <Content Include="Views\SourceLists\EditDtl.cshtml" />
     <Content Include="Views\SourceLists\Index.cshtml" />
     <Content Include="Views\SourceLists\IndexDtl.cshtml" />
-    <Content Include="Views\SupplierStocks\Create.cshtml" />
-    <Content Include="Views\SupplierStocks\Delete.cshtml" />
     <Content Include="Views\SupplierStocks\Details.cshtml" />
     <Content Include="Views\SupplierStocks\Edit.cshtml" />
     <Content Include="Views\SupplierStocks\Index.cshtml" />
-    <Content Include="Views\SupplierStocks\SupplierStocksView.cshtml" />
     <Content Include="Views\UsersAdmin\Create.cshtml" />
     <Content Include="Views\UsersAdmin\Delete.cshtml" />
     <Content Include="Views\UsersAdmin\Details.cshtml" />
@@ -1093,6 +1086,14 @@
     <Content Include="Views\WarehouseInfoes\Edit.cshtml" />
     <Content Include="Views\WarehouseInfoes\Index.cshtml" />
     <Content Include="Views\Shared\Deny.cshtml" />
+    <Content Include="Views\ShipNotices\purchaseOrderSended.cshtml" />
+    <Content Include="Views\ShipNotices\shipCheck.cshtml" />
+    <Content Include="Views\ShipNotices\shipNoticeDisplay.cshtml" />
+    <Content Include="Views\ShipNotices\shipNoticeDtl.cshtml" />
+    <Content Include="Views\ShipNotices\UnshipOrderDtl.cshtml" />
+    <Content Include="Views\ShipNotices\Edit.cshtml" />
+    <Content Include="Views\ShipNotices\Index.cshtml" />
+    <Content Include="Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1102,7 +1103,6 @@
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />
     <Folder Include="Utilities\ShiYuan\" />
-    <Folder Include="Utilities\TingHuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
   </ItemGroup>

@@ -1,5 +1,4 @@
 ﻿@model PMSAWebMVC.Models.SourceList
-
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,67 +6,104 @@
 
 <h2>@PMSAWebMVC.Resources.AppResource.Edit</h2>
 
+<div class="form-horizontal">
+    <h4>@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.SourceListOID)
+    @Html.HiddenFor(model => model.SourceListID)
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.SourceListOID)
-        @Html.HiddenFor(model => model.SourceListID)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PartNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PartNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.PartNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.QtyPerUnit, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.QtyPerUnit, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.QtyPerUnit, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UnitsOnOrder, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitsOnOrder, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.UnitsOnOrder, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.UnitsInStock, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UnitsInStock, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UnitsInStock, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="@PMSAWebMVC.Resources.AppResource.save" class="btn btn-primary" />
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PartNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PartNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.PartNumber, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.QtyPerUnit, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.QtyPerUnit, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.QtyPerUnit, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UnitsOnOrder, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.UnitsOnOrder, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.UnitsOnOrder, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.UnitsInStock, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input type="text" id="idUnitsInStock" class="form-control" value=@Model.UnitsInStock />
+            @*@Html.EditorFor(model => model.UnitsInStock, new { htmlAttributes = new { @class = "form-control" } })*@
+            @Html.ValidationMessageFor(model => model.UnitsInStock, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+<p>
+    <input id="idSave" type="submit" value="存檔" class="btn btn-primary" />
+    @Html.ActionLink("回查詢頁面", "Index", null, new { @class = "btn btn-primary" })
+</p>
+<div id="message"></div>
+@section Scripts {
+    <script>
+        $("#idSave").click(function () {
+            Swal.fire({
+                title: '確定修改此筆貨源清單庫存?',
+                text: '修改後可再修改!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '確定修改',
+                cancelButtonText:'取消',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: `@Url.Action("changeUnitsInStock", "SupplierStocks")`,
+                        type: "GET",
+                        //dataType: "json",
+                        data: {
+                            UnitsInStock: $("#idUnitsInStock").val(),
+                            SourceListID:`@Model.SourceListID`
+                        }
+                    }).done(function (result) {
+                        //AJAX 接收的變數為一個物件，裡面的屬性名稱要寫好，並在這裡正確寫出來，JAVASCRIPT才會知道你要比的是甚麼
+                        if (result.value == true) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '修改成功',
+                                showConfirmButton: true,
+                                timer: 1500
+                            });
+                        }
+                        else {
+                            $("#message").html(result);
+                        }
+                        }).fail(function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: '處理修改時發生錯誤',
+                                footer: ""
+                            });
+                        });
+                }
+            })
+        });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
 }
-    <div>
-        @Html.ActionLink(PMSAWebMVC.Resources.AppResource.BackToList, "Index",null, new { @class = "btn btn-primary" })
-    </div>
-
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }

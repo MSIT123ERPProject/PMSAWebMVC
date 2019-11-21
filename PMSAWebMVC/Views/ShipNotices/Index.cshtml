@@ -1,134 +1,188 @@
 ﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseOrder>
 
 @{
+    /**/
+
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@*已出貨以及為出貨按鈕還沒做出來*@
-
-
 @Html.Raw(ViewBag.failMessage)
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>
+    <h2>@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h2>
     <!-- Topbar Search -->
-    @using (Html.BeginForm("Index", "ShipNotices", FormMethod.Get, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
-    {
-        <div class="input-group">
-            <input name="PurchaseOrderID" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMSAWebMVC.Resources.AppResource.PurchaseOrderID aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-        <div class="input-group">
-            @*<select id="shipment" class="form-control bg-light border-0 small">
-                <option id="shipped">已出貨</option>
-                <option id="unship">已答交</option>
-                <option id="sended">已送出</option>
-            </select>*@
-            <input name="PurchaseOrderStatus" id="idSearh2" type="text" class="form-control bg-light border-0 small" placeholder=@PMSAWebMVC.Resources.AppResource.status . aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-        @*<span>
-                <div class="input-group">
-                    <select id="shipment">
-                        <option id="shipped" name="P">已答交</option>
-                        <option id="unship">未出貨</option>
-                    </select>
+    @*@using (Html.BeginForm("Index", "ShipNotices", FormMethod.Get, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
+        {
+            <div class="input-group">
+                <input name="PurchaseOrderID" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMS_Inventory_huan.Resources.AppResource.PurchaseOrderID aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
                 </div>
-            </span>*@
-
-
-    }
-</nav>
-
-<nav>
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">@PMSAWebMVC.Resources.AppResource.ShipNotice</h6>
-        </div>
-        <div>
-
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.PurchaseOrderID)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ReceiverName)
-                            </th>
-
-                            <th>
-                                @Html.DisplayNameFor(model => model.ReceiverTel)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ReceiverMobile)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ReceiptAddress)
-                            </th>
-                            <th>
-                                @PMSAWebMVC.Resources.AppResource.Edit
-                            </th>
-                        </tr>
-                    </thead>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(model => item.PurchaseOrderID)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.ReceiverName)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(model => item.ReceiverTel)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.ReceiverMobile)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.ReceiptAddress)
-                            </td>
-                            <td>
-                                <a class="btn btn-primary" href="@Url.Action( "Edit", new { id = item.PurchaseOrderID })"><i class="fa fa-edit">@PMSAWebMVC.Resources.AppResource.Ship</i></a>|
-                                <a class="btn btn-info" href="@Url.Action("Details", new { id = item.PurchaseOrderID })"><i class="fa fa-tasks">@PMSAWebMVC.Resources.AppResource.Details</i></a>
-                                @*@Html.ActionLink(PMSAWebMVC.Resources.AppResource.Ship, "Edit", new { id = item.PurchaseOrderID }, new { @class = "btn btn-primary" }) |
-                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.Details, "Details", new { id = item.PurchaseOrderID }, new { @class = "btn btn-primary" })*@
-                                @*@Html.ActionLink(PMSAWebMVC.Resources.AppResource.Delete, "Delete", new { id = item.PurchaseOrderID })*@
-                            </td>
-                        </tr>
-                    }
-
-                </table>
             </div>
+            <div class="input-group">
+                <input name="PurchaseOrderStatus" id="idSearh2" type="text" class="form-control bg-light border-0 small" placeholder=@PMS_Inventory_huan.Resources.AppResource.status . aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        }*@
+
+    <div  class="col-sm-auto">
+        @Html.DropDownList("selectlist", new SelectList(new[]
+     {
+        new SelectListItem { Text = "未出貨", Value = "E",Selected=true },
+        new SelectListItem { Text = "未答交",Value="P",Selected=false },
+        new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
+        }, "Value", "Text"),
+     new { id = "idStatus", @class = "form-control" }
+     )
+    </div>
+    @*=================================================================*@
+    @*這裡想加一個採購單編號的下拉式選單還沒成功*@
+    @*<div id="idOrder" class="col-sm-auto">
+        @Html.DropDownListFor(model=>model.Where(x=>x.PurchaseOrderStatus=="E"), new { id = "idStatus", @class = "form-control" })
+    </div>*@
+@*=============================================================================================*@
+</nav>
+@*dropdownlist取得值得方法*@
+@*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
+
+<!-- DataTables Example -->
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        採購單
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        @*<th>採購單狀態</th>*@
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>
+                        @*<th>採購單編號</th>*@
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>
+                        @*<th>收貨人名稱</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
+                        @*<th>收貨人電話</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>
+                        @*<th>收貨人手機</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>
+                        @*<th>收貨人地址</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        @*<th>採購單狀態</th>*@
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>
+                        @*<th>採購單編號</th>*@
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>
+                        @*<th>收貨人名稱</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
+                        @*<th>收貨人電話</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>
+                        @*<th>收貨人手機</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>
+                        @*<th>收貨人地址</th>*@
+                        <th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
-</nav>
+    <div class="card-footer small text-muted"></div>
+</div>
+
 @section scripts{
-    @*想寫AJAX傳直 失敗了QQ*@
     <script>
-                    $(document).ready(function () {
-                        $("#dataTable").DataTable();
-                        $("#shipment").bind("change", function () {
-                          @Url.Action("Index","ShipNotices")
-                                     });
-                    });
-        function shipment() {
+        $(document).ready(function () {
+            shipDatatable();
+            $("#idStatus").change(function () {
+                shipDatatable();
+            });
+        });
+
+        //用來取得下拉式選單所選取的採購單編號
+        @*function idOrder() {
+            $.ajax({
+                url: `@Url.Action("unshipOrderDtl","ShipNotices")`,
+                type: "GET",
+                data: { id: $("#idStatus option:selected").val() }
+            }).done(function (result) {
+                $("#idOrder").empty();
+                $("#idOrder").append($(`<option></option>`).val('').text('請選擇'));
+                $.each(result, function (index, item) {
+                    $("#idOrder").append($(`<option></option>`).val(item.value).text(item.text));
+                });
+                }).fail(function () {
+                    alert("idOrder ajax is fail");
+                });
+        }*@
+        //顯示選取的採購單狀態的所有採購單
+        function shipDatatable() {
+            if ($.fn.dataTable.isDataTable("#dataTable")) {
+                $("#dataTable").DataTable().destroy();
+            }
+             $("#dataTable").DataTable({
+                    "ajax": {
+                      "url": `@Url.Action("GetPurchaseOrderList","ShipNotices")`,
+                     "type" : "get",
+                     "dataType" :"json",
+                     "data": { "PurchaseOrderStatus": $('#idStatus option:selected').val() },
+                        "contentType": "application/json;charset=utf-8",
+                        "cache": true,
+                              },
+                "columns": [
+                    { "data": "PurchaseOrderStatus" },
+                    {"data" : "PurchaseOrderID" },
+                    { "data": "ReceiverName" },
+                    { "data": "ReceiverTel" },
+                    { "data": "ReceiverMobile" },
+                    { "data": "ReceiptAddress" },
+                    {       /*按鈕程式碼想寫在這，但失敗了*/   /* 20191107 09:12 成功了，原因在於return字串沒有正確的打好，必須注意雙引號以及單引號  */
+                        "data": "PurchaseOrderID",
+                        "render": function (data, type, row, meta) {
+                            if (row.PurchaseOrderStatus == "P") {
+                                /*未答交*/
+                                   return '<a class="btn btn-primary"'+' href="' + "@Url.Action( "purchaseOrderSended","ShipNotices")" + "?id=" + data + '">檢視未答交</a>';
+                             }
+                             else if(row.PurchaseOrderStatus == "E") {
+                                /*未出貨按鈕 檢視該採購單所有的產品，並可以選擇出貨那些產品*/
+                                return '<a class="btn btn-primary"'+' href="' + "@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data + '">檢視未出貨</a>';
+                            }
+                            else {
+                                /*已出貨*/
+                                return '<a class="btn btn-primary" href="' + "@Url.Action( "Edits","ShipNotices")"+"?id=" + data + '">檢視已出貨</a>';
+                            }
+                        }
+                    }
+                 ],
+                 "lengthMenu":[[10,25,50,75,100,-1],[10,25,50,75,100,"All"]],
+                "order": [[1,"desc"]],
+            });
+            //$.fn.dataTable.ext.errMode = 'throw';
+        }
+        /*此方法目前沒用到*/
+        function shipmentStatus() {
             $.ajax({
                 url: "@Url.Action("Index","ShipNotices")",
-                data: JSON.stringify({purchaseOrderStatus = }),
-            });
+                type: "POST",
+                data: { "PurchaseOrderStatus": $('#idStatus option:selected').val() },
+            }).done(function () {
+                Swal.fire( '搜尋成功','以下為查詢結果','success')
+            }).fail(function () {
+                Swal.fire({
+                       type: 'error',
+                       title: '查詢失敗',
+                       text: '查無訂單資料',
+                         })
+            })
         }
     </script>
 

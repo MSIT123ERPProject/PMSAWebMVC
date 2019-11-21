@@ -24,13 +24,16 @@ namespace PMSAWebMVC.Controllers.SupplierController
         //highChart
         public ActionResult SupplierHomePage()
         {
+            return View();
+        }
+        public ActionResult GetData() {
             var q = from sl in db.SourceList
                     select new
                     {
                         sl.PartNumber,
                         sl.SafetyQty
                     };
-            return Json(q,JsonRequestBehavior.AllowGet);
+            return Json(q, JsonRequestBehavior.AllowGet);
         }
     }
 }

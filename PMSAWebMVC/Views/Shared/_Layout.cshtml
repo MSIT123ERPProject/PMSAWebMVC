@@ -18,146 +18,147 @@
     @*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
 </head>
 <body id="page-top">
-
     <div id="wrapper">
+        <button class="btn btn-link btn-sm text-white" id="sidebarToggleMobile" href="#" style="position:absolute; top: 10px;">
+            <i class="fas fa-bars"></i>
+        </button>
         <!-- Sidebar -->
-        <div class="sidebar navbar-nav navbar-light mr-5" style="z-index: 999999;">
+        <div class="sidebar-content sidebar navbar-nav navbar-light" style="z-index:9999">
             <!-- Navbar -->
-            <div class="position-fixed navbar navbar-expand navbar-dark static-top p-0">
-                <div class="d-block">
-                    <button class="ml-3 mt-2 navbtn btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#" style="position:absolute; top: 10px;">
-                        <i class="fas fa-bars"></i>
-                    </button>
+            <nav class="sidebar-wrapper navbar navbar-expand navbar-dark sidebar-menu sidebar nav">
+                <div class="sidebar-menu">
+                    <ul>
+                        <li>
+                            <button class="navbtn btn btn-link btn-sm text-white" id="sidebarToggle" href="#" style="position:absolute; top: 10px;">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div class="sidebar-brand nav-item" style="height:40px;">
+                                <a class="navbar-brand d-none" id="navbrand" href="@Url.Action("Index", "Home")"><i class="fas fa-bicycle"></i> @PMSAWebMVC.Resources.AppResource.chokobo</a>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div id="userwrap">
+                                    <div style="display:flex; flex-direction:row !important;">
+                                        <div style="width:40px;">
+                                            <i class="fas fa-user-circle fa-fw pb-2" style="font-size: 40px;margin-top:10px;"></i>
+                                        </div>
+                                        @if (Request.IsAuthenticated)
+                                        {
+                                            <div class="userwrap d-none" style="margin-left:10px;">
+                                                <span style="display:block;">@User.Identity.GetTitle()</span>
+                                                <span style="display:block;">@User.Identity.GetRealName()</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="sidebar-submenu dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">基本資料設定</a>
+                                <a class="dropdown-item" href="#">重設密碼</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" style="font-weight: 600;letter-spacing:2px;" href="@Url.Action( "LogOff", "Account")"><i class="fas fa-power-off"></i>登出</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Index", "Home")" class="nav-link">
+                                <i class="fas fa-fw fa-tachometer-alt"></i>
+                                <span>首頁</span>
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Supplier"))
+                        {
+                            <li class="sidebar-dropdown nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-fw fa-folder"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
+                                </a>
+                                <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                    @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h6>*@
+                                    @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", null, new { @class = "dropdown-item" })
+                                    @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", null, new { @class = "dropdown-item" })
+                                    @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
+                                </div>
+                            </li>
+                        }
+                        @if (User.IsInRole("Warehouse"))
+                        {
+                            <li class="sidebar-dropdown nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-fw fa-folder"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.Inventory</span>
+                                </a>
+                                <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                    @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.Inventory</h6>*@
+                                    <a class="dropdown-item" href="@Url.Action("Index", "WarehouseInfoes")">@PMSAWebMVC.Resources.AppResource.WarehouseInfoes</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "InventoryDtls")">@PMSAWebMVC.Resources.AppResource.InventoryDtls</a>
+                                </div>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="sidebar-dropdown nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-fw fa-folder"></i>
+                                    <span>管理員</span>
+                                </a>
+                                <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                    @*<h6 class="dropdown-header">管理員</h6>*@
+                                    <a class="dropdown-item" href="@Url.Action("Create", "RolesAdmin")">角色管理</a>
+                                    <a class="dropdown-item" href="@Url.Action("Create", "UsersAdmin")">採購員帳號管理</a>
+                                </div>
+                            </li>
+                        }
+                        @if (User.IsInRole("Buyer"))
+                        {
+                            <li class="sidebar-dropdown nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-fw fa-folder"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.PartsMangement</span>
+                                </a>
+                                <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                    @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.PartsMangement</h6>*@
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Parts")">@PMSAWebMVC.Resources.AppResource.Parts</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "Products")">@PMSAWebMVC.Resources.AppResource.Products</a>
+                                </div>
+                            </li>
+                        }
+                        @if (User.IsInRole("Buyer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "SourceLists")">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>貨源清單</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Buyer") || User.IsInRole("ProductionControl"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "PurchaseRequisitions")">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>請購單</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Buyer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "PurchaseOrders")">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>採購單</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            @Html.Partial("_LanguagePartial")
+                        </li>
+                    </ul>
                 </div>
-                <ul class="sidebar nav p-0 flex-column">
-                    <li class="nav-link dropdown d-flex no-arrow" style="margin-left: 80px; margin-top: 15px;">
-                        @Html.ActionLink(PMSAWebMVC.Resources.AppResource.chokobo, "Index", "Home", new { area = "" }, new { @class = "navbar-brand d-none", @id = "navbrand" })
-                    </li>
-                    <li class="nav-item no-arrow alertlink d-flex align-items-center justify-content-around mt-5 ml-2 w-75">
-                        <a class="nav-link d-block p-0 m-1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <span class="badge badge-danger">9+</span>
-                        </a>
-                        <a class="nav-link d-block p-0 m-1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-envelope fa-fw"></i>
-                            <span class="badge badge-danger">7</span>
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle d-flex" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user-circle fa-fw pb-2" style="font-size: 50px;"></i>
-                            <div id="userwrap" class="userwrap d-none">
-                                @if (Request.IsAuthenticated)
-                                {
-                                    <span class="d-block">@User.Identity.GetTitle()</span>
-                                    <span class="d-block">@User.Identity.GetRealName()</span>
-                                }
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">基本資料設定</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="@Url.Action( "LogOff", "Account")" data-toggle="modal" data-target="#logoutModal">登出</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a href="@Url.Action("Index", "Home")" class="nav-link">
-                            <i class="fas fa-fw fa-tachometer-alt"></i>
-                            <span>首頁</span>
-                        </a>
-                    </li>
-                    @if (User.IsInRole("Supplier"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-fw fa-folder"></i>
-                                <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                                @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h6>*@
-                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", null, new { @class = "dropdown-item" })
-                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", null, new { @class = "dropdown-item" })
-                                @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
-                            </div>
-                        </li>
-                    }
-                    @if (User.IsInRole("Warehouse"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-fw fa-folder"></i>
-                                <span>@PMSAWebMVC.Resources.AppResource.Inventory</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                                @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.Inventory</h6>*@
-                                <a class="dropdown-item" href="@Url.Action("Index", "WarehouseInfoes")">@PMSAWebMVC.Resources.AppResource.WarehouseInfoes</a>
-                                <a class="dropdown-item" href="@Url.Action("Index", "InventoryDtls")">@PMSAWebMVC.Resources.AppResource.InventoryDtls</a>
-                            </div>
-                        </li>
-                    }
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-fw fa-folder"></i>
-                                <span>管理員</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                                @*<h6 class="dropdown-header">管理員</h6>*@
-                                <a class="dropdown-item" href="@Url.Action("Create", "RolesAdmin")">角色管理</a>
-                                <a class="dropdown-item" href="@Url.Action("Create", "UsersAdmin")">採購員帳號管理</a>
-                            </div>
-                        </li>
-                    }
-                    @if (User.IsInRole("Buyer"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-fw fa-folder"></i>
-                                <span>@PMSAWebMVC.Resources.AppResource.PartsMangement</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-                                @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.PartsMangement</h6>*@
-                                <a class="dropdown-item" href="@Url.Action("Index", "Parts")">@PMSAWebMVC.Resources.AppResource.Parts</a>
-                                <a class="dropdown-item" href="@Url.Action("Index", "Products")">@PMSAWebMVC.Resources.AppResource.Products</a>
-                            </div>
-                        </li>
-                    }
-                    @if (User.IsInRole("Buyer"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "SourceLists")">
-                                <i class="fas fa-fw fa-table"></i>
-                                <span>貨源清單</span>
-                            </a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Buyer") || User.IsInRole("ProductionControl"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "PurchaseRequisitions")">
-                                <i class="fas fa-fw fa-table"></i>
-                                <span>請購單</span>
-                            </a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Buyer"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "PurchaseOrders")">
-                                <i class="fas fa-fw fa-table"></i>
-                                <span>採購單</span>
-                            </a>
-                        </li>
-                    }
-                    <li>
-                        @Html.Partial("_LanguagePartial")
-                    </li>
-                </ul>
-            </div>
+            </nav>
         </div>
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column mr-2">
+        <div id="content-wrapper" class="d-flex flex-column mr-3">
             <div class="container-fluid p-3">
                 <!-- Breadcrumbs-->
                 <!-- Icon Cards-->
@@ -165,14 +166,6 @@
                 @RenderBody()
             </div>
             <!-- /.container-fluid -->
-            <!-- Sticky Footer -->
-            <footer class="sticky-footer">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>@DateTime.Now.Year &copy; @PMSAWebMVC.Resources.AppResource.chokobo</span>
-                    </div>
-                </div>
-            </footer>
         </div>
         <!-- /.content-wrapper -->
     </div>
@@ -181,24 +174,6 @@
     <a class="scroll-to-top" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">確定登出?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">按下登出按鈕以登出。</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">取消</button>
-                    <a class="btn btn-primary" href="@Url.Action("LogOff", "Account")">登出</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

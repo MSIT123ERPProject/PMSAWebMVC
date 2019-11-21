@@ -26,11 +26,12 @@ namespace PMSAWebMVC
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/fontawesome-all.css",
-                      "~/Content/sbTemplate/sb-admin.css",
+                      "~/Content/sbTemplate/mdb.min.css",
                       "~/Content/Site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/allpluginjs").Include(
                         "~/Scripts/jquery.easing.js",
+                        "~/Scripts/sbTemplate/mdb.js",
                         "~/Scripts/sbTemplate/sb-admin.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqDataTables").Include(

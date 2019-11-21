@@ -16,11 +16,12 @@
     <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
 </address>
 
+
 <div class="row">
     <div class="col-sm-6">
         <div class="form-group">
             <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" />
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" data-toggle="datetimepicker"/>
                 <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                 </div>
@@ -28,6 +29,9 @@
         </div>
     </div>
 </div>
+
+<input type="text" id="pickadate-datepicker" class="form-control datetimepicker-input mb-0" />
+
 
 <table id="example" class="table table-striped tablesaw tablesaw-stack" data-tablesaw-mode="stack" style="width:100%">
     <thead>
@@ -86,6 +90,10 @@
         $(document).ready(function () {
             $('#example').DataTable();
             $('#datetimepicker1').datetimepicker();
+            $('#pickadate-datepicker').pickadate({
+                format: 'yyyy/mm/dd',
+                formatSubmit: 'yyyy/mm/dd'
+            })
         });
     </script>
 

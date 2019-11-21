@@ -56,13 +56,13 @@ namespace PMSAWebMVC.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult SetLanguage(string cultureName)
+        public ActionResult SetLanguage(string cultureName, string returnUrl)
         {
             HttpCookie c = new HttpCookie(cookieName);
             c.Values.Add(cookieKey, cultureName);
             c.Expires.AddDays(30);
             Response.Cookies.Add(c);
-            return RedirectToAction("Index", "Home");
+            return Redirect(returnUrl);
         }
 
         // 採購系統 ====================================================================================================================

@@ -17,6 +17,13 @@ namespace PMSAWebMVC.Controllers
             filterContext.HttpContext.Response.Cache.SetNoServerCaching();
             filterContext.HttpContext.Response.Cache.SetNoStore();
 
+            base.OnResultExecuting(filterContext);
+        }
+
+        protected string cookieName = "PMSAWebMVC";
+        protected string cookieKey = "CultureInfo";
+        protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
+        {
             string cultureName = "";
             HttpCookie cultureCookie = Request.Cookies[cookieName];
             if (cultureCookie != null)
@@ -25,23 +32,16 @@ namespace PMSAWebMVC.Controllers
             }
             else
             {
+                //修正 cultureName null 問題
                 cultureName = Request.UserLanguages != null && Request.UserLanguages.Length > 0 ? Request.UserLanguages[0] : "";
                 HttpCookie c = new HttpCookie("PMSAWebMVC");
                 c.Values.Add("CultureInfo", cultureName);
                 c.Expires.AddDays(30);
                 Response.Cookies.Add(c);
             }
+
             Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(cultureName);
-           
 
-
-            base.OnResultExecuting(filterContext);
-        }
-
-        protected string cookieName = "PMSAWebMVC";
-        protected string cookieKey = "CultureInfo";
-        protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
-        {
             return base.BeginExecuteCore(callback, state);
         }
     }

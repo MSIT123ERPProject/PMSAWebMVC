@@ -8,10 +8,7 @@
 <h2>出貨明細</h2>
 @if (TempData["message"] != null)
 {
-    <div class="alert alert-warning" id="warning">
-        <a href="#" class="close" data-dismiss="alert">&times;</a>
         @Html.Raw(TempData["message"])
-    </div>
 }
 @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
 {

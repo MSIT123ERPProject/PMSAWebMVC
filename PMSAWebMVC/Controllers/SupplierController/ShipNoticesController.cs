@@ -1,5 +1,6 @@
 ﻿using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.Utilities.TingHuan;
 using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
 using System.Collections.Generic;
@@ -23,8 +24,10 @@ namespace PMSAWebMVC.Controllers
         string supplierCode;
         string POChangedCategoryCodeShipped;
         string RequesterRoleSupplier;
+        ShipNoticesUtilities utilities = new ShipNoticesUtilities();
         public ShipNoticesController()
         {
+            
             db = new PMSAEntities();
             supplierCode = "S00001";
             supplierAccount = "SE00001";
@@ -99,7 +102,7 @@ namespace PMSAWebMVC.Controllers
                 }
             }
             DateTime now = DateTime.Now;
-            List<SourceList> sourceLists = new List<SourceList>();
+            List<SourceList> sourceLists = new List<SourceList>(); //這個LIST目前沒有用
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
             //並新增該採購單明細實際出貨日期，新增出貨明細//
             foreach (var dtl in orderDtls)
@@ -121,8 +124,7 @@ namespace PMSAWebMVC.Controllers
                 {
                     sourceList.UnitsOnOrder = sourceList.UnitsOnOrder - dtl.Qty;
                 }
-                sourceLists.Add(sourceList);
-                dtl.ShipDate = now;
+                sourceLists.Add(sourceList);    
                 //新增出貨通知 應該在這 先檢查是否有該筆出貨通知(因為有可能分開出貨，所以同筆訂單後出貨的就不用在增加出貨通知，只要增加出貨明細即可)
                 if (db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault() == null)
                 {
@@ -149,9 +151,27 @@ namespace PMSAWebMVC.Controllers
                 shipNoticeDtl.ShipQty = dtl.Qty;
                 //金額為數量*單價*折扣*批量
                 shipNoticeDtl.ShipAmount = Convert.ToInt32(dtl.Qty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
+                //不管是採購單明細或是採購單有異動都要新增採購單異動總表
+                //新增採購單異動總表(明細)
+                POChanged pOChanged = new POChanged();
+                pOChanged.PurchaseOrderID = unshipOrderDtl.PurchaseOrderID;
+                pOChanged.POChangedCategoryCode = POChangedCategoryCodeShipped;
+                pOChanged.RequestDate = now;
+                pOChanged.DateRequired = dtl.DateRequired;
+                pOChanged.RequesterRole = RequesterRoleSupplier;
+                pOChanged.RequesterID = supplierAccount;
+                pOChanged.PurchaseOrderDtlCode = dtl.PurchaseOrderDtlCode;
+                pOChanged.Qty = dtl.Qty;
+                db.POChanged.Add(pOChanged);
+                db.SaveChanges();
+                //新增採購單明細出貨日期欄位以及POchangedOID欄位
+                dtl.ShipDate = now;
+                //更新採購單明細POChangedOID欄位
+                //找出最新一筆採購單異動資料且是供應商的
+                dtl.POChangedOID = utilities.FindPOChangedOIDByDtlCode( RequesterRoleSupplier,dtl.PurchaseOrderDtlCode ); 
                 //把新出貨明細資料加進資料庫
                 db.ShipNoticeDtl.Add(shipNoticeDtl);
-                //把資料庫中的每筆訂單以及貨源清單資料狀態改為追蹤
+                //把資料庫中的每筆訂單明細以及貨源清單資料狀態改為追蹤
                 db.Entry(dtl).State = EntityState.Modified;
                 db.Entry(sourceList).State = EntityState.Modified;
             }
@@ -186,26 +206,11 @@ namespace PMSAWebMVC.Controllers
                 pOChanged.RequesterID = supplierAccount;
                 db.POChanged.Add(pOChanged);
                 db.SaveChanges();
-                //更新採購單明細POChangedOID欄位
-                //2019 11/20 23:06 下方註解掉的程式碼不知道為甚麼會發生無法辨識此方法，無法放入站存區，所以只好分開來寫
-                //int a = db.POChanged.Last(x => (x.RequesterRole == RequesterRoleSupplier) && (x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID)).POChangedOID;
-                
-                //先找出最新一筆採購單異動資料且是供應商的
-                var poc = db.POChanged.Where(x => (x.RequesterRole == RequesterRoleSupplier) && (x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID));
-                DateTime dt = poc.FirstOrDefault().RequestDate;
-                int pOChangedOID = poc.FirstOrDefault().POChangedOID;
-                foreach (var pocD in poc)
-                {
-                    if (pocD.RequestDate > dt)
-                    {
-                        dt = pocD.RequestDate;
-                        pOChangedOID = pocD.POChangedOID;
-                    }
-                }
                 //然後把找出來的採購單異動總表最新的POChangedOID更新至採購單明細POChangedOID欄位中
                 var podQueryForPOChangedOID = from pod in db.PurchaseOrderDtl
                                               where pod.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID
                                               select pod;
+                int pOChangedOID = utilities.FindPOChangedOID(RequesterRoleSupplier,unshipOrderDtl.PurchaseOrderID);
                 foreach (var pod in podQueryForPOChangedOID)
                 {
                     pod.POChangedOID = pOChangedOID;

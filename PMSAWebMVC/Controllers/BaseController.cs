@@ -32,16 +32,16 @@ namespace PMSAWebMVC.Controllers
             }
             else
             {
-                cultureName = Request.UserLanguages != null && Request.UserLanguages.Length > 0 ? Request.UserLanguages[0] : null;
+                //修正 cultureName null 問題
+                cultureName = Request.UserLanguages != null && Request.UserLanguages.Length > 0 ? Request.UserLanguages[0] : "";
                 HttpCookie c = new HttpCookie("PMSAWebMVC");
                 c.Values.Add("CultureInfo", cultureName);
                 c.Expires.AddDays(30);
                 Response.Cookies.Add(c);
             }
-            if (cultureName == "" || cultureName == null) {
-                cultureName = "zh-TW";
-            }
+
             Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(cultureName);
+
             return base.BeginExecuteCore(callback, state);
         }
     }

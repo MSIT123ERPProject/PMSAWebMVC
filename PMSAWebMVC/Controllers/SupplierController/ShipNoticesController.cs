@@ -212,11 +212,13 @@ namespace PMSAWebMVC.Controllers
                     db.Entry(pod).State = EntityState.Modified;
                 }
                 db.SaveChanges();
+                TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '出貨處理成功，庫存已扣除',showConfirmButton: false,timer: 1500})</script>";
             }
             //成功回原頁面
-            TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '出貨處理成功，庫存已扣除',showConfirmButton: false,timer: 1500})</script>";
+            TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '已全部出貨',showConfirmButton: false,timer: 1500})</script>";
             return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
         }
+        //出貨按鈕ACTION結束在這
 
         /// <summary>
         /// UnshipOrderDtl的patialView方法

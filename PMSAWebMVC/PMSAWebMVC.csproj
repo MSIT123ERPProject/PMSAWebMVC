@@ -196,6 +196,9 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Common\HtmlHelperExtensions.cs" />
+    <Compile Include="Common\IdentityExtensions.cs" />
+    <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -605,6 +608,8 @@
     <Content Include="Content\sweetAlert\sweetalert2.min.css" />
     <Content Include="Content\tablesaw\dependencies\qunit.css" />
     <Content Include="Content\tablesaw\tablesaw.css" />
+    <Content Include="Content\tempusdominus\tempusdominus-bootstrap-4.css" />
+    <Content Include="Content\tempusdominus\tempusdominus-bootstrap-4.min.css" />
     <Content Include="Content\v4-shims.css" />
     <Content Include="Content\v4-shims.min.css" />
     <Content Include="Controls\RESXManager\FileManagement.ascx" />
@@ -785,6 +790,9 @@
     <Content Include="Scripts\DataTables\dataTables.foundation.min.js" />
     <Content Include="Scripts\DataTables\dataTables.jqueryui.js" />
     <Content Include="Scripts\DataTables\dataTables.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\i18n\jquery.dataTables.en-US.js" />
+    <Content Include="Scripts\DataTables\i18n\jquery.dataTables.ja.js" />
+    <Content Include="Scripts\DataTables\i18n\jquery.dataTables.zh-TW.js" />
     <Content Include="Scripts\DataTables\dataTables.keyTable.js" />
     <Content Include="Scripts\DataTables\dataTables.keyTable.min.js" />
     <Content Include="Scripts\DataTables\dataTables.material.js" />
@@ -884,7 +892,12 @@
     <Content Include="Content\MDB\font\roboto\Roboto-Thin.ttf" />
     <Content Include="Content\MDB\font\roboto\Roboto-Thin.woff" />
     <Content Include="Content\MDB\font\roboto\Roboto-Thin.woff2" />
+<<<<<<< HEAD
 >>>>>>> f084808d9787e1ba2f78f4723fcde67189306d74
+=======
+    <Content Include="Scripts\DataTables\i18n\Japanese.json" />
+    <Content Include="Scripts\DataTables\i18n\English.json" />
+>>>>>>> master
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -949,6 +962,11 @@
     <Content Include="Scripts\tablesaw\tablesaw-init.js" />
     <Content Include="Scripts\tablesaw\tablesaw.jquery.js" />
     <Content Include="Scripts\tablesaw\tablesaw.js" />
+    <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.ja.js" />
+    <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.en-US.js" />
+    <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.zh-TW.js" />
+    <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.js" />
+    <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.min.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
@@ -1087,7 +1105,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="assets\parts\" />
     <Folder Include="assets\products\" />
-    <Folder Include="Common\" />
     <Folder Include="Services\" />
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />

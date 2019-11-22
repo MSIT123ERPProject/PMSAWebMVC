@@ -159,7 +159,7 @@
                             }
                             else {
                                 /*已出貨*/
-                                return '<a class="btn btn-primary" href="' + "@Url.Action( "Edits","ShipNotices")"+"?id=" + data + '">檢視已出貨</a>';
+                                return '<a class="btn btn-primary"'+' href="' + "@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data + '">檢視已出貨</a>';
                             }
                         }
                     }
@@ -167,24 +167,9 @@
                  "lengthMenu":[[10,25,50,75,100,-1],[10,25,50,75,100,"All"]],
                 "order": [[1,"desc"]],
             });
-            //$.fn.dataTable.ext.errMode = 'throw';
+            $.fn.dataTable.ext.errMode = 'throw';
         }
-        /*此方法目前沒用到*/
-        function shipmentStatus() {
-            $.ajax({
-                url: "@Url.Action("Index","ShipNotices")",
-                type: "POST",
-                data: { "PurchaseOrderStatus": $('#idStatus option:selected').val() },
-            }).done(function () {
-                Swal.fire( '搜尋成功','以下為查詢結果','success')
-            }).fail(function () {
-                Swal.fire({
-                       type: 'error',
-                       title: '查詢失敗',
-                       text: '查無訂單資料',
-                         })
-            })
-        }
+      
     </script>
 
 }

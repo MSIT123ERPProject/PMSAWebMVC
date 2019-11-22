@@ -1,5 +1,5 @@
-﻿using PMSAWebMVC.Models;
-using PMSAWebMVC.Controllers;
+﻿using PMSAWebMVC.Controllers;
+using PMSAWebMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -91,16 +91,30 @@ namespace PMSAWebMVC.Controllers
             int? UnitsInStock = SourceList.UnitsInStock;
             if (UnitsInStock == null || UnitsInStock <= 0)
             {
-                return Json( "<script>Swal.fire({ title: '庫存數量不得小於零', showClass: {  popup: 'animated fadeInDown faster' }, hideClass:      {      popup: 'animated fadeOutUp faster' }    })</script>" , JsonRequestBehavior.AllowGet);
+                return Json("<script>Swal.fire({ title: '庫存數量不得小於零', showClass: {  popup: 'animated fadeInDown faster' }, hideClass:      {      popup: 'animated fadeOutUp faster' }    })</script>", JsonRequestBehavior.AllowGet);
             }
             SourceList a = db.SourceList.Find(SourceList.SourceListID);
-            if ( a== null ) {
+            if (a == null)
+            {
                 return HttpNotFound();
             }
             a.UnitsInStock = (int)UnitsInStock;
-            db.Entry(a).Property(ap=>ap.UnitsInStock).IsModified =true;
+            db.Entry(a).Property(ap => ap.UnitsInStock).IsModified = true;
             db.SaveChanges();
             return Json(new { value = true }, JsonRequestBehavior.AllowGet);
+        }
+        //sweetalert2 修改視窗用ajax方法//Index的VIEW資料無法進到這裡
+        [HttpPut]
+        public JsonResult UpdateStock([Bind(Include = "UnitsInStock,PartNumber,SourceListOID,SourceListID")] SourceList SourceList)
+        {
+            if (SourceList.SourceListID ==null) {
+                return Json("savefail", JsonRequestBehavior.AllowGet);
+            }
+           SourceList sourceList= db.SourceList.Find(SourceList.SourceListID);
+            sourceList.UnitsInStock = SourceList.UnitsInStock;
+            db.Entry(sourceList).State = EntityState.Modified;
+            db.SaveChanges();
+            return Json("saved",JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {

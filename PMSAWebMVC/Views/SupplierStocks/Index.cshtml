@@ -3,36 +3,9 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!-- Topbar Search -->
-@*舊的搜尋功能*@
-@*@using (Html.BeginForm("Index", "SupplierStocks", FormMethod.Post, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
-    {
-
-        <div class="input-group">
-            <input name="PartNumber" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMS_Inventory_huan.Resources.AppResource.PartNumber aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    }*@
-
-@*舊的搜尋功能*@
-@*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder="用料號搜尋庫存" aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-
-            </div>
-        </div>
-    </form>*@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>庫存管理</h2>&nbsp;
-    <h2 class="align-content-xl-end" >@ViewBag.supplierName</h2>
+    <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
 </nav>
 <nav>
 </nav>
@@ -104,6 +77,7 @@
     <script>
         $(document).ready(function () {
             dataTableDisplay();
+
         });
         function dataTableDisplay() {
             if ($.fn.DataTable.isDataTable("#dataTable")) {
@@ -128,17 +102,53 @@
                     {
                         "data": "SourceListID",
                         "render": function (data, type, row, meta) {
-                            return '<a class="btn btn-primary"'+' href="' + "@Url.Action( "Edit","SupplierStocks")" + "?id=" + data + '">調整庫存</a>';
+                            return '<button class="btn btn-primary"'+'name="UpdateStock"'  + 'id="' + data + '">調整庫存</button>';
                         }
                     }
                 ],
                 "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
                 "order": [[1, "desc"]],
             });
-            //table.on('xhr', function () {
-            //    var data = table.ajax.params();
-            //    alert('Search term was:' + data.search.value );
-            //});
+            $(document).on('click', "button[name='UpdateStock']", async function () {
+                let row = $(this).parent('td');
+                let tr = row.parent('tr');
+                let stock = tr.children('td:nth-child(6)').text();
+                let id = tr.children('td:nth-child(1)').text();
+                 const { value: formValues } = await Swal.fire({
+                    title: 'Multiple inputs',
+                    html:
+                        '<Label swal-label>PartNumber</Label>' +
+                        `<input id="stock" class="swal2-input" value="${stock}">`,
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        return [
+                            document.getElementById('stock').value,
+                        ]
+                    }
+                });
+                //此處無法傳值進UpdateStock方法裡面 2019 11/22 17:30
+                if (formValues && formValues[0] >= 0) {
+                    let uisChange = parseInt(formValues[0]);
+                    let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
+                    $.ajax({
+                        url: "@Url.Action("UpdateStock", "SupplierStocks")" ,
+                        type: "PUT",
+                        data: jsondata,
+                        contentType: "application/json",
+                        dataType:"JSON"
+                    }).done(function (res) {
+                        if (res == "saved") {
+                            alert("saved");
+                        }
+                        if (res =="savefail") {
+                            alert("savefail");
+                        }
+                        }).fail(function (err) {
+                            alert("ajax fail  " + err.responseJSON);
+                        });
+                    //Swal.fire(JSON.stringify(formValues))
+                }
+            });
         }
     </script>
 }

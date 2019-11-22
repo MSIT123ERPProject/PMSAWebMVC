@@ -1024,6 +1024,8 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\ShipNotices\ShipNoticeDisplay.cshtml" />
+    <Content Include="Views\ShipNotices\purchaseOrderSended.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1145,12 +1147,7 @@
     <Content Include="Views\WarehouseInfoes\Edit.cshtml" />
     <Content Include="Views\WarehouseInfoes\Index.cshtml" />
     <Content Include="Views\Shared\Deny.cshtml" />
-    <Content Include="Views\ShipNotices\purchaseOrderSended.cshtml" />
-    <Content Include="Views\ShipNotices\shipCheck.cshtml" />
-    <Content Include="Views\ShipNotices\shipNoticeDisplay.cshtml" />
-    <Content Include="Views\ShipNotices\shipNoticeDtl.cshtml" />
     <Content Include="Views\ShipNotices\UnshipOrderDtl.cshtml" />
-    <Content Include="Views\ShipNotices\Edit.cshtml" />
     <Content Include="Views\ShipNotices\Index.cshtml" />
     <Content Include="Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />

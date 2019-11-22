@@ -11,6 +11,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
+
     .sidebar .nav-item:last-child {
         margin-bottom: 1rem;
     }
@@ -54,71 +55,70 @@
             color: rgba(255, 255, 255, 0.75);
         }
 
-
 @media screen and (min-width: 580px) {
     .sidebar {
         width: 225px !important;
     }
 
-        .sidebar .nav-item .nav-link {
-            display: block;
-            width: 100%;
-            text-align: left;
-            padding: 1rem;
-            width: 225px;
+    .sidebar .nav-item .nav-link {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 1rem;
+        width: 225px;
+    }
+
+        .sidebar .nav-item .nav-link span {
+            font-size: 1rem;
+            display: inline;
         }
 
-            .sidebar .nav-item .nav-link span {
-                font-size: 1rem;
-                display: inline;
-            }
+    .sidebar .nav-item .dropdown-menu {
+        position: static !important;
+        margin: 0 1rem;
+        top: 0;
+    }
 
-        .sidebar .nav-item .dropdown-menu {
-            position: static !important;
-            margin: 0 1rem;
-            top: 0;
+    .sidebar .nav-item.dropdown .dropdown-toggle::after {
+        display: block;
+    }
+
+    .sidebar.toggled {
+        overflow: visible;
+        width: 90px !important;
+    }
+
+        .sidebar.toggled .nav-item:last-child {
+            margin-bottom: 1rem;
         }
 
-        .sidebar .nav-item.dropdown .dropdown-toggle::after {
-            display: block;
+        .sidebar.toggled .nav-item .nav-link {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            width: 90px;
         }
 
-        .sidebar.toggled {
-            overflow: visible;
-            width: 90px !important;
+            .sidebar.toggled .nav-item .nav-link span {
+                font-size: 0.65rem;
+                display: block;
+            }
+
+        .sidebar.toggled .nav-item .dropdown-menu {
+            position: absolute !important;
+            -webkit-transform: none !important;
+            transform: none !important;
+            left: calc(90px + 0.5rem) !important;
+            margin: 0;
         }
 
-            .sidebar.toggled .nav-item:last-child {
-                margin-bottom: 1rem;
+            .sidebar.toggled .nav-item .dropdown-menu.dropup {
+                bottom: 0;
+                top: auto !important;
             }
 
-            .sidebar.toggled .nav-item .nav-link {
-                text-align: center;
-                padding: 0.75rem 1rem;
-                width: 90px;
-            }
-
-                .sidebar.toggled .nav-item .nav-link span {
-                    font-size: 0.65rem;
-                    display: block;
-                }
-
-            .sidebar.toggled .nav-item .dropdown-menu {
-                position: absolute !important;
-                -webkit-transform: none !important;
-                transform: none !important;
-                left: calc(90px + 0.5rem) !important;
-                margin: 0;
-            }
-
-                .sidebar.toggled .nav-item .dropdown-menu.dropup {
-                    bottom: 0;
-                    top: auto !important;
-                }
-
-            .sidebar.toggled .nav-item.dropdown .dropdown-toggle::after {
-                display: none;
-            }
+        .sidebar.toggled .nav-item.dropdown .dropdown-toggle::after {
+            display: none;
+        }
 }
 /*mobile*/
 #sidebarToggleMobile {
@@ -128,22 +128,27 @@
     background-color: #3a3f48 !important;
     font-size: 8px !important;
 }
+
 @media (max-width: 580px) {
     .sidebar {
         width: 225px !important;
     }
-    .sidebar.toggled {
-        overflow: hidden;
-        display: none;
-    }
+
+        .sidebar.toggled {
+            overflow: hidden;
+            display: none;
+        }
+
     #wrapper #content-wrapper {
         width: 100%;
         margin-top: 30px;
     }
+
     #sidebarToggleMobile {
         display: block;
         z-index: 99999 !important;
     }
+
     .sidebar .nav-item .nav-link {
         display: block;
         width: 100%;
@@ -248,8 +253,6 @@
         padding-top: 1rem;
         padding-bottom: 80px;
     }
-
-
 
 /*================*/
 @keyframes swing {
@@ -392,32 +395,41 @@
     }
 
 /*--------------------sidebar-brand----------------------*/
-.navbtn{
+.navbtn {
     z-index: 9999;
+    position: absolute;
+    top: 10px;
+    left: -5px;
 }
-.navbtn i{
-    font-size: 18px;
+
+.sidebar.toggled #sidebarToggle.navbtn {
+    left: 3px;
 }
+    .navbtn i {
+        font-size: 18px;
+    }
+
 .sidebar-brand {
     margin-top: 9px;
     letter-spacing: 2px;
 }
 
-.sidebar-wrapper .sidebar-brand{
+.sidebar-wrapper .sidebar-brand {
     display: flex;
-    align-items:flex-end;
-    text-align:right;
-}
-.sidebar-wrapper .sidebar-brand > a {
-    text-transform: uppercase;
-    font-weight: bold;
-    flex-grow: 1;
+    align-items: flex-end;
+    text-align: right;
 }
 
-.sidebar-wrapper .sidebar-brand #close-sidebar {
-    cursor: pointer;
-    font-size: 20px;
-}
+    .sidebar-wrapper .sidebar-brand > a {
+        text-transform: uppercase;
+        font-weight: bold;
+        flex-grow: 1;
+    }
+
+    .sidebar-wrapper .sidebar-brand #close-sidebar {
+        cursor: pointer;
+        font-size: 20px;
+    }
 /*--------------------sidebar-header----------------------*/
 
 .sidebar-wrapper .sidebar-header {
@@ -568,12 +580,12 @@
         right: 17px;
     }
 
-.sidebar-wrapper ul li:hover a i,
-.sidebar-wrapper .sidebar-dropdown .sidebar-submenu li a:hover:before,
-.sidebar-wrapper .sidebar-menu .sidebar-dropdown.active a i {
-    color: #16c7ff;
-    text-shadow: 0px 0px 10px rgba(22, 199, 255, 0.5);
-}
+    .sidebar-wrapper ul li:hover a i,
+    .sidebar-wrapper .sidebar-dropdown .sidebar-submenu li a:hover:before,
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active a i {
+        color: #16c7ff;
+        text-shadow: 0px 0px 10px rgba(22, 199, 255, 0.5);
+    }
 /*--------------------------side-footer------------------------------*/
 
 .sidebar-footer {

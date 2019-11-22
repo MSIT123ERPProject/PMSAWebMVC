@@ -127,28 +127,37 @@
                     }
                 });
                 //此處無法傳值進UpdateStock方法裡面 2019 11/22 17:30
+                //成功了，改成POST就可以了，不知道為甚麼PUT不行
                 if (formValues && formValues[0] >= 0) {
                     let uisChange = parseInt(formValues[0]);
                     let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
                     $.ajax({
-                        url: "@Url.Action("UpdateStock", "SupplierStocks")" ,
-                        type: "PUT",
+                        url: "@Url.Action("UpdateStock", "SupplierStocks")",
+                        type: "POST",
                         data: jsondata,
                         contentType: "application/json",
-                        dataType:"JSON"
+                        dataType: "JSON"
                     }).done(function (res) {
                         if (res == "saved") {
-                            alert("saved");
+                            alert("庫存已修改");
+                            setTimeout("dataTableDisplay()", 0);
                         }
-                        if (res =="savefail") {
-                            alert("savefail");
+                        if (res == "savefail") {
+                            alert("庫存修改失敗");
                         }
-                        }).fail(function (err) {
-                            alert("ajax fail  " + err.responseJSON);
-                        });
+                    }).fail(function (err) {
+                        alert("ajax fail  " + err.responseJSON);
+                    });
                     //Swal.fire(JSON.stringify(formValues))
                 }
+                else {
+                    alert("庫存不得小於零");
+                }
             });
+        }
+
+        function reload() {
+            window.location.reload();
         }
     </script>
 }

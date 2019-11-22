@@ -104,7 +104,7 @@ namespace PMSAWebMVC.Controllers
             return Json(new { value = true }, JsonRequestBehavior.AllowGet);
         }
         //sweetalert2 修改視窗用ajax方法//Index的VIEW資料無法進到這裡
-        [HttpPut]
+        [HttpPost]
         public JsonResult UpdateStock([Bind(Include = "UnitsInStock,PartNumber,SourceListOID,SourceListID")] SourceList SourceList)
         {
             if (SourceList.SourceListID ==null) {

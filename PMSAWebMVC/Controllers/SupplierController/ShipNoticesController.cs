@@ -96,9 +96,13 @@ namespace PMSAWebMVC.Controllers
         ////出貨明細檢視並勾選完畢後進入此方法(出貨按鈕)
         //要修改該採購單明細的實際出貨日期(ShipDate)，並新增資料到出貨明細
         //採購單明細要一一檢查庫存是否足夠，不足則告知是哪筆訂單明細不足，並取消動作回原頁面
+        //如果有全部出貨則修改採購單狀態為已出貨，如果沒有?
+        //如果只有部分出貨，採購單狀態???????
         /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
+
         {
             //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;

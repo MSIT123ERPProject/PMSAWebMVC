@@ -115,7 +115,7 @@
                 let stock = tr.children('td:nth-child(6)').text();
                 let id = tr.children('td:nth-child(1)').text();
                  const { value: formValues } = await Swal.fire({
-                    title: 'Multiple inputs',
+                    title: '庫存數量修改',
                     html:
                         '<Label swal-label>PartNumber</Label>' +
                         `<input id="stock" class="swal2-input" value="${stock}">`,

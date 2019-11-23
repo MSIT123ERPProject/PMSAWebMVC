@@ -3,25 +3,62 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@*KIWI的樣式表*@
+@section styles
+{
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+    <style>
+        @@keyframes fadeinShowBody {
+            0% {
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeinShow {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        body {
+            animation: 0.8s fadeinShowBody 0.4s both;
+        }
+
+        .wrapall {
+            animation: 0.5s fadeinShow 0.5s both;
+        }
+    </style>
+}
+@*KIWI的樣式表*@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>庫存管理</h2>&nbsp;
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
-</nav>
-<nav>
 </nav>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
     </div>
     <div class="card-body">
-        <div class="dataTables_wrapper">
-            <table  id="dataTable" class="nowrap dataTable dtr-column collapsed" role="grid" aria-describedby="example_info">
+        <div class="dataTables_wrapper" id="example_wrapper">
+            <table id="dataTable" class="nowrap dataTable dtr-column collapsed" role="grid" aria-describedby="example_info">
                 <thead>
                     <tr role="row">
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
-
                         <th>
                             @Html.DisplayNameFor(model => model.PartNumber)
                         </th>
@@ -41,7 +78,6 @@
                             調整庫存
                         </th>
                         <th></th>
-                      
                     </tr>
                 </thead>
                 <tfoot>
@@ -68,7 +104,6 @@
                             調整庫存
                         </th>
                         <th></th>
-                   
                     </tr>
                 </tfoot>
             </table>
@@ -86,7 +121,7 @@
 
     <!-- (Optional) Latest compiled and minified JavaScript translation files -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js"></script>
-    
+
     <script>
         $(document).ready(function () {
             dataTableDisplay();
@@ -114,8 +149,7 @@
                     {
                         className: 'control',
                         orderable: false,
-                        targets: -1,
-                        //data: null
+                        targets: -1
                     },
                     {
                         targets: 0,
@@ -141,7 +175,7 @@
                             return '<button class="btn editBtn bd r fillbtn"' + 'name="UpdateStock"' + 'id="' + data + '"><i class="fas fa-pen"></i></button>';
                         }
                     },
-                    {}
+                    { data:"" }
                 ],
                 fixedColumns: {
                     leftColumns: 2,
@@ -157,8 +191,8 @@
                 console.log(e.currentTarget);
             });
             $(document).on('click', "button[name='UpdateStock']", async function () {
-                let row = $(this).parent('td');
-                let tr = row.parent('tr');
+                let td = $(this).parent('td');
+                let tr = td.parent('tr');
                 let stock = tr.children('td:nth-child(6)').text();
                 let id = tr.children('td:nth-child(1)').text();
                  const { value: formValues } = await Swal.fire({
@@ -202,7 +236,6 @@
                 }
             });
         }
-
         function reload() {
             window.location.reload();
         }

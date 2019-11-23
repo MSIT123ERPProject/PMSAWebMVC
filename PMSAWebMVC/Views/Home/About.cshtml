@@ -842,15 +842,15 @@
                 <!------>
             </div>
         </div>
-        <button class="btn addBtn bd fillbtn" style="width:100%;max-width:960px;margin-left:0;margin-top:8px;"><i class='fas fa-plus-square'></i> 新增</button>
-        <button class="btn editBtn bd fillbtn" style="width:100%;max-width:960px;margin-left:0;margin-top:8px;"><i class="fas fa-pen"></i> 修改</button>
-        <button class="btn detailBtn bd fillbtn" style="width:100%;max-width:960px;margin-left:0;margin-top:8px;"><i class="fas fa-file-alt"></i> 明細</button>
-        <button class="btn deleteBtn bd fillbtn" style="width:100%;max-width:960px;margin-left:0;margin-top:8px;"><i class='fas fa-trash-alt'></i> 刪除</button>
+        <button class="btn addBtn bd fillbtn wild"><i class='fas fa-plus-square'></i> 新增</button>
+        <button class="btn editBtn bd fillbtn wild"><i class="fas fa-pen"></i> 修改</button>
+        <button class="btn detailBtn bd fillbtn wild"><i class="fas fa-file-alt"></i> 明細</button>
+        <button class="btn deleteBtn bd fillbtn wild"><i class='fas fa-trash-alt'></i> 刪除</button>
 
         <textarea cols="95" rows="5">
             style="width:100%;max-width:960px;margin-left:0;margin-top:8px;"
 
-            <button class="btn addBtn bd fillbtn" style="width:100%;max-width:960px;margin-left:0;margin-top:8px;"><i class='fas fa-plus-square'></i> 新增</button>
+            <button class="btn addBtn bd fillbtn wild"><i class='fas fa-plus-square'></i> 新增</button>
         </textarea>
     </div>
 
@@ -907,7 +907,8 @@
                     leftColumns: 2
                 },
                 "order": [[1, "asc"]],
-                "sDom": '<"wraptop"<"top fl"fl><"top"p>>'
+                "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
+                "autoWidth": false
             });
 
             //抓 table 裡按鈕請 如此 $("tbody").on()

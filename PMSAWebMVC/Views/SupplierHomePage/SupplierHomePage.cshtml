@@ -4,83 +4,114 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>SupplierHomePage</h2>
+<h2>供應商首頁</h2>
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
 
 <div id="container"></div>
+<div id="container2"></div>
 @section scripts{
-<script>
-    $(document).ready(function () {
-        $.getJSON("SupplierHomePage/GetData", function (datas) {
-            let safetyQty = datas.SafetyQty;
-            let partNumber = datas.PartNumber;
-            Highcharts.chart('container', {
-                title: {
-                    text: 'Solar Employment Growth by Sector, 2010-2016'
-                },
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
-                subtitle: {
-                    text: 'Source: thesolarfoundation.com'
-                },
-
-                yAxis: {
-                    title: {
-                        text: 'Number of Employees'
-                    }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle'
-                },
-
-                plotOptions: {
-                    series: {
-                        label: {
-                            connectorAllowed: false
+    <script>
+        $(document).ready(function () {
+            $.getJSON(`@Url.Action("GetData", "SupplierHomePage")`, function (datas) {
+                let safetyQty = [];
+                let partNumber = [];
+                for (let i = 0; i < datas.length; i++) {
+                    partNumber.push(datas[i].PartNumber);
+                    safetyQty.push(datas[i].SafetyQty);
+                };
+                Highcharts.setOptions({
+                    chart: {
+                        backgroundColor: {
+                            linearGradient: [0, 0, 500, 500],
+                            stops: [
+                                [0, 'rgb(255,255,255)'],
+                                [1, 'rgb(240,240,255)']
+                            ]
                         },
-                        pointStart: 2010
+                        borderWidth: 2,
+                        plotBackgroundColor: 'rgba(255,255,255, .9)',
+                        plotShadow: true,
+                        plotBorderWidth:1
                     }
-                },
-
-                series: [{
-                    name: 'Manufacturing',
-                    data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-                }, {
-                    name: 'Sales & Distribution',
-                    data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-                }, {
-                    name: 'Project Development',
-                    data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-                }, {
-                    name: 'Other',
-                    data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-                }],
-
-                responsive: {
-                    rules: [{
-                        condition: {
-                            maxWidth: 500
-                        },
-                        chartOptions: {
-                            legend: {
-                                layout: 'horizontal',
-                                align: 'center',
-                                verticalAlign: 'bottom'
+                });
+                var chart1 = new Highcharts.chart({
+                    chart: {
+                        renderTo:'container',
+                    },
+                    xAxis: {
+                        title: 'partNumber',
+                        categories: partNumber
+                    },
+                    yAxis: {
+                        title: 'Stocks',
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color:'#808080'
+                        }]
+                    },
+                    plotOptions: {
+                        bar: {
+                            dataLabels: {
+                                enabled: true
                             }
                         }
-                    }]
-                }
-
+                    },
+                    legend : {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle',
+                        borderWidth: 0,
+                    },
+                    series: [{
+                        name:'safetyQty',
+                        data: safetyQty
+                       }]
+                });
+                var chart2 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'container2',
+                        type:'bar',
+                    },
+                    xAxis: {
+                        categories: partNumber
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '',
+                            align:'high'
+                        },
+                        labels: {
+                            overflow:'justify'
+                        }
+                    },
+                    series: [{
+                        name:'safetyQty',
+                        data: safetyQty
+                    }],
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        vertical: '',
+                        x: -40,
+                        y: 80,
+                        floating: true,
+                        borderwidth: 1,
+                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                        shadow: true
+                    },
+                    credits: {
+                        enable: false
+                    }
+                });
             });
         });
-    });
-
-
-
-</script>
-    }
+    </script>
+}

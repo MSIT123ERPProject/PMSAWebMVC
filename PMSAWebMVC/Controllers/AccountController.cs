@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -87,15 +88,19 @@ namespace PMSAWebMVC.Controllers
             }
             // 這不會計算為帳戶鎖定的登入失敗
             // 若要啟用密碼失敗來觸發帳戶鎖定，請變更為 shouldLockout: true
+            //登入(加 cookies (在 Startup.Auth.cs 的 UseCookieAuthentication裡))
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "登入嘗試失試。");
@@ -156,7 +161,15 @@ namespace PMSAWebMVC.Controllers
             byte[] bytesalt = new byte[8];
             rngbyte.GetBytes(bytesalt);
             string salty = Convert.ToBase64String(bytesalt);
-            return salty;
+            Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])");
+            if (regex.IsMatch(salty))
+            {
+                return salty;
+            }
+            else
+            {
+                return generateFirstPwd();
+            }
         }
 
         //
@@ -182,8 +195,31 @@ namespace PMSAWebMVC.Controllers
                     Email = model.Email,
                     RealName = model.realName
                 };
+                var userToEmp = new Employee
+                {
+                    EmployeeID = model.EmployeeID,
+                    Name = model.realName,
+                    Email = model.Email,
+                    Mobile = model.Mobile,
+                    Tel = model.Tel,
+                    CompanyCode = "C00001",
+                    ManagerID = null,
+                    PasswordHash = "+y1MS0Wp2nZUefXbyYhiz9Tn84S8FhCbxDpCXgfNXjk=",
+                    PasswordSalt = "fd357578-7784-4dea-b8c1-4d8b8d290d55",
+                    AccountStatus = "R",
+                    CreateDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                    SendLetterStatus = null,
+                    SendLetterDate = null,
+                    AuthRoleID = null,
+                    AuthenticateToken = null,
+                    TokenCreateTime = null,
+                    EnableTwoFactorAuth = null,
+                    Title = null,
+                };
                 string pwd = generateFirstPwd();
                 var result = await UserManager.CreateAsync(user, pwd);
+
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -192,8 +228,27 @@ namespace PMSAWebMVC.Controllers
                     // 傳送包含此連結的電子郵件
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "確認您的帳戶", $"請按一下此連結確認您的帳戶 <a href='{ callbackUrl}'>這裏</a> {pwd}");
-
+                    string mailbody = $@"
+                            <tbody style='font-family: 'microsoft jhenghei', sans-serif;'>
+                              <table style='width: 580px; min-width: 580px; margin: 20px auto; background-color: #eee; padding-bottom: 20px;'>
+                                <tr>
+                                    <td>
+                                        <img src='https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg' alt='昶興自行車'>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style='line-height: 2; padding: 10px 38px 30px 38px;'>
+                                        <h1 style='color: #3d5f7f; letter-spacing: 1px; margin: 0; font-size: 26px'>重設您的密碼 </h1>
+                                        <p style='letter-spacing: 1px; color: #000; margin: 0;font-size: 16px'><strong>您好,</strong></p>
+                                        <p style='letter-spacing: 1px; color: #000; margin: 0; font-size: 13px; margin-bottom: 25px; '>請按一下此連結確認您的帳戶，並使用下方重設密碼登入，帳號為您的員工編號，請在5分鐘內登入連結並重設密碼:</p>
+                                        <p style='letter-spacing: 1px; margin: 0; margin-bottom: 30px; font-size: 16px'><strong><a href='{callbackUrl}'>按這裏!</a></strong></p>
+                                        <p style='letter-spacing: 1px; margin: 0; margin-bottom: 30px; font-size: 16px'><strong>{pwd}</strong></p>
+                                        <p style='letter-spacing: 1px; margin: 0; color: #aaa;' font-size: 13px>如果這不是您的帳戶，請忽略這封信，感謝您。</p>
+                                    </ td>
+                                </ tr>
+                                </ table>
+                            </ tbody> ";
+                    await UserManager.SendEmailAsync(user.Id, "確認您的帳戶", mailbody);
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);

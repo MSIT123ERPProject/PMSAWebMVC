@@ -1,4 +1,5 @@
 ﻿using PMSAWebMVC.Models;
+using PMSAWebMVC.Utilities.TingHuan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,20 @@ namespace PMSAWebMVC.Controllers.SupplierController
 {
     public class SupplierHomePageController : Controller
     {
-        PMSAEntities db;
+        private PMSAEntities db;
+        string supplierAccount;
+        string supplierCode;
+        string POChangedCategoryCodeShipped;
+        string RequesterRoleSupplier;
+        ShipNoticesUtilities utilities = new ShipNoticesUtilities();
         public SupplierHomePageController()
         {
-            db = new PMSAEntities();
 
+            db = new PMSAEntities();
+            supplierCode = "S00001";
+            supplierAccount = "SE00001";
+            POChangedCategoryCodeShipped = "S";
+            RequesterRoleSupplier = "S";
         }
         // GET: SupplierHomePage
         //供應商首頁
@@ -28,12 +38,16 @@ namespace PMSAWebMVC.Controllers.SupplierController
         }
         public ActionResult GetData() {
             var q = from sl in db.SourceList
+                    where sl.SupplierCode == supplierCode &&(sl.UnitsInStock<=sl.SafetyQty)
                     select new
                     {
                         sl.PartNumber,
-                        sl.SafetyQty
+                        sl.SafetyQty,
+                        sl.UnitsInStock
                     };
-            return Json(q, JsonRequestBehavior.AllowGet);
+            
+            var s = q.ToList();
+            return Json(s, JsonRequestBehavior.AllowGet);
         }
     }
 }

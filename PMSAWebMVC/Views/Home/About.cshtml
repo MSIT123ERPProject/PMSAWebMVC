@@ -5,12 +5,10 @@
 {
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+@*<p>Use this area to provide additional information.</p>*@
 
-<<<<<<< HEAD
-<p>Use this area to provide additional information.</p>
 
-@section scripts{
-    <script>
+    @*<script>
         Swal.fire({
             title: 'Submit your Github username',
             input: 'text',
@@ -18,9 +16,8 @@
                 autocapitalize: 'off'
             }
         })
-    </script>
+    </script>*@
     
-=======
     <style>
         @@keyframes fadeinShowBody {
             0% {
@@ -868,8 +865,9 @@
             <button class="btn addBtn bd fillbtn wild"><i class='fas fa-plus-square'></i> 新增</button>
         </textarea>
     </div>
+@section scripts
+    {
 
-@section scripts{
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>
     <script src="@Url.Content("~/Scripts/DataTables/i18n/jquery.dataTables." + Html.OutputText("".CultureName())+".js")"></script>
@@ -939,7 +937,5 @@
                 formatSubmit: 'yyyy/mm/dd'
             })
         });
-    </script>
-
->>>>>>> master
+    </script> 
 }

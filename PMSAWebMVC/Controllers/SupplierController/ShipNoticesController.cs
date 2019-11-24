@@ -102,7 +102,6 @@ namespace PMSAWebMVC.Controllers
         /// <returns></returns>
         [HttpPost]
         public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
-
         {
             //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;

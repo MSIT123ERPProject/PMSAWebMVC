@@ -36,18 +36,70 @@ namespace PMSAWebMVC.Controllers.SupplierController
         {
             return View();
         }
-        public ActionResult GetData() {
+        public ActionResult GetStockData()
+        {
             var q = from sl in db.SourceList
-                    where sl.SupplierCode == supplierCode &&(sl.UnitsInStock<=sl.SafetyQty)
+                    join pt in db.Part on
+                    sl.PartNumber equals pt.PartNumber
+                    where sl.SupplierCode == supplierCode && (sl.UnitsInStock <= sl.SafetyQty)
                     select new
                     {
                         sl.PartNumber,
                         sl.SafetyQty,
-                        sl.UnitsInStock
+                        sl.UnitsInStock,
+                        sl.UnitsOnOrder,
+                        pt.PartName
                     };
-            
+
             var s = q.ToList();
             return Json(s, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult GetPartTotalPricePercentage()
+        {
+            var q = from pod in db.PurchaseOrderDtl
+                    join po in db.PurchaseOrder
+                    on pod.PurchaseOrderID equals po.PurchaseOrderID
+                    join sl in db.SourceList
+                    on pod.SourceListID equals sl.SourceListID
+                    where po.SupplierCode == supplierCode
+                    select new
+                    {
+                        pod.PartName,
+                        pod.PartNumber,
+                        pod.QtyPerUnit,
+                        pod.Qty,
+                        sl.UnitPrice,
+                    };
+            List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
+
+            foreach (var data in q)
+            {
+                partTotalPriceViewModel a = new partTotalPriceViewModel();
+                a.ToalPrice = data.Qty * data.UnitPrice * data.QtyPerUnit;
+                a.PartNumber = data.PartNumber;
+                a.PartName = data.PartName;
+                list.Add(a);
+            }
+            double total = 0;
+            for (int i = 0; i < list.Count(); i++)
+            {
+                total += list[i].ToalPrice;
+            }
+
+            for (int i = 0; i < list.Count(); i++)
+            {
+               double p =  list[i].ToalPrice / total*100;
+                p = Math.Round(p, 1);
+                list[i].Percentage = p;
+            }
+            return Json(list,JsonRequestBehavior.AllowGet );
+        }
+        public class partTotalPriceViewModel
+        {
+            public string PartName { get; set; }
+            public string PartNumber { get; set; }
+            public int ToalPrice { get; set; }
+            public double Percentage { get; set; }
         }
     }
 }

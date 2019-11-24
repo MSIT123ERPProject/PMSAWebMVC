@@ -9,93 +9,102 @@
 
 
 <div id="container"></div>
-<div id="container2"></div>
+<figure class="highcharts-figure">
+    <div id="container2"></div>
+</figure>
+
 @section scripts{
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
-
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script>
         $(document).ready(function () {
-            $.getJSON(`@Url.Action("GetData", "SupplierHomePage")`, function (datas) {
+            unitsInStockChart();
+            partTotalPrice();
+        });
+        Highcharts.setOptions({
+            chart: {
+                backgroundColor: {
+                //    linearGradient: [0, 0, 500, 500],
+                    stops: [
+                        [0, 'rgb(255,255,255)'],
+                        [1, 'rgb(240,240,255)']
+                    ]
+                },
+                width: 500,
+            }
+        });
+        //庫存不足料件圖 column chart
+        function unitsInStockChart() {
+               $.getJSON(`@Url.Action("GetStockData", "SupplierHomePage")`, function (datas) {
                 let safetyQty = [];
                 let partNumber = [];
+                   let unitsInStock = [];
+                   let unitsOnOrder = [];
                 for (let i = 0; i < datas.length; i++) {
                     partNumber.push(datas[i].PartNumber);
                     safetyQty.push(datas[i].SafetyQty);
+                    unitsInStock.push(datas[i].UnitsInStock);
+                    unitsOnOrder.push(datas[i].UnitsOnOrder);
                 };
-                Highcharts.setOptions({
-                    chart: {
-                        backgroundColor: {
-                            linearGradient: [0, 0, 500, 500],
-                            stops: [
-                                [0, 'rgb(255,255,255)'],
-                                [1, 'rgb(240,240,255)']
-                            ]
-                        },
-                        borderWidth: 2,
-                        plotBackgroundColor: 'rgba(255,255,255, .9)',
-                        plotShadow: true,
-                        plotBorderWidth:1
-                    }
-                });
-                var chart1 = new Highcharts.chart({
-                    chart: {
-                        renderTo:'container',
-                    },
-                    xAxis: {
-                        title: 'partNumber',
-                        categories: partNumber
-                    },
-                    yAxis: {
-                        title: 'Stocks',
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color:'#808080'
-                        }]
-                    },
-                    plotOptions: {
-                        bar: {
-                            dataLabels: {
-                                enabled: true
-                            }
-                        }
-                    },
-                    legend : {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle',
-                        borderWidth: 0,
-                    },
-                    series: [{
-                        name:'safetyQty',
-                        data: safetyQty
-                       }]
-                });
+              
                 var chart2 = new Highcharts.chart({
+                    title: { text: '安全庫存量不足' },
+                    subtitle: { text: '料件' },
                     chart: {
                         renderTo: 'container2',
-                        type:'bar',
+                        type: 'column',
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} EA</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
                     },
                     xAxis: {
                         categories: partNumber
                     },
-                    yAxis: {
+                    yAxis: [{
                         min: 0,
                         title: {
-                            text: '',
+                            text: 'UnitsInStock',
                             align:'high'
                         },
                         labels: {
                             overflow:'justify'
                         }
                     },
-                    series: [{
-                        name:'safetyQty',
-                        data: safetyQty
-                    }],
+                        {
+                            title: 'safetyQty',
+                            opposite: true
+                        }
+                    ],
+                    series: [
+                        {
+                      //  yAxis:0,
+                        name:'UnitsInStock',
+                        data: unitsInStock
+                    },
+                        {
+                           // yAxis: 1,
+                            name: 'safetyQty',
+                            data: safetyQty
+                        },
+                        {
+                            name: 'unitsOnOrder',
+                            data: unitsOnOrder
+                        }
+                    ],
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
                     legend: {
                         layout: 'vertical',
                         align: 'right',
@@ -112,6 +121,51 @@
                     }
                 });
             });
-        });
+        }
+        //三個月內各料件出貨金額 PIE CHART
+        function partTotalPrice() {
+            $.getJSON(`@Url.Action("GetPartTotalPricePercentage", "SupplierHomePage")`, function (datas) {
+                let percentage = [];
+                let partname = [];
+                for (var i = 0; i < datas.length; i++) {
+                    percentage.push(datas[i].Percentage);
+                    partname.push(datas[i].PartName);
+                }
+                var chart = new Highcharts.chart({
+                    chart: {
+                        renderTo:'container',
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '各料件出貨金額'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                            }
+                        }
+                    },    
+                }/*, ChartAddSeriesCallbackFunction(this, event)*/);
+                
+                for (var i = 0; i < datas.length; i++) {
+                    chart.addSeries({
+                        name: datas[i].PartName,
+                        y: datas[i].Percentage
+                    },false);
+                }
+                chart.redraw();
+            });
+          
+        }
     </script>
 }

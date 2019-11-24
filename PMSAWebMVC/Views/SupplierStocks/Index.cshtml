@@ -56,6 +56,7 @@
             <table id="dataTable" class="nowrap dataTable dtr-column collapsed" role="grid" aria-describedby="example_info">
                 <thead>
                     <tr role="row">
+
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -77,11 +78,12 @@
                         <th>
                             調整庫存
                         </th>
-                        <th></th>
+                        <th>檢視</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
+
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -103,7 +105,7 @@
                         <th>
                             調整庫存
                         </th>
-                        <th></th>
+                        <th>檢視</th>
                     </tr>
                 </tfoot>
             </table>
@@ -118,127 +120,134 @@
     <script src="@Url.Content("~/Scripts/tempusdominus/tempusdominus-bootstrap-4." + Html.OutputText("".CultureName())+".js")"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-
     <!-- (Optional) Latest compiled and minified JavaScript translation files -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-*.min.js"></script> -->
 
     <script>
-        $(document).ready(function () {
-            dataTableDisplay();
-        });
-        function dataTableDisplay() {
-            if ($.fn.DataTable.isDataTable("#dataTable")) {
-                $("#dataTable").DataTable().destroy();
-            }
-            $('#dataTable').DataTable({
-              "ajax": {
-                    "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
-                    "type": "GET",
-                    "dataType": "json",
-                  "data": { "supplierCode": "@ViewBag.supplierCode" },
-                    "contentType": "application/json;charset=utf-8",
-                    "cache": true
-                },
-                responsive: {
-                    details: {
-                        type:'column',
-                        target:-1
-                    }
-                },
-                columnDefs: [
-                    {
-                        className: 'control',
-                        orderable: false,
-                        targets: -1
+            $(document).ready(function () {
+                dataTableDisplay();
+            });
+            function dataTableDisplay() {
+                if ($.fn.DataTable.isDataTable("#dataTable")) {
+                    $("#dataTable").DataTable().destroy();
+                }
+              //  $.fn.dataTable.ext.errMode = 'throw';
+                $('#dataTable').DataTable({
+                  "ajax": {
+                        "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
+                        "type": "GET",
+                        "dataType": "json",
+                      "data": { "supplierCode": "@ViewBag.supplierCode" },
+                        "contentType": "application/json;charset=utf-8",
+                        "cache": true
                     },
-                    {
-                        targets: 0,
-                        data: "SourceListID",
-                        orderable: false
-                    },
-                    {
-                        targets: 1,
-                        data: "PartNumber",
-                        orderable: false
-                    }
-                ],
-                "columns": [
-                    { "data": "SourceListID", orderable: false },
-                    { "data": "PartNumber", orderable: false },
-                    { "data": "QtyPerUnit" },
-                    { "data": "UnitPrice"},
-                    { "data": "UnitsOnOrder" },
-                    { "data": "UnitsInStock", orderable: false },
-                    {
-                        "data": "SourceListID",
-                        "render": function (data, type, row, meta) {
-                            return '<button class="btn editBtn bd r fillbtn"' + 'name="UpdateStock"' + 'id="' + data + '"><i class="fas fa-pen"></i></button>';
+                    responsive: {
+                        details: {
+                            type: 'column',
+                           // renderer: { hidden: false },
+                           target:-1
                         }
                     },
-                    { data:"" }
-                ],
-                fixedColumns: {
-                    leftColumns: 2,
-                    rightColumns:2
-                },
-                "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
-                "order": [[1, "asc"]],
-                "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
-                "autoWidth": false
-            });
-            //抓 table 裡按鈕請 如此 $("tbody").on()
-            $("tbody").on('click', '.addBtn', function (e) {
-                console.log(e.currentTarget);
-            });
-            $(document).on('click', "button[name='UpdateStock']", async function () {
-                let td = $(this).parent('td');
-                let tr = td.parent('tr');
-                let stock = tr.children('td:nth-child(6)').text();
-                let id = tr.children('td:nth-child(1)').text();
-                 const { value: formValues } = await Swal.fire({
-                    title: '庫存數量修改',
-                    html:
-                        '<Label swal-label>PartNumber</Label>' +
-                        `<input id="stock" class="swal2-input" value="${stock}">`,
-                    focusConfirm: false,
-                    preConfirm: () => {
-                        return [
-                            document.getElementById('stock').value,
-                        ]
+                    columnDefs: [
+                        {
+                            className: 'control',
+                            orderable: false,
+                            targets: -1,
+                        },
+                        {
+                            orderable: false,
+                            className: 'action-btn',
+                            targets: -2
+                        }
+                    ],
+                    "columns": [
+                        { "data": "SourceListID" },
+                        { "data": "PartNumber" },
+                        { "data": "QtyPerUnit" },
+                        { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+                        { "data": "UnitsOnOrder" },
+                        { "data": "UnitsInStock"},
+                        {
+                            "data": "SourceListID",
+                            "render": function (data, type, row, meta) {
+                                return '<button class="btn editBtn bd r fillbtn"' + 'name="UpdateStock"' + 'id="' + data + '"><i class="fas fa-pen"></i></button>';
+                            }
+                        },
+                        {
+                            "data": "SourceListID",
+                            orderable: false,
+                            className: 'control',
+                            render: function (data, type, row, meta) {
+                                return "";
+                            }
+                        }
+                    ],
+                    fixedColumns: {
+                        leftColumns: 2,
+                      //  rightColumns:2
+                    },
+                    "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
+                    "order": [[1, "asc"]],
+                    "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
+                    "autoWidth": false
+                });
+                //抓 table 裡按鈕請 如此 $("tbody").on()
+                $("tbody").on('click', '.addBtn', function (e) {
+                    console.log(e.currentTarget);
+                });
+                //////
+                $(document).on('click', "button[name='UpdateStock']", async function () {
+                    let td = $(this).parent('td');
+                    let tr = td.parent('tr');
+                    let stock = tr.children('td:nth-child(6)').text();
+                    let id = $(this).prop('id');
+                     const { value: formValues } = await Swal.fire({
+                        title: '庫存數量修改',
+                        html:
+                            '<Label swal-label>PartNumber</Label>' +
+                             `<input id="stock" class="swal2-input" value="${stock}">`,
+                         showCancelButton: true,
+                         cancelButtonColor: '#d33',
+                         cancelButtonText:'取消',
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            return [
+                                document.getElementById('stock').value,
+                            ]
+                        }
+                    });
+                    //此處無法傳值進UpdateStock方法裡面 2019 11/22 17:30
+                    //成功了，改成POST就可以了，不知道為甚麼PUT不行
+                    if (formValues && formValues[0] >= 0) {
+                        let uisChange = parseInt(formValues[0]);
+                        let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
+                        $.ajax({
+                            url: "@Url.Action("UpdateStock", "SupplierStocks")",
+                            type: "POST",
+                            data: jsondata,
+                            contentType: "application/json",
+                            dataType: "JSON"
+                        }).done(function (res) {
+                            if (res == "saved") {
+                                alert("庫存已修改");
+                                setTimeout("dataTableDisplay()", 0);
+                            }
+                            if (res == "savefail") {
+                                alert("庫存修改失敗，庫存不得小於零");
+                            }
+                        }).fail(function (err) {
+                            alert("ajax fail  " + err.responseJSON);
+                        });
+                        //Swal.fire(JSON.stringify(formValues))
+                    }
+                    else {
+                       // alert("取消");
                     }
                 });
-                //此處無法傳值進UpdateStock方法裡面 2019 11/22 17:30
-                //成功了，改成POST就可以了，不知道為甚麼PUT不行
-                if (formValues && formValues[0] >= 0) {
-                    let uisChange = parseInt(formValues[0]);
-                    let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
-                    $.ajax({
-                        url: "@Url.Action("UpdateStock", "SupplierStocks")",
-                        type: "POST",
-                        data: jsondata,
-                        contentType: "application/json",
-                        dataType: "JSON"
-                    }).done(function (res) {
-                        if (res == "saved") {
-                            alert("庫存已修改");
-                            setTimeout("dataTableDisplay()", 0);
-                        }
-                        if (res == "savefail") {
-                            alert("庫存修改失敗");
-                        }
-                    }).fail(function (err) {
-                        alert("ajax fail  " + err.responseJSON);
-                    });
-                    //Swal.fire(JSON.stringify(formValues))
-                }
-                else {
-                    alert("庫存不得小於零");
-                }
-            });
-        }
-        function reload() {
-            window.location.reload();
-        }
+            }
+            function reload() {
+                window.location.reload();
+            }
     </script>
 }
 

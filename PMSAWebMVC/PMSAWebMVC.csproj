@@ -1134,8 +1134,6 @@
     <Content Include="Views\SourceLists\EditDtl.cshtml" />
     <Content Include="Views\SourceLists\Index.cshtml" />
     <Content Include="Views\SourceLists\IndexDtl.cshtml" />
-    <Content Include="Views\SupplierStocks\Details.cshtml" />
-    <Content Include="Views\SupplierStocks\Edit.cshtml" />
     <Content Include="Views\SupplierStocks\Index.cshtml" />
     <Content Include="Views\UsersAdmin\Create.cshtml" />
     <Content Include="Views\UsersAdmin\Delete.cshtml" />

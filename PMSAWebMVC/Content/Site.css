@@ -151,7 +151,7 @@ button.btn.dropdown-toggle {
         }
 
 .card {
-    max-width: 1024px !important;
+    max-width: 100% !important;
     min-width: 269px;
     overflow-x: scroll;
     border: none;
@@ -159,7 +159,7 @@ button.btn.dropdown-toggle {
 }
 
 .card-body {
-    max-width: 960px !important;
+    max-width: 100% !important;
     min-width: 269px;
     padding-top: 8px;
 }
@@ -303,7 +303,7 @@ ul.pagination {
     /*btn wild/*/
 .wild {
     width: 100% !important;
-    max-width: 1024px !important;
+    max-width: 100% !important;
     margin-left: 0 !important;
     margin-top: 8px !important;
 }

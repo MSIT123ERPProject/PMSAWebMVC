@@ -41,7 +41,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
             var q = from sl in db.SourceList
                     join pt in db.Part on
                     sl.PartNumber equals pt.PartNumber
-                    where sl.SupplierCode == supplierCode && (sl.UnitsInStock <= sl.SafetyQty)
+                    where sl.SupplierCode == supplierCode /*&& (sl.UnitsInStock <= sl.SafetyQty)*/
                     select new
                     {
                         sl.PartNumber,

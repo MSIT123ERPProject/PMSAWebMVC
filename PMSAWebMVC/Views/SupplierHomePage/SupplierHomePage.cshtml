@@ -7,11 +7,13 @@
 <h2>供應商首頁</h2>
 
 
+<div>
+    <div id="container"></div>
+    <figure class="highcharts-figure">
+        <div id="container2"></div>
+    </figure>
+</div>
 
-<div id="container"></div>
-<figure class="highcharts-figure">
-    <div id="container2"></div>
-</figure>
 
 @section scripts{
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -49,7 +51,6 @@
                     unitsInStock.push(datas[i].UnitsInStock);
                     unitsOnOrder.push(datas[i].UnitsOnOrder);
                 };
-              
                 var chart2 = new Highcharts.chart({
                     title: { text: '安全庫存量不足' },
                     subtitle: { text: '料件' },
@@ -127,20 +128,22 @@
             $.getJSON(`@Url.Action("GetPartTotalPricePercentage", "SupplierHomePage")`, function (datas) {
                 let percentage = [];
                 let partname = [];
+                let pie = [];
                 for (var i = 0; i < datas.length; i++) {
                     percentage.push(datas[i].Percentage);
                     partname.push(datas[i].PartName);
+                    pie.push([datas[i].PartName, datas[i].Percentage]);
                 }
                 var chart = new Highcharts.chart({
                     chart: {
-                        renderTo:'container',
+                        renderTo: 'container',
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
                         plotShadow: false,
                         type: 'pie'
                     },
                     title: {
-                        text: '各料件出貨金額'
+                        text: '各料件出貨金額百分比'
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -154,18 +157,15 @@
                                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                             }
                         }
-                    },    
+                    },
                 }/*, ChartAddSeriesCallbackFunction(this, event)*/);
-                
-                for (var i = 0; i < datas.length; i++) {
                     chart.addSeries({
-                        name: datas[i].PartName,
-                        y: datas[i].Percentage
+                        type: 'pie',
+                        name: '',
+                        data: pie
                     },false);
-                }
                 chart.redraw();
             });
-          
         }
     </script>
 }

@@ -1,5 +1,6 @@
 ﻿using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.ViewModels.PurchaseRequisitions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -176,16 +177,6 @@ namespace PMSAWebMVC.Controllers
 
         }
 
-        //// POST: PurchaseRequisitions/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(string id)
-        //{
-        //    PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
-        //    db.PurchaseRequisition.Remove(purchaseRequisition);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {
@@ -196,8 +187,134 @@ namespace PMSAWebMVC.Controllers
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// </summary>
+        /// <returns></returns>
+
+        private string GetProcessStatus(string ProcessStatus)
+        {
+            //N = 新增,O = 採購中,C = 結案
+            switch (ProcessStatus)
+            {
+                case "N":
+                    return "新增";
+                case "C":
+                    return "結案";
+                case "O":
+                    return "採購中";
+                default:
+                    return "";
+            }
+        }
+        private string GetSignStatus(string SignStatus)
+        {
+            //S = 簽核中,Y = 同意 ,N = 拒絕
+            switch (SignStatus)
+            {
+                case "S":
+                    return "簽核中";
+                case "Y":
+                    return "同意";
+                case "N":
+                    return "拒絕";
+                default:
+                    return "";
+            }
+        }
 
 
+        //取得請購單資料集
+        public JsonResult GetPurchaseRequisitionsList()
+        {
+            //請購單可能會無關聯
+            Employee emp = User.Identity.GetEmployee();
+            var povm = from pur in db.PurchaseRequisition.AsEnumerable() //請購單
+                       join pr in db.Product //與產品關聯 
+                       on pur.ProductNumber equals pr.ProductNumber 
+                       join pp in db.ProductPart //與產品料件關聯
+                       on pr.ProductNumber equals pp.ProductNumber 
+                       join p in db.Part//與料件關聯
+                       on pp.PartNumber equals p.PartNumber 
+                       into rels//資料放進rels
+                       from rel in rels.DefaultIfEmpty()//
+                       group new { pur, pr, pp } by new
+                       {
+                           pur.PurchaseRequisitionID,//請購單編號
+                           pr.ProductName,//產品名稱
+                           pur.PRBeginDate,//產生日期
+                           pur.ProcessStatus,//處理狀態
+                           pur.SignStatus//簽核狀態
+                       } into gp
+                       orderby gp.Key.PurchaseRequisitionID descending
+                       select new PurchaseRequisitionIndexViewModel  //用自己做的ViewModel new出來
+                       {
+                           PurchaseRequisitionID = gp.Key.PurchaseRequisitionID,
+                           ProductName = gp.Key.ProductName,
+                           PRBeginDate = gp.Key.PRBeginDate,
+                           ProcessStatus = GetProcessStatus(gp.Key.ProcessStatus),//翻譯蒟蒻
+                           SignStatus = GetSignStatus(gp.Key.SignStatus)//翻譯蒟蒻
+                       };
+            return Json(new { data = povm }, JsonRequestBehavior.AllowGet); //傳回資料
+        }
+
+        //取得料件資料集
+        [HttpGet]
+        public JsonResult GetPartList(string id)
+        {//data的值=供應商編號 文字=供應商名稱
+            var data = Repository.GetPartList(id).Select(p => new { Value = p.PartNumber, Text = p.PartName });
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        //取得請購單明細資料集
+        [HttpGet]
+        public ActionResult GetPurchaseRequisitionsDtlList(string id, string PurchaseRequisitionID)
+        {
+            Repository rep = new Repository();
+            //string c = User.Identity.GetRealName();
+            var data = Repository.GetPurchaseRequisitionDtlList(id, PurchaseRequisitionID);
+            IList<PurchaseRequisitionDtlItemChecked> resultSet = new List<PurchaseRequisitionDtlItemChecked>();
+            foreach (var item in data)
+            {
+                PurchaseRequisitionDtlItemChecked pod = new PurchaseRequisitionDtlItemChecked
+                {
+                    ProductNumber = item.ProductNumber,//產品編號
+                    PurchaseRequisitionDtlOID = item.PurchaseRequisitionDtlOID,//請購單識別碼
+                    Checked = false//確認按鈕
+                };
+                resultSet.Add(pod);
+            }
+            PurchaseRequisitionCreateViewModel vm = new PurchaseRequisitionCreateViewModel
+            {
+                PurchaseRequisitionDtlSetVM = data,
+                CheckedResultSetVM = resultSet
+            };
+            vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;
+            return PartialView("_CreatePODItemPartial", vm);//注意
+        }
+
+        private void ConfigureViewModel(PurchaseRequisitionCreateViewModel model)
+        {
+            //參考資料：https://dotnetfiddle.net/PBi075
+            IList<ProductItem> Product = Repository.GetProductList();
+            model.ProductList = new SelectList(Product, "ProductNameValue", "ProductNameDisplay");
+            if (!string.IsNullOrEmpty(model.SelectedProductNume))
+            {
+                IEnumerable<PartItem> parts = Repository.GetPartList(model.SelectedProductNume);
+                model.PartList = new SelectList(parts, "PartNumber", "PartName");
+            }
+            else
+            {
+                model.PartList = new SelectList(Enumerable.Empty<SelectListItem>());
+            }
+        }
+
+        public ActionResult Createtest()
+        {
+            PurchaseRequisitionCreateViewModel model = new PurchaseRequisitionCreateViewModel();
+            ConfigureViewModel(model);
+            return View(model);
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // GET: PurchaseRequisitionDtls

@@ -17,7 +17,6 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public shipOrderViewModel()
         {
-
         }
         public string PurchaseOrderID { get; set; }
         public string PurchaseOrderStatus { get; set; }
@@ -26,11 +25,9 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         public string ReceiverMobile { get; set; }
         public string ReceiptAddress { get; set; }
         public IEnumerable<OrderDtlItem> orderDtlItems { get; set; }
-
         //此集合是用來存放訂單出貨明細檢視時，判斷有無被選取使用
         public IList<OrderDtlItemChecked> orderDtlItemCheckeds { get; set; }
     }
-
     public class OrderDtlItem
     {
         [Display(Name = "訂單明細流水號")]

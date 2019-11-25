@@ -61,6 +61,7 @@
             <table class="nowrap dataTable dtr-column collapsed" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
                     <tr>
+                        <th></th>
                         @*<th>採購單狀態</th>*@
                         <th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>
                         @*<th>採購單編號</th>*@
@@ -79,6 +80,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th></th>
                         @*<th>採購單狀態</th>*@
                         <th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>
                         @*<th>採購單編號</th>*@
@@ -153,6 +155,12 @@
                     className: 'control'
                 }],
                 "columns": [
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent:''
+                    },
                     { "data": "PurchaseOrderStatus" },
                     {"data" : "PurchaseOrderID" },
                     { "data": "ReceiverName" },
@@ -189,20 +197,51 @@
             });
             $.fn.dataTable.ext.errMode = 'throw';
             //想做子TABLE//先放者
-            @*$("#dataTable>tbody").on('click', 'input[name=shipped]', function (e) {
+            $("#dataTable tbody").on('click', 'td.details-control', function (e) {
                 let td = $(this).parent('td');
                 let row = td.parent('tr');
                 let id = row.children('td:nth child(2)');
+                let tr = $(this).closest('tr');
+                let r = table.row(tr);
                 $.ajax({
-                    url: `@Url.Action("","")`,
+                    url: `@Url.Action("ChildTableForOrderDtl", "ShipNotices")`,
                     type: "GET",
                     data: { PurchaseOrderID: id }
                 }).done(function (res) {
                     console.log(res);
+                    let datas = res;
+                    if (r.child.isShown()) {
+                        r.child.hide();
+                        tr.removeClass('shown');
+                    }
+                    else {
+                        r.child(format(datas)).show();
+                        tr.addClass('shown');
+                    }
                     }).fail(function () {
                         alert('ajax fail');
                     });
-            });*@
+            });
+        }
+        function format(d) {
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                '<tr>' +
+                '<td>PurchaseOrderDtlOID:</td>' +
+                '<td>' + d.PurchaseOrderDtlOID + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>PurchaseOrderDtlCode:</td>' +
+                '<td>' + d.PurchaseOrderDtlCode + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>PartName:</td>' +
+                '<td>' + d.PartName + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Qty:</td>' +
+                '<td>' + d.Qty + '</td>' +
+                '</tr>' +
+                '</table>';
         }
     </script>
 

@@ -394,9 +394,24 @@ namespace PMSAWebMVC.Controllers
         ///  查詢頁面的顯示紙TABLE的用法
         /// </summary>
         /// <param name="disposing"></param>
-        public ActionResult childTableForOrderDtl(shipOrderViewModel order)
+        [HttpGet]
+        public ActionResult ChildTableForOrderDtl(string purchaseOrderID)
         {
-
+            PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
+            IEnumerable<OrderDtlItem> orderDtls = from pod in db.PurchaseOrderDtl
+                                                  where pod.PurchaseOrderID == purchaseOrderID
+                                                  select new OrderDtlItem
+                                                  {
+                                                      PurchaseOrderDtlOID = pod.PurchaseOrderDtlOID,
+                                                      PurchaseOrderDtlCode=pod.PurchaseOrderDtlCode,
+                                                      PartName = pod.PartName,
+                                                      Qty = pod.Qty,
+                                                      QtyPerUnit = pod.QtyPerUnit,
+                                                      SourceListID = pod.SourceListID,
+                                                      CommittedArrivalDate = pod.CommittedArrivalDate,
+                                                      ShipDate = pod.ShipDate
+                                                  };
+            return Json(orderDtls,JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {

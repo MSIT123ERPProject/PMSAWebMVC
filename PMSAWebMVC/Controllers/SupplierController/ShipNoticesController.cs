@@ -43,10 +43,9 @@ namespace PMSAWebMVC.Controllers
         public JsonResult GetPurchaseOrderList(string PurchaseOrderStatus)
         {
             string status = PurchaseOrderStatus;
-
             var query = from po in db.PurchaseOrder.AsEnumerable()
                         where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)
-                        select new PurchaseOrder
+                        select new shipOrderViewModel
                         {
                             PurchaseOrderStatus = po.PurchaseOrderStatus,
                             PurchaseOrderID = po.PurchaseOrderID,
@@ -59,16 +58,17 @@ namespace PMSAWebMVC.Controllers
         }
 
         //檢視未出貨訂單明細，並要可以勾選要出貨的明細，檢視該採購單所有的產品，並可以選擇出貨那些產品
-        public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]UnshipOrderDtlViewModel purchaseOrder)
+        public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]shipOrderViewModel purchaseOrder)
         {
             var q = from po in db.PurchaseOrder
                     where po.PurchaseOrderID == purchaseOrder.PurchaseOrderID
-                    select new UnshipOrderDtlViewModel {
+                    select new shipOrderViewModel
+                    {
                         PurchaseOrderID = po.PurchaseOrderID,
-                        PurchaseOrderStatus =po.PurchaseOrderStatus
+                        PurchaseOrderStatus = po.PurchaseOrderStatus
                     };
             var query = q.First();
-                    return View(query);
+            return View(query);
         }
         //檢視未出貨訂單明細的datatable的AJAX取資料方法
         public JsonResult GetPurchaseOrderDtl(string purchaseOrderID)
@@ -101,7 +101,7 @@ namespace PMSAWebMVC.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult shipCheckDtl(UnshipOrderDtlViewModel unshipOrderDtl)
+        public ActionResult shipCheckDtl(shipOrderViewModel unshipOrderDtl)
         {
             //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
@@ -247,7 +247,7 @@ namespace PMSAWebMVC.Controllers
         /// <returns></returns>
         //回傳PATIALVIEW給UnShipOrderDtl.cshtml
         //這裡應該要檢查庫存不足，和已出貨的明細，並直接顯示在第一欄
-        public ActionResult GetPurchaseOrderDtlPatialView(UnshipOrderDtlViewModel unshipOrderDtlViewModel)
+        public ActionResult GetPurchaseOrderDtlPatialView(shipOrderViewModel unshipOrderDtlViewModel)
         {
             var q = from pod in db.PurchaseOrderDtl.AsEnumerable()
                     join sl in db.SourceList on pod.SourceListID equals sl.SourceListID
@@ -312,7 +312,7 @@ namespace PMSAWebMVC.Controllers
                     orderdtl.Unship = false;
                 }
             }
-            UnshipOrderDtlViewModel uodvm = new UnshipOrderDtlViewModel()
+            shipOrderViewModel uodvm = new shipOrderViewModel()
             {
                 PurchaseOrderID = unshipOrderDtlViewModel.PurchaseOrderID,
                 orderDtlItems = od,
@@ -365,7 +365,7 @@ namespace PMSAWebMVC.Controllers
         }
         //======================================================================================
 
-
+        //此方法須改寫
         //顯示出貨通知資訊
         public ActionResult shipNoticeDisplay(string id)
         {
@@ -389,6 +389,14 @@ namespace PMSAWebMVC.Controllers
             ViewBag.shipNoticeID = sn.ShipNoticeID;
             ViewBag.shipDate = sn.ShipDate;
             return View(po);
+        }
+        /// <summary>
+        ///  查詢頁面的顯示紙TABLE的用法
+        /// </summary>
+        /// <param name="disposing"></param>
+        public ActionResult childTableForOrderDtl(shipOrderViewModel order)
+        {
+
         }
         protected override void Dispose(bool disposing)
         {

@@ -61,17 +61,16 @@ namespace PMSAWebMVC.Controllers.SupplierController
                     on pod.PurchaseOrderID equals po.PurchaseOrderID
                     join sl in db.SourceList
                     on pod.SourceListID equals sl.SourceListID
-                    where po.SupplierCode == supplierCode
+                    where  sl.SupplierCode == supplierCode
                     select new
                     {
                         pod.PartName,
                         pod.PartNumber,
                         pod.QtyPerUnit,
                         pod.Qty,
-                        sl.UnitPrice,
+                        sl.UnitPrice
                     };
             List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
-
             foreach (var data in q)
             {
                 partTotalPriceViewModel a = new partTotalPriceViewModel();
@@ -85,7 +84,6 @@ namespace PMSAWebMVC.Controllers.SupplierController
             {
                 total += list[i].ToalPrice;
             }
-
             for (int i = 0; i < list.Count(); i++)
             {
                double p =  list[i].ToalPrice / total*100;

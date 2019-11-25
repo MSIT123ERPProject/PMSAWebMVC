@@ -11,16 +11,20 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
     /// <summary>
     /// 未出貨採購單ViewModel
     /// </summary>
-    public class UnshipOrderDtlViewModel
+    public class shipOrderViewModel
     {
         //這行不知道是甚麼??
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UnshipOrderDtlViewModel()
+        public shipOrderViewModel()
         {
 
         }
         public string PurchaseOrderID { get; set; }
         public string PurchaseOrderStatus { get; set; }
+        public string ReceiverName { get; set; }
+        public string ReceiverTel { get; set; }
+        public string ReceiverMobile { get; set; }
+        public string ReceiptAddress { get; set; }
         public IEnumerable<OrderDtlItem> orderDtlItems { get; set; }
 
         //此集合是用來存放訂單出貨明細檢視時，判斷有無被選取使用

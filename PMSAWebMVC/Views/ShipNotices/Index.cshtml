@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseOrder>
+﻿@model IEnumerable<PMSAWebMVC.ViewModels.ShipNotices.shipOrderViewModel>
 
 @{
     /**/
@@ -30,7 +30,7 @@
             </div>
         }*@
 
-    <div  class="col-sm-auto">
+    <div class="col-sm-auto">
         @Html.DropDownList("selectlist", new SelectList(new[]
      {
         new SelectListItem { Text = "未出貨", Value = "E",Selected=true },
@@ -43,22 +43,22 @@
     @*=================================================================*@
     @*這裡想加一個採購單編號的下拉式選單還沒成功*@
     @*<div id="idOrder" class="col-sm-auto">
-        @Html.DropDownListFor(model=>model.Where(x=>x.PurchaseOrderStatus=="E"), new { id = "idStatus", @class = "form-control" })
-    </div>*@
-@*=============================================================================================*@
+            @Html.DropDownListFor(model=>model.Where(x=>x.PurchaseOrderStatus=="E"), new { id = "idStatus", @class = "form-control" })
+        </div>*@
+    @*=============================================================================================*@
 </nav>
 @*dropdownlist取得值得方法*@
 @*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
 
 <!-- DataTables Example -->
-<div class="card mb-3">
-    <div class="card-header">
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
         <i class="fas fa-table"></i>
-        採購單
+        <h6 class="m-0 font-weight-bold text-primary">  採購單</h6>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+        <div class="dataTables_wrapper">
+            <table class="nowrap dataTable dtr-column collapsed" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
                     <tr>
                         @*<th>採購單狀態</th>*@
@@ -73,6 +73,7 @@
                         <th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>
                         @*<th>收貨人地址</th>*@
                         <th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -91,6 +92,7 @@
                         @*<th>收貨人地址</th>*@
                         <th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>
@@ -100,6 +102,7 @@
 </div>
 
 @section scripts{
+    <script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>
     <script>
         $(document).ready(function () {
             shipDatatable();
@@ -129,15 +132,26 @@
             if ($.fn.dataTable.isDataTable("#dataTable")) {
                 $("#dataTable").DataTable().destroy();
             }
-             $("#dataTable").DataTable({
-                    "ajax": {
-                      "url": `@Url.Action("GetPurchaseOrderList","ShipNotices")`,
-                     "type" : "get",
-                     "dataType" :"json",
-                     "data": { "PurchaseOrderStatus": $('#idStatus option:selected').val() },
-                        "contentType": "application/json;charset=utf-8",
-                        "cache": true,
-                              },
+            $("#dataTable").DataTable({
+                "ajax": {
+                    "url": `@Url.Action("GetPurchaseOrderList","ShipNotices")`,
+                    "type": "get",
+                    "dataType": "json",
+                    "data": { "PurchaseOrderStatus": $('#idStatus option:selected').val() },
+                    "contentType": "application/json;charset=utf-8",
+                    "cache": true,
+                },
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: -1
+                    }
+                },
+                columnDefs: [{
+                    targets: -1,
+                    orderable: false,
+                    className: 'control'
+                }],
                 "columns": [
                     { "data": "PurchaseOrderStatus" },
                     {"data" : "PurchaseOrderID" },
@@ -159,8 +173,14 @@
                             }
                             else {
                                 /*已出貨*/
-                                return '<a class="btn btn-primary"'+' href="' + "@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data + '">檢視已出貨</a>';
+                                return '<input class="btn btn-primary"' + 'name="shipped"' + `id="${data}"` + ' href="' + "@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data + '">檢視已出貨</input>';
                             }
+                        }
+                    },
+                    {
+                        "data": "PurchaseOrderID",
+                        render: function (data, type, row, meta) {
+                            return "";
                         }
                     }
                  ],
@@ -168,8 +188,22 @@
                 "order": [[1,"desc"]],
             });
             $.fn.dataTable.ext.errMode = 'throw';
+            //想做子TABLE//先放者
+            @*$("#dataTable>tbody").on('click', 'input[name=shipped]', function (e) {
+                let td = $(this).parent('td');
+                let row = td.parent('tr');
+                let id = row.children('td:nth child(2)');
+                $.ajax({
+                    url: `@Url.Action("","")`,
+                    type: "GET",
+                    data: { PurchaseOrderID: id }
+                }).done(function (res) {
+                    console.log(res);
+                    }).fail(function () {
+                        alert('ajax fail');
+                    });
+            });*@
         }
-      
     </script>
 
 }

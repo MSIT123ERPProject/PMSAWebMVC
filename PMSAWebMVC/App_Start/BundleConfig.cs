@@ -58,29 +58,34 @@ namespace PMSAWebMVC
                 //DataTables、DatetimePicker
                 "~/Scripts/moment-with-locales.js",
                 //DatetimePicker
-                //https://tempusdominus.github.io/bootstrap-4/Usage/
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.js",
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.zh-TW.js",
                  //pickadate
                  "~/Scripts/pickadate/picker.js",
-                  "~/Scripts/pickadate/picker.date.js",
-                   "~/Scripts/pickadate/picker.time.js",
-                    "~/Scripts/pickadate/translations/zh_TW.js",
-                //SweetAlert
+                 "~/Scripts/pickadate/picker.date.js",
+                 "~/Scripts/pickadate/picker.time.js",
+                 "~/Scripts/pickadate/translations/zh_TW.js",
+                 //SweetAlert
                 "~/Scripts/sweetAlert/sweetalert2.all.js"
                 ));
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-                "~/Content/DataTables/css/dataTables.bootstrap4.css",
-                "~/Content/tablesaw/tablesaw.css"));
+                "~/Content/DataTables/css/datatables.css"
+                //"~/Content/DataTables/css/dataTables.bootstrap4.css",
+                //"~/Content/DataTables/css/responsive.bootstrap4.css",
+                //"~/Content/DataTables/css/fixedHeader.bootstrap4.css"
+                ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
-                "~/Scripts/DataTables/jquery.dataTables.js",
-                "~/Scripts/DataTables/dataTables.bootstrap4.js",
-                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js",
-                "~/Scripts/tablesaw/tablesaw.jquery.js",
-                 "~/Scripts/tablesaw/tablesaw-init.js"));
+                "~/Scripts/DataTables/datatables.js",
+                //"~/Scripts/DataTables/jquery.dataTables.js",
+                //"~/Scripts/DataTables/dataTables.bootstrap4.js",
+                //"~/Scripts/DataTables/dataTables.responsive.js",
+                //"~/Scripts/DataTables/responsive.bootstrap4.js",
+                //"~/Scripts/DataTables/dataTables.fixedHeader.js",
+                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
+                ));
         }
     }
 }

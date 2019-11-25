@@ -611,6 +611,7 @@
     <Content Include="Content\pickadate\themes\rtl.css" />
     <Content Include="Content\regular.css" />
     <Content Include="Content\regular.min.css" />
+    <Content Include="Content\sbTemplate\mdb.min.css" />
     <Content Include="Content\sbTemplate\sb-admin.css" />
     <Content Include="Content\solid.css" />
     <Content Include="Content\solid.min.css" />
@@ -1009,6 +1010,7 @@
     <Content Include="Scripts\resxmanager\jquery.spellchecker.js" />
     <Content Include="Scripts\resxmanager\jquery.textarea-expander.js" />
     <Content Include="Scripts\resxmanager\jquery.watermark.min.js" />
+    <Content Include="Scripts\sbTemplate\mdb.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.min.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.all.js" />

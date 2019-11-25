@@ -27,7 +27,7 @@ namespace PMSAWebMVC
                 //MDB
                 "~/Content/MDB/css/mdb.css",
                 //SB Admin
-                "~/Content/sbTemplate/sb-admin.css",
+                //"~/Content/sbTemplate/sb-admin.css",
                 //Site
                 "~/Content/Site.css"));
 

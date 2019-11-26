@@ -56,9 +56,8 @@ namespace PMSAWebMVC.Controllers.SupplierController
         }
         public ActionResult GetPartTotalPricePercentage()
         {
+            //這裡LINQ語法需要更改一下，同一個料件要加總起來，並必須顯示出所有的料件
             var q = from pod in db.PurchaseOrderDtl
-                    join po in db.PurchaseOrder
-                    on pod.PurchaseOrderID equals po.PurchaseOrderID
                     join sl in db.SourceList
                     on pod.SourceListID equals sl.SourceListID
                     where  sl.SupplierCode == supplierCode
@@ -68,16 +67,17 @@ namespace PMSAWebMVC.Controllers.SupplierController
                         pod.PartNumber,
                         pod.QtyPerUnit,
                         pod.Qty,
-                        sl.UnitPrice
+                        sl.UnitPrice,
+                        sl.SourceListID
                     };
             List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
             foreach (var data in q)
             {
-                partTotalPriceViewModel a = new partTotalPriceViewModel();
-                a.ToalPrice = data.Qty * data.UnitPrice * data.QtyPerUnit;
-                a.PartNumber = data.PartNumber;
-                a.PartName = data.PartName;
-                list.Add(a);
+                partTotalPriceViewModel temp = new partTotalPriceViewModel();
+                temp.ToalPrice = data.Qty * data.UnitPrice * data.QtyPerUnit;
+                temp.PartNumber = data.PartNumber;
+                temp.PartName = data.PartName;
+                list.Add(temp);
             }
             double total = 0;
             for (int i = 0; i < list.Count(); i++)
@@ -92,6 +92,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
             }
             return Json(list,JsonRequestBehavior.AllowGet );
         }
+
         public class partTotalPriceViewModel
         {
             public string PartName { get; set; }

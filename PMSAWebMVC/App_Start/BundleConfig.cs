@@ -81,6 +81,13 @@ namespace PMSAWebMVC
                 "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js",
                 "~/Scripts/tablesaw/tablesaw.jquery.js",
                  "~/Scripts/tablesaw/tablesaw-init.js"));
+            //highcharts
+            bundles.Add(new StyleBundle("~/Content/highcharts").Include(
+                "~/Content/highcharts/css/highcharts.scss"
+                ));
+            bundles.Add(new ScriptBundle("~/bundles/highcharts").Include(
+                "~/Scripts/highcharts/highcharts.js"
+                ));
         }
     }
 }

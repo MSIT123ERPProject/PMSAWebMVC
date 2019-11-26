@@ -3,32 +3,185 @@
 @{
     ViewBag.Title = "Index";
 }
+@section styles
+{
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 
-<h2>Index</h2>
+    <style>
+        @@keyframes fadeinShowBody {
+            0% {
+                opacity: 0;
+            }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-        </th>
-    </tr>
+            20% {
+                opacity: 0.8;
+            }
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeinShow {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        body {
+            animation: 0.8s fadeinShowBody 0.4s both;
+        }
+
+        .wrapall {
+            animation: 0.5s fadeinShow 0.5s both;
+        }
+    </style>
+}
+<div class="wrapall">
+    <h2>管理採購員帳號</h2>
+    <h6>從人資系統加入採購員帳號至採購系統，查詢、新增、修改採購員帳號</h6>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                <i class="fas fa-table"></i>
+                採購員帳號
+            </h4>
+            <a href="@Url.Action("Create","UsersAdmin")">
+                <button class="btn addBtn bd fillbtn"><i class='fas fa-plus-square'></i> 新增</button>
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="dataTables_wrapper" id="createEmp_wrapper">
+                <table id="createEmp" class="nowrap dataTable dtr-column collapsed" role="grid" aria-describedby="createEmp_info">
+                    <thead>
+                        <tr role="row">
+                            <th>
+                                @Html.DisplayNameFor(model => model.UserName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.RealName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Roles)
+                            </th>
+                            <th>
+                                動作
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr role="row">
+                                <td>
+                                    @Html.DisplayFor(m => item.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.RealName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.Roles)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UserName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.RealName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Roles)
+                            </th>
+                            <th>
+                                動作
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+        <script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>
+        <script src="@Url.Content("~/Scripts/DataTables/i18n/jquery.dataTables." + Html.OutputText("".CultureName())+".js")"></script>
+        <script src="@Url.Content("~/Scripts/tempusdominus/tempusdominus-bootstrap-4." + Html.OutputText("".CultureName())+".js")"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+
+        @*https://datatables.net/forums/discussion/56914*@
+        <script type="text/javascript">
+
+            $(window).on('resize', function () {
+                location.reload();
+            });
+            $("#createEmp").ready(() => {
+                var oTable = $('#createEmp').DataTable({
+                    responsive: {
+                        details: {
+                            type: 'column',
+                            target: -1
+                        }
+                    },
+                    columnDefs: [{
+                        className: 'control',
+                        orderable: false,
+                        targets: -1
+                    },
+                    {
+                        targets: -2,
+                        data: null,
+                        defaultContent: `
+                                    <button class="btn editBtn bd r fillbtn"><i class="fas fa-pen"></i></button>
+                                    <button class="btn detailBtn bd r fillbtn"><i class="fas fa-file-alt"></i></button>
+                                    <button class="btn deleteBtn bd r fillbtn"><i class='fas fa-trash-alt'></i></button>
+                                    <button class="btn addBtn bd r fillbtn"><i class='fas fa-plus-square'></i></button>`,
+                        orderable: false,
+                        className: 'action-btn'
+                    }],
+                    fixedColumns: {
+                        leftColumns: 2
+                    },
+                    "order": [[1, "asc"]],
+                    "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
+                    "autoWidth": false,
+                    initComplete: function () {
+                        $('select[name="createEmp_length"]').addClass('selectpicker')
+                    }
+                });
+
+                //抓 table 裡按鈕請 如此 $("tbody").on()
+                $("tbody").on('click', '.addBtn', function (e) {
+                    console.log(e.currentTarget);
+                })
+            });
+        </script>
+
     }
-</table>

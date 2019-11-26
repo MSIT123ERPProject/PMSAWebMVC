@@ -26,6 +26,13 @@ namespace PMSAWebMVC
                 "~/Content/bootstrap.css",
                 //MDB
                 "~/Content/MDB/css/mdb.css",
+                "~/Content/MDB/css/addons/datatables.min.css",
+                "~/Content/MDB/css/addons/datatables-select.min.css",
+                "~/Content/MDB/css/addons/directives.min.css",
+                "~/Content/MDB/css/addons/flag.min.css",
+                "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
+                "~/Content/MDB/css/addons/rating.min.css",
+                "~/Content/MDB/css/modules/animations-extended.min.css",
                 //SB Admin
                 //"~/Content/sbTemplate/sb-admin.css",
                 //Site
@@ -37,6 +44,19 @@ namespace PMSAWebMVC
                 "~/Scripts/bootstrap.js",
                 //MDB
                 "~/Scripts/MDB/mdb.js",
+                "~/Scripts/MDB/addons/datatables.min.js",
+                "~/Scripts/MDB/addons/datatables-select.min.js",
+                "~/Scripts/MDB/addons/directives.min.js",
+                "~/Scripts/MDB/addons/flag.min.js",
+                "~/Scripts/MDB/addons/imagesloaded.pkgd.min.js",
+                "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
+                "~/Scripts/MDB/addons/masonry.pkgd.min.js",
+                "~/Scripts/MDB/addons/rating.min.js",
+                "~/Scripts/MDB/modules/animations-extended.min.js",
+                "~/Scripts/MDB/modules/forms-free.min.js",
+                "~/Scripts/MDB/modules/scrolling-navbar.min.js",
+                "~/Scripts/MDB/modules/treeview.min.js",
+                "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/sbTemplate/sb-admin.js"
@@ -58,29 +78,34 @@ namespace PMSAWebMVC
                 //DataTables、DatetimePicker
                 "~/Scripts/moment-with-locales.js",
                 //DatetimePicker
-                //https://tempusdominus.github.io/bootstrap-4/Usage/
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.js",
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.zh-TW.js",
                  //pickadate
                  "~/Scripts/pickadate/picker.js",
-                  "~/Scripts/pickadate/picker.date.js",
-                   "~/Scripts/pickadate/picker.time.js",
-                    "~/Scripts/pickadate/translations/zh_TW.js",
-                //SweetAlert
+                 "~/Scripts/pickadate/picker.date.js",
+                 "~/Scripts/pickadate/picker.time.js",
+                 "~/Scripts/pickadate/translations/zh_TW.js",
+                 //SweetAlert
                 "~/Scripts/sweetAlert/sweetalert2.all.js"
                 ));
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-                "~/Content/DataTables/css/dataTables.bootstrap4.css",
-                "~/Content/tablesaw/tablesaw.css"));
+                "~/Content/DataTables/css/datatables.css"
+                //"~/Content/DataTables/css/dataTables.bootstrap4.css",
+                //"~/Content/DataTables/css/responsive.bootstrap4.css",
+                //"~/Content/DataTables/css/fixedHeader.bootstrap4.css"
+                ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
-                "~/Scripts/DataTables/jquery.dataTables.js",
-                "~/Scripts/DataTables/dataTables.bootstrap4.js",
-                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js",
-                "~/Scripts/tablesaw/tablesaw.jquery.js",
-                 "~/Scripts/tablesaw/tablesaw-init.js"));
+                "~/Scripts/DataTables/datatables.js",
+                //"~/Scripts/DataTables/jquery.dataTables.js",
+                //"~/Scripts/DataTables/dataTables.bootstrap4.js",
+                //"~/Scripts/DataTables/dataTables.responsive.js",
+                //"~/Scripts/DataTables/responsive.bootstrap4.js",
+                //"~/Scripts/DataTables/dataTables.fixedHeader.js",
+                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
+                ));
         }
     }
 }

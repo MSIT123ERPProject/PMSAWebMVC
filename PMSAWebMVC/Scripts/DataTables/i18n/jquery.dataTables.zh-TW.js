@@ -1,4 +1,7 @@
-﻿$.extend(true,  $.fn.dataTable.defaults, {
+﻿$.extend(true, $.fn.dataTable.defaults, {
+    responsive: true,
+    fixedHeader: true,
+    "errMode": 'throw',
     "language": {
         "emptyTable": "無資料",
         "processing": "處理中...",

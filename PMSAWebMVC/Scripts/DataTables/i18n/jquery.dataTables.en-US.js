@@ -1,4 +1,7 @@
 ﻿$.extend(true, $.fn.dataTable.defaults, {
+    responsive: true,
+    fixedHeader: true,
+    "errMode": 'throw',
     "language": {
         "emptyTable": "No data available in table",
         "info": "Showing _START_ to _END_ of _TOTAL_ entries",

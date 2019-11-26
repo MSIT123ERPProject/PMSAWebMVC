@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -102,16 +103,6 @@ namespace PMSAWebMVC.Controllers
             return View();
         }
 
-        public string generateFirstPwd()
-        {
-            //salt: 隨機位元組=>演算法=>計算後給值
-            RNGCryptoServiceProvider rngbyte = new RNGCryptoServiceProvider();
-            byte[] bytesalt = new byte[8];
-            rngbyte.GetBytes(bytesalt);
-            string salty = Convert.ToBase64String(bytesalt);
-            return salty;
-        }
-
         private PMSAEntities db = new PMSAEntities();
 
         [HttpPost]
@@ -144,7 +135,25 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
-        //
+        public string generateFirstPwd()
+        {
+            //salt: 隨機位元組=>演算法=>計算後給值
+            RNGCryptoServiceProvider rngbyte = new RNGCryptoServiceProvider();
+            byte[] bytesalt = new byte[8];
+            rngbyte.GetBytes(bytesalt);
+            string salty = Convert.ToBase64String(bytesalt);
+            Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])");
+            if (regex.IsMatch(salty))
+            {
+                return salty;
+            }
+            else
+            {
+                return generateFirstPwd();
+            }
+        }
+
+        //管理員新增採購員帳號
         // POST: /Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

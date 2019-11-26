@@ -1,4 +1,7 @@
-﻿$.extend(true,  $.fn.dataTable.defaults, {
+﻿$.extend(true, $.fn.dataTable.defaults, {
+    responsive: true,
+    fixedHeader: true,
+    "errMode": 'throw',
     "language": {
         "emptyTable": "テーブルにデータがありません",
         "info": " _TOTAL_ 件中 _START_ から _END_ まで表示",

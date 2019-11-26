@@ -26,6 +26,13 @@ namespace PMSAWebMVC
                 "~/Content/bootstrap.css",
                 //MDB
                 "~/Content/MDB/css/mdb.css",
+                "~/Content/MDB/css/addons/datatables.min.css",
+                "~/Content/MDB/css/addons/datatables-select.min.css",
+                "~/Content/MDB/css/addons/directives.min.css",
+                "~/Content/MDB/css/addons/flag.min.css",
+                "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
+                "~/Content/MDB/css/addons/rating.min.css",
+                "~/Content/MDB/css/modules/animations-extended.min.css",
                 //SB Admin
                 //"~/Content/sbTemplate/sb-admin.css",
                 //Site
@@ -37,6 +44,19 @@ namespace PMSAWebMVC
                 "~/Scripts/bootstrap.js",
                 //MDB
                 "~/Scripts/MDB/mdb.js",
+                "~/Scripts/MDB/addons/datatables.min.js",
+                "~/Scripts/MDB/addons/datatables-select.min.js",
+                "~/Scripts/MDB/addons/directives.min.js",
+                "~/Scripts/MDB/addons/flag.min.js",
+                "~/Scripts/MDB/addons/imagesloaded.pkgd.min.js",
+                "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
+                "~/Scripts/MDB/addons/masonry.pkgd.min.js",
+                "~/Scripts/MDB/addons/rating.min.js",
+                "~/Scripts/MDB/modules/animations-extended.min.js",
+                "~/Scripts/MDB/modules/forms-free.min.js",
+                "~/Scripts/MDB/modules/scrolling-navbar.min.js",
+                "~/Scripts/MDB/modules/treeview.min.js",
+                "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/sbTemplate/sb-admin.js"

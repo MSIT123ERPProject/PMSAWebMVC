@@ -12,6 +12,7 @@
     <figure class="highcharts-figure">
         <div id="container2"></div>
     </figure>
+    <div id="SplitBubbleChart"></div>
 </div>
 
 
@@ -21,6 +22,7 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script>
         $(document).ready(function () {
             unitsInStockChart();
@@ -156,13 +158,63 @@
                             }
                         }
                     },
-                }/*, ChartAddSeriesCallbackFunction(this, event)*/);
+                });
                     chart.addSeries({
                         type: 'pie',
                         name: '',
                         data: pie
                     },false);
                 chart.redraw();
+            });
+        }
+        //BUBBLECHART
+        function SplitBubbleChart() {
+            $.getJSON(`@Url.Action("GetPartQtyByShipStatus", "SupplierHomePage")`, function (datas) {
+                
+
+                let chart3 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'SplitBubbleChart',
+                        type: 'packedbubble',
+                        height:'100%'
+                    },
+                    title: {
+                        text:'出貨數量'
+                    },
+                    tooltip: {
+                        useHTML: true,
+                        pointFormat: '<b>{point.name}:</b> {point.value}m CO<sub>2</sub>'
+                    },
+                    plotOptions: {
+                        packedbubble: {
+                            minSize: '',
+                            maxSize: '',
+                            zMin:,
+                            zMax:,
+                            layoutAlgorithm: {
+                                splitSeries: false,
+                                gravitationalConstant: 0.02
+                            },
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}',
+                                filter: {
+                                    property: 'y',
+                                    operator: '>',
+                                    value:250
+                                },
+                                style: {
+                                    color: 'black',
+                                    textOutline: 'none',
+                                    fontWeight:'normal'
+                                }
+                            }
+                        }
+                    },
+                    series: [
+
+                    ]
+                });
             });
         }
     </script>

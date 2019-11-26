@@ -60,7 +60,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
             var q = from pod in db.PurchaseOrderDtl
                     join sl in db.SourceList
                     on pod.SourceListID equals sl.SourceListID
-                    where  sl.SupplierCode == supplierCode
+                    where sl.SupplierCode == supplierCode
                     select new
                     {
                         pod.PartName,
@@ -86,11 +86,11 @@ namespace PMSAWebMVC.Controllers.SupplierController
             }
             for (int i = 0; i < list.Count(); i++)
             {
-               double p =  list[i].ToalPrice / total*100;
+                double p = list[i].ToalPrice / total * 100;
                 p = Math.Round(p, 1);
                 list[i].Percentage = p;
             }
-            return Json(list,JsonRequestBehavior.AllowGet );
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         public class partTotalPriceViewModel
@@ -99,6 +99,51 @@ namespace PMSAWebMVC.Controllers.SupplierController
             public string PartNumber { get; set; }
             public int ToalPrice { get; set; }
             public double Percentage { get; set; }
+        }
+        //第三張表的方法要寫未出貨的數量以及需求日期
+        //已出貨料件的數量以及出貨日期
+        //用LINECHART呈現即可
+        //或是BUBBLECHART
+        public ActionResult GetPartQtyByShipStatus()
+        {
+            //2019 11/26 22:57 這裡要改寫
+            var qpod = from pod in db.PurchaseOrderDtl
+                       join po in db.PurchaseOrder
+                       on pod.PurchaseOrderID equals po.PurchaseOrderID
+                       where po.SupplierCode == supplierCode
+                       select new OrderPartQty
+                       {
+                           ShipStatus = null,
+                           Qty = pod.Qty,
+                           ShipDate = pod.ShipDate,
+                           DateRequired = pod.DateRequired
+                       };
+            foreach (var order in qpod)
+            {
+                if (order.ShipDate == null)
+                {
+                    order.ShipStatus = "unship";
+                }
+                else
+                {
+                    order.ShipStatus = "shipped";
+                }
+            }
+            var json = qpod.ToList();
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+        //需要兩個ViewModel來幫助生成BubbleChart
+        public class OrderPart
+        { 
+            //ShipStatus是用來讓VIEW判斷是否已出貨
+            public string ShipStatus { get; set; }
+            public List<OrderPartQty> OrderPartQties { get; set; }
+         }
+        public class OrderPartQty
+        {
+            public int Qty { get; set; }
+            public DateTime? ShipDate { get; set; }
+            public DateTime? DateRequired { get; set; }
         }
     }
 }

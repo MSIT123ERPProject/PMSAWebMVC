@@ -1,0 +1,113 @@
+/*22*/
+/*body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td {
+    margin: 0;
+    padding: 0
+}*/
+/*27*/
+/*table {
+    border-collapse: collapse;
+    border-spacing: 0
+}*/
+/*766*/
+/*table.dataTable {
+    width: 100%;
+    margin: 0 auto;
+    clear: both;
+    border-collapse: separate;
+    border-spacing: 0
+}*/
+    /*827*/
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 8px 10px
+    }
+    /*952*/
+    /*table.dataTable.nowrap th, table.dataTable.nowrap td {
+        white-space: nowrap
+    }*/
+    /*1028*/
+    /*table.dataTable, table.dataTable th, table.dataTable td {
+        box-sizing: content-box
+    }*/
+/*1222*/
+/*body {
+    font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif !important;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #fff;
+    position: relative;
+    padding-bottom: 220px !important;
+    height: auto !important;
+    min-height: 100%;
+    box-sizing: border-box;
+    -webkit-font-smoothing: inherit
+}*/
+
+/*datatables.css 549*/
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+    top: 12px;
+    left: 4px;
+    height: 14px;
+    width: 14px;
+    display: block;
+    position: absolute;
+    color: white;
+    border: 0px solid white;
+    border-radius: 0px;
+    box-shadow: 0 0 0px #444;
+    box-sizing: content-box;
+    text-align: center;
+    text-indent: 0 !important;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-style: normal;
+    line-height: 14px;
+    content: '\f0fe';
+    color: #4285f4;
+    background-color: transparent;
+    /*background-color: #0275d8;*/
+}
+/*593*/
+table.dataTable.dtr-column > tbody > tr > td.control:before,
+table.dataTable.dtr-column > tbody > tr > th.control:before {
+    top: 50%;
+    left: 50%;
+    height: 16px;
+    width: 16px;
+    margin-top: -10px;
+    margin-left: -10px;
+    display: block;
+    position: absolute;
+    color: white;
+    border: 0px solid white;
+    border-radius: 0px;
+    box-shadow: 0 0 0px #444;
+    box-sizing: content-box;
+    text-align: center;
+    text-indent: 0 !important;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-style: normal;
+    line-height: 14px;
+    content: '\f0fe';
+    color: #4285f4;
+    background-color: transparent;
+    /*background-color: #0275d8;*/
+}
+/*569*/
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
+    content: '\f146';
+    color: #4285f4;
+    background-color: transparent;
+    /*background-color: #d33333;*/
+}
+/*datatables 615*/
+table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+    content: '\f146';
+    color: #4285f4;
+    background-color: transparent;
+    /*background-color: #d33333;*/
+}

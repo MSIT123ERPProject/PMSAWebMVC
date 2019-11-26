@@ -1,11 +1,9 @@
 ﻿using PMSAWebMVC.Models;
-using PMSAWebMVC.ViewModels.PurchaseOrders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
@@ -49,6 +47,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         public int OriginalUnitPrice { get; set; }
         [Display(Name = "數量")]
         public int Qty { get; set; }
+        [Display(Name = "供應商名稱")]
+        public string SupplierName { get; set; }
         [DisplayFormat(DataFormatString = "{0:P0}")]
         [Column(TypeName = "decimal(3, 2)")]
         [Display(Name = "折扣")]
@@ -134,7 +134,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
 
 
         //取得請購單明細資料集
-        public static IEnumerable<PurchaseRequisitionDtlItem> GetPurchaseRequisitionDtlList(string ProductNumber, string PartNumber)
+        public static IEnumerable<PurchaseRequisitionDtlItem> GetPurchaseRequisitionDtlList(string productNumber, string partNumber)
         {
             IEnumerable<PurchaseRequisitionDtlItem> pods = null;//建立空的請購單明細模型
             DateTime now = DateTime.Now;
@@ -146,19 +146,16 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
                 var podq = from pr in db.Product//產品
                            join prp in db.ProductPart//產品料件
                             on new { pr.ProductNumber, ID = pr.ProductNumber } equals//產品編號一樣的話
-                            new { prp.ProductNumber, ID = ProductNumber }
-                           join p in db.Part//抓料件
-                           on prp.PartNumber equals p.PartNumber//"產品料件"的料件編號跟"料件"一樣的話
+                            new { prp.ProductNumber, ID = productNumber }
                            join s1 in db.SourceList//貨源清單
-                           on p.PartNumber equals s1.PartNumber
-                           join s2 in db.SourceListDtl//貨源清單明細
-                           on s1.SourceListID equals s2.SourceListID
-                           where !s1.SourceListDtl.Where(d => d.DiscountBeginDate <= now && d.DiscountEndDate >= now).Any()//檢查是否過期
-                           orderby prp.ProductNumber//用產品料件編號排序
+                           on new { prp.PartNumber ,number=prp.PartNumber  } equals
+                           new { s1.PartNumber ,number=partNumber}
+                           //where !s1.SourceListDtl.Where(d => d.DiscountBeginDate <= now && d.DiscountEndDate >= now).Any()//檢查是否過期
+                           orderby pr.ProductNumber//用產品料件編號排序
                            select new PurchaseRequisitionDtlItem
                            {
                                PartNumber = prp.PartNumber,//料件編號=產品料件明細的
-                               PartName = p.PartName,//料件名稱=料件的
+                               PartName = prp.Part.PartName,//料件名稱=料件的
                                QtyPerUnit = s1.QtyPerUnit,//批量=貨源清單的
                                OriginalUnitPrice = s1.UnitPrice,//價格=貨源清單的
                                Qty = s1.QtyPerUnit,//請購數量=貨源清單.最小訂貨量
@@ -188,7 +185,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
                     item.TotalPartQty = item.QtyPerUnit * item.Qty;//請購料件總數=批量*請購數量
                     item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - item.Discount));//購買單價=批量原始單價*(1-折扣)
                     item.Total = item.PurchaseUnitPrice * item.Qty;//總價格=單價*數量
-                    item.DateRequired = item.DateRequired.AddDays(-7);//要求到貨日期
+                    //item.DateRequired = item.DateRequired.AddDays(-7);//要求到貨日期
                 }
             }
 

@@ -398,6 +398,8 @@
     <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionCreateViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
     <Compile Include="ViewModels\ShipNotices\ShipNoticeViewModel.cs" />
   </ItemGroup>
@@ -1156,6 +1158,8 @@
     <Content Include="Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
+    <Content Include="Views\PurchaseRequisitions\Createtest.cshtml" />
+    <Content Include="Views\PurchaseRequisitions\_CreatePRItemPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

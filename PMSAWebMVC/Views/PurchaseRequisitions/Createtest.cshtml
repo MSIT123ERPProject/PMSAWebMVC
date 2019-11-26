@@ -40,12 +40,12 @@
         </div>
     </div>
 </div>
-@*@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
+@using (Html.BeginForm("Create", "PurchaseRequisitions", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-list"></i> 採購細項
+                <i class="fas fa-list"></i> 請購細項
             </div>
             <div class="card-body">
                 @if (TempData["ErrorMessage"] != null)
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-    }*@
+    }
 
 @section scripts
 {
@@ -91,18 +91,18 @@
             });
             })
 
-            @*$('#SelectedSupplierName').change(function () {
+            $('#SelectedPartName').change(function () {//查詢料件名稱
                 $.ajax({
-                    url: "@Url.Action("GetPurchaseOrderDtlList", "PurchaseOrders")",
+                    url: "@Url.Action("GetPurchaseRequisitionsDtlList", "PurchaseRequisitions")",//取得請購單明細資料集,請購單
                     type: "get",
                     data: {
-                        id: $("#SelectedPurchaseRequisitionID").val(),
-                        supplierCode: $("#SelectedSupplierName").val()
+                        Name: $("#SelectedProductNume").val(),//查詢產品(ID)名稱
+                        partNumber: $("#SelectedPartName").val()//查詢料件名稱
                     },
                 }).done(function (result) {
                     $("#dataTablesContainer").html(result);
                     $("#warning").remove();
-                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
+                    $("#ProductNume").val($("#SelectedProductNume").val());//產品名稱(ID),查詢產品名稱
 
                     //全選、全勾消
                     $("input[name=chkAll]").change(function () {
@@ -126,7 +126,7 @@
                         },
                     }
                 );
-            })*@
+            })
         });
     </script>
 }

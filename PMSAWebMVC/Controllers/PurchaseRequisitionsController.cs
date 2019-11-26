@@ -268,11 +268,21 @@ namespace PMSAWebMVC.Controllers
 
         //取得請購單明細資料集
         [HttpGet]
-        public ActionResult GetPurchaseRequisitionsDtlList(string id, string PurchaseRequisitionID)
+        public ActionResult GetPurchaseRequisitionsDtlList(string Name, string partNumber)
         {
+            string PrNuber = "";
+            var find = from prn in db.Product   //產品名轉產品編號
+                       where prn.ProductName == Name
+                       select prn;
+            foreach (var item in find)
+            {
+                PrNuber = item.ProductNumber;
+            }
+          
+
             Repository rep = new Repository();
             //string c = User.Identity.GetRealName();
-            var data = Repository.GetPurchaseRequisitionDtlList(id, PurchaseRequisitionID);
+            var data = Repository.GetPurchaseRequisitionDtlList(PrNuber, partNumber);
             IList<PurchaseRequisitionDtlItemChecked> resultSet = new List<PurchaseRequisitionDtlItemChecked>();
             foreach (var item in data)
             {
@@ -290,7 +300,7 @@ namespace PMSAWebMVC.Controllers
                 CheckedResultSetVM = resultSet
             };
             vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;
-            return PartialView("_CreatePODItemPartial", vm);//注意
+            return PartialView("_CreatePRItemPartial", vm);//注意
         }
 
         private void ConfigureViewModel(PurchaseRequisitionCreateViewModel model)

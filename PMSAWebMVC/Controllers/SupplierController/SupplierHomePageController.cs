@@ -18,7 +18,6 @@ namespace PMSAWebMVC.Controllers.SupplierController
         ShipNoticesUtilities utilities = new ShipNoticesUtilities();
         public SupplierHomePageController()
         {
-
             db = new PMSAEntities();
             supplierCode = "S00001";
             supplierAccount = "SE00001";
@@ -104,46 +103,49 @@ namespace PMSAWebMVC.Controllers.SupplierController
         //已出貨料件的數量以及出貨日期
         //用LINECHART呈現即可
         //或是BUBBLECHART
+        [HttpGet]
         public ActionResult GetPartQtyByShipStatus()
         {
             //2019 11/26 22:57 這裡要改寫
-            var qpod = from pod in db.PurchaseOrderDtl
-                       join po in db.PurchaseOrder
-                       on pod.PurchaseOrderID equals po.PurchaseOrderID
-                       where po.SupplierCode == supplierCode
-                       select new OrderPartQty
-                       {
-                           ShipStatus = null,
-                           Qty = pod.Qty,
-                           ShipDate = pod.ShipDate,
-                           DateRequired = pod.DateRequired
-                       };
-            foreach (var order in qpod)
-            {
-                if (order.ShipDate == null)
-                {
-                    order.ShipStatus = "unship";
-                }
-                else
-                {
-                    order.ShipStatus = "shipped";
-                }
-            }
-            var json = qpod.ToList();
+            var qpodUnship = from pod in db.PurchaseOrderDtl.AsEnumerable()
+                             //join pod in db.PurchaseOrderDtl
+                             //on po.PurchaseOrderID equals pod.PurchaseOrderID
+                             where /*po.SupplierCode == supplierCode &&*/ pod.ShipDate == null 
+                             select new OrderPartQty
+                             {
+                                 name = pod.PartName,
+                                 value = pod.Qty,
+                             };
+            var qpodShipped = from po in db.PurchaseOrder.AsEnumerable()
+                              join pod in db.PurchaseOrderDtl
+                              on po.PurchaseOrderID equals pod.PurchaseOrderID
+                              where po.SupplierCode == supplierCode && pod.ShipDate != null
+                              select new OrderPartQty
+                              {
+                                  name = pod.PartName,
+                                  value= pod.Qty,
+                              };
+            List<OrderPartQty> orderPartQtyUnship = qpodUnship.ToList();
+            List<OrderPartQty> orderPartQtyShipped = qpodShipped.ToList();
+            IList<OrderPart> orderParts = new List<OrderPart>();
+            orderParts.Add(new OrderPart{ShipStatus="Unship",OrderPartQties=orderPartQtyUnship  });
+            orderParts.Add(new OrderPart { ShipStatus = "Shipped", OrderPartQties = orderPartQtyShipped });
+            var json = orderParts;
             return Json(json, JsonRequestBehavior.AllowGet);
         }
         //需要兩個ViewModel來幫助生成BubbleChart
         public class OrderPart
-        { 
+        {
             //ShipStatus是用來讓VIEW判斷是否已出貨
             public string ShipStatus { get; set; }
             public List<OrderPartQty> OrderPartQties { get; set; }
-         }
+        }
         public class OrderPartQty
         {
-            public int Qty { get; set; }
-            public DateTime? ShipDate { get; set; }
-            public DateTime? DateRequired { get; set; }
+            public string name { get; set; }
+            public int value { get; set; }
+            //public DateTime? ShipDate { get; set; }
+            //public DateTime? DateRequired { get; set; }
         }
     }
 }

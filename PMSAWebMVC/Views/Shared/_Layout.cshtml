@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +10,7 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/form")
     @Styles.Render("~/Content/DataTables")
-    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/modernizr")    
     @RenderSection("styles", required: false)
     <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
     @*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
@@ -178,6 +177,7 @@
     @Scripts.Render("~/bundles/js")
     @Scripts.Render("~/bundles/form")
     @Scripts.Render("~/bundles/DataTables")
+    @*@Scripts.Render("~/bundles/HighCharts")*@
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -100,10 +100,7 @@ namespace PMSAWebMVC
                 ));
 
             //HighCharts
-            bundles.Add(new StyleBundle("~/Content/highcharts").Include(
-                "~/Content/highcharts/css/highcharts.scss"
-                ));
-            bundles.Add(new ScriptBundle("~/bundles/highcharts").Include(
+            bundles.Add(new ScriptBundle("~/bundles/HighCharts").Include(
                 "~/Scripts/highcharts/highcharts.js"
                 ));
 

@@ -125,11 +125,21 @@ namespace PMSAWebMVC.Controllers.SupplierController
                                   name = pod.PartName,
                                   value= pod.Qty,
                               };
+            var qpodNoApplied = from po in db.PurchaseOrder.AsEnumerable()
+                              join pod in db.PurchaseOrderDtl
+                              on po.PurchaseOrderID equals pod.PurchaseOrderID
+                              where po.SupplierCode == supplierCode && po.PurchaseOrderStatus == "P"
+                              select new OrderPartQty
+                              {
+                                  name = pod.PartName,
+                                  value = pod.Qty,
+                              };
             List<OrderPartQty> orderPartQtyUnship = qpodUnship.ToList();
             List<OrderPartQty> orderPartQtyShipped = qpodShipped.ToList();
             IList<OrderPart> orderParts = new List<OrderPart>();
             orderParts.Add(new OrderPart{ShipStatus="Unship",OrderPartQties=orderPartQtyUnship  });
             orderParts.Add(new OrderPart { ShipStatus = "Shipped", OrderPartQties = orderPartQtyShipped });
+            orderParts.Add(new OrderPart { ShipStatus = "NoApplied", OrderPartQties = qpodNoApplied.ToList() });
             var json = orderParts;
             return Json(json, JsonRequestBehavior.AllowGet);
         }

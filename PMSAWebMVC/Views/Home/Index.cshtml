@@ -209,7 +209,8 @@
             $.getJSON(`@Url.Action("GetPartQtyByShipStatus", "SupplierHomePage")`, function (datas) {
             console.log(datas);
             let ShippedOrder =[];
-             let UnshipOrder =[];
+                let UnshipOrder = [];
+                let NoAppliedOrder = [];
             $.each( datas,function( index,item ){
             if( item.ShipStatus  == "Unship" ){
             let us = item.OrderPartQties;
@@ -222,11 +223,14 @@
             $.each(so,function(i,dtl){
             ShippedOrder.push( dtl );
             });
-            }
+                }
+                if (item.ShipStatus =="NoApplied") {
+                    NoAppliedOrder = item.OrderPartQties;
+                }
              } );
                 
           console.log(ShippedOrder);
-            
+                console.log(NoAppliedOrder);
                 let chart3 = new Highcharts.chart('container3',{
                     chart: {
                        type: 'packedbubble',
@@ -237,7 +241,7 @@
                     },
                     tooltip: {
                         useHTML: true,
-                        pointFormat: '<b>{point.name}:</b> {point.value}m CO<sub>2</sub>'
+                        pointFormat: '<b>{point.name}:</b> {point.value}個<sub></sub>'
                     },
                     plotOptions: {
                         packedbubble: {
@@ -274,7 +278,11 @@
             {
             name:'Shipped',
             data:ShippedOrder
-            }
+                        },
+                        {
+                            name: 'NoApplied',
+                            data: NoAppliedOrder
+                        }
                     ]
                 });
             });

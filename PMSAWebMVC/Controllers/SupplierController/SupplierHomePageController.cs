@@ -137,9 +137,9 @@ namespace PMSAWebMVC.Controllers.SupplierController
             List<OrderPartQty> orderPartQtyUnship = qpodUnship.ToList();
             List<OrderPartQty> orderPartQtyShipped = qpodShipped.ToList();
             IList<OrderPart> orderParts = new List<OrderPart>();
-            orderParts.Add(new OrderPart{ShipStatus="Unship",OrderPartQties=orderPartQtyUnship  });
-            orderParts.Add(new OrderPart { ShipStatus = "Shipped", OrderPartQties = orderPartQtyShipped });
-            orderParts.Add(new OrderPart { ShipStatus = "NoApplied", OrderPartQties = qpodNoApplied.ToList() });
+            orderParts.Add(new OrderPart{name="Unship",data=orderPartQtyUnship  });
+            orderParts.Add(new OrderPart { name = "Shipped", data = orderPartQtyShipped });
+            orderParts.Add(new OrderPart { name = "NoApplied", data = qpodNoApplied.ToList() });
             var json = orderParts;
             return Json(json, JsonRequestBehavior.AllowGet);
         }
@@ -147,15 +147,13 @@ namespace PMSAWebMVC.Controllers.SupplierController
         public class OrderPart
         {
             //ShipStatus是用來讓VIEW判斷是否已出貨
-            public string ShipStatus { get; set; }
-            public List<OrderPartQty> OrderPartQties { get; set; }
+            public string name { get; set; }
+            public List<OrderPartQty> data { get; set; }
         }
         public class OrderPartQty
         {
             public string name { get; set; }
             public int value { get; set; }
-            //public DateTime? ShipDate { get; set; }
-            //public DateTime? DateRequired { get; set; }
         }
     }
 }

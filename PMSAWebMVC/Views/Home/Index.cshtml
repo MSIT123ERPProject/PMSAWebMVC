@@ -207,30 +207,6 @@
         //BUBBLECHART
         function SplitBubbleChart() {
             $.getJSON(`@Url.Action("GetPartQtyByShipStatus", "SupplierHomePage")`, function (datas) {
-            console.log(datas);
-            let ShippedOrder =[];
-                let UnshipOrder = [];
-                let NoAppliedOrder = [];
-            $.each( datas,function( index,item ){
-            if( item.ShipStatus  == "Unship" ){
-            let us = item.OrderPartQties;
-            $.each(us,function(i,dtl){
-            UnshipOrder.push( dtl );
-            });
-            }
-            if( item.ShipStatus =="Shipped" ){
-             let so = item.OrderPartQties;
-            $.each(so,function(i,dtl){
-            ShippedOrder.push( dtl );
-            });
-                }
-                if (item.ShipStatus =="NoApplied") {
-                    NoAppliedOrder = item.OrderPartQties;
-                }
-             } );
-                
-          console.log(ShippedOrder);
-                console.log(NoAppliedOrder);
                 let chart3 = new Highcharts.chart('container3',{
                     chart: {
                        type: 'packedbubble',
@@ -269,21 +245,7 @@
                             }
                         }
                     },
-            //[{name:'abc' ,data:[{ name: 'efg' value: 762.1 },{ name: 'hijk' value: 762.1 }]}]
-                    series: [
-                          {
-            name:'Unship',
-            data:UnshipOrder
-            },
-            {
-            name:'Shipped',
-            data:ShippedOrder
-                        },
-                        {
-                            name: 'NoApplied',
-                            data: NoAppliedOrder
-                        }
-                    ]
+                    series: datas
                 });
             });
         }

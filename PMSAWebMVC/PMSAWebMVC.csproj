@@ -573,6 +573,8 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fontawesome-all.css" />
     <Content Include="Content\fontawesome-all.min.css" />
     <Content Include="Content\fontawesome.css" />
@@ -624,6 +626,8 @@
     <Content Include="Content\tablesaw\tablesaw.css" />
     <Content Include="Content\tempusdominus\tempusdominus-bootstrap-4.css" />
     <Content Include="Content\tempusdominus\tempusdominus-bootstrap-4.min.css" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
     <Content Include="Content\v4-shims.css" />
     <Content Include="Content\v4-shims.min.css" />
     <Content Include="Controls\RESXManager\FileManagement.ascx" />
@@ -642,6 +646,7 @@
     <Content Include="css\RESXManager\spellchecker.css" />
     <Content Include="css\RESXManager\webos.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\NoImage.jpg" />
@@ -1526,6 +1531,13 @@
     <Content Include="Scripts\highcharts\7.1.2\css\stocktools\gui.scss" />
     <Content Include="Scripts\highcharts\7.1.2\css\highcharts.scss" />
     <Content Include="Scripts\highcharts\7.1.2\css\annotations\popup.scss" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\highcharts\7.1.2\themes\sunset.src.js" />
     <Content Include="Scripts\highcharts\es-modules\annotations\annotations.src.js" />
@@ -2118,6 +2130,8 @@
     <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.zh-TW.js" />
     <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.js" />
     <Content Include="Scripts\tempusdominus\tempusdominus-bootstrap-4.min.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
@@ -2237,10 +2251,6 @@
     <Content Include="Views\UsersAdmin\DisplayEmail.cshtml" />
     <Content Include="Views\UsersAdmin\Edit.cshtml" />
     <Content Include="Views\UsersAdmin\Index.cshtml" />
-    <Content Include="Views\WarehouseInfoes\Create.cshtml" />
-    <Content Include="Views\WarehouseInfoes\Delete.cshtml" />
-    <Content Include="Views\WarehouseInfoes\Details.cshtml" />
-    <Content Include="Views\WarehouseInfoes\Edit.cshtml" />
     <Content Include="Views\WarehouseInfoes\Index.cshtml" />
     <Content Include="Views\Shared\Deny.cshtml" />
     <Content Include="Views\ShipNotices\UnshipOrderDtl.cshtml" />

@@ -22,6 +22,7 @@ namespace PMSAWebMVC
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
+                "~/Content/font-awesome.css",
                 //Bootstrap
                 "~/Content/bootstrap.css",
                 //MDB
@@ -104,6 +105,14 @@ namespace PMSAWebMVC
                 "~/Scripts/highcharts/highcharts.js"
                 ));
 
+            //toastr
+            bundles.Add(new ScriptBundle("~/bundles/toastrcss").Include(
+                "~/Content/toastr.min.css"
+                ));
+            bundles.Add(new ScriptBundle("~/bundles/toastrjs").Include(
+                "~/Scripts/toastr.min.js"
+                ));
+            
         }
     }
 }

@@ -37,6 +37,13 @@ namespace PMSAWebMVC.Controllers
         /// 出貨管理首頁//////////////////////////////////////////////////
         public ActionResult Index()
         {
+            if (TempData["message"] != null)
+            {
+                ViewBag.message = TempData["message"];
+            }
+            else {
+                ViewBag.message = "你好";
+            }
             return View();
         }
         //此方法為幫助INDEX的DATATABLE查訂單資料
@@ -60,6 +67,7 @@ namespace PMSAWebMVC.Controllers
         //檢視未出貨訂單明細，並要可以勾選要出貨的明細，檢視該採購單所有的產品，並可以選擇出貨那些產品
         public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]shipOrderViewModel purchaseOrder)
         {
+            
             var q = from po in db.PurchaseOrder
                     where po.PurchaseOrderID == purchaseOrder.PurchaseOrderID
                     select new shipOrderViewModel
@@ -91,7 +99,6 @@ namespace PMSAWebMVC.Controllers
             var s = new { data = q };
             return Json(s, JsonRequestBehavior.AllowGet);
         }
-
         /// <summary>
         ////出貨明細檢視並勾選完畢後進入此方法(出貨按鈕)
         //要修改該採購單明細的實際出貨日期(ShipDate)，並新增資料到出貨明細
@@ -103,6 +110,7 @@ namespace PMSAWebMVC.Controllers
         [HttpPost]
         public ActionResult shipCheckDtl(shipOrderViewModel unshipOrderDtl)
         {
+            string message = "";
             //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
             //用來存放確定有要出貨的LIST(有勾選)
@@ -127,7 +135,9 @@ namespace PMSAWebMVC.Controllers
                 {
                     //這裡要return 錯誤訊息，並且回到原頁面
                     TempData["message"] = "<script>Swal.fire({  icon: 'error',  title: 'Oops...',  text: '庫存不足!',  footer: '<a href>Why do I have this issue?</a>'})</script>";
-                    return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
+                   message = "庫存不足!";
+                   // return Json(new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message }, JsonRequestBehavior.AllowGet);
+                     return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID,message=message });
                 }
                 //扣除該料件貨源清單的庫存以及訂單數量
                 sourceList.UnitsInStock = sourceList.UnitsInStock - dtl.Qty;
@@ -206,7 +216,7 @@ namespace PMSAWebMVC.Controllers
                     poCheck = false;
                 }
             }
-            //確認是否已全部出貨，如果是修改採購單狀態為已出貨(S)並新增一筆採購單異動資料
+            //確認是否已全部出貨，如果是，修改採購單狀態為已出貨(S)並新增一筆採購單異動資料
             //採購單明細的POChangedOID欄位也要更新
             if (poCheck)
             {
@@ -232,11 +242,17 @@ namespace PMSAWebMVC.Controllers
                     db.Entry(pod).State = EntityState.Modified;
                 }
                 db.SaveChanges();
-                TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '出貨處理成功，庫存已扣除',showConfirmButton: false,timer: 1500})</script>";
+               // TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: ' 已全部出貨',showConfirmButton: false,timer: 1500})</script>";
+                 message= "已全部出貨";
             }
             //成功回原頁面
-            TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '已全部出貨',showConfirmButton: false,timer: 1500})</script>";
-            return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID });
+            //TempData["message"] = "<script>Swal.fire({position: 'top-end',icon: 'success',title: '出貨處理成功，庫存已扣除',showConfirmButton: false,timer: 1500})</script>";
+            TempData["message"] = "出貨處理成功，庫存已扣除";
+            if (message == "") {
+                message = "出貨處理成功，庫存已扣除";
+            }
+            //return Json(new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message },JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID,message= message });
         }
         //出貨按鈕ACTION結束在這
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////

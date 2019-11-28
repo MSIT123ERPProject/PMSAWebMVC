@@ -87,6 +87,10 @@
     
     <script>
         $(document).ready(function () {
+          let message=  `@ViewBag.message`;
+            if (message != null) {
+                toastr.success(message, "通知");
+            }
             shipDatatable();
             $("#idStatus").change(function () {
                 shipDatatable();
@@ -135,7 +139,6 @@
                     className: 'control'
                 }],
                 "columns": [
-                  
                     { "data": "PurchaseOrderStatus" },
                     {"data" : "PurchaseOrderID" },
                     { "data": "ReceiverName" },

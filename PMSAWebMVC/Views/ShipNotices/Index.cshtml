@@ -9,26 +9,6 @@
 @Html.Raw(ViewBag.failMessage)
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h2>
-    <!-- Topbar Search -->
-    @*@using (Html.BeginForm("Index", "ShipNotices", FormMethod.Get, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
-        {
-            <div class="input-group">
-                <input name="PurchaseOrderID" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMS_Inventory_huan.Resources.AppResource.PurchaseOrderID aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="input-group">
-                <input name="PurchaseOrderStatus" id="idSearh2" type="text" class="form-control bg-light border-0 small" placeholder=@PMS_Inventory_huan.Resources.AppResource.status . aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                </div>
-            </div>
-        }*@
 
     <div class="col-sm-auto">
         @Html.DropDownList("selectlist", new SelectList(new[]
@@ -49,7 +29,7 @@
 </nav>
 @*dropdownlist取得值得方法*@
 @*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
-
+@*/////////////////////////////////////////////////////////////////////////////////////////////*@
 <!-- DataTables Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -104,7 +84,7 @@
 </div>
 
 @section scripts{
-    @*<script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>*@
+    
     <script>
         $(document).ready(function () {
             shipDatatable();
@@ -155,12 +135,7 @@
                     className: 'control'
                 }],
                 "columns": [
-                    //{
-                    //    className: 'details-control',
-                    //    orderable: false,
-                    //    data: null,
-                    //    defaultContent:''
-                    //},
+                  
                     { "data": "PurchaseOrderStatus" },
                     {"data" : "PurchaseOrderID" },
                     { "data": "ReceiverName" },

@@ -208,11 +208,11 @@
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
-    <Compile Include="Controllers\RolesAdminController.cs" />
+    <Compile Include="Controllers\AdminController\RolesAdminController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
     <Compile Include="Controllers\SourceListsController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierStocksController.cs" />
-    <Compile Include="Controllers\UsersAdminController.cs" />
+    <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

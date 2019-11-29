@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMSAWebMVC.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,6 +8,37 @@ namespace PMSAWebMVC.Utilities.TingHuan
 {
     public class ShipNoticesUtilities
     {
+        private PMSAEntities db = new PMSAEntities();
+        public int FindPOChangedOID(string requesterRole, string purchaseOrderID)
+        {
+            var poc = db.POChanged.Where(x => (x.RequesterRole == requesterRole) && (x.PurchaseOrderID == purchaseOrderID));
+            DateTime dt = poc.FirstOrDefault().RequestDate;
+            int pOChangedOID = poc.FirstOrDefault().POChangedOID;
+            foreach (var pocD in poc)
+            {
+                if (pocD.RequestDate > dt)
+                {
+                    dt = pocD.RequestDate;
+                    pOChangedOID = pocD.POChangedOID;
+                }
+            }
+            return pOChangedOID;
+        }
+        public int FindPOChangedOIDByDtlCode(string requesterRole,string purchaseOrderDtlCode)
+        {
+            var poc = db.POChanged.Where(x => (x.RequesterRole == requesterRole) && (x.PurchaseOrderDtlCode == purchaseOrderDtlCode));
+            DateTime dt = poc.FirstOrDefault().RequestDate;
+            int pOChangedOID = poc.FirstOrDefault().POChangedOID;
+            foreach (var pocD in poc)
+            {
+                if (pocD.RequestDate > dt)
+                {
+                    dt = pocD.RequestDate;
+                    pOChangedOID = pocD.POChangedOID;
+                }
+            }
+            return pOChangedOID;
+        }
         //把訂單狀態換成文字敘述的方法
         public string GetStatus(string purchaseOrderStatus)
         {

@@ -1,5 +1,5 @@
-﻿using PMSAWebMVC.Models;
-using PMSAWebMVC.Controllers;
+﻿using PMSAWebMVC.Controllers;
+using PMSAWebMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,15 +30,15 @@ namespace PMSAWebMVC.Controllers
             return View();
         }
         // GET: SupplierStocks
-        [HttpPost]
-        public ActionResult Index([Bind(Include = "PartNumber")] SourceList SourceList)
-        {
-            var qeury = from sl in db.SourceList.AsEnumerable()
-                        where sl.PartNumber == SourceList.PartNumber
-                        select sl;
-            ViewBag.supplierCode = SupplierCode;
-            return View(qeury);
-        }
+        //[HttpPost]
+        //public ActionResult Index([Bind(Include = "PartNumber")] SourceList SourceList)
+        //{
+        //    var qeury = from sl in db.SourceList.AsEnumerable()
+        //                where sl.PartNumber == SourceList.PartNumber
+        //                select sl;
+        //    ViewBag.supplierCode = SupplierCode;
+        //    return View(qeury);
+        //}
         [HttpGet]
         public JsonResult GetSourcelistBySupplierCode(string supplierCode)
         {
@@ -54,22 +54,10 @@ namespace PMSAWebMVC.Controllers
                             UnitsOnOrder = sl.UnitsOnOrder,
                             UnitsInStock = sl.UnitsInStock
                         };
-            return Json(new { data = query }, JsonRequestBehavior.AllowGet);
+            var json = new { data = query };
+            return Json( json , JsonRequestBehavior.AllowGet);
         }
-        // GET: SupplierStocks/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SourceList supplierStock = db.SourceList.Find(id);
-            if (supplierStock == null)
-            {
-                return HttpNotFound();
-            }
-            return View(supplierStock);
-        }
+      
         // GET: SupplierStocks/Edit/5
         public ActionResult Edit(string id)
         {
@@ -91,16 +79,30 @@ namespace PMSAWebMVC.Controllers
             int? UnitsInStock = SourceList.UnitsInStock;
             if (UnitsInStock == null || UnitsInStock <= 0)
             {
-                return Json( "<script>Swal.fire({ title: '庫存數量不得小於零', showClass: {  popup: 'animated fadeInDown faster' }, hideClass:      {      popup: 'animated fadeOutUp faster' }    })</script>" , JsonRequestBehavior.AllowGet);
+                return Json("<script>Swal.fire({ title: '庫存數量不得小於零', showClass: {  popup: 'animated fadeInDown faster' }, hideClass:      {      popup: 'animated fadeOutUp faster' }    })</script>", JsonRequestBehavior.AllowGet);
             }
             SourceList a = db.SourceList.Find(SourceList.SourceListID);
-            if ( a== null ) {
+            if (a == null)
+            {
                 return HttpNotFound();
             }
             a.UnitsInStock = (int)UnitsInStock;
-            db.Entry(a).Property(ap=>ap.UnitsInStock).IsModified =true;
+            db.Entry(a).Property(ap => ap.UnitsInStock).IsModified = true;
             db.SaveChanges();
             return Json(new { value = true }, JsonRequestBehavior.AllowGet);
+        }
+        //sweetalert2 修改視窗用ajax方法
+        [HttpPost]
+        public JsonResult UpdateStock([Bind(Include = "UnitsInStock,PartNumber,SourceListOID,SourceListID")] SourceList SourceList)
+        {
+            if (SourceList.SourceListID ==null) {
+                return Json("savefail", JsonRequestBehavior.AllowGet);
+            }
+            SourceList sourceList= db.SourceList.Find(SourceList.SourceListID);
+            sourceList.UnitsInStock = SourceList.UnitsInStock;
+            db.Entry(sourceList).State = EntityState.Modified;
+            db.SaveChanges();
+            return Json("saved",JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {

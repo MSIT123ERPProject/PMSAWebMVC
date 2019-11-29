@@ -1,4 +1,4 @@
-﻿@model  PMSAWebMVC.ViewModels.ShipNotices.UnshipOrderDtlViewModel
+﻿@model  PMSAWebMVC.ViewModels.ShipNotices.shipOrderViewModel
 
 @{
     ViewBag.Title = "UnshipOrderDtl";
@@ -48,7 +48,8 @@
                 type: "GET",
                 data: { PurchaseOrderID :id },
             }).done(function (result) {
-                alert("訂單明細載入成功");
+                //alert("訂單明細載入成功");
+                toastr.success("訂單明細載入成功","通知");
                 $("#divTable").html('');
                 $("#divTable").html(result);
                 //全選、全勾消
@@ -63,15 +64,15 @@
                         },
                     }
                 );
-            }).fail(function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: '訂單明細載入失敗',
-                    footer: '<a href>Why do I have this issue?</a>'
-                })
+                }).fail(function () {
+                    toastr.error("訂單明細載入失敗","通知");
+                //Swal.fire({
+                //    icon: 'error',
+                //    title: 'Oops...',
+                //    text: '訂單明細載入失敗',
+                //    footer: '<a href>Why do I have this issue?</a>'
+                //})
             });
-
             //fetch方法會回傳PROMISE物件，不知道要兂麼把他轉乘HTML元素，而用JQUERY的AJAX方法回傳後會是直接的一個HTML元素
             //fetch(queryId)
             //    .then(function (response) {

@@ -40,7 +40,7 @@
                         <th>
                             調整庫存
                         </th>
-                        <th>檢視</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -67,7 +67,7 @@
                         <th>
                             調整庫存
                         </th>
-                        <th>檢視</th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>
@@ -79,13 +79,17 @@
     <script>
             $(document).ready(function () {
                 dataTableDisplay();
-            });
+                ClickUpdateButton()
+        });
+        /////////////////////////////////////////////
+        let table;
+        //dataTable顯示方法
             function dataTableDisplay() {
-                if ($.fn.DataTable.isDataTable("#dataTable")) {
+              if ($.fn.DataTable.isDataTable("#dataTable")) {
                     $("#dataTable").DataTable().destroy();
                 }
               //  $.fn.dataTable.ext.errMode = 'throw';
-                $('#dataTable').DataTable({
+         table=        $('#dataTable').DataTable({
                   "ajax": {
                         "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
                         "type": "GET",
@@ -125,7 +129,7 @@
                             orderable: false,
                             className: 'control',
                             render: function (data, type, row, meta) {
-                                return "";
+                                return '';
                             }
                         }
                     ],
@@ -137,11 +141,10 @@
                     "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
                     "autoWidth": false
                 });
-                //抓 table 裡按鈕請 如此 $("tbody").on()
-                $("tbody").on('click', '.addBtn', function (e) {
-                    console.log(e.currentTarget);
-                });
-                //////
+        }
+        /////////////////////////////////////////////////////
+        //調整庫存按鈕
+        function ClickUpdateButton() {
                 $(document).on('click', "button[name='UpdateStock']", async function () {
                     let td = $(this).parent('td');
                     let tr = td.parent('tr');
@@ -162,9 +165,8 @@
                             ]
                         }
                     });
-                    //此處無法傳值進UpdateStock方法裡面 2019 11/22 17:30
-                    //成功了，改成POST就可以了，不知道為甚麼PUT不行
-                    if (formValues && formValues[0] >= 0) {
+                    //呼叫UpdateStock方法修改庫存
+                    if (formValues && parseInt(formValues[0]) >= 0) {
                         let uisChange = parseInt(formValues[0]);
                         let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
                         $.ajax({
@@ -174,26 +176,26 @@
                             contentType: "application/json",
                             dataType: "JSON"
                         }).done(function (res) {
-                            if (res == "saved") {
-                                alert("庫存已修改");
-                                setTimeout("dataTableDisplay()", 0);
+                            if (res.status == "saved") {
+                               // alert("庫存已修改");
+                                dataTableDisplay();
+                                toastr.success(res.message,"通知");
+                              //  table.row(tr).cell(':eq(6)').data(uisChange).draw();
                             }
-                            if (res == "savefail") {
-                                alert("庫存修改失敗，庫存不得小於零");
+                            if (res.status == "savefail") {
+                            //    alert("庫存修改失敗，庫存不得小於零");
+                                toastr.error(res.message, "通知");
                             }
                         }).fail(function (err) {
                             alert("ajax fail  " + err.responseJSON);
-                        });
-                        //Swal.fire(JSON.stringify(formValues))
+                            });
                     }
                     else {
-                       // alert("取消");
+                        toastr.error("已取消", "通知");
                     }
                 });
-            }
-            //function reload() {
-            //    window.location.reload();
-            //}
+        }
+        ///////////////////////////////////////////////////
     </script>
 }
 

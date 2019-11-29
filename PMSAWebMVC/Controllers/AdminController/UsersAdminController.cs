@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 using PMSAWebMVC.Models;
 using PMSAWebMVC.ViewModels.RolesAdmin;
+using PMSAWebMVC.ViewModels.UsersAdmin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -69,10 +72,87 @@ namespace PMSAWebMVC.Controllers
 
         //
         // GET: /Users/
-        [HttpGet]
         public async Task<ActionResult> Index()
         {
-            return View(await UserManager.Users.ToListAsync());
+            //Get the list of Roles
+            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> getEmpByIDIndexAjax(string EmpId)
+        {
+            //var userRoles = await UserManager.GetRolesAsync(UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).Select(x => x.Id).ToString());
+            //ViewBag.RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
+            //{
+            //    Selected = userRoles.Contains(x.Name),
+            //    Text = x.Description,
+            //    Value = x.Name
+            //});
+            List<ApplicationUser> usersWithEmpID = await UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).ToListAsync();
+            PMSAEntities db = new PMSAEntities();
+            //datatime 要轉型
+            var js = new JsonSerializerSettings()
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
+
+            foreach (var x in usersWithEmpID)
+            {
+                var user = new
+                {
+                    EmployeeID = x.UserName,
+                    Name = x.RealName,
+                    Role = await UserManager.GetRolesAsync(x.Id),
+                    Email = x.Email,
+                    Mobile = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
+                    Tel = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
+                    AccountStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
+                    ModifiedDate = JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
+                    ManagerID = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
+                    CreateDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
+                    SendLetterDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
+                    SendLetterStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterStatus).FirstOrDefaultAsync()
+                };
+
+                return Json(user, JsonRequestBehavior.AllowGet);
+            }
+            // Return Error:
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> IndexAjax()
+        {
+            List<ApplicationUser> usersWithEmpID = await UserManager.Users.Where(x => x.UserName.Contains("C")).ToListAsync();
+            //return View(await UserManager.Users.ToListAsync());
+            PMSAEntities db = new PMSAEntities();
+            List<object> emps = new List<object>();
+            //datatime 要轉型
+            var js = new JsonSerializerSettings()
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
+            foreach (var x in usersWithEmpID)
+            {
+                var user = new
+                {
+                    EmployeeID = x.UserName,
+                    Name = x.RealName,
+                    Role = await UserManager.GetRolesAsync(x.Id),
+                    Email = x.Email,
+                    Mobile = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
+                    Tel = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
+                    AccountStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
+                    ModifiedDate = JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
+                    ManagerID = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
+                    CreateDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
+                    SendLetterDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
+                    SendLetterStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterStatus).FirstOrDefaultAsync()
+                };
+                emps.Add(user);
+            }
+            return Json(emps, JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -100,16 +180,6 @@ namespace PMSAWebMVC.Controllers
             ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
             ViewBag.empID = new SelectList(db.Employee, "EmployeeID", "EmployeeID");
             return View();
-        }
-
-        public string generateFirstPwd()
-        {
-            //salt: 隨機位元組=>演算法=>計算後給值
-            RNGCryptoServiceProvider rngbyte = new RNGCryptoServiceProvider();
-            byte[] bytesalt = new byte[8];
-            rngbyte.GetBytes(bytesalt);
-            string salty = Convert.ToBase64String(bytesalt);
-            return salty;
         }
 
         private PMSAEntities db = new PMSAEntities();
@@ -144,7 +214,25 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
-        //
+        public string generateFirstPwd()
+        {
+            //salt: 隨機位元組=>演算法=>計算後給值
+            RNGCryptoServiceProvider rngbyte = new RNGCryptoServiceProvider();
+            byte[] bytesalt = new byte[8];
+            rngbyte.GetBytes(bytesalt);
+            string salty = Convert.ToBase64String(bytesalt);
+            Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])");
+            if (regex.IsMatch(salty))
+            {
+                return salty;
+            }
+            else
+            {
+                return generateFirstPwd();
+            }
+        }
+
+        //管理員新增採購員帳號
         // POST: /Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

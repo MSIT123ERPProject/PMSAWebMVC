@@ -818,7 +818,9 @@
                                 }
                             }
                         $("#AccountStatus").html(getAccountStatus());
-
+                        x.RolesList.forEach(r => {
+                            $("#" + r.Value).prop('checked', r.Selected);
+                        });
                         $('#editModal').modal('show');
             }
         ).fail(function (data) { console.log(data); });

@@ -26,8 +26,6 @@ namespace PMSAWebMVC.Models
 
         public DateTime? LastPasswordChangedDate { get; set; }
 
-        public bool? IsApproved { get; set; }
-
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // 注意 authenticationType 必須符合 CookieAuthenticationOptions.AuthenticationType 中定義的項目

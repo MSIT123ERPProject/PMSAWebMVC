@@ -82,43 +82,43 @@ namespace PMSAWebMVC.Controllers
         [HttpGet]
         public async Task<ActionResult> getEmpByIDIndexAjax(string EmpId)
         {
-            //var userRoles = await UserManager.GetRolesAsync(UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).Select(x => x.Id).ToString());
-            //ViewBag.RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
-            //{
-            //    Selected = userRoles.Contains(x.Name),
-            //    Text = x.Description,
-            //    Value = x.Name
-            //});
-            List<ApplicationUser> usersWithEmpID = await UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).ToListAsync();
+            var usersWithEmpID = await UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).FirstOrDefaultAsync();
             PMSAEntities db = new PMSAEntities();
+
+            //取得此 empId 找Role 加到 RolesList
+            var user = await UserManager.FindByIdAsync(usersWithEmpID.Id);
+            var userRoles = await UserManager.GetRolesAsync(user.Id);
+
             //datatime 要轉型
             var js = new JsonSerializerSettings()
             {
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc
             };
 
-            foreach (var x in usersWithEmpID)
-            {
-                var user = new
+                var userA = new
                 {
-                    EmployeeID = x.UserName,
-                    Name = x.RealName,
-                    Role = await UserManager.GetRolesAsync(x.Id),
-                    Email = x.Email,
-                    Mobile = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
-                    Tel = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
-                    AccountStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
-                    ModifiedDate = JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
-                    ManagerID = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
-                    CreateDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
-                    SendLetterDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
-                    SendLetterStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterStatus).FirstOrDefaultAsync()
+                    EmployeeID = user.UserName,
+                    Name = user.RealName,
+                    Role = await UserManager.GetRolesAsync(user.Id),
+                    Email = user.Email,
+                    Mobile = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
+                    Tel = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
+                    AccountStatus = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
+                    ModifiedDate = JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
+                    ManagerID = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
+                    CreateDate = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
+                    SendLetterDate = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
+                    SendLetterStatus = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterStatus).FirstOrDefaultAsync(),
+                    //取得 所有Role列表，若有出現在該userA中 Selected = true
+                    RolesList = RoleManager.Roles.ToList().Select(r => new
+                    {
+                        Selected = userRoles.Contains(r.Name),
+                        Text = r.Description,
+                        Value = r.Name
+                    })
                 };
 
-                return Json(user, JsonRequestBehavior.AllowGet);
-            }
-            // Return Error:
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Json(userA, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

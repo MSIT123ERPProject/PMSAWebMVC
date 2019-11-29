@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -22,6 +24,28 @@ namespace PMSAWebMVC.Controllers
             return View(inventoryDtl);
         }
 
+        //dropdownlist
+        public ActionResult whousecodelist()
+        {
+            var datas = db.WarehouseInfo.Select(s => new { s.WarehouseCode, s.WarehouseName });
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult inventorycategorycode()
+        {
+            var datas = db.InventoryCategory.Select(s => new { s.InventoryCategoryCode, s.InventoryCategoryName });
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+
+        //因為不同倉庫可能存放相同料號的庫存，所以在此用倉庫來判斷哪些新增過
+        public ActionResult sourcelistID(string id)
+        {
+            var da1 = db.InventoryDtl.Where(w => w.WarehouseCode == id).Select(s => s.SourceListID);
+            var da2 = db.SourceList.Select(s => s.SourceListID);
+            var datas = da2.Except(da1);
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: InventoryDtls/Details/5
         public ActionResult Details(string id)
         {
@@ -34,37 +58,37 @@ namespace PMSAWebMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(inventoryDtl);
+
+            var datas = db.InventoryDtl.AsEnumerable().Where(w => w.InventoryCode == id).
+                        Select(s => new
+                        {
+                            s.InventoryCode,
+                            s.WarehouseInfo.WarehouseName,
+                            s.InventoryCategory.InventoryCategoryName,
+                            s.SourceListID,
+                            s.Part.PartName,
+                            s.UnitsOnStockOutOrder,
+                            s.UnitsOnStockInOrder,
+                            s.SafetyQty,
+                            s.UnitsInStock,
+                            crname = s.CreateEmployeeID,
+                            CreateDate = s.CreateDate.ToString(),
+                            laname = s.LastModifiedEmployeeID,
+                            LastModifiedDate = s.LastModifiedDate.ToString()
+                        });
+
+            return Json(datas, JsonRequestBehavior.AllowGet);
         }
-
-        // GET: InventoryDtls/Create
-        public ActionResult Create()
-        {
-            var q = from p in db.SourceList
-                    select p.SourceListID;
-            var q1 = from p in db.InventoryDtl
-                     select p.SourceListID;
-            var q2 = q.Except(q1);
-
-            ViewBag.CreateEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name");
-            ViewBag.LastModifiedEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name");
-            ViewBag.InventoryCategoryCode = new SelectList(db.InventoryCategory, "InventoryCategoryCode", "InventoryCategoryName");
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName");
-            ViewBag.SourceListID = new SelectList(q2);
-            ViewBag.WarehouseCode = new SelectList(db.WarehouseInfo, "WarehouseCode", "WarehouseName");
-            return View();
-        }
-
-        //嘗試 在新增頁面按下 新增 時，先執行一方法(在此處SQL語法將要自動產生的值在後端帶入)
-        //然後再執行原本的CREATE方法
 
         // POST: InventoryDtls/Create
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "InventoryDtlOID,InventoryCode,WarehouseCode,InventoryCategoryCode,SourceListID,PartNumber,UnitsInStock,UnitsOnStockOutOrder,UnitsOnStockInOrder,SafetyQty,CreateDate,CreateEmployeeID,LastModifiedDate,LastModifiedEmployeeID")] InventoryDtl inventoryDtl)
+        public ActionResult Create(InventoryDtl inventoryDtl)
         {
+            string message = "新增成功!!";
+            bool status = true;
+
             if (inventoryDtl.SourceListID != null)
             {
                 int z = 1;
@@ -135,118 +159,136 @@ namespace PMSAWebMVC.Controllers
                          select p.SourceListID;
                 var q2 = qe.Except(q1);
 
+                int ui = inventoryDtl.UnitsInStock;
+                var qt = from p in db.SourceList
+                         where p.SourceListID == inventoryDtl.SourceListID
+                         select p.QtyPerUnit;
+                var pp = qt.ToList();
+                int qty = ui * Convert.ToInt32(pp[0].ToString());
+
                 if (inventoryDtl.SafetyQty == null)
                 {
                     inventoryDtl.SafetyQty = 0;
                 }
 
+                var use = User.Identity.GetEmployee();
+
                 if (ModelState.IsValid)
                 {
+                    inventoryDtl.UnitsInStock = qty;
                     inventoryDtl.PartNumber = p1[0].ToString();
-                    inventoryDtl.CreateEmployeeID = "CE00001";
-                    inventoryDtl.LastModifiedEmployeeID = "CE00001";
+                    inventoryDtl.CreateEmployeeID = use.EmployeeID;
+                    inventoryDtl.LastModifiedEmployeeID = use.EmployeeID;
                     inventoryDtl.UnitsOnStockInOrder = 0;
                     inventoryDtl.UnitsOnStockOutOrder = 0;
                     inventoryDtl.CreateDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
                     inventoryDtl.LastModifiedDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
                     db.InventoryDtl.Add(inventoryDtl);
                     db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
 
-                ViewBag.CreateEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", inventoryDtl.CreateEmployeeID);
-                ViewBag.LastModifiedEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", inventoryDtl.LastModifiedEmployeeID);
-                ViewBag.InventoryCategoryCode = new SelectList(db.InventoryCategory, "InventoryCategoryCode", "InventoryCategoryName", inventoryDtl.InventoryCategoryCode);
-                ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", inventoryDtl.PartNumber);
-                ViewBag.SourceListID = new SelectList(q2);
-                ViewBag.WarehouseCode = new SelectList(db.WarehouseInfo, "WarehouseCode", "WarehouseName", inventoryDtl.WarehouseCode);
-                return View(inventoryDtl);
+                    var ii = db.InventoryDtl.Max(x => x.InventoryDtlOID);
+
+                    var inventorycode = db.InventoryDtl.Where(w => w.InventoryDtlOID == ii).Select(s => s.InventoryCode);
+                    var partnumber = db.InventoryDtl.Where(w => w.InventoryDtlOID == ii).Select(s => s.Part.PartName);
+                    var unitsonstockinorder = db.InventoryDtl.Where(w => w.InventoryDtlOID == ii).Select(s => s.UnitsOnStockInOrder);
+                    var unitsonstockoutorder = db.InventoryDtl.Where(w => w.InventoryDtlOID == ii).Select(s => s.UnitsOnStockOutOrder);
+                    var unit = db.InventoryDtl.Where(w => w.InventoryDtlOID == ii).Select(s => s.UnitsInStock);
+
+                    var inv = inventorycode.ToList();
+                    var c = inv[0].ToString();
+
+                    var pat = partnumber.ToList();
+                    var pa = pat[0].ToString();
+
+                    var uio = unitsonstockinorder.ToList();
+                    var uis = uio[0].ToString();
+
+                    var uoo = unitsonstockoutorder.ToList();
+                    var uos = uoo[0].ToString();
+
+                    var uin = unit.ToList();
+                    var uii = uin[0].ToString();
+
+                    return Json(new { status = status, message = message, id = db.InventoryDtl.Max(x => x.InventoryDtlOID),
+                                      c, pa, uis, uos, uii }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    message = "新增失敗!!";
+                    status = false;
+                    return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+                }
             }
             else
             {
-                return Content("<script>alert('目前已沒有新的貨源清單編號可新增庫存!!!!');</script>");
+                message = "新增失敗!!目前已沒有新的貨源清單編號可新增庫存!!!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
             }
-
-
         }
-
-        // GET: InventoryDtls/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            InventoryDtl inventoryDtl = db.InventoryDtl.Find(id);
-            if (inventoryDtl == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.CreateEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", inventoryDtl.CreateEmployeeID);
-            ViewBag.LastModifiedEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", inventoryDtl.LastModifiedEmployeeID);
-            ViewBag.InventoryCategoryCode = new SelectList(db.InventoryCategory, "InventoryCategoryCode", "InventoryCategoryName", inventoryDtl.InventoryCategoryCode);
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", inventoryDtl.PartNumber);
-            ViewBag.SourceListID = new SelectList(db.SourceList, "SourceListID", "SourceListID", inventoryDtl.SourceListID);
-            ViewBag.WarehouseCode = new SelectList(db.WarehouseInfo, "WarehouseCode", "WarehouseName", inventoryDtl.WarehouseCode);
-            return View(inventoryDtl);
-        }
-
-        // POST: InventoryDtls/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        
+        //修改
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InventoryDtlOID,InventoryCode,WarehouseCode,InventoryCategoryCode,SourceListID,PartNumber,UnitsInStock,UnitsOnStockOutOrder,UnitsOnStockInOrder,SafetyQty,CreateDate,CreateEmployeeID,LastModifiedDate,LastModifiedEmployeeID")] InventoryDtl inventoryDtl)
+        //[ValidateAntiForgeryToken]
+        public ActionResult Edit(InventoryDtl inventoryDtl)
         {
-            if (inventoryDtl.SafetyQty == null)
-            {
-                inventoryDtl.SafetyQty = 0;
-            }
+            string message = "修改成功!!";
+            bool status = true;
 
+            var q = from p in db.InventoryDtl
+                    where p.WarehouseCode == inventoryDtl.WarehouseCode
+                    select p.WarehouseCode;
+            var p0 = q.ToList();
+            var q1 = db.InventoryDtl.Where(w => w.InventoryCategoryCode == inventoryDtl.InventoryCategoryCode).Select(s => s.InventoryCategoryCode);
+            var p1 = q1.ToList();
+            var q2 = db.InventoryDtl.Where(w => w.Part.PartName == inventoryDtl.PartNumber).Select(s => s.PartNumber);
+            var p2 = q2.ToList();
+
+            int qty = 0;
+            var num = from p in db.InventoryDtl
+                      where p.InventoryCode == inventoryDtl.InventoryCode
+                      select p.UnitsInStock;
+            var num1 = num.ToList();
+            if (Convert.ToInt32(num1[0].ToString()) != inventoryDtl.UnitsInStock)
+            {
+                int ui = inventoryDtl.UnitsInStock;
+                var qt = from p in db.SourceList
+                         where p.SourceListID == inventoryDtl.SourceListID
+                         select p.QtyPerUnit;
+                var pp = qt.ToList();
+                qty = ui * pp[0];
+            }
+            else
+            {
+                qty = inventoryDtl.UnitsInStock;
+            }
+            var use = User.Identity.GetEmployee();
+            var unit = db.InventoryDtl.Where(w => w.InventoryCode == inventoryDtl.InventoryCode).Select(s => s.UnitsInStock);
+            var uin = unit.ToList();
+            var uii = uin[0].ToString();
             if (ModelState.IsValid)
             {
+                inventoryDtl.UnitsInStock = qty;
+                inventoryDtl.InventoryCategoryCode = p1[0].ToString();
+                inventoryDtl.WarehouseCode = p0[0].ToString();
+                inventoryDtl.PartNumber = p2[0].ToString();
                 inventoryDtl.UnitsOnStockInOrder = 0;
                 inventoryDtl.UnitsOnStockOutOrder = 0;
-                inventoryDtl.LastModifiedEmployeeID = "CE00001";
+                inventoryDtl.LastModifiedEmployeeID = use.EmployeeID;
+                inventoryDtl.CreateDate = Convert.ToDateTime(inventoryDtl.CreateDate.ToShortDateString());
                 inventoryDtl.LastModifiedDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+
                 db.Entry(inventoryDtl).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(new { status = status, message = message, id = db.InventoryDtl.Max(x => x.InventoryDtlOID), qty }, JsonRequestBehavior.AllowGet);
             }
-            ViewBag.CreateEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", inventoryDtl.CreateEmployeeID);
-            ViewBag.LastModifiedEmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", inventoryDtl.LastModifiedEmployeeID);
-            ViewBag.InventoryCategoryCode = new SelectList(db.InventoryCategory, "InventoryCategoryCode", "InventoryCategoryName", inventoryDtl.InventoryCategoryCode);
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", inventoryDtl.PartNumber);
-            ViewBag.SourceListID = new SelectList(db.SourceList, "SourceListID", "SourceListID", inventoryDtl.SourceListID);
-            ViewBag.WarehouseCode = new SelectList(db.WarehouseInfo, "WarehouseCode", "WarehouseName", inventoryDtl.WarehouseCode);
-            return View(inventoryDtl);
+            else
+            {
+                message = "修改失敗!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+            }
         }
-
-        // GET: InventoryDtls/Delete/5
-        //public ActionResult Delete(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    InventoryDtl inventoryDtl = db.InventoryDtl.Find(id);
-        //    if (inventoryDtl == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(inventoryDtl);
-        //}
-
-        //// POST: InventoryDtls/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(string id)
-        //{
-        //    InventoryDtl inventoryDtl = db.InventoryDtl.Find(id);
-        //    db.InventoryDtl.Remove(inventoryDtl);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {
@@ -256,5 +298,6 @@ namespace PMSAWebMVC.Controllers
             }
             base.Dispose(disposing);
         }
+        
     }
 }

@@ -26,7 +26,7 @@
 
 <div class="card mb-3">
     <div class="card-header">
-        <i class="far fa-building"></i> 料件
+        <i class="far fa-building"></i> 請購單明細
     </div>
     <div class="card-body">
         <div class="form-horizontal">
@@ -40,32 +40,62 @@
         </div>
     </div>
 </div>
-@using (Html.BeginForm("Create", "PurchaseRequisitions", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        <div class="card mb-3">
-            <div class="card-header">
-                <i class="fas fa-list"></i> 請購細項
-            </div>
-            <div class="card-body">
-                @if (TempData["ErrorMessage"] != null)
-                {
-                    <div class="alert alert-warning" id="warning">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        @TempData["ErrorMessage"]
-                    </div>
-                }
-                <div class="table-responsive" id="dataTablesContainer"></div>
+
+
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="far fa-building"></i> 貨源清單
+    </div>
+    <div class="card-body">
+        <div class="form-horizontal">
+            <div class="form-group row">
+                @Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.DropDownListFor(m => m.SelectedSupplierName, Model.PartList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="d-flex justify-content-center">
-                <button id="btnSubmit" type="submit" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>送出申請</button>
+            @Html.LabelFor(model => model.Qty, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.MOQ, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
             </div>
         </div>
 
-    }
+    </div>
+</div>
+
+@using (Html.BeginForm("Create", "PurchaseRequisitions", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fas fa-list"></i> 請購細項
+        </div>
+        <div class="card-body">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-warning" id="warning">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            <div class="table-responsive" id="dataTablesContainer"></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="d-flex justify-content-center">
+            <button id="btnSubmit" type="submit" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>送出申請</button>
+        </div>
+    </div>
+
+}
 
 @section scripts
 {
@@ -90,6 +120,26 @@
                 $("#btnSubmit").prop("disabled", true);
             });
             })
+
+             let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseRequisitions")';
+            let supplierList = $('#SelectedSupplierName');
+            $("#btnSubmit").prop("disabled", true);
+
+            $('#SelectedPartName').change(function() {
+            supplierList.empty();
+            $("#dataTablesContainer").html('');
+            $.getJSON(supplierListUrl, { id: $(this).val() }, function (data) {
+                if (!data) {
+                    return;
+                }
+                supplierList.append($('<option></option>').val('').text('請選擇'));
+                $.each(data, function (index, item) {
+                    supplierList.append($('<option></option>').val(item.Value).text(item.Text));
+                });
+                $("#btnSubmit").prop("disabled", true);
+            });
+            })
+
 
             $('#SelectedPartName').change(function () {//查詢料件名稱
                 $.ajax({

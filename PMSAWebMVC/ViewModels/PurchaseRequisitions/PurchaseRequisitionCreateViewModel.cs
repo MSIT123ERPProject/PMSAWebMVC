@@ -25,6 +25,13 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         public string ProductNume { get; set; }//產品編號
     }
 
+    public class SupplierItem//供應商模型
+    {
+        public string SupplierCode { get; set; }//供應商編號
+        public string SupplierName { get; set; }//供應商名稱
+        public string PartNumber { get; set; }//料件編號
+    }
+
     public class PurchaseRequisitionDtlItemChecked//請購單明細確認模型
     {
         public string ProductNumber { get; set; }//產品編號 
@@ -98,6 +105,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
             }
         }
 
+
+
         //取得料件資料集
         public static IList<PartItem> GetPartList(string ProductName)
         {
@@ -130,8 +139,31 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
                 return sups;
             }
         }
-
-
+        //取得供應商資料集
+        public static IList<SupplierItem> GetSupplierList(string partNumber)
+        {
+            DateTime now = DateTime.Now;
+            //排除時間
+            now = new DateTime(now.Year, now.Month, now.Day);//now=現在時間 年月日
+            using (PMSAEntities db = new PMSAEntities())
+            {
+                var supq = from prd in db.PurchaseRequisitionDtl//請購單明細
+                           join s in db.SourceList//貨源清單
+                            on new { prd.PartNumber, ID = prd.PartNumber } equals//料件編號
+                            new { s.PartNumber, ID = partNumber }//一樣的話
+                           where s.SourceListDtl.Where(d => d.DiscountBeginDate <= now && d.DiscountEndDate >= now).Any()//and從貨源清單明細判斷時效是否過期
+                           group s by  new { s.SupplierCode, s.SupplierInfo.SupplierName } into g//用供應商群組//供應商編號 供應商名稱
+                           orderby g.Key.SupplierCode//用供應商編號排序
+                           select new SupplierItem //傳回供應商資料集
+                           {
+                               SupplierCode = g.Key.SupplierCode, //供應商編號
+                               SupplierName = "(" + g.Key.SupplierCode + ") " + g.Key.SupplierName,//供應商姓名
+                               PartNumber = partNumber//料件編號
+                           };
+                IList<SupplierItem> sups = supq.ToList();
+                return sups;
+            }
+        }
 
         //取得請購單明細資料集
         public static IEnumerable<PurchaseRequisitionDtlItem> GetPurchaseRequisitionDtlList(string productNumber, string partNumber)
@@ -159,8 +191,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
                                QtyPerUnit = s1.QtyPerUnit,//批量=貨源清單的
                                OriginalUnitPrice = s1.UnitPrice,//價格=貨源清單的
                                Qty = s1.QtyPerUnit,//請購數量=貨源清單.最小訂貨量
-                               //Discount = 0M,//折扣
-                               //DateRequired = prd.DateRequired,//要求到貨日期=請購單明細的
+                               SupplierName=s1.SupplierInfo.SupplierName,//取供應商名稱
                                SourceListID = s1.SourceListID,//貨源清單ID=貨源清單的
                                ProductNumber = prp.ProductNumber//料件編號=料件產品的
                            };
@@ -271,9 +302,15 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         [Required(ErrorMessage = "請選擇料件")]
         [Display(Name = "料件名稱")]
         public string SelectedPartName { get; set; }
+        [Required(ErrorMessage = "請選擇建議供應商")]
+        [Display(Name = "供應商名稱")]
+        public string SelectedSupplierName { get; set; }
+
 
         public SelectList ProductList { get; set; }
         public SelectList PartList { get; set; }
+        public SelectList DateRequired { get; set; }
+        public int Qty { get; set; }
 
         //TODO: 應是多筆的狀況，之後需作修正
         public string ProductNumber { get; set; }

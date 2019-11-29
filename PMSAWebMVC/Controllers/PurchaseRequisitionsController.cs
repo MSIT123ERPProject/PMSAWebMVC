@@ -266,6 +266,13 @@ namespace PMSAWebMVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult GetSupplierList(string id)
+        {//data的值=供應商編號 文字=供應商名稱
+            var data = Repository.GetSupplierList(id).Select(s => new { Value = s.SupplierCode, Text = s.SupplierName });
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         //取得請購單明細資料集
         [HttpGet]
         public ActionResult GetPurchaseRequisitionsDtlList(string Name, string partNumber)

@@ -603,6 +603,7 @@
     <Content Include="Content\MDB\css\plugins\owl.theme.default.min.css" />
     <Content Include="Content\MDB\css\plugins\perfect-scrollbar.css" />
     <Content Include="Content\MDB\css\plugins\tempusdominus-bootstrap-4.min.css" />
+    <Content Include="Content\MDB\css\plugins\theme.css" />
     <Content Include="Content\MDB\css\plugins\theme.min.css" />
     <Content Include="Content\MDB\css\plugins\weather-icons.min.css" />
     <Content Include="Content\MDB\css\style.css" />
@@ -2023,13 +2024,13 @@
     <Content Include="Scripts\highcharts\themes\skies.src.js" />
     <Content Include="Scripts\highcharts\themes\sunset.js" />
     <Content Include="Scripts\highcharts\themes\sunset.src.js" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.easing.compatibility.js" />
     <Content Include="Scripts\jquery.easing.js" />
@@ -2052,7 +2053,6 @@
     <Content Include="Scripts\MDB\jquery.min.js" />
     <Content Include="Scripts\MDB\mdb.lite.min.js" />
     <Content Include="Scripts\MDB\mdb.min.js" />
-    <Content Include="Scripts\MDB\modernizr-2.8.3.min.js" />
     <Content Include="Scripts\MDB\modules\animations-extended.min.js" />
     <Content Include="Scripts\MDB\modules\forms-free.min.js" />
     <Content Include="Scripts\MDB\modules\scrolling-navbar.min.js" />

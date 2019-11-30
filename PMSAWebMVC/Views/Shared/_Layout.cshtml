@@ -3,16 +3,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">*@
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>ThemeKit - Admin Template</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
     @*ThemeKit*@
     <link rel="icon" href="~/Content/MDB/favicon.ico" type="image/x-icon" />
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/form")
-    @*@Styles.Render("~/Content/DataTables")*@
+    @Styles.Render("~/Content/DataTables")
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
     <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
@@ -24,8 +30,9 @@
             <i class="fas fa-bars"></i>
         </button>
         <!-- Sidebar -->
-        <div class="sidebar-content sidebar navbar-nav navbar-light" style="z-index:9999">
+        <div class="app-sidebar colored" style="z-index:9999">
             <!-- Navbar -->
+
             <nav class="sidebar-wrapper navbar navbar-expand navbar-dark sidebar-menu sidebar nav">
                 <div class="sidebar-menu">
                     <ul>
@@ -184,7 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @Scripts.Render("~/bundles/js")
     @Scripts.Render("~/bundles/form")
-    @*@Scripts.Render("~/bundles/DataTables")*@
+    @Scripts.Render("~/bundles/DataTables")
     @Scripts.Render("~/bundles/HighCharts")
     @RenderSection("scripts", required: false)
 </body>

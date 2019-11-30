@@ -17,8 +17,7 @@ namespace PMSAWebMVC
             // 使用開發版本的 Modernizr 進行開發並學習。然後，當您
             // 準備好可進行生產時，請使用 https://modernizr.com 的建置工具，只挑選您需要的測試。
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                 "~/Scripts/MDB/modernizr-2.8.3.min.js"
-                //"~/Scripts/modernizr-*"
+                  "~/Scripts/modernizr-*"
                 ));
 
             //共用
@@ -28,14 +27,14 @@ namespace PMSAWebMVC
                 //Bootstrap
                 "~/Content/bootstrap.css",
                 //MDB
-                //  "~/Content/MDB/css/mdb.css",
-                //  "~/Content/MDB/css/addons/datatables.min.css",
-                //    "~/Content/MDB/css/addons/datatables-select.min.css",
-                //    "~/Content/MDB/css/addons/directives.min.css",
-                //   "~/Content/MDB/css/addons/flag.min.css",
-                //    "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
-                //    "~/Content/MDB/css/addons/rating.min.css",
-                //   "~/Content/MDB/css/modules/animations-extended.min.css",
+                  //"~/Content/MDB/css/mdb.css",
+                  //"~/Content/MDB/css/addons/datatables.min.css",
+                  // "~/Content/MDB/css/addons/datatables-select.min.css",
+                  // "~/Content/MDB/css/addons/directives.min.css",
+                  //"~/Content/MDB/css/addons/flag.min.css",
+                  // "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
+                  //  "~/Content/MDB/css/addons/rating.min.css",
+                  // "~/Content/MDB/css/modules/animations-extended.min.css",
                 //SB Admin
               //  "~/Content/MDB/favicon.ico",
                 "~/Content/MDB/css/plugins/all.min.css",
@@ -51,26 +50,28 @@ namespace PMSAWebMVC
                 "~/Content/MDB/css/plugins/tempusdominus-bootstrap-4.min.css",
                 "~/Content/MDB/css/plugins/theme.min.css",
                 "~/Content/MDB/css/plugins/weather-icons.min.css",
+                "~/Content/MDB/css/plugins/responsive.bootstrap4.min.css",
                 //Site
-                "~/Content/Site.css"));
+                "~/Content/Site.css"
+                ));
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
                 "~/Scripts/bootstrap.js",
                 //MDB
              //   "~/Scripts/MDB/mdb.js",
-            //    "~/Scripts/MDB/addons/datatables.min.js",
-           //     "~/Scripts/MDB/addons/datatables-select.min.js",
-            //    "~/Scripts/MDB/addons/directives.min.js",
-            //    "~/Scripts/MDB/addons/flag.min.js",
-            //    "~/Scripts/MDB/addons/imagesloaded.pkgd.min.js",
-          //      "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
-           //     "~/Scripts/MDB/addons/masonry.pkgd.min.js",
-           //     "~/Scripts/MDB/addons/rating.min.js",
-          //      "~/Scripts/MDB/modules/animations-extended.min.js",
+             //  "~/Scripts/MDB/addons/datatables.min.js",
+             //   "~/Scripts/MDB/addons/datatables-select.min.js",
+             //   "~/Scripts/MDB/addons/directives.min.js",
+             //   "~/Scripts/MDB/addons/flag.min.js",
+             //   "~/Scripts/MDB/addons/imagesloaded.pkgd.min.js",
+             // "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
+             //  "~/Scripts/MDB/addons/masonry.pkgd.min.js",
+             // "~/Scripts/MDB/addons/rating.min.js",
+             //"~/Scripts/MDB/modules/animations-extended.min.js",
              //   "~/Scripts/MDB/modules/forms-free.min.js",
              //   "~/Scripts/MDB/modules/scrolling-navbar.min.js",
-              //  "~/Scripts/MDB/modules/treeview.min.js",
+             //   "~/Scripts/MDB/modules/treeview.min.js",
              //   "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
@@ -90,9 +91,8 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js",
                 "~/Scripts/MDB/plugins/screenfull.js",
                 "~/Scripts/MDB/plugins/tempusdominus-bootstrap-4.min.js",
-                "~/Scripts/MDB/plugins/theme.min.js",
+                "~/Scripts/MDB/plugins/theme.js",
                 "~/Scripts/MDB/plugins/widgets.js"
-               // "~/Scripts/MDB/plugins/modernizr-2.8.3.min.js"
                 ));
 
             //表單
@@ -124,12 +124,12 @@ namespace PMSAWebMVC
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-                "~/Content/DataTables/css/datatables.css"
+             //    "~/Content/DataTables/css/datatables.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
-                "~/Scripts/DataTables/datatables.js",
-                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
+           //     "~/Scripts/DataTables/datatables.js",
+           //     "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
                 ));
 
             //HighCharts

@@ -97,7 +97,7 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/plugins/theme.js"
                 ));
             bundles.Add(new ScriptBundle("~/bundle/BAT").Include(
-                 "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
+                "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
                 "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
                 "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js"
                 ));

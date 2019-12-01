@@ -27,19 +27,20 @@ namespace PMSAWebMVC
                 //Bootstrap
                 "~/Content/bootstrap.css",
                 //MDB
-                  //"~/Content/MDB/css/mdb.css",
-                  //"~/Content/MDB/css/addons/datatables.min.css",
-                  // "~/Content/MDB/css/addons/datatables-select.min.css",
+                //"~/Content/MDB/css/mdb.css",
+                //"~/Content/MDB/css/addons/datatables.min.css",
+                // "~/Content/MDB/css/addons/datatables-select.min.css",
                 // "~/Content/MDB/css/addons/directives.min.css",
                 //"~/Content/MDB/css/addons/flag.min.css",
                 // "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
                 //  "~/Content/MDB/css/addons/rating.min.css",
                 // "~/Content/MDB/css/modules/animations-extended.min.css",
                 //SB Admin
-               // "~/Content/MDB/favicon.ico",
+                // "~/Content/MDB/favicon.ico",
                 "~/Content/MDB/css/plugins/all.min.css",
-                "~/Content/MDB/css/plugins/bootstrap.min.css",
+                //"~/Content/MDB/css/plugins/bootstrap.min.css",
                 "~/Content/MDB/css/plugins/c3.min.css",
+
                 "~/Content/MDB/css/plugins/dataTables.bootstrap4.min.css",
                 "~/Content/MDB/css/plugins/iconkit.min.css",
                 "~/Content/MDB/css/plugins/ionicons.min.css",
@@ -82,24 +83,24 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/plugins/perfect-scrollbar.min.js",
                 "~/Scripts/MDB/plugins/screenfull.js",
                 "~/Scripts/MDB/plugins/jquery.dataTables.min.js",
-                //"~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
+                "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
                 "~/Scripts/MDB/plugins/datatables.js",
-              // "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
-              //  "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js",
+               "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
+                "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js",
                 "~/Scripts/MDB/plugins/jquery-jvectormap.min.js",
                 "~/Scripts/MDB/plugins/moment.js",
                 "~/Scripts/MDB/plugins/tempusdominus-bootstrap-4.min.js",
-                "~/Scripts/MDB/plugins/d3.min.js",
+                "~/Scripts/MDB/plugins/d3.js",
                 "~/Scripts/MDB/plugins/c3.min.js",
                 "~/Scripts/MDB/plugins/tables.js",
                 "~/Scripts/MDB/plugins/widgets.js",
-                //"~/Scripts/MDB/plugins/charts.js",
+                "~/Scripts/MDB/plugins/charts.js",
                 "~/Scripts/MDB/plugins/theme.js"
                 ));
             bundles.Add(new ScriptBundle("~/bundle/BAT").Include(
-                "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
-                "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
-                "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js"
+             //   "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
+            //  "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
+             //   "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js"
                 ));
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
@@ -130,12 +131,12 @@ namespace PMSAWebMVC
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-               //  "~/Content/DataTables/css/datatables.css"
+              //  "~/Content/DataTables/css/datatables.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
-             //  "~/Scripts/DataTables/datatables.js",
-               // "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
+              // "~/Scripts/DataTables/datatables.js",
+             //   "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
                 ));
 
             //HighCharts

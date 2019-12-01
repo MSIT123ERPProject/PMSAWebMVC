@@ -30,13 +30,13 @@ namespace PMSAWebMVC
                   //"~/Content/MDB/css/mdb.css",
                   //"~/Content/MDB/css/addons/datatables.min.css",
                   // "~/Content/MDB/css/addons/datatables-select.min.css",
-                  // "~/Content/MDB/css/addons/directives.min.css",
-                  //"~/Content/MDB/css/addons/flag.min.css",
-                  // "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
-                  //  "~/Content/MDB/css/addons/rating.min.css",
-                  // "~/Content/MDB/css/modules/animations-extended.min.css",
+                // "~/Content/MDB/css/addons/directives.min.css",
+                //"~/Content/MDB/css/addons/flag.min.css",
+                // "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
+                //  "~/Content/MDB/css/addons/rating.min.css",
+                // "~/Content/MDB/css/modules/animations-extended.min.css",
                 //SB Admin
-              //  "~/Content/MDB/favicon.ico",
+               // "~/Content/MDB/favicon.ico",
                 "~/Content/MDB/css/plugins/all.min.css",
                 "~/Content/MDB/css/plugins/bootstrap.min.css",
                 "~/Content/MDB/css/plugins/c3.min.css",
@@ -59,42 +59,48 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/popper.js",
                 "~/Scripts/bootstrap.js",
                 //MDB
-             //   "~/Scripts/MDB/mdb.js",
-             //  "~/Scripts/MDB/addons/datatables.min.js",
-             //   "~/Scripts/MDB/addons/datatables-select.min.js",
-             //   "~/Scripts/MDB/addons/directives.min.js",
-             //   "~/Scripts/MDB/addons/flag.min.js",
-             //   "~/Scripts/MDB/addons/imagesloaded.pkgd.min.js",
-             // "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
-             //  "~/Scripts/MDB/addons/masonry.pkgd.min.js",
-             // "~/Scripts/MDB/addons/rating.min.js",
-             //"~/Scripts/MDB/modules/animations-extended.min.js",
-             //   "~/Scripts/MDB/modules/forms-free.min.js",
-             //   "~/Scripts/MDB/modules/scrolling-navbar.min.js",
-             //   "~/Scripts/MDB/modules/treeview.min.js",
-             //   "~/Scripts/MDB/modules/wow.min.js",
+                //   "~/Scripts/MDB/mdb.js",
+                //  "~/Scripts/MDB/addons/datatables.min.js",
+                //   "~/Scripts/MDB/addons/datatables-select.min.js",
+                //   "~/Scripts/MDB/addons/directives.min.js",
+                //   "~/Scripts/MDB/addons/flag.min.js",
+                //   "~/Scripts/MDB/addons/imagesloaded.pkgd.min.js",
+                // "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
+                //  "~/Scripts/MDB/addons/masonry.pkgd.min.js",
+                // "~/Scripts/MDB/addons/rating.min.js",
+                //"~/Scripts/MDB/modules/animations-extended.min.js",
+                //   "~/Scripts/MDB/modules/forms-free.min.js",
+                //   "~/Scripts/MDB/modules/scrolling-navbar.min.js",
+                //   "~/Scripts/MDB/modules/treeview.min.js",
+                //   "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/sbTemplate/sb-admin.js",
-                "~/Scripts/MDB/plugins/bootstrap.min.js",
-                "~/Scripts/MDB/plugins/c3.min.js",
-                "~/Scripts/MDB/plugins/charts.js",
-                "~/Scripts/MDB/plugins/d3.min.js",
-                "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
-                "~/Scripts/MDB/plugins/datatables.js",
-                "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
+
+                //  "~/Scripts/MDB/plugins/popper.min.js",
+                //"~/Scripts/MDB/plugins/bootstrap.min.js",
+                "~/Scripts/MDB/plugins/perfect-scrollbar.min.js",
+                "~/Scripts/MDB/plugins/screenfull.js",
                 "~/Scripts/MDB/plugins/jquery.dataTables.min.js",
+                //"~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
+                "~/Scripts/MDB/plugins/datatables.js",
+              // "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
+              //  "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js",
                 "~/Scripts/MDB/plugins/jquery-jvectormap.min.js",
                 "~/Scripts/MDB/plugins/moment.js",
-                "~/Scripts/MDB/plugins/perfect-scrollbar.min.js",
-                "~/Scripts/MDB/plugins/popper.min.js",
-                "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js",
-                "~/Scripts/MDB/plugins/screenfull.js",
                 "~/Scripts/MDB/plugins/tempusdominus-bootstrap-4.min.js",
-                "~/Scripts/MDB/plugins/theme.js",
-                "~/Scripts/MDB/plugins/widgets.js"
+                "~/Scripts/MDB/plugins/d3.min.js",
+                "~/Scripts/MDB/plugins/c3.min.js",
+                "~/Scripts/MDB/plugins/tables.js",
+                "~/Scripts/MDB/plugins/widgets.js",
+                //"~/Scripts/MDB/plugins/charts.js",
+                "~/Scripts/MDB/plugins/theme.js"
                 ));
-
+            bundles.Add(new ScriptBundle("~/bundle/BAT").Include(
+                 "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
+                "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
+                "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js"
+                ));
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
                 //DatetimePicker
@@ -124,12 +130,12 @@ namespace PMSAWebMVC
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-             //    "~/Content/DataTables/css/datatables.css"
+               //  "~/Content/DataTables/css/datatables.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
-           //     "~/Scripts/DataTables/datatables.js",
-           //     "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
+             //  "~/Scripts/DataTables/datatables.js",
+               // "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
                 ));
 
             //HighCharts

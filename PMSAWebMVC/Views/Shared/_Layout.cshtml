@@ -8,29 +8,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">*@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>ThemeKit - Admin Template</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="">
+    <title>新人類ERP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewBag.Title</title>
-    @*Bootstrap 4 Admin Template*@
     <link rel="icon" href="~/Content/MDB/favicon.ico" type="image/x-icon" />
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
-    @*<link rel="stylesheet" href="~/plugins/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
-        <link rel="stylesheet" href="~/plugins/icon-kit/dist/css/iconkit.min.css">
-        <link rel="stylesheet" href="~/plugins/ionicons/dist/css/ionicons.min.css">
-        <link rel="stylesheet" href="~/plugins/perfect-scrollbar/css/perfect-scrollbar.css">
-        <link rel="stylesheet" href="~/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
-        <link rel="stylesheet" href="~/plugins/jvectormap/jquery-jvectormap.css">
-        <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css">
-        <link rel="stylesheet" href="~/plugins/weather-icons/css/weather-icons.min.css">
-        <link rel="stylesheet" href="~/plugins/c3/c3.min.css">
-        <link rel="stylesheet" href="~/plugins/owl.carousel/dist/assets/owl.carousel.min.css">
-        <link rel="stylesheet" href="~/plugins/owl.carousel/dist/assets/owl.theme.default.min.css">
-        <link rel="stylesheet" href="~/dist/css/theme.min.css">
-        <script src="~/src/js/vendor/modernizr-2.8.3.min.js"></script>*@
-    @*Bootstrap 4 Admin Template*@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/form")
     @Styles.Render("~/Content/DataTables")
@@ -40,185 +21,194 @@
     @*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
 </head>
 <body id="page-top">
-    <div id="wrapper" class="wrapper">
-        <header class="header-top" header-theme="light">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between">
-                    <div class="top-menu d-flex align-items-center">
-                        <button type="button" class="btn-icon mobile-nav-toggle d-lg-none"><span></span></button>
-                        <div class="header-search">
-                            <div class="input-group">
-                                <span class="input-group-addon search-close"><i class="ik ik-x"></i></span>
-                                <input type="text" class="form-control">
-                                <span class="input-group-addon search-btn"><i class="ik ik-search"></i></span>
-                            </div>
-                        </div>
-                        <button type="button" id="navbar-fullscreen" class="nav-link"><i class="ik ik-maximize"></i></button>
-                    </div>
-                    <div class="top-menu d-flex align-items-center">
-                        <div class="dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="notiDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ik ik-bell"></i><span class="badge bg-danger">3</span></a>
-                            <div class="dropdown-menu dropdown-menu-right notification-dropdown" aria-labelledby="notiDropdown">
-                                <h4 class="header">Notifications</h4>
-                                <div class="notifications-wrap">
-                                    <a href="#" class="media">
-                                        <span class="d-flex">
-                                            <i class="ik ik-check"></i>
-                                        </span>
-                                        <span class="media-body">
-                                            <span class="heading-font-family media-heading">Invitation accepted</span>
-                                            <span class="media-content">Your have been Invited ...</span>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="media">
-                                        <span class="d-flex">
-                                            <img src="img/users/1.jpg" class="rounded-circle" alt="">
-                                        </span>
-                                        <span class="media-body">
-                                            <span class="heading-font-family media-heading">Steve Smith</span>
-                                            <span class="media-content">I slowly updated projects</span>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="media">
-                                        <span class="d-flex">
-                                            <i class="ik ik-calendar"></i>
-                                        </span>
-                                        <span class="media-body">
-                                            <span class="heading-font-family media-heading">To Do</span>
-                                            <span class="media-content">Meeting with Nathan on Friday 8 AM ...</span>
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="footer"><a href="javascript:void(0);">See all activity</a></div>
-                            </div>
-                        </div>
-                        <button type="button" class="nav-link ml-10 right-sidebar-toggle"><i class="ik ik-message-square"></i><span class="badge bg-success">3</span></button>
-                        <div class="dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ik ik-plus"></i></a>
-                            <div class="dropdown-menu dropdown-menu-right menu-grid" aria-labelledby="menuDropdown">
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Dashboard"><i class="ik ik-bar-chart-2"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Message"><i class="ik ik-mail"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Accounts"><i class="ik ik-users"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Sales"><i class="ik ik-shopping-cart"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Purchase"><i class="ik ik-briefcase"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Pages"><i class="ik ik-clipboard"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Chats"><i class="ik ik-message-square"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Contacts"><i class="ik ik-map-pin"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Blocks"><i class="ik ik-inbox"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Events"><i class="ik ik-calendar"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="Notifications"><i class="ik ik-bell"></i></a>
-                                <a class="dropdown-item" href="#" data-toggle="tooltip" data-placement="top" title="More"><i class="ik ik-more-horizontal"></i></a>
-                            </div>
-                        </div>
-                        <button type="button" class="nav-link ml-10" id="apps_modal_btn" data-toggle="modal" data-target="#appsModal"><i class="ik ik-grid"></i></button>
-                        <div class="dropdown">
-                            <a class="dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="avatar" src="img/user.jpg" alt=""></a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="profile.html"><i class="ik ik-user dropdown-icon"></i> Profile</a>
-                                <a class="dropdown-item" href="#"><i class="ik ik-settings dropdown-icon"></i> Settings</a>
-                                <a class="dropdown-item" href="#"><span class="float-right"><span class="badge badge-primary">6</span></span><i class="ik ik-mail dropdown-icon"></i> Inbox</a>
-                                <a class="dropdown-item" href="#"><i class="ik ik-navigation dropdown-icon"></i> Message</a>
-                                <a class="dropdown-item" href="login.html"><i class="ik ik-power dropdown-icon"></i> Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <div class="page-wrap">
-          
-            <!-- Sidebar -->
+    <div id="wrapper">
+        <button class="btn btn-link btn-sm text-white" id="sidebarToggleMobile" href="#" style="position:absolute; top: 10px;">
+            <i class="fas fa-bars"></i>
+        </button>
+        <!-- Sidebar -->
+        <div class="page-wrap" style="z-index:9999">
             <div class="app-sidebar colored">
                 <div class="sidebar-header">
                     <a class="header-brand" href="index.html">
-                        <div class="logo-img">
-                            <i class="fas fa-bicycle mr-1"></i>
+                        <div class="logo-img" style="height:40px;">
+                            <h2><i class="fas fa-bicycle mr-1"></i>@PMSAWebMVC.Resources.AppResource.chokobo</h2>  
                         </div>
-                        <span class="text">陸行鳥</span>
+                        <span class="text">Chokobo</span>
                     </a>
                     <button type="button" class="nav-toggle"><i data-toggle="expanded" class="ik ik-toggle-right toggle-icon"></i></button>
                     <button id="sidebarClose" class="nav-close"><i class="ik ik-x"></i></button>
                 </div>
                 <div class="sidebar-content">
-                    <!-- Navbar -->
                     <div class="nav-container">
+                        <!-- Navbar -->
                         <nav id="main-menu-navigation" class="navigation-main">
-                            <div class="nav-item has-sub">
-                                <a>
-                                        <div style="width:40px;">
-                                            <i class="fas fa-user-circle fa-fw pb-2" style="font-size: 40px;margin-top:10px;"></i>
-                                        </div>
-                                        @if (Request.IsAuthenticated)
-                                        {
-                                            <span style="display:block;">@User.Identity.GetTitle()</span>
-                                            <span style="display:block;">@User.Identity.GetRealName()</span>
-                                        }
-                                </a>
-                                <div class="submenu-content">
-                                    <a class="menu-item" href="#">基本資料設定</a>
-                                    <a class="menu-item" href="#">重設密碼</a>
-                                </div>
-                            </div>
-                            <div class="nav-item has-sub">
-                                <a href="javascript:void(0)"><i class="ik ik-layers"></i><span>管理員</span> <span class="badge badge-danger"></span></a>
-                                <div class="submenu-content">
-                                    <a class="menu-item" href="@Url.Action("Create", "RolesAdmin")">角色管理</a>
-                                    <a class="menu-item" href="@Url.Action("Create", "UsersAdmin")">採購員帳號管理</a>
-                                </div>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Content Wrapper -->
-            <div id="content-wrapper" class="main-content">
-                <div class="container-fluid">
-                    <!-- Breadcrumbs-->
-                    <!-- Icon Cards-->
-                    <!-- Area Chart Example-->
-                    @RenderBody()
+                            <div class="nav-item has-sub">
+                                <button class="navbtn btn btn-link btn-sm text-white" id="sidebarToggle" href="#">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+                                <div class="submenu-content">
+                                    <a class="navbar-brand d-none" id="navbrand" href="@Url.Action("Index", "Home")" style="font-family:'NSimSun';color:#EBEEF5;letter-spacing: 5px;"><i class="fas fa-bicycle mr-1"></i>@PMSAWebMVC.Resources.AppResource.chokobo</a>
+                                </div>
+                            </div>
+                            <ul>
+                                <li>
+                                    <button class="navbtn btn btn-link btn-sm text-white" id="sidebarToggle" href="#">
+                                        <i class="fas fa-bars"></i>
+                                    </button>
+                                    <div class="sidebar-brand nav-item" style="height:40px;">
+                                        <a class="navbar-brand d-none" id="navbrand" href="@Url.Action("Index", "Home")" style="font-family:'NSimSun';color:#EBEEF5;letter-spacing: 5px;"><i class="fas fa-bicycle mr-1"></i>@PMSAWebMVC.Resources.AppResource.chokobo</a>
+                                    </div>
+                                </li>
+                                <li class="sidebar-dropdown nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <div id="userwrap">
+                                            <div style="display:flex; flex-direction:row !important;">
+                                                <div style="width:40px;">
+                                                    <i class="fas fa-user-circle fa-fw pb-2" style="font-size: 40px;margin-top:10px;"></i>
+                                                </div>
+                                                @if (Request.IsAuthenticated)
+                                                {
+                                                    <div class="userwrap d-none" style="margin-left:10px;">
+                                                        <span style="display:block;">@User.Identity.GetTitle()</span>
+                                                        <span style="display:block;">@User.Identity.GetRealName()</span>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div class="sidebar-submenu dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                        <a class="dropdown-item" href="#">基本資料設定</a>
+                                        <a class="dropdown-item" href="#">重設密碼</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" style="font-weight: 600;letter-spacing:2px;" href="@Url.Action( "LogOff", "Account")"><i class="fas fa-power-off"></i>登出</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index", "Home")" class="nav-link">
+                                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                                        <span>首頁</span>
+                                    </a>
+                                </li>
+                                @if (User.IsInRole("Supplier"))
+                                {
+                                    <li class="sidebar-dropdown nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-fw fa-folder"></i>
+                                            <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
+                                        </a>
+                                        <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                            @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h6>*@
+                                            @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", null, new { @class = "dropdown-item" })
+                                            @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", null, new { @class = "dropdown-item" })
+                                            @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
+                                        </div>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Warehouse"))
+                                {
+                                    <li class="sidebar-dropdown nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-fw fa-folder"></i>
+                                            <span>@PMSAWebMVC.Resources.AppResource.Inventory</span>
+                                        </a>
+                                        <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                            @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.Inventory</h6>*@
+                                            <a class="dropdown-item" href="@Url.Action("Index", "WarehouseInfoes")">@PMSAWebMVC.Resources.AppResource.WarehouseInfoes</a>
+                                            <a class="dropdown-item" href="@Url.Action("Index", "InventoryDtls")">@PMSAWebMVC.Resources.AppResource.InventoryDtls</a>
+                                        </div>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="sidebar-dropdown nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-fw fa-folder"></i>
+                                            <span>管理員</span>
+                                        </a>
+                                        <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                            @*<h6 class="dropdown-header">管理員</h6>*@
+                                            <a class="dropdown-item" href="@Url.Action("Create", "RolesAdmin")">角色管理</a>
+                                            <a class="dropdown-item" href="@Url.Action("Create", "UsersAdmin")">採購員帳號管理</a>
+                                        </div>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Buyer"))
+                                {
+                                    <li class="sidebar-dropdown nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-fw fa-folder"></i>
+                                            <span>@PMSAWebMVC.Resources.AppResource.PartsMangement</span>
+                                        </a>
+                                        <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                            @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.PartsMangement</h6>*@
+                                            <a class="dropdown-item" href="@Url.Action("Index", "Parts")">@PMSAWebMVC.Resources.AppResource.Parts</a>
+                                            <a class="dropdown-item" href="@Url.Action("Index", "Products")">@PMSAWebMVC.Resources.AppResource.Products</a>
+                                        </div>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Buyer"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "SourceLists")">
+                                            <i class="fas fa-fw fa-table"></i>
+                                            <span>貨源清單</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Buyer") || User.IsInRole("ProductionControl"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "PurchaseRequisitions")">
+                                            <i class="fas fa-fw fa-table"></i>
+                                            <span>請購單</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Buyer"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Index", "PurchaseOrders")">
+                                            <i class="fas fa-fw fa-table"></i>
+                                            <span>採購單</span>
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    @Html.Partial("_LanguagePartial")
+                                </li>
+                            </ul>
+
+                  
+                    </nav>
                 </div>
-                <!-- /.container-fluid -->
+                </div>
             </div>
-            <!-- /.content-wrapper -->
         </div>
-        <!-- /#wrapper -->
-        <!-- Scroll to Top Button-->
-        @*<a class="scroll-to-top" href="#page-top">
-                <i class="fas fa-angle-up"></i>
-            </a>*@
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column mr-3">
+            <div class="container-fluid">
+                <!-- Breadcrumbs-->
+                <!-- Icon Cards-->
+                <!-- Area Chart Example-->
+                @RenderBody()
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content-wrapper -->
     </div>
+    <!-- /#wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
     @Scripts.Render("~/bundles/jquery")
     @*@Scripts.Render("~/bundles/toastrcss")
         @Scripts.Render("~/bundles/toastrjs")*@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <script src="http://i.gtimg.cn/qzone/biz/gdt/lib/jquery/jquery-2.1.4.js?max_age=31536000"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    @*Bootstrap 4 Admin Template*@
-    @*<script>window.jQuery || document.write('<script src="src/js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
-        <script src="~/plugins/popper.js/dist/umd/popper.min.js"></script>
-        <script src="~/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="~/plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
-        <script src="~/plugins/screenfull/dist/screenfull.js"></script>
-        <script src="~/plugins/datatables.net/js/jquery.dataTables.min.js"></script>
-        <script src="~/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-        <script src="~/plugins/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="~/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-        <script src="~/plugins/jvectormap/jquery-jvectormap.min.js"></script>
-        @*<script src="~/plugins/jvectormap/tests/assets/jquery-jvectormap-world-mill-en.js"></script>*@
-    @*<script src="~/plugins/moment/moment.js"></script>
-        <script src="~/plugins/tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js"></script>
-        <script src="~/plugins/d3/dist/d3.min.js"></script>
-        <script src="~/plugins/c3/c3.min.js"></script>
-        <script src="~/js/tables.js"></script>
-        <script src="~/js/widgets.js"></script>
-        <script src="~/js/charts.js"></script>
-        <script src="~/dist/js/theme.min.js"></script>*@
-    @*Bootstrap 4 Admin Template*@
     @Scripts.Render("~/bundles/js")
-    @Scripts.Render("~/bundle/BAT")
     @Scripts.Render("~/bundles/form")
     @Scripts.Render("~/bundles/DataTables")
     @Scripts.Render("~/bundles/HighCharts")

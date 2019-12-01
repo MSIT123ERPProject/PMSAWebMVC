@@ -35,12 +35,10 @@ namespace PMSAWebMVC
                 // "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
                 //  "~/Content/MDB/css/addons/rating.min.css",
                 // "~/Content/MDB/css/modules/animations-extended.min.css",
-                //SB Admin
-                // "~/Content/MDB/favicon.ico",
-                "~/Content/MDB/css/plugins/all.min.css",
-                //"~/Content/MDB/css/plugins/bootstrap.min.css",
-                "~/Content/MDB/css/plugins/c3.min.css",
 
+                //ThemeKit //都放在MDB/plugins資料夾
+                "~/Content/MDB/css/plugins/all.min.css",
+                "~/Content/MDB/css/plugins/c3.min.css",
                 "~/Content/MDB/css/plugins/dataTables.bootstrap4.min.css",
                 "~/Content/MDB/css/plugins/iconkit.min.css",
                 "~/Content/MDB/css/plugins/ionicons.min.css",
@@ -48,7 +46,6 @@ namespace PMSAWebMVC
                 "~/Content/MDB/css/plugins/owl.carousel.min.css",
                 "~/Content/MDB/css/plugins/owl.theme.default.min.css",
                 "~/Content/MDB/css/plugins/perfect-scrollbar.css",
-                "~/Content/MDB/css/plugins/tempusdominus-bootstrap-4.min.css",
                 "~/Content/MDB/css/plugins/theme.min.css",
                 "~/Content/MDB/css/plugins/weather-icons.min.css",
                 "~/Content/MDB/css/plugins/responsive.bootstrap4.min.css",
@@ -74,12 +71,11 @@ namespace PMSAWebMVC
                 //   "~/Scripts/MDB/modules/scrolling-navbar.min.js",
                 //   "~/Scripts/MDB/modules/treeview.min.js",
                 //   "~/Scripts/MDB/modules/wow.min.js",
+
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/sbTemplate/sb-admin.js",
-
-                //  "~/Scripts/MDB/plugins/popper.min.js",
-                //"~/Scripts/MDB/plugins/bootstrap.min.js",
+                 //ThemeKit 都放在MDB/plugins資料夾
                 "~/Scripts/MDB/plugins/perfect-scrollbar.min.js",
                 "~/Scripts/MDB/plugins/screenfull.js",
                 "~/Scripts/MDB/plugins/jquery.dataTables.min.js",
@@ -87,20 +83,12 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/plugins/datatables.js",
                "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
                 "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js",
-                "~/Scripts/MDB/plugins/jquery-jvectormap.min.js",
                 "~/Scripts/MDB/plugins/moment.js",
-                "~/Scripts/MDB/plugins/tempusdominus-bootstrap-4.min.js",
                 "~/Scripts/MDB/plugins/d3.js",
                 "~/Scripts/MDB/plugins/c3.min.js",
                 "~/Scripts/MDB/plugins/tables.js",
-                "~/Scripts/MDB/plugins/widgets.js",
                 "~/Scripts/MDB/plugins/charts.js",
                 "~/Scripts/MDB/plugins/theme.js"
-                ));
-            bundles.Add(new ScriptBundle("~/bundle/BAT").Include(
-             //   "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
-            //  "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
-             //   "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js"
                 ));
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
@@ -131,12 +119,12 @@ namespace PMSAWebMVC
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-              //  "~/Content/DataTables/css/datatables.css"
+               "~/Content/DataTables/css/datatables.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
-              // "~/Scripts/DataTables/datatables.js",
-             //   "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
+              "~/Scripts/DataTables/datatables.js",
+                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
                 ));
 
             //HighCharts

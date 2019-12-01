@@ -14,8 +14,8 @@
         <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
     </div>
     <div class="card-body">
-        <div class="dataTables_wrapper">
-            <table class="nowrap dataTable dtr-column collapsed" id="dataTable" cellspacing="0" style="width:100%">
+        @*<div class="table-responsive">*@
+            <table class="table" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
                     <tr role="row">
                         <th>
@@ -69,7 +69,7 @@
                     </tr>
                 </tfoot>
             </table>
-        </div>
+        @*</div>*@
     </div>
 </div>
 @section scripts
@@ -87,7 +87,7 @@
                     $("#dataTable").DataTable().destroy();
                 }
               //  $.fn.dataTable.ext.errMode = 'throw';
-         table=        $('#dataTable').DataTable({
+         table=$('#dataTable').DataTable({
                   "ajax": {
                         "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
                         "type": "GET",
@@ -109,8 +109,8 @@
                             targets: -1,
                         }
                     ],
-                    "columns": [
-                        { "data": "SourceListID" },
+             "columns": [
+                 { "data": "SourceListID", orderable: true },
                         { "data": "PartNumber" },
                         { "data": "QtyPerUnit" },
                         { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
@@ -133,6 +133,9 @@
                     ],
                     fixedColumns: {
                         leftColumns: 2,
+             },
+                      language: {
+                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
                     },
                     "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
                     "order": [[1, "asc"]],

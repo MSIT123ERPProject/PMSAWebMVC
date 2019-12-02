@@ -859,7 +859,7 @@
                             e.preventDefault();
                             var formData = {
                                 __RequestVerificationToken: $('#editOfEmpform').serializeArray()[0].value,
-                                EmpId: $('#editOfEmpform').serializeArray()[9].value,
+                                EmpId: $('#editOfEmpform').serializeArray()[10].value,
                                 AccStatus: $('input[name="AccStatus"]').prop("checked"),
                                 selectedRole: $('#editOfEmpform').serializeArray().filter(isselectedRole).map(x => x.value),
                                 sendResetMail: $('#sendResetMail').prop("checked")

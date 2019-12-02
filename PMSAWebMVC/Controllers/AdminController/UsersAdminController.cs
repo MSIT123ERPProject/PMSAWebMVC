@@ -280,6 +280,8 @@ namespace PMSAWebMVC.Controllers
             //停用
             else if (AccStatus == false)
             {
+                var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+                emp.ModifiedDate = DateTime.Now;
                 await AccStatusDisable(EmpId);
             }
 
@@ -367,7 +369,6 @@ namespace PMSAWebMVC.Controllers
         private async Task AccStatusDisable(string EmpId)
         {
             var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
-            var manager = new UserManager<ApplicationUser>(store);
             var user = await UserManager.FindByNameAsync(EmpId);
 
             var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
@@ -431,7 +432,6 @@ namespace PMSAWebMVC.Controllers
             //4.存到資料庫
             //更新此 user table
             var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
-            var manager = new UserManager<ApplicationUser>(store);
             await UserManager.UpdateAsync(user);
             var ctx = store.Context;
             await ctx.SaveChangesAsync();

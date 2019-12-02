@@ -22,6 +22,7 @@ namespace PMSAWebMVC
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
+                "~/Content/font-awesome.css",
                 //Bootstrap
                 //"~/Content/bootstrap.css",
                 "~/Content/MDB/css/bootstrap.css",
@@ -91,7 +92,7 @@ namespace PMSAWebMVC
                  "~/Scripts/pickadate/picker.date.js",
                  "~/Scripts/pickadate/picker.time.js",
                  "~/Scripts/pickadate/translations/zh_TW.js",
-                 //SweetAlert
+                //SweetAlert
                 "~/Scripts/sweetAlert/sweetalert2.all.js"
                 ));
 
@@ -105,6 +106,20 @@ namespace PMSAWebMVC
                 "~/Scripts/DataTables/datatables.js",
                 "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
                 ));
+
+            //HighCharts
+            bundles.Add(new ScriptBundle("~/bundles/HighCharts").Include(
+                "~/Scripts/highcharts/highcharts.js"
+                ));
+
+            //toastr
+            bundles.Add(new ScriptBundle("~/bundles/toastrcss").Include(
+                "~/Content/toastr.min.css"
+                ));
+            bundles.Add(new ScriptBundle("~/bundles/toastrjs").Include(
+                "~/Scripts/toastr.min.js"
+                ));
+            
         }
     }
 }

@@ -607,6 +607,7 @@
     <Content Include="Content\MDB\css\plugins\owl.carousel.min.css" />
     <Content Include="Content\MDB\css\plugins\owl.theme.default.min.css" />
     <Content Include="Content\MDB\css\plugins\perfect-scrollbar.css" />
+    <Content Include="Content\MDB\css\plugins\responsive.bootstrap4.min.css" />
     <Content Include="Content\MDB\css\plugins\tempusdominus-bootstrap-4.min.css" />
     <Content Include="Content\MDB\css\plugins\theme.css" />
     <Content Include="Content\MDB\css\plugins\theme.min.css" />
@@ -2115,6 +2116,7 @@
     <Content Include="Scripts\MDB\plugins\screenfull.js" />
     <Content Include="Scripts\MDB\plugins\tables.js" />
     <Content Include="Scripts\MDB\plugins\tempusdominus-bootstrap-4.min.js" />
+    <Content Include="Scripts\MDB\plugins\theme.js" />
     <Content Include="Scripts\MDB\plugins\theme.min.js" />
     <Content Include="Scripts\MDB\plugins\widgets.js" />
     <Content Include="Scripts\MDB\popper.js" />

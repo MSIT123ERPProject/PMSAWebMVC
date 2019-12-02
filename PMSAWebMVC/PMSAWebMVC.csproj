@@ -208,16 +208,17 @@
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
-    <Compile Include="Controllers\RolesAdminController.cs" />
+    <Compile Include="Controllers\AdminController\RolesAdminController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
     <Compile Include="Controllers\SourceListsController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierStocksController.cs" />
-    <Compile Include="Controllers\UsersAdminController.cs" />
+    <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Metadata\CompanyInfo.cs" />
     <Compile Include="Metadata\Employee.cs" />
     <Compile Include="Metadata\EmployeeMetadata.cs" />
     <Compile Include="Metadata\InventoryDtl.cs" />
@@ -395,12 +396,14 @@
     <Compile Include="Resources\AppResource.Designer.cs" />
     <Compile Include="Resources\AppResource.ja.Designer.cs" />
     <Compile Include="Resources\AppResource.zh-TW.Designer.cs" />
+    <Compile Include="Services\MembersDBService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
     <Compile Include="ViewModels\ShipNotices\ShipNoticeViewModel.cs" />
+    <Compile Include="ViewModels\UsersAdmin\UsersAdminViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -2136,6 +2139,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Shared\ResetPwdEmailTemplate.html" />
     <Content Include="Views\ShipNotices\ShipNoticeDisplay.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -2160,7 +2164,6 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -2258,12 +2261,12 @@
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
     <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
+    <Content Include="Views\Account\ConfirmEmailError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="assets\parts\" />
     <Folder Include="assets\products\" />
-    <Folder Include="Services\" />
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />
     <Folder Include="Utilities\ShiYuan\" />

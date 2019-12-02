@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.Services;
 using PMSAWebMVC.ViewModels.RolesAdmin;
 using PMSAWebMVC.ViewModels.UsersAdmin;
 using System;
@@ -20,6 +22,8 @@ namespace PMSAWebMVC.Controllers
     [Authorize]
     public class UsersAdminController : BaseController
     {
+        private PMSAEntities db = new PMSAEntities();
+
         public UsersAdminController()
         {
         }
@@ -95,34 +99,34 @@ namespace PMSAWebMVC.Controllers
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc
             };
 
-                var userA = new
+            var userA = new
+            {
+                EmployeeID = user.UserName,
+                Name = user.RealName,
+                Role = await UserManager.GetRolesAsync(user.Id),
+                Email = user.Email,
+                Mobile = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
+                Tel = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
+                AccountStatus = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
+                ModifiedDate = JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
+                ManagerID = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
+                CreateDate = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
+                SendLetterDate = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
+                LastPasswordChangedDate = await UserManager.Users.Where(e => e.UserName == user.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await UserManager.Users.Where(e => e.UserName == user.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync(), js),
+                //取得 所有Role列表，若有出現在該userA中 Selected = true
+                RolesList = RoleManager.Roles.ToList().Select(r => new
                 {
-                    EmployeeID = user.UserName,
-                    Name = user.RealName,
-                    Role = await UserManager.GetRolesAsync(user.Id),
-                    Email = user.Email,
-                    Mobile = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
-                    Tel = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
-                    AccountStatus = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
-                    ModifiedDate = JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
-                    ManagerID = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
-                    CreateDate = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
-                    SendLetterDate = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
-                    SendLetterStatus = await db.Employee.Where(e => e.EmployeeID == user.UserName).Select(e => e.SendLetterStatus).FirstOrDefaultAsync(),
-                    //取得 所有Role列表，若有出現在該userA中 Selected = true
-                    RolesList = RoleManager.Roles.ToList().Select(r => new
-                    {
-                        Selected = userRoles.Contains(r.Name),
-                        Text = r.Description,
-                        Value = r.Name
-                    })
-                };
+                    Selected = userRoles.Contains(r.Name),
+                    Text = r.Description,
+                    Value = r.Name
+                })
+            };
 
-                return Json(userA, JsonRequestBehavior.AllowGet);
+            return Json(userA, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
-        public async Task<ActionResult> IndexAjax()
+        public async Task<ActionResult> getAllEmpToIndexAjax()
         {
             List<ApplicationUser> usersWithEmpID = await UserManager.Users.Where(x => x.UserName.Contains("C")).ToListAsync();
             //return View(await UserManager.Users.ToListAsync());
@@ -148,7 +152,7 @@ namespace PMSAWebMVC.Controllers
                     ManagerID = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
                     CreateDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
                     SendLetterDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
-                    SendLetterStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterStatus).FirstOrDefaultAsync()
+                    LastPasswordChangedDate = await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync(), js)
                 };
                 emps.Add(user);
             }
@@ -181,8 +185,6 @@ namespace PMSAWebMVC.Controllers
             ViewBag.empID = new SelectList(db.Employee, "EmployeeID", "EmployeeID");
             return View();
         }
-
-        private PMSAEntities db = new PMSAEntities();
 
         [HttpPost]
         public JsonResult GetUsersFromEmp(string EmpID)
@@ -232,72 +234,228 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
-        //管理員新增採購員帳號
+        //管理員修改採購員帳號(啟用停用/角色)
         // POST: /Users/Create
+        //TODO
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(RegisterViewModel model, params string[] selectedRoles)
+        public async Task<ActionResult> updateEmployeeUsersAtIndex(string EmpId, bool AccStatus, bool sendResetMail, params string[] selectedRole)
         {
-            if (ModelState.IsValid)
+            var user = await UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).SingleOrDefaultAsync();
+
+            //role table
+            //角色更新到db
+            //更新db角色
+            //selectedRole = selectedRole ?? new string[] { };
+            //var all = new string[] { "Buyer", "Manager", "ProductionControl", "NewEmployee", "Admin", "Warehouse" };
+            //var now = UserManager.GetRolesAsync(user.Id).ToString();
+            //await UserManager.RemoveFromRolesAsync(user.Id, now);
+
+            //var r2 = await UserManager.AddToRolesAsync(user.Id, selectedRole);
+
+            var userRoles = await UserManager.GetRolesAsync(user.Id);
+            selectedRole = selectedRole ?? new string[] { };
+
+            var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
+            result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray<string>());
+
+            //更新此 user
+            //var r3 = await UserManager.UpdateAsync(user);
+
+            //啟用 AccStatus==true//先判斷DB是否 D -> RE // && db.Employee.Where(x => x.AccountStatus == "D" && x.EmployeeID == EmpId).Any()
+            if (AccStatus == true)
             {
-                ApplicationDbContext context = new ApplicationDbContext();
-                //ApplicationRoleStore roleStore = new ApplicationRoleStore(context);
-                //ApplicationRoleManager roleManager = new ApplicationRoleManager(roleStore);
-                //新增 user 資料
-                var user = new ApplicationUser
+                //如果勾選寄信重設密碼
+                if (sendResetMail == true)
                 {
-                    //EmployeeID = model.EmployeeID,
-                    UserName = model.EmployeeID,
-                    //realName = model.realName,
-                    Email = model.Email,
-                    //AccountStatus = "R",
-                    //CreateDate = DateTime.Now,
-                    //ModifiedDate = DateTime.Now,
-                    //SendLetterStatus = "Y",
-                    //SendLetterDate = DateTime.Now,
-                    SecurityStamp = Guid.NewGuid().ToString("D")
-                };
-                // TODO
-                // 密碼寫死先統一 P@ssw0rd
-                // string pwd = generateFirstPwd();
-                string pwd = "P@ssw0rd";
-                var result = await UserManager.CreateAsync(user, pwd);
-                //ViewBag.RoleId = new SelectList(await roleManager.Roles.ToListAsync(), "Name", "Name");
-                // 如果成功新增 進行驗證
-                if (result.Succeeded)
-                {
-                    // 新增成功才有 userID(流水號)
-                    // 如果選擇不為空
-                    if (selectedRoles != null)
-                    {
-                        // 將 user 加入角色池  //Add User to the selected Roles
-                        var resultSelect = await UserManager.AddToRolesAsync(user.Id, selectedRoles);
-                        // 加入失敗的話 讓他可以選 RoleId
-                        if (!resultSelect.Succeeded)
-                        {
-                            ModelState.AddModelError("", resultSelect.Errors.First());
-                            //ViewBag.RoleId = new SelectList(await roleManager.Roles.ToListAsync(), "Name", "Name");
-                            return View();
-                        }
-                    }
-                    //?????
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    // TODO 帳戶確認及密碼重設
-                    // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
-                    // 傳送包含此連結的電子郵件
-                    var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
-                    //UserManager.UserTokenProvider = new Microsoft.AspNet.Identity.Owin.DataProtectorTokenProvider<ApplicationUser, int>(provider.Create("TokenName"));
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "確認您的帳戶", $"<h1>請按一下此連結確認您的帳戶</h1> <a href='{callbackUrl}'>這裏</a><h5>您好，您的密碼是：</h5><h5>{pwd}</h5>");
-
-                    ViewBag.Link = callbackUrl;
-                    return View("DisplayEmail");
+                    // 帳戶確認及密碼重設 //user emp confirmemail // user emp pwd // emp SendLetterStatus="Y" SendLetterDate datetime.now 已重設還沒存 db
+                    await sendMailatIndex(user, EmpId);
                 }
+
+                var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+                emp.ModifiedDate = DateTime.Now;
+                //更新紀錄狀態的欄位
+                await AccStatusReset(EmpId);
             }
-            // 如果執行到這裡，發生某項失敗，則重新顯示表單
-            return View(model);
+            //停用
+            else if (AccStatus == false)
+            {
+                await AccStatusDisable(EmpId);
+            }
+
+            //Get the list of Roles
+            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
+            return View("Index");
+        }
+
+        // 帳戶確認及密碼重設
+        [HttpPost]
+        public async Task sendMail(string EmpId)
+        {
+            var user = await UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).SingleOrDefaultAsync();
+            // 傳送包含此連結的電子郵件
+            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdEmailTemplate.html"));
+            // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
+            string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
+            string pwd = generateFirstPwd();
+            string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
+            //emp table user table
+            //重設資料庫該 user 密碼 並 hash 存入 db
+            //重設db密碼
+            //1.重設 user 密碼
+            await UserManager.UpdateSecurityStampAsync(user.Id);
+            user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
+            user.LastPasswordChangedDate = null;
+
+            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+            emp.PasswordHash = user.PasswordHash;
+
+            //寄信
+            await UserManager.SendEmailAsync(user.Id, "重設您的密碼", MailBody);
+
+            //3.更新db寄信相關欄位
+            //SendLetterDate
+            emp.SendLetterDate = DateTime.Now;
+            //SendLetterStatus
+            emp.SendLetterStatus = "S";
+
+            //更新狀態欄位 user emo table
+            await AccStatusReset(EmpId);
+        }
+
+        // 帳戶確認及密碼重設
+        private async Task sendMailatIndex(ApplicationUser user, string EmpId)
+        {
+            // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
+            // 傳送包含此連結的電子郵件
+            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdEmailTemplate.html"));
+            // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
+            string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
+            string pwd = generateFirstPwd();
+            string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
+            //emp table user table
+            //重設資料庫該 user 密碼 並 hash 存入 db
+            //重設db密碼
+            //1.重設 user 密碼
+            await UserManager.UpdateSecurityStampAsync(user.Id);
+            user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
+
+            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+            emp.PasswordHash = user.PasswordHash;
+
+            //寄信
+            await UserManager.SendEmailAsync(user.Id, "重設您的密碼", MailBody);
+
+            //3.更新db寄信相關欄位
+            //SendLetterDate
+            emp.SendLetterDate = DateTime.Now;
+            //SendLetterStatus
+            emp.SendLetterStatus = "S";
+
+            //更新狀態欄位 user emo table
+            await AccStatusReset(EmpId);
+        }
+
+        //Disable 帳號為停用時 LastPasswordChangedDate = null /  Role 重設為 NewEmployee
+        //R -> D
+        private async Task AccStatusDisable(string EmpId)
+        {
+            var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var manager = new UserManager<ApplicationUser>(store);
+            var user = await UserManager.FindByNameAsync(EmpId);
+
+            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+            emp.AccountStatus = "D";
+
+            //Disable 帳號為停用時 LastPasswordChangedDate = null /  Role 重設為 NewEmployee
+            user.LastPasswordChangedDate = null;
+            user.Roles.Clear();
+            var role = RoleManager.FindByName("NewEmployee");
+            IdentityUserRole r = new IdentityUserRole()
+            {
+                RoleId = role.Id,
+                UserId = user.Id
+            };
+            user.Roles.Add((IdentityUserRole)r);
+
+            //更新此 user
+            await UserManager.UpdateAsync(user);
+
+            //4.存到資料庫
+            //更新此 user table
+            await updateEmpUserTable(user, emp);
+        }
+
+        //Reset 帳號為重啟時 LastPasswordChangedDate = null /  SendLetterDate / resetPwd 和 寄信
+        //D -> R
+        private async Task AccStatusReset(string EmpId)
+        {
+            var user = await UserManager.FindByNameAsync(EmpId);
+            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+
+            //有寄過信了
+            //if (emp.SendLetterDate != null)
+            //{
+            //    DateTime s = (DateTime)emp.SendLetterDate;
+            //    var tokenOverTime = (DateTime.Now - s).TotalSeconds > s.AddDays(1).Second;
+            //    ////檢查token是否過期 //過期才重發密碼x -> 想發就發才對
+            //    // 如果過期 R-> D
+            //    // token過期 / 沒登入過
+            //    if (tokenOverTime && user.LastPasswordChangedDate == null)
+            //    {
+            //        emp.AccountStatus = "D";
+            //        await AccStatusDisable(EmpId);
+            //    }
+            //}
+
+            //emp table
+            //寄信成功狀態設為 R
+            emp.AccountStatus = "R";
+
+            //4.存到資料庫
+            //更新此 user table
+            await updateEmpUserTable(user, emp);
+        }
+
+        //4.存到資料庫
+        //更新此 user table
+        //await updateEmpUserTable(user, emp);
+        private async Task updateEmpUserTable(ApplicationUser user, Employee emp)
+        {
+            //4.存到資料庫
+            //更新此 user table
+            var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var manager = new UserManager<ApplicationUser>(store);
+            await UserManager.UpdateAsync(user);
+            var ctx = store.Context;
+            await ctx.SaveChangesAsync();
+            //Emp table
+            db.Entry(emp).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+        }
+
+        //TODO ConfirmEmail ResetPwd
+        //Enable 帳號為啟用時
+        //R -> E
+        private async Task AccStatusEnable(string EmpId)
+        {
+            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+
+            //確認信箱 ConfirmEmail 1成功 -> 登入後 ResetPwd 重設密碼成功 更新 LastPasswordChangedDate = DateTime.Now
+            //若 Confirmemail 0 回倒 ResetPwd 頁面
+
+            emp.AccountStatus = "E";
+
+            //4.存到資料庫
+            //Emp table
+            db.Entry(emp).State = EntityState.Modified;
+            await db.SaveChangesAsync();
         }
 
         private void AddErrors(IdentityResult result)

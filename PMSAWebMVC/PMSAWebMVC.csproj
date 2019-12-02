@@ -2139,6 +2139,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Shared\ResetPwdEmailTemplate.html" />
     <Content Include="Views\ShipNotices\ShipNoticeDisplay.cshtml" />
     <Content Include="Views\ShipNotices\purchaseOrderSended.cshtml" />
     <Content Include="Web.config">
@@ -2261,6 +2262,7 @@
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
     <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
+    <Content Include="Views\Account\ConfirmEmailError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2271,7 +2273,6 @@
     <Folder Include="Utilities\ShiYuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
-    <Folder Include="Views\Members\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

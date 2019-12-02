@@ -41,7 +41,7 @@ namespace PMSAWebMVC.ViewModels.UsersAdmin
         [DisplayName("寄信日期")]
         public Nullable<System.DateTime> SendLetterDate { get; set; }
 
-        [DisplayName("寄信狀態")]
-        public string SendLetterStatus { get; set; }
+        [DisplayName("使用者更改密碼日期")]
+        public Nullable<System.DateTime> LastPasswordChangedDate { get; set; }
     }
 }

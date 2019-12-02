@@ -23,7 +23,8 @@ namespace PMSAWebMVC
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
                 //Bootstrap
-                "~/Content/bootstrap.css",
+                //"~/Content/bootstrap.css",
+                "~/Content/MDB/css/bootstrap.css",
                 //MDB
                 "~/Content/MDB/css/mdb.css",
                 "~/Content/MDB/css/addons/datatables.min.css",
@@ -41,7 +42,8 @@ namespace PMSAWebMVC
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
-                "~/Scripts/bootstrap.js",
+                //"~/Scripts/bootstrap.js",
+                "~/Scripts/MDB/bootstrap.js",
                 //MDB
                 "~/Scripts/MDB/mdb.js",
                 "~/Scripts/MDB/addons/datatables.min.js",
@@ -59,7 +61,9 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
-                "~/Scripts/sbTemplate/sb-admin.js"
+                "~/Scripts/sbTemplate/sb-admin.js",
+                //Site
+                "~/Scripts/Site.js"
                 ));
 
             //表單
@@ -71,9 +75,11 @@ namespace PMSAWebMVC
                  "~/Content/pickadate/themes/classic.date.css",
                  "~/Content/pickadate/themes/classic.time.css",
                 //SweetAlert
-                "~/Content/sweetAlert/sweetalert2.css"
+                "~/Content/sweetAlert/sweetalert2.css",
+                //MagicInput
+                "~/Content/MagicInput/magic-input.css",
+                "~/Content/MagicInput/magic-input.site.css"
                 ));
-
             bundles.Add(new ScriptBundle("~/bundles/form").Include(
                 //DataTables、DatetimePicker
                 "~/Scripts/moment-with-locales.js",
@@ -91,19 +97,12 @@ namespace PMSAWebMVC
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-                "~/Content/DataTables/css/datatables.css"
-                //"~/Content/DataTables/css/dataTables.bootstrap4.css",
-                //"~/Content/DataTables/css/responsive.bootstrap4.css",
-                //"~/Content/DataTables/css/fixedHeader.bootstrap4.css"
+                "~/Content/DataTables/css/datatables.css",
+                "~/Content/DataTables/css/dataTables.site.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
                 "~/Scripts/DataTables/datatables.js",
-                //"~/Scripts/DataTables/jquery.dataTables.js",
-                //"~/Scripts/DataTables/dataTables.bootstrap4.js",
-                //"~/Scripts/DataTables/dataTables.responsive.js",
-                //"~/Scripts/DataTables/responsive.bootstrap4.js",
-                //"~/Scripts/DataTables/dataTables.fixedHeader.js",
                 "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
                 ));
         }

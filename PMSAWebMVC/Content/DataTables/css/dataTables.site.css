@@ -16,16 +16,16 @@
     border-collapse: separate;
     border-spacing: 0
 }*/
-    /*827*/
-    table.dataTable tbody th, table.dataTable tbody td {
-        padding: 8px 10px
-    }
-    /*952*/
-    /*table.dataTable.nowrap th, table.dataTable.nowrap td {
+/*827*/
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 8px 10px
+}
+/*952*/
+/*table.dataTable.nowrap th, table.dataTable.nowrap td {
         white-space: nowrap
     }*/
-    /*1028*/
-    /*table.dataTable, table.dataTable th, table.dataTable td {
+/*1028*/
+/*table.dataTable, table.dataTable th, table.dataTable td {
         box-sizing: content-box
     }*/
 /*1222*/
@@ -110,4 +110,69 @@ table.dataTable.dtr-column > tbody > tr.parent th.control:before {
     color: #4285f4;
     background-color: transparent;
     /*background-color: #d33333;*/
+}
+
+/*網站自訂*/
+
+/*hover*/
+table.dataTable.hover tbody tr:hover,
+table.dataTable.display tbody tr:hover {
+    background-color: rgb(217, 236, 255);
+}
+
+/*功能按鈕 coolAdmin/css/theme.css 55 */
+.table-data-feature button,
+.table-data-feature input[type='button'] {
+    cursor: pointer;
+}
+/*功能按鈕 coolAdmin/css/theme.css 70 */
+.table-data-feature button {
+    border: none;
+    background: none;
+}
+/*功能按鈕 coolAdmin/css/theme.css 4609 */
+.table-data-feature {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+    .table-data-feature .item {
+        display: block;
+        height: 30px;
+        width: 30px;
+        position: relative;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+        background: #e5e5e5;
+        margin-right: 5px;
+    }
+
+        .table-data-feature .item:last-child {
+            margin-right: 0;
+        }
+
+        .table-data-feature .item i {
+            font-size: 20px;
+            color: #808080;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+table.dataTable .dtr-data {
+    display: inline-flex;
 }

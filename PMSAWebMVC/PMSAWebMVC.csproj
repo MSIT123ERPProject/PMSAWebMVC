@@ -461,7 +461,7 @@
     <Content Include="Content\DataTables\css\dataTables.semanticui.css" />
     <Content Include="Content\DataTables\css\dataTables.semanticui.min.css" />
     <Content Include="Content\DataTables\css\dataTables.site.examples.css" />
-    <Content Include="Content\DataTables\css\dataTables.site.table.css" />
+    <Content Include="Content\DataTables\css\dataTables.site.css" />
     <Content Include="Content\DataTables\css\dataTables.uikit.css" />
     <Content Include="Content\DataTables\css\dataTables.uikit.min.css" />
     <Content Include="Content\DataTables\css\fixedColumns.bootstrap.css" />
@@ -576,6 +576,9 @@
     <Content Include="Content\fontawesome-all.min.css" />
     <Content Include="Content\fontawesome.css" />
     <Content Include="Content\fontawesome.min.css" />
+    <Content Include="Content\MagicInput\magic-input.css" />
+    <Content Include="Content\MagicInput\magic-input.min.css" />
+    <Content Include="Content\MagicInput\magic-input.site.css" />
     <Content Include="Content\MDB\css\addons\datatables-select.min.css" />
     <Content Include="Content\MDB\css\addons\datatables.min.css" />
     <Content Include="Content\MDB\css\addons\directives.min.css" />
@@ -1013,6 +1016,7 @@
     <Content Include="Scripts\sbTemplate\mdb.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.min.js" />
+    <Content Include="Scripts\Site.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.all.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.all.min.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.js" />

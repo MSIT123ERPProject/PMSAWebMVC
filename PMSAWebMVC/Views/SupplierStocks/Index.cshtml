@@ -125,11 +125,11 @@
                             }
                         },
                         {
-                            "data": "SourceListID",
+                            "data": null,
                             orderable: false,
                             className: 'control',
                             render: function (data, type, row, meta) {
-                                return '';
+                                return '<a><i class="fas fa-fw fa-table"></i></a>';
                             }
                         }
                     ],
@@ -191,7 +191,7 @@
                             });
                     }
                     else {
-                        toastr.error("已取消", "通知");
+                        toastr.error("庫存不得小於零", "通知");
                     }
                 });
         }

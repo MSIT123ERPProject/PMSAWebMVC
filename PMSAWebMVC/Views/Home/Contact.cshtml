@@ -9,7 +9,6 @@
     @*<link href="~/Content/DataTables/css/dataTables.site.examples.bs4.css" rel="stylesheet" />*@
     @*<link href="~/Content/DataTables/css/dataTables.site.examples.css" rel="stylesheet" />*@
     @*<link href="~/Content/DataTables/css/dataTables.site.site.css" rel="stylesheet" />*@
-
     <style>
         .td2c tbody tr td:nth-child(1), tbody tr td:nth-child(2) {
             text-align: center;
@@ -56,9 +55,19 @@
 
 <hr />
 
+<h3><a href="#">Rounded Outline Button</a></h3>
+<button class="btn btn-primary btn-icon" data-toggle="tooltip" title="檢視">
+    <i class="far fa-eye"></i>
+</button>
+<button class="btn btn-outline-primary btn-icon" data-toggle="tooltip" title="編輯">
+    <i class="far fa-edit"></i>
+</button>
+
+<hr />
+
 <h3><a href="https://datatables.net/extensions/responsive/examples/">DataTables</a></h3>
 
-<table id="dataTablesId" class="table table-striped hover nowrap text-left" style="width:100%">
+<table id="dataTablesId" class="table table-striped hover order-column nowrap text-left" style="width:100%">
     <thead>
         <tr class="bg-primary text-white text-center">
             <th></th>
@@ -104,7 +113,7 @@
                     <button class="item" data-toggle="tooltip" title="明細">
                         <i class="far fa-file-alt"></i>
                     </button>
-                    <div class="dropdown" data-toggle="popover-hover">
+                    <div class="dropdown" data-toggle="popover-dropdown">
                         <button class="item">
                             <i class="fas fa-ellipsis-h"></i>
                         </button>
@@ -597,7 +606,7 @@
         $(document).ready(function () {
 
             $("body").popover({
-                selector: '[data-toggle="popover-hover"]', html: true,
+                selector: '[data-toggle="popover-dropdown"]', html: true,
                 trigger: 'focus',
                 placement: 'bottom',
                 content: function () { return $(this).children(".dropdown-menu").html(); }
@@ -605,7 +614,9 @@
 
             $('#dataTablesId').DataTable({
                 ordering: false,
-                //第一欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [[2, 'desc']],
+                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
                 responsive: {
                     details: {
                         type: 'column',
@@ -614,8 +625,10 @@
                 },
                 columnDefs: [{
                     targets: 0,
-                    className: 'control text-center'
-                }],
+                    className: 'control'
+                },
+                { orderable: false, targets: [0, 1, -1] },
+                ],
             });
 
             $('#datetimepickerId').datetimepicker();

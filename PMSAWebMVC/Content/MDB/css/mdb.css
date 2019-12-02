@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 
 /*!
  * Material Design for Bootstrap 4
@@ -6172,13 +6172,13 @@ a.waves-light {
     -webkit-animation-name: slideOutUp;
     animation-name: slideOutUp
 }
-
+/*修正mdb btn過大，恢復Bootstrap 4 Style*/
 .btn {
-    margin: .375rem;
+    /*margin: .375rem;*/
     color: inherit;
-    text-transform: uppercase;
+    /*text-transform: uppercase;
     word-wrap: break-word;
-    white-space: normal;
+    white-space: normal;*/
     cursor: pointer;
     border: 0;
     border-radius: .125rem;
@@ -6188,8 +6188,8 @@ a.waves-light {
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
-    padding: .84rem 2.14rem;
-    font-size: .81rem
+    /*padding: .84rem 2.14rem;
+    font-size: .81rem*/
 }
 
 .btn:hover,
@@ -6216,7 +6216,7 @@ a.waves-light {
     margin-right: .3rem
 }
 
-.btn.btn-lg {
+/*.btn.btn-lg {
     padding: 1rem 2.4rem;
     font-size: .94rem
 }
@@ -6229,7 +6229,7 @@ a.waves-light {
 .btn.btn-sm {
     padding: .5rem 1.6rem;
     font-size: .64rem
-}
+}*/
 
 .btn.disabled:hover,
 .btn.disabled:focus,
@@ -6241,7 +6241,7 @@ a.waves-light {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
 }
 
-.btn[class*="btn-outline-"] {
+/*.btn[class*="btn-outline-"] {
     padding-top: .7rem;
     padding-bottom: .7rem
 }
@@ -6259,7 +6259,7 @@ a.waves-light {
 .btn[class*="btn-outline-"].btn-sm {
     padding-top: .38rem;
     padding-bottom: .38rem
-}
+}*/
 
 .btn-link {
     color: #000;

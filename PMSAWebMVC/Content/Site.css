@@ -695,3 +695,29 @@
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
+
+/*Rounded Outline Button*/
+
+.btn-icon {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+    line-height: 32px;
+    font-size: 14px;
+    /*display: inline-block;*/
+    display:inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+    .btn-icon i {
+        margin-right: 0 !important;
+    }

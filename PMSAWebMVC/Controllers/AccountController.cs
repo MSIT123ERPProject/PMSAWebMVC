@@ -84,8 +84,6 @@ namespace PMSAWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            TempData["EmpId"] = model.UserName;
-            TempData.Keep();
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -106,8 +104,6 @@ namespace PMSAWebMVC.Controllers
                     {
                         return RedirectToLocal(returnUrl);
                     }
-                    break;
-
                 case SignInStatus.LockedOut:
                     return View("Lockout");
 
@@ -276,62 +272,57 @@ namespace PMSAWebMVC.Controllers
         //
         // POST: /Account/ResetPassword
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            var EmpId = TempData.Peek("EmpId");
+            var EmpId = User.Identity.GetEmployee().EmployeeID;
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(EmpId.ToString());
-            if (user == null)
-            {
-                // 不顯示使用者不存在
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            }
-            //var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+            var user = await UserManager.FindByNameAsync(EmpId);
             user.PasswordHash = UserManager.PasswordHasher.HashPassword(model.ConfirmPassword);
-            var result = await UserManager.UpdateSecurityStampAsync(user.Id);
-            if (result.Succeeded)
-            {
-                user.LastPasswordChangedDate = DateTime.Now;
-            }
-            else
-            {
-                AddErrors(result);
-                return RedirectToAction("Error");
-            }
-
-            var emp = db.Employee.Where(x => x.EmployeeID == user.UserName).SingleOrDefault();
+            await UserManager.UpdateSecurityStampAsync(user.Id);
             emp.PasswordHash = user.PasswordHash;
+            user.LastPasswordChangedDate = DateTime.Now;
+            emp.AccountStatus = "E";
 
-            await updateEmpUserTable(user, emp);
-
-            if (result.Succeeded)
+            //按下重設確定後要判斷是否成功修改
+            var isResetPwd = await updateEmpUserTable(user, emp);
+            //成功
+            if (isResetPwd > 0)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
-            AddErrors(result);
-            return View();
+            //失敗
+            //TODO 重設密碼失敗提示請在時間重設
+            return RedirectToAction("Error");
         }
 
         //4.存到資料庫
         //更新此 user table
         //await updateEmpUserTable(user, emp);
-        private async Task updateEmpUserTable(ApplicationUser user, Employee emp)
+        private async Task<int> updateEmpUserTable(ApplicationUser user, Employee emp)
         {
             //4.存到資料庫
             //更新此 user table
             var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
             var manager = new UserManager<ApplicationUser>(store);
-            await UserManager.UpdateAsync(user);
+            var u1 = await UserManager.UpdateAsync(user);
             var ctx = store.Context;
             await ctx.SaveChangesAsync();
             //Emp table
             db.Entry(emp).State = EntityState.Modified;
-            await db.SaveChangesAsync();
+            var u2 = await db.SaveChangesAsync();
+            //成功
+            if(u1.Succeeded && u2 > 0)
+            {
+                return 1;
+            }
+            //失敗
+            return 0;
         }
 
         //

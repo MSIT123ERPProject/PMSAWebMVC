@@ -246,13 +246,6 @@ namespace PMSAWebMVC.Controllers
             //role table
             //角色更新到db
             //更新db角色
-            //selectedRole = selectedRole ?? new string[] { };
-            //var all = new string[] { "Buyer", "Manager", "ProductionControl", "NewEmployee", "Admin", "Warehouse" };
-            //var now = UserManager.GetRolesAsync(user.Id).ToString();
-            //await UserManager.RemoveFromRolesAsync(user.Id, now);
-
-            //var r2 = await UserManager.AddToRolesAsync(user.Id, selectedRole);
-
             var userRoles = await UserManager.GetRolesAsync(user.Id);
             selectedRole = selectedRole ?? new string[] { };
 

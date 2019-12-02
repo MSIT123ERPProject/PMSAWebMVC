@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PMSAWebMVC;
@@ -19,6 +20,7 @@ namespace PMSAWebMVC.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
+        private PMSAEntities db = new PMSAEntities();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -82,6 +84,8 @@ namespace PMSAWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            TempData["EmpId"] = model.UserName;
+            TempData.Keep();
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -93,7 +97,16 @@ namespace PMSAWebMVC.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    var user = UserManager.Users.Where(x => x.UserName == model.UserName).FirstOrDefault();
+                    if (user.LastPasswordChangedDate == null)
+                    {
+                        return RedirectToAction("ResetPassword", "Account");
+                    }
+                    else
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+                    break;
 
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -106,6 +119,13 @@ namespace PMSAWebMVC.Controllers
                     ModelState.AddModelError("", "登入嘗試失試。");
                     return View(model);
             }
+        }//
+
+        // GET: /Account/VerifyCode
+        [Authorize]
+        public ActionResult ConfirmEmailError()
+        {
+            return View();
         }
 
         //
@@ -181,82 +201,6 @@ namespace PMSAWebMVC.Controllers
         }
 
         //
-        // POST: /Account/Register
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser
-                {
-                    UserName = model.EmployeeID,
-                    Email = model.Email,
-                    RealName = model.realName
-                };
-                var userToEmp = new Employee
-                {
-                    EmployeeID = model.EmployeeID,
-                    Name = model.realName,
-                    Email = model.Email,
-                    Mobile = model.Mobile,
-                    Tel = model.Tel,
-                    CompanyCode = "C00001",
-                    ManagerID = null,
-                    PasswordHash = "+y1MS0Wp2nZUefXbyYhiz9Tn84S8FhCbxDpCXgfNXjk=",
-                    PasswordSalt = "fd357578-7784-4dea-b8c1-4d8b8d290d55",
-                    AccountStatus = "R",
-                    CreateDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now,
-                    SendLetterStatus = null,
-                    SendLetterDate = null,
-                    AuthRoleID = null,
-                    AuthenticateToken = null,
-                    TokenCreateTime = null,
-                    EnableTwoFactorAuth = null,
-                    Title = null,
-                };
-                string pwd = generateFirstPwd();
-                var result = await UserManager.CreateAsync(user, pwd);
-
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
-                    // 傳送包含此連結的電子郵件
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    string mailbody = $@"
-                            <tbody style='font-family: 'microsoft jhenghei', sans-serif;'>
-                              <table style='width: 580px; min-width: 580px; margin: 20px auto; background-color: #eee; padding-bottom: 20px;'>
-                                <tr>
-                                    <td>
-                                        <img src='https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg' alt='昶興自行車'>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style='line-height: 2; padding: 10px 38px 30px 38px;'>
-                                        <h1 style='color: #3d5f7f; letter-spacing: 1px; margin: 0; font-size: 26px'>重設您的密碼 </h1>
-                                        <p style='letter-spacing: 1px; color: #000; margin: 0;font-size: 16px'><strong>您好,</strong></p>
-                                        <p style='letter-spacing: 1px; color: #000; margin: 0; font-size: 13px; margin-bottom: 25px; '>請按一下此連結確認您的帳戶，並使用下方重設密碼登入，帳號為您的員工編號，請在5分鐘內登入連結並重設密碼:</p>
-                                        <p style='letter-spacing: 1px; margin: 0; margin-bottom: 30px; font-size: 16px'><strong><a href='{callbackUrl}'>按這裏!</a></strong></p>
-                                        <p style='letter-spacing: 1px; margin: 0; margin-bottom: 30px; font-size: 16px'><strong>{pwd}</strong></p>
-                                        <p style='letter-spacing: 1px; margin: 0; color: #aaa;' font-size: 13px>如果這不是您的帳戶，請忽略這封信，感謝您。</p>
-                                    </ td>
-                                </ tr>
-                                </ table>
-                            </ tbody> ";
-                    await UserManager.SendEmailAsync(user.Id, "確認您的帳戶", mailbody);
-                    return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);
-            }
-
-            // 如果執行到這裡，發生某項失敗，則重新顯示表單
-            return View(model);
-        }
 
         //
         // GET: /Account/ConfirmEmail
@@ -266,9 +210,9 @@ namespace PMSAWebMVC.Controllers
             if (!string.IsNullOrWhiteSpace(userId) || code == null)
             {
                 var result = await UserManager.ConfirmEmailAsync(userId, code);
-                return View(result.Succeeded ? "ConfirmEmail" : "Error");
+                return View(result.Succeeded ? "ConfirmEmail" : "ConfirmEmailError");
             }
-            return View("Error");
+            return View("ConfirmEmailError");
         }
 
         //
@@ -315,13 +259,19 @@ namespace PMSAWebMVC.Controllers
             return View();
         }
 
-        //
-        // GET: /Account/ResetPassword
-        [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        [Authorize]
+        public ActionResult ResetPassword()
         {
-            return code == null ? View("Error") : View();
+            return View();
         }
+
+        ////
+        //// GET: /Account/ResetPassword
+        //[AllowAnonymous]
+        //public ActionResult ResetPassword(string code)
+        //{
+        //    return code == null ? View("Error") : View();
+        //}
 
         //
         // POST: /Account/ResetPassword
@@ -330,23 +280,58 @@ namespace PMSAWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+            var EmpId = TempData.Peek("EmpId");
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByNameAsync(EmpId.ToString());
             if (user == null)
             {
                 // 不顯示使用者不存在
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            //var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            user.PasswordHash = UserManager.PasswordHasher.HashPassword(model.ConfirmPassword);
+            var result = await UserManager.UpdateSecurityStampAsync(user.Id);
+            if (result.Succeeded)
+            {
+                user.LastPasswordChangedDate = DateTime.Now;
+            }
+            else
+            {
+                AddErrors(result);
+                return RedirectToAction("Error");
+            }
+
+            var emp = db.Employee.Where(x => x.EmployeeID == user.UserName).SingleOrDefault();
+            emp.PasswordHash = user.PasswordHash;
+
+            await updateEmpUserTable(user, emp);
+
             if (result.Succeeded)
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             AddErrors(result);
             return View();
+        }
+
+        //4.存到資料庫
+        //更新此 user table
+        //await updateEmpUserTable(user, emp);
+        private async Task updateEmpUserTable(ApplicationUser user, Employee emp)
+        {
+            //4.存到資料庫
+            //更新此 user table
+            var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var manager = new UserManager<ApplicationUser>(store);
+            await UserManager.UpdateAsync(user);
+            var ctx = store.Context;
+            await ctx.SaveChangesAsync();
+            //Emp table
+            db.Entry(emp).State = EntityState.Modified;
+            await db.SaveChangesAsync();
         }
 
         //

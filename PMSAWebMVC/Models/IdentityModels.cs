@@ -24,6 +24,8 @@ namespace PMSAWebMVC.Models
         [StringLength(30)]
         public string RealName { get; set; }
 
+        public DateTime? LastPasswordChangedDate { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // 注意 authenticationType 必須符合 CookieAuthenticationOptions.AuthenticationType 中定義的項目

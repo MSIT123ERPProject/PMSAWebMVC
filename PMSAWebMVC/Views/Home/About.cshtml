@@ -3,8 +3,7 @@
 }
 @section styles
 {
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+
     <style>
         @@keyframes fadeinShowBody {
             0% {
@@ -31,14 +30,234 @@
         }
 
         body {
-            animation: 0.8s fadeinShowBody 0.4s both;
+            /*animation: 0.3s fadeinShowBody 0.3s both;*/
         }
 
         .wrapall {
-            animation: 0.5s fadeinShow 0.5s both;
+            animation: 0.4s fadeinShow 0.3s both;
         }
+
         #example {
             width: 95%;
+        }
+        #example_wrapper {
+            /*display: none;*/
+        }
+        /* +-collaspe =============*/
+        td.control {
+            margin: 0;
+            transition: 0.2s;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+            td.control:hover, td.control:active {
+                color: white;
+                border-bottom: 0px !important;
+                background-color: #E6A23C;
+                transition: 0.2s;
+            }
+
+        table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            display: block;
+            position: relative;
+            color: #E6A23C;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            box-sizing: content-box;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 14px;
+            content: '＋';
+            background-color: transparent;
+        }
+
+        table.dataTable.dtr-column > tbody > tr > td.control:hover::before, table.dataTable.dtr-column > tbody > tr > th.control:hover::before {
+            color: white;
+        }
+
+        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+            content: '─';
+            background-color: transparent;
+        }
+
+        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+            content: '─';
+            background-color: transparent;
+        }
+        /*================*/
+        table.dataTable {
+            border-collapse: collapse !important;
+            border: 0;
+        }
+
+        th {
+            background-color: #212529;
+            color: white;
+            border: 0px;
+        }
+
+        .table-bordered th, .table-bordered td {
+            border: 0px;
+        }
+
+        .table thead th {
+            border-bottom: 0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #E4E7ED;
+        }
+/*==========*/
+        /*btn==============================*/
+        .action-btn > button i:before {
+            display: block;
+        }
+
+        .editBtn, .detailBtn, .deleteBtn, .addBtn {
+            border: 0;
+            background-color: transparent;
+            font-size: 20px;
+            box-sizing: border-box;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            margin: 5px;
+            transition: 0.5s;
+            border-radius: 20px;
+            padding: 8px 10px 10px 10px;
+        }
+
+            .editBtn:hover, .detailBtn:hover, .deleteBtn:hover, .addBtn:hover {
+                opacity: 0.8;
+                transition: 0.5s;
+                box-shadow: 0 2px 8px #909399;
+            }
+
+            .editBtn:focus, .detailBtn:focus, .deleteBtn:focus, .addBtn:focus {
+                opacity: 0.8;
+                outline: none;
+                transition: 0.5s;
+                box-shadow: 0 2px 8px #909399;
+            }
+
+        .editBtn {
+            color: #409EFF;
+        }
+
+            .editBtn:focus {
+                color: #FFFFFF;
+                background-color: #409EFF;
+            }
+
+            .editBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #409EFF;
+            }
+
+        .detailBtn {
+            color: #909399;
+        }
+
+            .detailBtn:focus {
+                color: #FFFFFF;
+                background-color: #909399;
+            }
+
+            .detailBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #909399;
+            }
+
+        .deleteBtn {
+            color: #F56C6C;
+        }
+
+            .deleteBtn:focus {
+                color: #FFFFFF;
+                background-color: #F56C6C;
+            }
+
+            .deleteBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #F56C6C;
+            }
+
+        .addBtn {
+            color: #67C23A;
+        }
+
+            .addBtn:focus {
+                color: #FFFFFF;
+                background-color: #67C23A;
+            }
+
+            .addBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #67C23A;
+            }
+        /*btn wild/*/
+        .wild {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-top: 8px !important;
+        }
+        /*btn =======================*/
+        .editBtn.bd, .detailBtn.bd, .deleteBtn.bd, .addBtn.bd {
+            border: 0;
+            font-size: 20px;
+            box-sizing: border-box;
+            width: auto;
+            height: auto;
+            text-align: center;
+            margin: 5px;
+            transition: 0.5s;
+            font-size: 15px;
+            letter-spacing: 1px;
+            border-radius: .125rem;
+        }
+
+            .editBtn.bd.r, .detailBtn.bd.r, .deleteBtn.bd.r, .addBtn.bd.r {
+                width: 40px;
+                height: 40px;
+                border-radius: 40px;
+            }
+
+        .editBtn.fillbtn, .detailBtn.fillbtn, .deleteBtn.fillbtn, .addBtn.fillbtn {
+            color: white;
+        }
+
+            .editBtn.fillbtn:hover, .detailBtn.fillbtn:hover, .deleteBtn.fillbtn:hover, .addBtn.fillbtn:hover {
+                opacity: 0.5;
+            }
+
+        .deleteBtn.fillbtn {
+            background-color: #F56C6C;
+        }
+
+        .addBtn.fillbtn {
+            background-color: #67C23A;
+        }
+
+        .editBtn.fillbtn {
+            background-color: #409EFF;
+        }
+
+        .detailBtn.fillbtn {
+            background-color: #909399;
         }
     </style>
 }
@@ -48,17 +267,17 @@
 
     <div class="card">
         <div class="card-header">
-            <h4>
+            <h5>
                 <i class="fas fa-table"></i>
                 採購單
-            </h4>
+            </h5>
         </div>
         <div class="card-body">
             <div class="dataTables_wrapper" id="example_wrapper">
-                <table id="example" class="nowrap dataTable dtr-column collapsed" role="grid" aria-describedby="example_info">
+                <table class="table table-bordered nowrap" id="example" style="width:95%">
                     <thead>
                         <tr role="row">
-                            <th><label class="containerCheck"><input type="checkbox"><span class="checkmark"></span></label></th>
+                            <th></th>
                             <th>料件名稱</th>
                             <th>料件名稱</th>
                             <th>供應商名稱</th>
@@ -72,12 +291,7 @@
                     </thead>
                     <tbody>
                         <tr role="row">
-                            <td>
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="defaultInline1">
-                                    <label class="custom-control-label" for="defaultInline1"></label>
-                                </div>
-                            </td>
+                            <td></td>
                             <td>Nixon</td>
                             <td>System Architect</td>
                             <td>Edinburgh</td>
@@ -761,20 +975,6 @@
                             <td></td>
                         </tr>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <th></th>
-                            <th>貨源清單</th>
-                            <th>料件名稱</th>
-                            <th>供應商名稱</th>
-                            <th>批量</th>
-                            <th>MOQ</th>
-                            <th>安全庫存量</th>
-                            <th>保存期限</th>
-                            <th>action</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -825,6 +1025,13 @@
             <div>
                 <!------>
                 <textarea cols="95" rows="5">
+
+                <button class="btn detailBtn bd r fillbtn"><i class="fas fa-file-alt"></i></button>
+                <button class="btn editBtn bd r fillbtn"><i class="far fa-file-alt"></i></button>
+                <button class="btn deleteBtn bd r fillbtn"><i class="far fa-trash-alt"></i></button>
+                <button class="btn addBtn bd r fillbtn"><i class='fas fa-plus-square'></i></button>
+                <button class="btn addBtn bd r fillbtn"><i class="fas fa-plus"></i></button>
+
                 <div>
                 <button class="btn editBtn bd r"><i class="fas fa-pen"></i></button>
                 <button class="btn detailBtn bd r"><i class="fas fa-file-alt"></i></button>
@@ -860,82 +1067,65 @@
     <button class="btn deleteBtn bd fillbtn wild"><i class='fas fa-trash-alt'></i> 刪除</button>
 
     <textarea cols="95" rows="5">
-        <button class="btn addBtn bd fillbtn wild"><i class='fas fa-plus-square'></i> 新增</button>
-        <button class="btn editBtn bd fillbtn wild"><i class="fas fa-pen"></i> 修改</button>
-        <button class="btn detailBtn bd fillbtn wild"><i class="fas fa-file-alt"></i> 明細</button>
-        <button class="btn deleteBtn bd fillbtn wild"><i class='fas fa-trash-alt'></i> 刪除</button>
+    <button class="btn addBtn bd fillbtn wild"><i class='fas fa-plus-square'></i> 新增</button>
+    <button class="btn editBtn bd fillbtn wild"><i class="fas fa-pen"></i> 修改</button>
+    <button class="btn detailBtn bd fillbtn wild"><i class="fas fa-file-alt"></i> 明細</button>
+    <button class="btn deleteBtn bd fillbtn wild"><i class='fas fa-trash-alt'></i> 刪除</button>
+    </textarea>
+</div>
 
-        <textarea cols="95" rows="5">
-            style="width:100%;max-width:960px;margin-left:0;margin-top:8px;"
-
-            <button class="btn addBtn bd fillbtn wild"><i class='fas fa-plus-square'></i> 新增</button>
-        </textarea>
-    </div>
-@section scripts
-    {
-
-    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
-    <script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>
-    <script src="@Url.Content("~/Scripts/DataTables/i18n/jquery.dataTables." + Html.OutputText("".CultureName())+".js")"></script>
-    <script src="@Url.Content("~/Scripts/tempusdominus/tempusdominus-bootstrap-4." + Html.OutputText("".CultureName())+".js")"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-
+@section scripts{
 
     @*https://datatables.net/forums/discussion/56914*@
     <script type="text/javascript">
 
-        $(window).on('resize', function () {
-            location.reload();
-        });
-        $("#example").ready(() => {
-            var oTable = $('#example').DataTable({
-                responsive: {
-                    details: {
-                        type: 'column',
-                        target: -1
-                    }
-                },
-                columnDefs: [{
-                    className: 'control',
-                    orderable: false,
-                    targets: -1
-                },
-                {
-                    targets: 0,
-                    data: null,
-                    defaultContent: '<label class="containerCheck"><input type="checkbox"><span class="checkmark"></span></label>',
-                    orderable: false,
-                    className: 'select-checkbox'
-                },
-                {
-                    targets: -2,
-                    data: null,
-                    defaultContent: `
-                            <button class="btn editBtn bd r fillbtn"><i class="fas fa-pen"></i></button>
-                            <button class="btn detailBtn bd r fillbtn"><i class="fas fa-file-alt"></i></button>
-                            <button class="btn deleteBtn bd r fillbtn"><i class='fas fa-trash-alt'></i></button>
-                            <button class="btn addBtn bd r fillbtn"><i class='fas fa-plus-square'></i></button>`,
-                    orderable: false,
-                    className: 'action-btn'
-                }],
-                fixedColumns: {
-                    leftColumns: 2
-                },
-                "order": [[1, "asc"]],
-                "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
-                "autoWidth": false,
-                initComplete: function () {
-                    $('select[name="example_length"]').addClass('selectpicker')
+        //$(window).on('resize', function () {
+        //    location.reload();
+        //});
+        
+        var oTable = $('#example').DataTable({
+            responsive: {
+                details: {
+                    type: 'column',
+                    target: -1
                 }
-            });
-
-            //抓 table 裡按鈕請 如此 $("tbody").on()
-            $("tbody").on('click', '.addBtn', function (e) {
-                console.log(e.currentTarget);
-            })
+            },
+            columnDefs: [{
+                className: 'control',
+                orderable: false,
+                targets: -1
+            },
+            {
+                className: 'name',
+                targets: 1
+            },
+            {
+            targets: 0,
+            data: null,
+            defaultContent: `
+                                <button class="btn editBtn bd r fillbtn"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn bd r fillbtn"><i class="far fa-trash-alt"></i></button>`,
+            orderable: false,
+            className: 'action-btn'
+            }],
+            fixedHeader: true,
+            "order": [[1, "asc"]]
         });
+        console.log("hi")
+        //$("#example_wrapper").removeClass("d-none");
+        //oTable.columns.adjust().draw();
+        oTable.on('order.dt search.dt', function () {
+            oTable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = `<button class="btn editBtn bd r fillbtn"><i class="far fa-edit"></i></button>
+                                    <button class="btn deleteBtn bd r fillbtn"><i class="far fa-trash-alt"></i></button>`;
+            });
+        }).draw();
+
+        //抓 table 裡按鈕請 如此 $("tbody").on()
+        $("tbody").on('click', '.addBtn', function (e) {
+            console.log(e.currentTarget);
+        })
+        
 
         $(document).ready(function () {
             $('#datetimepicker1').datetimepicker();
@@ -944,5 +1134,7 @@
                 formatSubmit: 'yyyy/mm/dd'
             })
         });
-    </script> 
+    </script>
+
+}
 }

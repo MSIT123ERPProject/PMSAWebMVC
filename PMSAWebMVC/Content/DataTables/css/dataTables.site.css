@@ -191,16 +191,12 @@ table.dataTable.dtr-column > tbody > tr.parent th.control:before {
 }
 /*功能按鈕 coolAdmin/css/theme.css 4609 */
 .table-data-feature {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
     display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -moz-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+    -webkit-justify-content: space-around;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
 }
 
     .table-data-feature .item {

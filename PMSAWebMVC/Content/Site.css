@@ -699,14 +699,10 @@
 /*Rounded Outline Button*/
 
 .btn-icon {
-    width: 30px;
-    height: 30px;
     padding: 0;
     text-align: center;
-    line-height: 32px;
-    font-size: 14px;
     /*display: inline-block;*/
-    display:inline-flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
@@ -718,6 +714,23 @@
     transition: all 0.5s ease-in-out;
 }
 
-    .btn-icon i {
-        margin-right: 0 !important;
-    }
+.btn-icon, .btn-icon-md {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+}
+
+.btn-icon-lg {
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 17.5px;
+}
+
+.btn-icon-sm {
+    width: 23.6px;
+    height: 23.6px;
+    line-height: 23.6px;
+    font-size: 11px;
+}

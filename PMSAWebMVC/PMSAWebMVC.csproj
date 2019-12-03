@@ -595,9 +595,16 @@
     <Content Include="Content\MDB\css\bootstrap.min.css" />
     <Content Include="Content\MDB\css\mdb.css" />
     <Content Include="Content\MDB\css\mdb.lite.css" />
-    <Content Include="Content\MDB\css\mdb.lite.min.css" />
-    <Content Include="Content\MDB\css\mdb.min.css" />
-    <Content Include="Content\MDB\css\modules\animations-extended.min.css" />
+    <Content Include="Content\MDB\css\mdb.lite.min.css">
+      <DependentUpon>mdb.lite.css</DependentUpon>
+    </Content>
+    <Content Include="Content\MDB\css\mdb.min.css">
+      <DependentUpon>mdb.css</DependentUpon>
+    </Content>
+    <Content Include="Content\MDB\css\modules\animations-extended.css" />
+    <Content Include="Content\MDB\css\modules\animations-extended.min.css">
+      <DependentUpon>animations-extended.css</DependentUpon>
+    </Content>
     <Content Include="Content\MDB\css\style.css" />
     <Content Include="Content\MDB\img\mdb-favicon.ico" />
     <Content Include="Content\MDB\img\overlays\01.png" />

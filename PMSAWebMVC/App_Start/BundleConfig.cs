@@ -23,9 +23,9 @@ namespace PMSAWebMVC
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
                 "~/Content/font-awesome.css",
-                //Bootstrap
-                //"~/Content/bootstrap.css",
-                "~/Content/MDB/css/bootstrap.css",
+                 //Bootstrap
+                 //"~/Content/bootstrap.css",
+                 "~/Content/MDB/css/bootstrap.css",                
                 //MDB
                 "~/Content/MDB/css/mdb.css",
                 "~/Content/MDB/css/addons/datatables.min.css",
@@ -34,7 +34,7 @@ namespace PMSAWebMVC
                 "~/Content/MDB/css/addons/flag.min.css",
                 "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
                 "~/Content/MDB/css/addons/rating.min.css",
-                "~/Content/MDB/css/modules/animations-extended.min.css",
+                "~/Content/MDB/css/modules/animations-extended.css",
                 //SB Admin
                 //"~/Content/sbTemplate/sb-admin.css",
                 //Site

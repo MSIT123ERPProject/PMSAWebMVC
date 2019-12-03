@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +10,7 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/form")
     @Styles.Render("~/Content/DataTables")
-    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/modernizr")    
     @RenderSection("styles", required: false)
     <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
     @*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
@@ -103,8 +102,8 @@
                                 </a>
                                 <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
                                     @*<h6 class="dropdown-header">管理員</h6>*@
-                                    <a class="dropdown-item" href="@Url.Action("Create", "RolesAdmin")">角色管理</a>
-                                    <a class="dropdown-item" href="@Url.Action("Create", "UsersAdmin")">採購員帳號管理</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "RolesAdmin")">角色管理</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "UsersAdmin")">採購員帳號管理</a>
                                 </div>
                             </li>
                         }
@@ -175,9 +174,15 @@
     </a>
 
     @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/toastrcss")
+        @Scripts.Render("~/bundles/toastrjs")*@
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="http://i.gtimg.cn/qzone/biz/gdt/lib/jquery/jquery-2.1.4.js?max_age=31536000"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @Scripts.Render("~/bundles/js")
     @Scripts.Render("~/bundles/form")
     @Scripts.Render("~/bundles/DataTables")
+    @*@Scripts.Render("~/bundles/HighCharts")*@
     @RenderSection("scripts", required: false)
 </body>
 </html>

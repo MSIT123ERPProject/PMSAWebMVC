@@ -1,34 +1,966 @@
-﻿@model IEnumerable<PMSAWebMVC.Models.ApplicationUser>
+﻿@*@model IEnumerable<PMSAWebMVC.Models.ApplicationUser>*@
+@model PMSAWebMVC.ViewModels.UsersAdmin.UsersAdminViewModel
 
 @{
     ViewBag.Title = "Index";
 }
+@section styles
+{
 
-<h2>Index</h2>
+    <style>
+        @@keyframes fadeinShowBody {
+            0% {
+                opacity: 0;
+            }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-        </th>
-    </tr>
+            20% {
+                opacity: 0.8;
+            }
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-    }
-</table>
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeinShow {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        body {
+            /*animation: 0.3s fadeinShowBody 0.3s both;*/
+        }
+        /*標題 包在.wrapall中使用*/
+        .wrapall h2 {
+            font-weight: 500;
+            color: #909399;
+            letter-spacing: 2px;
+            margin-bottom: 0px;
+        }
+
+        .wrapall h6 {
+            font-size: 13px;
+            letter-spacing: 5px;
+            margin-left: 3px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #C0C4CC;
+        }
+
+        .wrapall {
+            animation: 0.4s fadeinShow 0.3s both;
+        }
+
+        #example_wrapper {
+            /*display: none;*/
+        }
+        /* +-collaspe =============*/
+        td.control {
+            margin: 0;
+            transition: 0.2s;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+            td.control:hover, td.control:active {
+                color: white;
+                border-bottom: 0px !important;
+                background-color: #409EFF;
+                transition: 0.2s;
+            }
+
+        table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            display: block;
+            position: relative;
+            color: #409EFF;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            box-sizing: content-box;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 14px;
+            content: '✚' !important;
+            background-color: transparent;
+        }
+
+        table.dataTable.dtr-column > tbody > tr > td.control:hover::before, table.dataTable.dtr-column > tbody > tr > th.control:hover::before {
+            color: white;
+        }
+
+        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+            content: '▂' !important;
+            background-color: transparent;
+            transform: translateY(-5px)
+        }
+
+        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+            background-color: transparent;
+        }
+        /*================*/
+        table.dataTable {
+            border-collapse: collapse !important;
+            /*border: 0;*/
+        }
+
+        th {
+            /*background-color: #212529;
+            color: white;*/
+            /*border: 0px;*/
+            box-sizing: border-box;
+            height: 10px;
+        }
+
+        .table-bordered th, .table-bordered td {
+            /*border: 0px;*/
+        }
+
+        .table thead th {
+            border-bottom: 0;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #E4E7ED;
+        }
+
+        button i {
+            margin-top: 0px !important;
+        }
+        /*input ======================*/
+        .form-group label {
+            margin: 0;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .disabled {
+            background-color: none;
+            border: 0;
+            font-size: 15px;
+            padding: 0;
+            padding-left: 2px;
+            height: auto;
+            color: #909399;
+        }
+        /*btn ==============================*/
+        td.action-btn {
+            padding: 5px 0 0 5px !important;
+        }
+
+        .action-btn > button i:before {
+            display: block;
+        }
+
+        .editBtn, .detailBtn, .deleteBtn, .addBtn {
+            border: 0;
+            background-color: transparent;
+            font-size: 20px;
+            box-sizing: border-box;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            margin: 5px;
+            transition: 0.5s;
+            border-radius: 20px;
+            padding: 5px 10px 10px 9px;
+            box-shadow: none;
+        }
+
+            .editBtn:hover, .detailBtn:hover, .deleteBtn:hover, .addBtn:hover {
+                opacity: 0.8;
+                transition: 0.5s;
+                box-shadow: 0 2px 8px #909399;
+            }
+
+            .editBtn:focus, .detailBtn:focus, .deleteBtn:focus, .addBtn:focus {
+                opacity: 0.8;
+                outline: none;
+                transition: 0.5s;
+                box-shadow: 0 0px 3px #909399;
+            }
+
+        .editBtn {
+            color: #409EFF;
+        }
+
+            .editBtn:focus {
+                color: #FFFFFF;
+                background-color: #409EFF;
+            }
+
+            .editBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #409EFF;
+            }
+
+        .detailBtn {
+            color: #909399;
+        }
+
+            .detailBtn:focus {
+                color: #FFFFFF;
+                background-color: #909399;
+            }
+
+            .detailBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #909399;
+            }
+
+        .deleteBtn {
+            color: #F56C6C;
+        }
+
+            .deleteBtn:focus {
+                color: #FFFFFF;
+                background-color: #F56C6C;
+            }
+
+            .deleteBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #F56C6C;
+            }
+
+        .addBtn {
+            color: #67C23A;
+        }
+
+            .addBtn:focus {
+                color: #FFFFFF;
+                background-color: #67C23A;
+            }
+
+            .addBtn:hover {
+                opacity: 1;
+                color: #FFFFFF;
+                background-color: #67C23A;
+            }
+        /*btn wild/*/
+        .wild {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-top: 8px !important;
+        }
+        /*btn =======================*/
+        .editBtn.bd, .detailBtn.bd, .deleteBtn.bd, .addBtn.bd {
+            border: 0;
+            font-size: 20px;
+            box-sizing: border-box;
+            width: auto;
+            height: auto;
+            text-align: center;
+            margin: 5px;
+            transition: 0.5s;
+            font-size: 15px;
+            letter-spacing: 1px;
+            border-radius: .125rem;
+        }
+
+            .editBtn.bd.r, .detailBtn.bd.r, .deleteBtn.bd.r, .addBtn.bd.r {
+                width: 35px;
+                height: 35px;
+                border-radius: 40px;
+            }
+
+        .editBtn.fillbtn, .detailBtn.fillbtn, .deleteBtn.fillbtn, .addBtn.fillbtn {
+            color: white;
+        }
+
+            .editBtn.fillbtn:hover, .detailBtn.fillbtn:hover, .deleteBtn.fillbtn:hover, .addBtn.fillbtn:hover {
+                opacity: 0.5;
+            }
+
+        .deleteBtn.fillbtn {
+            color: #F56C6C;
+            background-color: #fde2e2;
+            border: 1px solid #F56C6C;
+        }
+
+        .addBtn.fillbtn {
+            background-color: #67C23A;
+        }
+
+        .editBtn.fillbtn {
+            color: #409EFF;
+            background-color: #d9ecff;
+            border: 1px solid #409EFF;
+        }
+
+        .detailBtn.fillbtn {
+            background-color: #909399;
+        }
+        /*badge ============*/
+        td h5 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        /*========*/
+        #Role .custom-control-label {
+            font-weight: 500 !important;
+            margin-top: 5px !important;
+        }
+
+        .editAcc span label {
+            font-weight: 500 !important;
+        }
+
+        .editAcc label.d-block {
+            margin-bottom: 5px !important;
+        }
+
+        .editAcc {
+            margin-top: 20px;
+        }
+
+        .set {
+            /*border: 3px double gray !important;*/
+            box-shadow: 0 0 3px #aaa;
+            margin-right: 10px;
+            padding: 10px;
+            /*border-radius: 10px;*/
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+        }
+
+        .modal-header {
+            background-color: #eee;
+        }
+
+        .modal-footer {
+            background-color: #eee;
+        }
+    </style>
+}
+<div class="wrapall">
+    <h2>管理採購員帳號</h2>
+    <h6>查詢、啟用採購員帳號、重寄密碼</h6>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>
+                <i class="fas fa-table"></i>
+                採購員帳號
+            </h5>
+            @*<a href="@Url.Action("Create","UsersAdmin")">
+                    <button class="btn addBtn bd fillbtn"><i class='fas fa-plus-square'></i> 新增</button>
+                </a>*@
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" style="width:98%; padding: 10px">
+                <table class="table table-striped table-border nowrap" id="createEmp" style="width:100%;">
+                    <thead>
+                        <tr role="row">
+                            <th>動作</th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmployeeID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Role)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Mobile)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tel)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AccountStatus)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ManagerID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ModifiedDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreateDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SendLetterDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted"></div>
+    </div>
+</div>
+<!-- 修改 Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">採購員帳號資料</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editOfEmpform" action="@Url.Action("updateEmployeeUsersAtIndex","UsersAdmin")" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body m-1 ml-lg-3 mr-lg-3">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <!--- 左2 --->
+                                <div class="col-12 col-sm-6">
+                                    <div class="row">
+                                        <div class="col-4 col-sm-3">
+                                            <h1 style="transform: translateY(-4px)"><i class="far fa-id-card"></i></h1>
+                                        </div>
+                                        <!------>
+                                        <div class="col-8 col-sm-9">
+                                            <div class="emp">
+                                                <div class="form-group">
+                                                    <label for="EmployeeID">
+                                                        @Html.DisplayNameFor(model => model.EmployeeID)
+                                                    </label>
+                                                    <input type="text" class="form-control disabled" name="EmployeeID" id="EmployeeID" value="">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Name">
+                                                        @Html.DisplayNameFor(model => model.Name)
+                                                    </label>
+                                                    <input type="text" class="form-control disabled" name="Name" id="Name" value="">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Email">
+                                                        @Html.DisplayNameFor(model => model.Email)
+                                                    </label>
+                                                    <input type="text" class="form-control disabled" name="Email" id="Email" value="">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Mobile">
+                                                        @Html.DisplayNameFor(model => model.Mobile)
+                                                    </label>
+                                                    <input type="text" class="form-control disabled" name="Mobile" id="Mobile" value="">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Tel">
+                                                        @Html.DisplayNameFor(model => model.Tel)
+                                                    </label>
+                                                    <input type="text" class="form-control disabled" name="Tel" id="Tel" value="">
+                                                </div>
+                                                <!------>
+                                                <div class="send">
+                                                    <hr />
+                                                    <div class="form-group">
+                                                        <label for="SendLetterDate">
+                                                            @Html.DisplayNameFor(model => model.SendLetterDate)
+                                                        </label>
+                                                        <input type="text" class="form-control disabled" name="SendLetterDate" id="SendLetterDate">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="LastPasswordChangedDate">
+                                                            @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
+                                                        </label>
+                                                        <input type="text" class="form-control disabled" name="LastPasswordChangedDate" id="LastPasswordChangedDate">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!------>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--- 右2 --->
+                                <div class="col-12 col-sm-6">
+                                    <div class="row">
+                                        <div class="col-4 col-sm-3">
+                                            <h2 style="transform: translateY(5px)"><i class="fas fa-user-clock"></i></h2>
+                                        </div>
+                                        <!------>
+                                        <div class="col-8 col-sm-9">
+                                            <div class="Acc">
+                                                <div class="form-group">
+                                                    <label for="AccountStatus">
+                                                        @Html.DisplayNameFor(model => model.AccountStatus)
+                                                    </label>
+                                                    <div id="AccountStatus"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ModifiedDate">
+                                                        @Html.DisplayNameFor(model => model.ModifiedDate)
+                                                    </label>
+                                                    <input type="text" class="form-control disabled" name="ModifiedDate" id="ModifiedDate">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="CreateDate">
+                                                        @Html.DisplayNameFor(model => model.CreateDate)
+                                                    </label>
+                                                    <input type="text" class="form-control disabled" name="CreateDate" id="CreateDate">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="set row">
+
+                                        <div class="col-4 col-sm-3">
+                                            <h2 style="transform: scale(1.1)"><i class="fas fa-cog"></i></h2>
+                                        </div>
+                                        <div class="col-8 col-sm-9">
+                                            <div class="form-group">
+                                                <label for="Role">
+                                                    @Html.DisplayNameFor(model => model.Role)
+                                                </label>
+                                                <div id="Role">
+                                                    <input type="hidden" id="EmpId" name="EmpId" value="" />
+                                                    @foreach (var item in (SelectList)ViewBag.RoleId)
+                                                    {
+                                                        switch (item.Value)
+                                                        {
+                                                            case "Buyer":
+                                                                <div class="custom-control custom-checkbox d-inline-block">
+                                                                    <input type="checkbox" class="custom-control-input" id="Buyer" name="selectedRole" value="@item.Value">
+                                                                    <label class="custom-control-label" for="Buyer">採購員</label>
+                                                                </div>
+                                                                break;
+                                                            case "Manager":
+                                                                <div class="custom-control custom-checkbox d-inline-block">
+                                                                    <input type="checkbox" class="custom-control-input" id="Manager" name="selectedRole" value="@item.Value">
+                                                                    <label class="custom-control-label" for="Manager">主管</label>
+                                                                </div>
+                                                                break;
+                                                            case "ProductionControl":
+                                                                <div class="custom-control custom-checkbox d-inline-block">
+                                                                    <input type="checkbox" class="custom-control-input" id="ProductionControl" name="selectedRole" value="@item.Value">
+                                                                    <label class="custom-control-label" for="ProductionControl">生管</label>
+                                                                </div>
+                                                                break;
+                                                            case "Warehouse":
+                                                                <div class="custom-control custom-checkbox d-inline-block">
+                                                                    <input type="checkbox" class="custom-control-input" id="Warehouse" name="selectedRole" value="@item.Value">
+                                                                    <label class="custom-control-label" for="Warehouse">倉管</label>
+                                                                </div>
+                                                                break;
+                                                            case "Admin":
+                                                                <div class="custom-control custom-checkbox d-inline-block">
+                                                                    <input type="checkbox" class="custom-control-input" id="Admin" name="selectedRole" value="@item.Value">
+                                                                    <label class="custom-control-label" for="Admin">管理員</label>
+                                                                </div>
+                                                                break;
+                                                            case "NewEmployee":
+                                                                <div class="custom-control custom-checkbox d-inline-block">
+                                                                    <input type="checkbox" class="custom-control-input" id="NewEmployee" name="selectedRole" value="@item.Value">
+                                                                    <label class="custom-control-label" for="NewEmployee">新進職員</label>
+                                                                </div>
+                                                                break;
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="editAcc">
+                                                    <label class="d-block">
+                                                        編輯帳號狀態
+                                                    </label>
+                                                    <div class="setAcc">
+                                                        <span>
+                                                            <label for="AccountStatusSwitch">
+                                                                停用
+                                                            </label>
+                                                        </span>
+                                                        <span class="custom-control custom-switch d-inline-block">
+                                                            <span>
+                                                                <input type="checkbox" name="AccStatus" class="custom-control-input" id="AccountStatusSwitch">
+                                                                <label class="custom-control-label" for="AccountStatusSwitch">
+                                                                    啟用
+                                                                </label>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                    <div id="lert" class="alert alert-warning fade" role="alert" style="font-size: 12px; padding: 5px">
+                                                        <strong>注意!</strong>角色會重設為<strong>新進職員</strong>
+                                                    </div>
+                                                    <div id="sendResetMaildiv" class="custom-control custom-checkbox d-inline-block fade">
+                                                        <input type="checkbox" class="custom-control-input" id="sendResetMail" name="sendResetMail">
+                                                        <label class="custom-control-label" for="sendResetMail">將啟用帳戶，要重設密碼並寄 Email 嗎?</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" id="updateConfirm" data-dismiss="modal">確定修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @*https://datatables.net/forums/discussion/56914*@
+    <script type="text/javascript">
+
+        $("#createEmp").ready(() => {
+            var oTable = $('#createEmp').DataTable({
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: -1
+                    }
+                },
+                "columnDefs": [{
+                        className: 'control',
+                        orderable: false,
+                        targets: -1
+                    },
+                    {
+                        defaultContent: `
+                                <button class="btn editBtn bd r fillbtn" title="啟用停用/角色設定"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn bd r fillbtn" title="重設密碼"><i class="far fa-envelope"></i></button>`,
+                        orderable: false,
+                        className: 'action-btn',
+                        targets: 0
+                    },
+                ],
+                "ajax": {
+                    "url": '@Url.Action("getAllEmpToIndexAjax", "UsersAdmin")',
+                    "type": "GET",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    {
+                        "data": "actionbtn",
+                        "orderable": false,
+                        "render": function () {
+                            var frag = $(document.createDocumentFragment());
+                            var str = `
+                                <button class="btn editBtn bd r fillbtn" title="啟用停用/角色設定"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn bd r fillbtn" title="重設密碼"><i class="far fa-envelope"></i></button>`
+                            frag.append(str);
+                            $("td.action-btn").html(frag);
+                        }
+                    },
+                    { "data": "EmployeeID" },
+                    { "data": "Name" },
+                    {
+                        "data": "Role[,]",
+                        "render": function (d) {
+                            var arr = d.split(',');
+                            var arrAll = [];
+                            arr.forEach(x => {
+                                if (x == "Supplier") {
+                                    x = "供應商";
+                                    arrAll.push(x);
+                                    console.log(x)
+                                } else if (x == "Buyer") {
+                                    x = "採購";
+                                    arrAll.push(x);
+                                } else if (x == "Manager") {
+                                    x = "主管";
+                                    arrAll.push(x);
+                                } else if (x == "ProductionControl") {
+                                    x = "生管";
+                                    arrAll.push(x);
+                                } else if (x == "NewEmployee") {
+                                    x = "新進職員";
+                                    arrAll.push(x);
+                                } else if (x == "Admin") {
+                                    x = "系統管理員";
+                                    arrAll.push(x);
+                                } else if (x == "Warehouse") {
+                                    x = "倉管";
+                                    arrAll.push(x);
+                                }
+                            })
+                            return String(arrAll);
+                        }
+                    },
+                    {
+                        "data": "Email",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "Mobile",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "Tel",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "AccountStatus",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            } else if (d == "D") {
+                                return `<h5><span class="badge badge-danger">停用</span></h5>`
+                            } else if (d == "E") {
+                                return `<h5><span class="badge badge-primary">啟用</span></h5>`
+                            } else if (d == "R") {
+                                return `<h5><span class="badge badge-warning">重設</span></h5>`
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "ManagerID",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "ModifiedDate",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            } else {
+                                var str = d.slice(1, 20);
+                                d = str.split("T").join(" ");
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "CreateDate",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            } else {
+                                var str = d.slice(1, 20);
+                                d = str.split("T").join(" ");
+                            }
+                            return d;
+                        }
+                     },
+                    {
+                        "data": "SendLetterDate",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            } else {
+                                var str = d.slice(1, 20);
+                                d = str.split("T").join(" ");
+                            }
+                            return d;
+                        }
+                     },
+                    {
+                        "data": "LastPasswordChangedDate",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            } else {
+                                var str = d.slice(1, 20);
+                                d = str.split("T").join(" ");
+                            }
+                            return d;
+                        },
+                        "defaultContent": "-"
+                    },
+                    {
+                        "data": null,
+                        "defaultContent": ""
+                    }
+                ]
+                },
+            )
+
+            //抓 table 裡按鈕請 如此 $("tbody").on()
+            $("tbody").on('click', '.editBtn', function (e) {
+                //EmployeeID
+                console.log($(this).closest('tr').find('td:eq(1)').find('td').remove().end().text());
+                $.getJSON(
+                    '@Url.Action("getEmpByIDIndexAjax")',
+                    { EmpId: $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() },
+                    function (x) {
+                        $("#EmployeeID").val(x.EmployeeID);
+                        $("#Name").val(x.Name);
+                        $("#Email").val(x.Email);
+                        $("#Mobile").val(x.Mobile);
+                        $("#Tel").val(x.Tel);
+                        $("#ModifiedDate").val(x.ModifiedDate == null ? '-' : () => { var str = x.ModifiedDate.slice(1, 20); x.ModifiedDate = str.split("T").join(" "); return x.ModifiedDate});
+                        $("#CreateDate").val(x.CreateDate == null ? '-' : () => { var str = x.CreateDate.slice(1, 20); x.CreateDate = str.split("T").join(" "); return x.CreateDate});
+                        $("#SendLetterDate").val(x.SendLetterDate == null ? '-' : () => { var str = x.SendLetterDate.slice(1, 20); x.SendLetterDate = str.split("T").join(" "); return x.SendLetterDate});
+                        $("#LastPasswordChangedDate").val(x.LastPasswordChangedDate == null ? '-' : () => { var str = x.LastPasswordChangedDate.slice(1, 20); x.LastPasswordChangedDate = str.split("T").join(" "); return x.LastPasswordChangedDate });
+                            function getAccountStatus() {
+                                if (x.AccountStatus == null) {
+                                    return "-";
+                                } else if (x.AccountStatus == "D") {
+                                    $("#AccountStatusSwitch").prop('checked', false);
+                                    return `<h5><span class="badge badge-danger">停用</span></h5>`
+                                } else if (x.AccountStatus == "E") {
+                                    $("#AccountStatusSwitch").prop('checked', true);
+                                    return `<h5><span class="badge badge-primary">啟用</span></h5>`
+                                } else if (x.AccountStatus == "R") {
+                                    $("#AccountStatusSwitch").prop('checked', true);
+                                    return `<h5><span class="badge badge-warning">重設</span></h5>`
+                                }
+                            }
+                        $("#AccountStatus").html(getAccountStatus());
+                        x.RolesList.forEach(r => {
+                            $("#" + r.Value).prop('checked', r.Selected);
+                        });
+                        $("#EmpId").val(x.EmployeeID);
+                        $('#editModal').modal('show');
+
+                        //post 修改 emp 資料
+                        function isselectedRole(role) {
+                            return role.name === "selectedRole";
+                        }
+                        var doPost = $('#updateConfirm').click(function (e) {
+                            //防止當掉時重複按
+                            $(this).off('click', doPost);
+                            e.preventDefault();
+                            var formData = {
+                                __RequestVerificationToken: $('#editOfEmpform').serializeArray()[0].value,
+                                EmpId: $('#editOfEmpform').serializeArray()[10].value,
+                                AccStatus: $('input[name="AccStatus"]').prop("checked"),
+                                selectedRole: $('#editOfEmpform').serializeArray().filter(isselectedRole).map(x => x.value),
+                                sendResetMail: $('#sendResetMail').prop("checked")
+                            }
+                            //console.log(formData) 不知為啥這裡會重複提交
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("updateEmployeeUsersAtIndex", "UsersAdmin")',
+                                data: formData,
+                                success: function (result) {
+                                    alert("更新成功");
+                                },
+                                complete: function () {
+                                    console.log("ffffff")
+
+                                    //更新datatable
+                                    oTable.ajax.reload();
+                                },
+                                error: function (result) {
+                                    alert("更新失敗nooooooooooooooooo");
+                                    console.log(result)
+                                }
+                            })
+                        })
+                    })
+            })
+
+            //重設密碼寄信按鈕
+            $("tbody").on('click', '.deleteBtn', function (e) {
+                console.log(e.currentTarget);
+                console.log($(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() )
+                alert("aaaa!")
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("sendMail", "UsersAdmin")',
+                    data: { EmpId: $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() },
+                    success: function (result) {
+                        alert("send");
+                    },
+                    error: function (result) {
+                        alert("send失敗nooooooooooooooooo");
+                        console.log(result)
+                    }
+                })
+            })
+        });
+
+        $(document).ready(function () {
+            $('#AccountStatusSwitch').change(() => {
+                if ($('#AccountStatusSwitch').prop('checked') == false) {
+                    $('#lert').addClass('show');
+                    //$('#sendResetMaildiv').addClass('d-none');
+                    //$('#sendResetMaildiv').removeClass('d-inline-block');
+                    $('#sendResetMaildiv').removeClass('show');
+                } else {
+                    $('#lert').removeClass('show');
+                    //$('#sendResetMaildiv').removeClass('d-none');
+                    $('#sendResetMaildiv').addClass('show');
+                    //$('#sendResetMaildiv').addClass('d-inline-block');
+                }
+            })
+
+            //防止重複ajax......
+            var pendingRequests = {};
+            // 所有ajax請求的通用前置filter
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                var key = generatePendingRequestKey(options);
+                //請求是否已經存在
+                if (!pendingRequests[key]) {
+                    storePendingRequest(key, jqXHR);
+                } else {
+                    //如果ajax請求已經存在，下一次相同的請求則取消，防止重複請求
+                    jqXHR.abort();
+                }
+                //ajax請求完成時，從臨時物件中清除請求對應的資料
+                var complete = options.complete;
+                options.complete = function (jqXHR, textStatus) {
+                    //延時1000毫秒刪除請求資訊，表示同Key值請求不能在此時間段內重複提交
+                    setTimeout(function () {
+                        delete pendingRequests[jqXHR.pendingRequestKey];
+                    }, 1000);
+                    if ($.isFunction(complete)) {
+                        complete.apply(this, arguments);
+                    }
+                }
+                /**
+                * 將ajax請求儲存到臨時物件中，用於根據key判斷請求是否已經存在
+                */
+                function storePendingRequest(key, jqXHR) {
+                    pendingRequests[key] = jqXHR;
+                    jqXHR.pendingRequestKey = key;
+                }
+                /**
+                * 根據ajax請求引數構建一個臨時儲存key,此處簡單的使用url作為key，
+                * 不考慮為解決請求型別為get時相同路徑引起的快取問題，採用隨機碼構建URL的情況
+                */
+                function generatePendingRequestKey(options){
+                return options.url;
+                }
+            })
+        })
+    </script>
+
+}

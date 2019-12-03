@@ -3,53 +3,25 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!-- Topbar Search -->
-@*舊的搜尋功能*@
-@*@using (Html.BeginForm("Index", "SupplierStocks", FormMethod.Post, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
-    {
 
-        <div class="input-group">
-            <input name="PartNumber" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMS_Inventory_huan.Resources.AppResource.PartNumber aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    }*@
-
-@*舊的搜尋功能*@
-@*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder="用料號搜尋庫存" aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-
-            </div>
-        </div>
-    </form>*@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>庫存管理</h2>&nbsp;
-    <h2 class="align-content-xl-end" >@ViewBag.supplierName</h2>
-</nav>
-<nav>
+    <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
 </nav>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
+        <i class="fas fa-table"></i>
         <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
     </div>
-
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <div class="dataTables_wrapper">
+            <table class="nowrap dataTable dtr-column collapsed" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
-                    <tr>
+                    <tr role="row">
+
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
-
                         <th>
                             @Html.DisplayNameFor(model => model.PartNumber)
                         </th>
@@ -66,12 +38,14 @@
                             @Html.DisplayNameFor(model => model.UnitsInStock)
                         </th>
                         <th>
-                            @PMSAWebMVC.Resources.AppResource.Edit
+                            調整庫存
                         </th>
+                        <th>檢視</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
+
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -91,8 +65,9 @@
                             @Html.DisplayNameFor(model => model.UnitsInStock)
                         </th>
                         <th>
-                            @PMSAWebMVC.Resources.AppResource.Edit
+                            調整庫存
                         </th>
+                        <th>檢視</th>
                     </tr>
                 </tfoot>
             </table>
@@ -102,44 +77,123 @@
 @section scripts
         {
     <script>
-        $(document).ready(function () {
-            dataTableDisplay();
-        });
-        function dataTableDisplay() {
-            if ($.fn.DataTable.isDataTable("#dataTable")) {
-                $("#dataTable").DataTable().destroy();
-            }
-            $('#dataTable').DataTable({
-              "ajax": {
-                    "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
-                    "type": "GET",
-                    "dataType": "json",
-                  "data": { "supplierCode": "@ViewBag.supplierCode" },
-                    "contentType": "application/json;charset=utf-8",
-                    "cache": true
-                },
-                "columns": [
-                    { "data": "SourceListID" },
-                    { "data": "PartNumber" },
-                    { "data": "QtyPerUnit" },
-                    { "data": "UnitPrice" },
-                    { "data": "UnitsOnOrder" },
-                    { "data": "UnitsInStock" },
-                    {
-                        "data": "SourceListID",
-                        "render": function (data, type, row, meta) {
-                            return '<a class="btn btn-primary"'+' href="' + "@Url.Action( "Edit","SupplierStocks")" + "?id=" + data + '">調整庫存</a>';
-                        }
-                    }
-                ],
-                "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
-                "order": [[1, "desc"]],
+            $(document).ready(function () {
+                dataTableDisplay();
             });
-            //table.on('xhr', function () {
-            //    var data = table.ajax.params();
-            //    alert('Search term was:' + data.search.value );
-            //});
-        }
+            function dataTableDisplay() {
+                if ($.fn.DataTable.isDataTable("#dataTable")) {
+                    $("#dataTable").DataTable().destroy();
+                }
+              //  $.fn.dataTable.ext.errMode = 'throw';
+                $('#dataTable').DataTable({
+                  "ajax": {
+                        "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
+                        "type": "GET",
+                        "dataType": "json",
+                      "data": { "supplierCode": "@ViewBag.supplierCode" },
+                        "contentType": "application/json;charset=utf-8",
+                        "cache": true
+                    },
+                    responsive: {
+                        details: {
+                            type: 'column',
+                           target:-1
+                        }
+                    },
+                    columnDefs: [
+                        {
+                            className: 'control',
+                            orderable: false,
+                            targets: -1,
+                        }
+                    ],
+                    "columns": [
+                        { "data": "SourceListID" },
+                        { "data": "PartNumber" },
+                        { "data": "QtyPerUnit" },
+                        { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+                        { "data": "UnitsOnOrder" },
+                        { "data": "UnitsInStock"},
+                        {
+                            "data": "SourceListID",
+                            "render": function (data, type, row, meta) {
+                                return '<button class="btn btn-primary"' + 'name="UpdateStock"' + 'id="' + data + '">調整庫存</button>';
+                            }
+                        },
+                        {
+                            "data": "SourceListID",
+                            orderable: false,
+                            className: 'control',
+                            render: function (data, type, row, meta) {
+                                return "";
+                            }
+                        }
+                    ],
+                    fixedColumns: {
+                        leftColumns: 2,
+                    },
+                    "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
+                    "order": [[1, "asc"]],
+                    "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
+                    "autoWidth": false
+                });
+                //抓 table 裡按鈕請 如此 $("tbody").on()
+                $("tbody").on('click', '.addBtn', function (e) {
+                    console.log(e.currentTarget);
+                });
+                //////
+                $(document).on('click', "button[name='UpdateStock']", async function () {
+                    let td = $(this).parent('td');
+                    let tr = td.parent('tr');
+                    let stock = tr.children('td:nth-child(6)').text();
+                    let id = $(this).prop('id');
+                     const { value: formValues } = await Swal.fire({
+                        title: '庫存數量修改',
+                        html:
+                            '<Label swal-label>PartNumber</Label>' +
+                             `<input id="stock" class="swal2-input" value="${stock}">`,
+                         showCancelButton: true,
+                         cancelButtonColor: '#d33',
+                         cancelButtonText:'取消',
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            return [
+                                document.getElementById('stock').value,
+                            ]
+                        }
+                    });
+                    //此處無法傳值進UpdateStock方法裡面 2019 11/22 17:30
+                    //成功了，改成POST就可以了，不知道為甚麼PUT不行
+                    if (formValues && formValues[0] >= 0) {
+                        let uisChange = parseInt(formValues[0]);
+                        let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
+                        $.ajax({
+                            url: "@Url.Action("UpdateStock", "SupplierStocks")",
+                            type: "POST",
+                            data: jsondata,
+                            contentType: "application/json",
+                            dataType: "JSON"
+                        }).done(function (res) {
+                            if (res == "saved") {
+                                alert("庫存已修改");
+                                setTimeout("dataTableDisplay()", 0);
+                            }
+                            if (res == "savefail") {
+                                alert("庫存修改失敗，庫存不得小於零");
+                            }
+                        }).fail(function (err) {
+                            alert("ajax fail  " + err.responseJSON);
+                        });
+                        //Swal.fire(JSON.stringify(formValues))
+                    }
+                    else {
+                       // alert("取消");
+                    }
+                });
+            }
+            //function reload() {
+            //    window.location.reload();
+            //}
     </script>
 }
 

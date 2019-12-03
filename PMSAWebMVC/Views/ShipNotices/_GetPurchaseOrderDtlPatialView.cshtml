@@ -20,7 +20,7 @@
         {
             <tr>
                 <td>
-                    @if (Model.orderDtlItems.ElementAt(i).Unship)
+                    @if (Model.orderDtlItems.ElementAt(i).Unship ==true)
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {
@@ -65,7 +65,7 @@
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).UnitsInStock)
                 </td>
                 <td>
-                    @if (Model.orderDtlItems.ElementAt(i).Unship)
+                    @if (Model.orderDtlItems.ElementAt(i).Unship == true)
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {

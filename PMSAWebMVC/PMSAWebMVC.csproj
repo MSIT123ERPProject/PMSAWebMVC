@@ -243,6 +243,10 @@
     <Compile Include="Metadata\SourceListDtl.cs" />
     <Compile Include="Metadata\SourceListDtlMetadata.cs" />
     <Compile Include="Metadata\SourceListMetadata.cs" />
+    <Compile Include="Metadata\StockIn.cs" />
+    <Compile Include="Metadata\StockInDtl.cs" />
+    <Compile Include="Metadata\StockInDtlMetadata.cs" />
+    <Compile Include="Metadata\StockInMetadata.cs" />
     <Compile Include="Metadata\SupplierInfo.cs" />
     <Compile Include="Metadata\SupplierInfoMetadata.cs" />
     <Compile Include="Metadata\WarehouseInfo.cs" />

@@ -103,8 +103,7 @@
                     <td>
                         @Html.ActionLink("新增明細", "CreateDtl2", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })
                         @Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" }) |
-                        @Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" }) |
-                        <a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionID"><i class="fa fa-close"></i> 刪除</a>
+                        @Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" }) 
                     </td>
                 </tr>
                 }
@@ -128,39 +127,7 @@
         function A() {
             window.location.reload();
         }
-        $("a[name = 'click01']").click(function () {
-            Swal.fire({
-                title: '確定要刪除 ?',
-                text: "刪除後你將沒有機會後悔 !",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: '取消',
-                confirmButtonText: '刪除'
-            }).then((result) => {
-                if (result.value) {
-                    let id1 = this.dataset.wc;
-                    $.ajax({
-                        url: `@Url.Action("Delete", "PurchaseRequisitions")`,
-                        type: 'POST',
-                        data: { id: id1 }
-                    }).done(function () {
-                        Swal.fire(
-                            '刪除成功 !',
-                            '此資料已被刪除',
-                            'success'
-                        )
-                    }).fail(function () {
-                        '刪除成功 !',
-                            '此資料已被刪除',
-                            'error'
-                        }).always(function () {
-                            setTimeout('A()', 2000);
-                        });
-                    }
-                })
-        });
+        
     </script>
 
 }

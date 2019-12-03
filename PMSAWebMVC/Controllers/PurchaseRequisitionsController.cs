@@ -21,6 +21,11 @@ namespace PMSAWebMVC.Controllers
         public ActionResult Index()
         {
             var purchaseRequisition = db.PurchaseRequisition.Include(p => p.Employee).Include(p => p.Product).Include(p => p.SignFlow);
+            foreach (var data in purchaseRequisition)
+            {
+                data.ProcessStatus = GetProcessStatus(data.ProcessStatus);
+                data.SignStatus = GetSignStatus(data.SignStatus);
+            }
             return View(purchaseRequisition.ToList());
         }
 

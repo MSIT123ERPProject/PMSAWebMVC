@@ -96,8 +96,8 @@
                     </td>
                     <td>
                         @Html.ActionLink("編輯", "EditDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) |
-                        @Html.ActionLink("檢視", "DetailsDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) |
-                        <a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionDtlCode"><i class="fa fa-close"></i> 刪除</a>
+                        @Html.ActionLink("檢視", "DetailsDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) 
+                        @*<a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionDtlCode"><i class="fa fa-close"></i> 刪除</a>*@
                     </td>
                 </tr>
                 }
@@ -121,7 +121,7 @@
         function A() {
             window.location.reload();
         }
-        $("a[name = 'click01']").click(function () {
+        @*$("a[name = 'click01']").click(function () {
             Swal.fire({
                 title: '確定要刪除 ?',
                 text: "刪除後你將沒有機會後悔 !",
@@ -151,7 +151,7 @@
                         });
                     }
                 })
-        });
+        });*@
     </script>
 
 }

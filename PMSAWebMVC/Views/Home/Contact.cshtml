@@ -88,6 +88,7 @@
 <hr />
 
 <h3><a href="https://datatables.net/extensions/responsive/examples/">DataTables</a></h3>
+<p>請使用第一列範例</p>
 
 <table id="dataTablesId" class="table table-striped hover order-column nowrap text-left" style="width:100%">
     <thead>
@@ -626,13 +627,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
-            $("body").popover({
-                selector: '[data-toggle="popover-dropdown"]', html: true,
-                trigger: 'focus',
-                placement: 'bottom',
-                content: function () { return $(this).children(".dropdown-menu").html(); }
-            });
 
             $('#dataTablesId').DataTable({
                 ordering: false,

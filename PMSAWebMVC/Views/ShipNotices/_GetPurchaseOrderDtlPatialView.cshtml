@@ -10,7 +10,7 @@
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PartName)</th>
             <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PartNumber)</th>
             <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PurchaseQty)</th>
-            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().Qty)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().Qty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().QtyPerUnit)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().CommittedArrivalDate)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().UnitsInStock)</th>
@@ -22,7 +22,7 @@
         {
             <tr>
                 <td>
-                    @if (Model.orderDtlItems.ElementAt(i).Unship ==true)
+                    @if (Model.orderDtlItems.ElementAt(i).Unship == true)
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {
@@ -31,21 +31,24 @@
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                            @*@Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Qty)*@
                         }
                         else
-                        { 
+                        {
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                            @*@Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Qty)*@
                         }
                     }
                     else
-                    { 
+                    {
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                        @*@Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Qty)*@
                     }
                 </td>
                 <td>
@@ -66,16 +69,16 @@
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {
-                            @Html.TextBoxFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                            @Html.TextBoxFor(x => Model.orderDtlItemCheckeds[i].Qty, new { onkeyup = "QtyText(this)", id = "Qty", name = "Qty" })
                         }
                         else
                         {
-                            @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                            @Html.DisplayFor(x => Model.orderDtlItemCheckeds[i].Qty)
                         }
                     }
                     else
                     {
-                        @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                        @Html.DisplayFor(x => Model.orderDtlItemCheckeds[i].Qty)
                     }
                 </td>
                 <td>

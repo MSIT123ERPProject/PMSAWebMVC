@@ -133,7 +133,7 @@ namespace PMSAWebMVC.Controllers
             foreach (var dtl in orderDtls)
             {
                 SourceList sourceList = db.SourceList.Find(dtl.SourceListID);
-                if (sourceList.UnitsInStock < dtl.Qty)
+                if (sourceList.UnitsInStock < unshipOrderDtl.orderDtlItemCheckeds.Where(x=>x.PurchaseOrderDtlCode==dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty)
                 {
                     //這裡要return 錯誤訊息，並且回到原頁面
                     TempData["message"] = "<script>Swal.fire({  icon: 'error',  title: 'Oops...',  text: '庫存不足!',  footer: '<a href>Why do I have this issue?</a>'})</script>";
@@ -147,17 +147,15 @@ namespace PMSAWebMVC.Controllers
                 if (db.ShipNoticeDtl.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault() != null)
                 {
                     ShipNoticeDtl snd = db.ShipNoticeDtl.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault();
-                    int orderQty = db.PurchaseOrderDtl.Find(dtl.PurchaseOrderDtlCode).Qty;
-                    if (orderQty > snd.ShipQty)
+                    int orderQty = dtl.Qty;
+                    if (orderQty > snd.ShipQty || (unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty + snd.ShipQty)<orderQty )
                     {
-                        sourceList.UnitsInStock = sourceList.UnitsInStock - dtl.Qty;
-                        snd.ShipQty += dtl.Qty;
-                        db.Entry(snd).State = EntityState.Modified;
+                        sourceList.UnitsInStock = sourceList.UnitsInStock - unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty;
                     }
                 }
                 else
                 {
-                    sourceList.UnitsInStock = sourceList.UnitsInStock - dtl.Qty;
+                    sourceList.UnitsInStock = sourceList.UnitsInStock - unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty;
                     if (sourceList.UnitsOnOrder < dtl.Qty)
                     {
                         sourceList.UnitsOnOrder = 0;
@@ -194,11 +192,18 @@ namespace PMSAWebMVC.Controllers
                     ShipNoticeDtl shipNoticeDtl = new ShipNoticeDtl();
                     shipNoticeDtl.ShipNoticeID = db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault().ShipNoticeID;
                     shipNoticeDtl.PurchaseOrderDtlCode = dtl.PurchaseOrderDtlCode;
-                    shipNoticeDtl.ShipQty = dtl.Qty;
+                    shipNoticeDtl.ShipQty = unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty;
                     //金額為數量*單價*折扣*批量
-                    shipNoticeDtl.ShipAmount = Convert.ToInt32(dtl.Qty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
+                    shipNoticeDtl.ShipAmount = Convert.ToInt32(shipNoticeDtl.ShipQty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
                     //把新出貨明細資料加進資料庫
                     db.ShipNoticeDtl.Add(shipNoticeDtl);
+                }
+                //有的話，則去修改出貨明細表的出貨數量和出貨金額
+                else {
+                    ShipNoticeDtl snd = db.ShipNoticeDtl.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault();
+                    snd.ShipQty += unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty;
+                    snd.ShipAmount = Convert.ToInt32(snd.ShipQty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
+                    db.Entry(snd).State = EntityState.Modified;
                 }
                 //不管是採購單明細或是採購單有異動都要新增採購單異動總表
                 //新增採購單異動總表(明細)
@@ -298,6 +303,7 @@ namespace PMSAWebMVC.Controllers
                         pod.PurchaseOrderDtlOID,
                         pod.PurchaseOrderDtlCode,
                         pod.Qty,
+                        pod.PurchasedQty,
                         sl.UnitsInStock
                     };
             IList<OrderDtlItemChecked> odc = new List<OrderDtlItemChecked>();
@@ -306,6 +312,7 @@ namespace PMSAWebMVC.Controllers
                 OrderDtlItemChecked orderDtlItemChecked = new OrderDtlItemChecked();
                 orderDtlItemChecked.PurchaseOrderDtlOID = item.PurchaseOrderDtlOID;
                 orderDtlItemChecked.PurchaseOrderDtlCode = item.PurchaseOrderDtlCode;
+                orderDtlItemChecked.Qty = item.Qty;
                 //顯示庫存是否足夠
                 if (item.UnitsInStock >= item.Qty)
                 {
@@ -334,7 +341,6 @@ namespace PMSAWebMVC.Controllers
                                      PartNumber = pod.PartNumber,
                                      QtyPerUnit = pod.QtyPerUnit,
                                      TotalPartQty = pod.TotalPartQty,
-                                     Qty = pod.Qty,
                                      PurchaseQty = pod.Qty,
                                      SourceListID = pod.SourceListID,
                                      CommittedArrivalDate = pod.CommittedArrivalDate,
@@ -447,7 +453,6 @@ namespace PMSAWebMVC.Controllers
                                                       PurchaseOrderDtlOID = pod.PurchaseOrderDtlOID,
                                                       PurchaseOrderDtlCode = pod.PurchaseOrderDtlCode,
                                                       PartName = pod.PartName,
-                                                      Qty = pod.Qty,
                                                       QtyPerUnit = pod.QtyPerUnit,
                                                       SourceListID = pod.SourceListID,
                                                       CommittedArrivalDate = pod.CommittedArrivalDate,

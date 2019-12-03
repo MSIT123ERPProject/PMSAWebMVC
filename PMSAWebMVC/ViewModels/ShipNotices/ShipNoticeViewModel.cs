@@ -44,10 +44,6 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         [Display(Name = "總量")]
         public int TotalPartQty { get; set; }
 
-        //此欄位是要供應商調整出貨數量用
-        [Display(Name = "出貨數量")]
-        public int Qty { get; set; }
-
         //此欄位對應到的是採購單的QTY欄位
         [Display(Name = "採購數量")]
         public int PurchaseQty { get; set; }
@@ -79,5 +75,9 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         public bool Checked { get; set; }
 
         public bool IsEnough { get; set; }
+
+        //此欄位是要供應商調整出貨數量用
+        [Display(Name = "出貨數量")]
+        public int Qty { get; set; }
     }
 }

@@ -206,15 +206,14 @@
                 ///////////////////////////////////////////////////
             });
         }*@
-        ////////////////////////////////
+        ///////////////////////////////////////////////////////
         //改寫SUBMIT按鈕執行動作
-        function QtyText() {
-            $("input[name='Qty']").on('change',function () {
-                let content = $(this).val();
-                $("#Qty").attr("value", content);
-                //console.log($('#Qty').val());
-                //console.log($("#Qty").attr("value"));
-            });
+        function QtyText(e) {
+            console.log(e);
+            let content = $(e).val();
+                $(e).attr("value", content);
+                console.log($(e).val());
+                console.log($("#Qty").attr("value"));
         }
         $("#shipQty").click(function () {
             let content = $('#Qty').val();

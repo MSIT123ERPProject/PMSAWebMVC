@@ -27,9 +27,10 @@ namespace PMSAWebMVC.Controllers
         ShipNoticesUtilities utilities = new ShipNoticesUtilities();
         public ShipNoticesController()
         {
-
+         //   SupplierAccount supplier = User.Identity.GetSupplierAccount();
             db = new PMSAEntities();
             supplierCode = "S00001";
+           // supplierAccount = supplier.SupplierAccountID;
             supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
             RequesterRoleSupplier = "S";
@@ -330,9 +331,11 @@ namespace PMSAWebMVC.Controllers
                                      PurchaseOrderDtlOID = pod.PurchaseOrderDtlOID,
                                      PurchaseOrderDtlCode = pod.PurchaseOrderDtlCode,
                                      PartName = pod.PartName,
+                                     PartNumber = pod.PartNumber,
                                      QtyPerUnit = pod.QtyPerUnit,
                                      TotalPartQty = pod.TotalPartQty,
                                      Qty = pod.Qty,
+                                     PurchaseQty = pod.Qty,
                                      SourceListID = pod.SourceListID,
                                      CommittedArrivalDate = pod.CommittedArrivalDate,
                                      ShipDate = pod.ShipDate,

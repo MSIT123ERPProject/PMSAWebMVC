@@ -53,22 +53,21 @@ namespace PMSAWebMVC.Controllers.SupplierController
             var s = q.ToList();
             return Json(s, JsonRequestBehavior.AllowGet);
         }
-        //columnChart
+        //pieChart
         public ActionResult GetPartTotalPricePercentage()
         {
             //這裡LINQ語法需要更改一下，同一個料件要加總起來，並必須顯示出所有的料件
             var q = from pod in db.PurchaseOrderDtl
-                    join sl in db.SourceList
-                    on pod.SourceListID equals sl.SourceListID
-                    where sl.SupplierCode == supplierCode && pod.ShipDate != null 
+                    join po in db.PurchaseOrder
+                    on pod.PurchaseOrderID equals po.PurchaseOrderID
+                    where po.SupplierCode == supplierCode
                     select new
                     {
                         pod.PartName,
                         pod.PartNumber,
                         pod.QtyPerUnit,
                         pod.Qty,
-                        sl.UnitPrice,
-                        sl.SourceListID,
+                        pod.PurchaseUnitPrice,
                         pod.Discount
                     };
             //計算百分比
@@ -76,7 +75,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
             foreach (var data in q)
             {
                 partTotalPriceViewModel temp = new partTotalPriceViewModel();
-                temp.ToalPrice = data.Qty * data.UnitPrice * data.QtyPerUnit*( 1 -data.Discount);
+                temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
                 temp.PartNumber = data.PartNumber;
                 temp.PartName = data.PartName;
                 list.Add(temp);
@@ -90,11 +89,11 @@ namespace PMSAWebMVC.Controllers.SupplierController
             {
                 decimal p = list[i].ToalPrice / total * 100;
                 p = Math.Round(p, 1);
-                list[i].Percentage =Convert.ToDouble(p) ;
+                list[i].Percentage = Convert.ToDouble(p);
             }
             return Json(list, JsonRequestBehavior.AllowGet);
         }
-        //columnChart使用的ViewModel
+        //pieChart使用的ViewModel
         public class partTotalPriceViewModel
         {
             public string PartName { get; set; }
@@ -102,7 +101,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
             public decimal ToalPrice { get; set; }
             public double Percentage { get; set; }
         }
-        
+
         //BUBBLECHART
         [HttpGet]
         public ActionResult GetPartQtyByShipStatus()
@@ -111,7 +110,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
             var qpodUnship = from pod in db.PurchaseOrderDtl.AsEnumerable()
                              join po in db.PurchaseOrder
                              on pod.PurchaseOrderID equals po.PurchaseOrderID
-                             where po.SupplierCode == supplierCode && pod.ShipDate == null 
+                             where po.SupplierCode == supplierCode && pod.ShipDate == null
                              select new OrderPartQty
                              {
                                  name = pod.PartName,
@@ -125,20 +124,20 @@ namespace PMSAWebMVC.Controllers.SupplierController
                               select new OrderPartQty
                               {
                                   name = pod.PartName,
-                                  value= pod.Qty,
+                                  value = pod.Qty,
                               };
             //未答交料件的出貨數量
             var qpodNoApplied = from po in db.PurchaseOrder.AsEnumerable()
-                              join pod in db.PurchaseOrderDtl
-                              on po.PurchaseOrderID equals pod.PurchaseOrderID
-                              where po.SupplierCode == supplierCode && po.PurchaseOrderStatus == "P"
-                              select new OrderPartQty
-                              {
-                                  name = pod.PartName,
-                                  value = pod.Qty,
-                              };
+                                join pod in db.PurchaseOrderDtl
+                                on po.PurchaseOrderID equals pod.PurchaseOrderID
+                                where po.SupplierCode == supplierCode && po.PurchaseOrderStatus == "P"
+                                select new OrderPartQty
+                                {
+                                    name = pod.PartName,
+                                    value = pod.Qty,
+                                };
             IList<OrderPart> orderParts = new List<OrderPart>();
-            orderParts.Add(new OrderPart{name="未出貨",data= qpodUnship.ToList()  });
+            orderParts.Add(new OrderPart { name = "未出貨", data = qpodUnship.ToList() });
             orderParts.Add(new OrderPart { name = "已出貨", data = qpodShipped.ToList() });
             orderParts.Add(new OrderPart { name = "未答交", data = qpodNoApplied.ToList() });
             var json = orderParts;

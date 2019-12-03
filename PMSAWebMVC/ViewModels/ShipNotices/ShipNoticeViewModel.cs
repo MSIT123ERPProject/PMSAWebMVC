@@ -25,6 +25,7 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         public string ReceiverMobile { get; set; }
         public string ReceiptAddress { get; set; }
         public IEnumerable<OrderDtlItem> orderDtlItems { get; set; }
+        //要傳回controller的話要用list
         //此集合是用來存放訂單出貨明細檢視時，判斷有無被選取使用
         public IList<OrderDtlItemChecked> orderDtlItemCheckeds { get; set; }
     }
@@ -36,12 +37,20 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         public string PurchaseOrderDtlCode { get; set; }
         [Display(Name = "料件名稱")]
         public string PartName { get; set; }
+        [Display(Name = "料件編號")]
+        public string PartNumber { get; set; }
         [Display(Name = "批量")]
         public int QtyPerUnit { get; set; }
         [Display(Name = "總量")]
         public int TotalPartQty { get; set; }
-        [Display(Name = "採購數量")]
+
+        //此欄位是要供應商調整出貨數量用
+        [Display(Name = "出貨數量")]
         public int Qty { get; set; }
+
+        //此欄位對應到的是採購單的QTY欄位
+        [Display(Name = "採購數量")]
+        public int PurchaseQty { get; set; }
         [Display(Name = "貨源清單編號")]
         public string SourceListID { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]

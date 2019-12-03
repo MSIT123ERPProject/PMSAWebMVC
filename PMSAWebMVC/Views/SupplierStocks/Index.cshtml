@@ -166,6 +166,7 @@
                             ]
                         }
                     });
+
                     //呼叫UpdateStock方法修改庫存
                     if (formValues && parseInt(formValues[0]) >= 0) {
                         let uisChange = parseInt(formValues[0]);
@@ -192,11 +193,7 @@
                             });
                     }
                     else {
-<<<<<<< HEAD
-                        toastr.error("庫存不得小於零", "通知");
-=======
                         toastr.error("庫存不得小於零", "警告");
->>>>>>> 227ad28af608cfa1d660e3eb15412f28ca79b8d1
                     }
                 });
         }

@@ -8,6 +8,8 @@
             <th><input type="checkbox" name="chkAll" />@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().Checked)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PurchaseOrderDtlCode)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PartName)</th>
+            <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PartNumber)</th>
+            <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PurchaseQty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().Qty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().QtyPerUnit)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().CommittedArrivalDate)</th>
@@ -51,6 +53,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).PartName)
+                </td>
+                <td>
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).PartNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).PurchaseQty)
                 </td>
                 <td>
                     @*出貨數量的調整要寫在這*@

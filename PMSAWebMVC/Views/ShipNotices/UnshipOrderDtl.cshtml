@@ -1,16 +1,13 @@
 ﻿@model  PMSAWebMVC.ViewModels.ShipNotices.shipOrderViewModel
-
 @{
     ViewBag.Title = "UnshipOrderDtl";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>出貨明細</h2>
 @if (TempData["message"] != null)
 {
     @Html.Raw(TempData["message"])
 }
-
 @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
 {
     <div class="card mb-3">
@@ -35,7 +32,6 @@
         </div>
     }
 }
-
 @section scripts{
     <script>
         $(document).ready(function () {

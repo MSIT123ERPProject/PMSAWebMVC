@@ -126,6 +126,12 @@ namespace PMSAWebMVC.Controllers
                     orderDtls.Add(purchaseOrderDtl);
                 }
             }
+            //檢查是否至少一個被勾選，如沒有則跳回去UnshipOrderDtl頁面
+            if (orderDtls.Count() ==0){
+                TempData["message"] = "<script>toastr.error('請選擇欲出貨商品!','通知')'</script>";
+                message = "請選擇欲出貨商品!";
+                return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
+            }
             DateTime now = DateTime.Now;
             List<SourceList> sourceLists = new List<SourceList>(); //這個LIST目前沒有用
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
@@ -306,15 +312,20 @@ namespace PMSAWebMVC.Controllers
                         pod.PurchasedQty,
                         sl.UnitsInStock
                     };
-            IList<OrderDtlItemChecked> odc = new List<OrderDtlItemChecked>();
+            IList<OrderDtlItemChecked> odc = new List<OrderDtlItemChecked>();             
             foreach (var item in q)
             {
                 OrderDtlItemChecked orderDtlItemChecked = new OrderDtlItemChecked();
                 orderDtlItemChecked.PurchaseOrderDtlOID = item.PurchaseOrderDtlOID;
                 orderDtlItemChecked.PurchaseOrderDtlCode = item.PurchaseOrderDtlCode;
-                orderDtlItemChecked.Qty = item.Qty;
+                int shipQty = 0;
+                if (db.ShipNoticeDtl.Where(x => x.PurchaseOrderDtlCode == item.PurchaseOrderDtlCode).SingleOrDefault() != null)
+                {
+                    shipQty = db.ShipNoticeDtl.Where(x => x.PurchaseOrderDtlCode == item.PurchaseOrderDtlCode).SingleOrDefault().ShipQty;
+                }
+                orderDtlItemChecked.Qty = item.Qty-shipQty;
                 //顯示庫存是否足夠
-                if (item.UnitsInStock >= item.Qty)
+                if (item.UnitsInStock >= orderDtlItemChecked.Qty)
                 {
                     orderDtlItemChecked.IsEnough = true;
                 }
@@ -349,6 +360,8 @@ namespace PMSAWebMVC.Controllers
                                      UnitsInStock = sl.UnitsInStock
                                  };
             od = queryOrderitem.ToList();
+            //檢查是否有出貨過，有的話要檢查是否出貨明細SHIPQTY是否和採購單QTY是否相同
+            //相同的話，代表該商品已全部出貨完畢，Unship = true，否則仍然有需要出貨的數量，Unship = false
             foreach (var orderdtl in od)
             {
                 if (orderdtl.ShipDate == null)
@@ -357,7 +370,14 @@ namespace PMSAWebMVC.Controllers
                 }
                 else
                 {
-                    orderdtl.Unship = false;
+                    ShipNoticeDtl snd = db.ShipNoticeDtl.Where(x => x.PurchaseOrderDtlCode == orderdtl.PurchaseOrderDtlCode).SingleOrDefault();
+                    if (snd.ShipQty < orderdtl.PurchaseQty)
+                    {
+                        orderdtl.Unship = true;
+                    }
+                    else {
+                        orderdtl.Unship = false;
+                    }
                 }
             }
             shipOrderViewModel uodvm = new shipOrderViewModel()

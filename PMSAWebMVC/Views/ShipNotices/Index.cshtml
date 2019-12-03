@@ -157,11 +157,11 @@
                         "render": function (data, type, row, meta) {
                             if (row.PurchaseOrderStatus == "P") {
                                 /*未答交*/
-                                return '<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"' + 'onclick="location.href=' + "'@Url.Action( "purchaseOrderSended","ShipNotices")" + "?id=" + data + "'" + '"'+ '><i class="far fa-eye"></i></button> </div>';
+                                return '<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"' + 'onclick="location.href=' + "'@Url.Action( "purchaseOrderSended","ShipNotices")" + "?id=" + data + "'" + '"'+ '><i class="far fa-eye"></i></button> </div>';
                              }
                              else if(row.PurchaseOrderStatus == "E") {
                                 /*未出貨按鈕 檢視該採購單所有的產品，並可以選擇出貨那些產品*/
-                                return '<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  ' + 'onclick="location.href=' + "'@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data +"'"+'"'+ '><i class="far fa-edit"></i></button> </div>';
+                                return '<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯"' + 'onclick="location.href=' + "'@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data +"'"+'"'+ '><i class="far fa-edit"></i></button> </div>';
                             }
                             else {
                                 /*已出貨*/

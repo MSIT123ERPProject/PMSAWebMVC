@@ -62,6 +62,7 @@ namespace PMSAWebMVC
                    "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
+                "~/Scripts/sbTemplate/sb-admin.js",
                 //Site
                 "~/Scripts/Site.js"
                 ));

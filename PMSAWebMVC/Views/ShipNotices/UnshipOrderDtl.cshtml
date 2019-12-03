@@ -217,7 +217,7 @@
             });
         }
         $("#shipQty").click(function () {
-            //let content = $('#Qty').val();
+            let content = $('#Qty').val();
             $("input[name*='Qty']").attr("value", content);
             toastr.success("調整完成", "通知");
             //console.log($('#Qty').val());

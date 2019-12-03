@@ -680,11 +680,7 @@
     <Content Include="css\RESXManager\ResourceEditor.css" />
     <Content Include="css\RESXManager\spellchecker.css" />
     <Content Include="css\RESXManager\webos.css" />
-<<<<<<< HEAD
-    <Content Include="fonts\fontawesome-webfont.svg" />
-=======
     <Content Include="favicon.ico" />
->>>>>>> bf3dd101309e36a170600315de7b27acd5fd67c7
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\NoImage.jpg" />

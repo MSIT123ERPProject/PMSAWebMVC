@@ -201,6 +201,7 @@
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryDtlsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -218,6 +219,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Metadata\SupplierAccount.cs" />
+    <Compile Include="Metadata\SupplierRating.cs" />
     <Compile Include="Metadata\CompanyInfo.cs" />
     <Compile Include="Metadata\Employee.cs" />
     <Compile Include="Metadata\EmployeeMetadata.cs" />
@@ -399,6 +402,10 @@
     <Compile Include="Services\MembersDBService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccount_CreateViewModel.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\SupCompanyInfoViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
@@ -2248,11 +2255,6 @@
     <Content Include="Views\SourceLists\Index.cshtml" />
     <Content Include="Views\SourceLists\IndexDtl.cshtml" />
     <Content Include="Views\SupplierStocks\Index.cshtml" />
-    <Content Include="Views\UsersAdmin\Create.cshtml" />
-    <Content Include="Views\UsersAdmin\Delete.cshtml" />
-    <Content Include="Views\UsersAdmin\Details.cshtml" />
-    <Content Include="Views\UsersAdmin\DisplayEmail.cshtml" />
-    <Content Include="Views\UsersAdmin\Edit.cshtml" />
     <Content Include="Views\UsersAdmin\Index.cshtml" />
     <Content Include="Views\WarehouseInfoes\Index.cshtml" />
     <Content Include="Views\Shared\Deny.cshtml" />
@@ -2263,6 +2265,8 @@
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
     <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
     <Content Include="Views\Account\ConfirmEmailError.cshtml" />
+    <Content Include="Views\BuyerSupAccount\Index.cshtml" />
+    <Content Include="Views\BuyerSupAccount\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

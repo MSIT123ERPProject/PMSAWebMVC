@@ -1,9 +1,9 @@
-﻿@*@model IEnumerable<PMSAWebMVC.Models.ApplicationUser>*@
-@model PMSAWebMVC.ViewModels.UsersAdmin.UsersAdminViewModel
+﻿@model PMSAWebMVC.ViewModels.BuyerSupAccount.BuyerSupAccountViewModel
 
 @{
     ViewBag.Title = "Index";
 }
+
 @section styles
 {
 
@@ -354,8 +354,8 @@
     </style>
 }
 <div class="wrapall">
-    <h2>管理採購員帳號</h2>
-    <h6>查詢、啟用採購員帳號、重寄密碼</h6>
+    <h2>管理供應商帳號</h2>
+    <h6>查詢、啟用供應商帳號、重寄密碼</h6>
 
     <div class="card">
         <div class="card-header">
@@ -363,39 +363,40 @@
                 <i class="fas fa-table"></i>
                 採購員帳號
             </h5>
-            @*<a href="@Url.Action("Create","UsersAdmin")">
-                    <button class="btn addBtn bd fillbtn"><i class='fas fa-plus-square'></i> 新增</button>
-                </a>*@
         </div>
         <div class="card-body">
+                <a  class="btn btn-warning" href="@Url.Action("Create","BuyerSupAccount")"><i class="fas fa-plus"></i> 新增帳號</a>          
             <div class="table-responsive" style="width:98%; padding: 10px">
-                <table class="table table-striped table-border nowrap" id="createEmp" style="width:100%;">
+                <table class="table table-striped table-border nowrap" id="Table" style="width:100%;">
                     <thead>
                         <tr role="row">
                             <th>動作</th>
                             <th>
-                                @Html.DisplayNameFor(model => model.EmployeeID)
+                                @Html.DisplayNameFor(model => model.SupplierCode)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Name)
+                                @Html.DisplayNameFor(model => model.SupplierName)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Role)
+                                @Html.DisplayNameFor(model => model.SupplierAccountID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ContactName)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AccountStatus)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatorEmployeeID)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Mobile)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Tel)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.AccountStatus)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ManagerID)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.ModifiedDate)
@@ -446,13 +447,13 @@
                                             <div class="emp">
                                                 <div class="form-group">
                                                     <label for="EmployeeID">
-                                                        @Html.DisplayNameFor(model => model.EmployeeID)
+                                                        @Html.DisplayNameFor(model => model.ContactName)
                                                     </label>
                                                     <input type="text" class="form-control disabled" name="EmployeeID" id="EmployeeID" value="">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="Name">
-                                                        @Html.DisplayNameFor(model => model.Name)
+                                                        @Html.DisplayNameFor(model => model.SupplierAccountID)
                                                     </label>
                                                     <input type="text" class="form-control disabled" name="Name" id="Name" value="">
                                                 </div>
@@ -532,54 +533,6 @@
                                         </div>
                                         <div class="col-8 col-sm-9">
                                             <div class="form-group">
-                                                <label for="Role">
-                                                    @Html.DisplayNameFor(model => model.Role)
-                                                </label>
-                                                <div id="Role">
-                                                    <input type="hidden" id="EmpId" name="EmpId" value="" />
-                                                    @foreach (var item in (SelectList)ViewBag.RoleId)
-                                                    {
-                                                        switch (item.Value)
-                                                        {
-                                                            case "Buyer":
-                                                                <div class="custom-control custom-checkbox d-inline-block">
-                                                                    <input type="checkbox" class="custom-control-input" id="Buyer" name="selectedRole" value="@item.Value">
-                                                                    <label class="custom-control-label" for="Buyer">採購員</label>
-                                                                </div>
-                                                                break;
-                                                            case "Manager":
-                                                                <div class="custom-control custom-checkbox d-inline-block">
-                                                                    <input type="checkbox" class="custom-control-input" id="Manager" name="selectedRole" value="@item.Value">
-                                                                    <label class="custom-control-label" for="Manager">主管</label>
-                                                                </div>
-                                                                break;
-                                                            case "ProductionControl":
-                                                                <div class="custom-control custom-checkbox d-inline-block">
-                                                                    <input type="checkbox" class="custom-control-input" id="ProductionControl" name="selectedRole" value="@item.Value">
-                                                                    <label class="custom-control-label" for="ProductionControl">生管</label>
-                                                                </div>
-                                                                break;
-                                                            case "Warehouse":
-                                                                <div class="custom-control custom-checkbox d-inline-block">
-                                                                    <input type="checkbox" class="custom-control-input" id="Warehouse" name="selectedRole" value="@item.Value">
-                                                                    <label class="custom-control-label" for="Warehouse">倉管</label>
-                                                                </div>
-                                                                break;
-                                                            case "Admin":
-                                                                <div class="custom-control custom-checkbox d-inline-block">
-                                                                    <input type="checkbox" class="custom-control-input" id="Admin" name="selectedRole" value="@item.Value">
-                                                                    <label class="custom-control-label" for="Admin">管理員</label>
-                                                                </div>
-                                                                break;
-                                                            case "NewEmployee":
-                                                                <div class="custom-control custom-checkbox d-inline-block">
-                                                                    <input type="checkbox" class="custom-control-input" id="NewEmployee" name="selectedRole" value="@item.Value">
-                                                                    <label class="custom-control-label" for="NewEmployee">新進職員</label>
-                                                                </div>
-                                                                break;
-                                                        }
-                                                    }
-                                                </div>
                                                 <div class="editAcc">
                                                     <label class="d-block">
                                                         編輯帳號狀態
@@ -628,8 +581,8 @@
     @*https://datatables.net/forums/discussion/56914*@
     <script type="text/javascript">
 
-        $("#createEmp").ready(() => {
-            var oTable = $('#createEmp').DataTable({
+        $("#Table").ready(() => {
+            var oTable = $('#Table').DataTable({
                 responsive: {
                     details: {
                         type: 'column',
@@ -651,7 +604,7 @@
                     },
                 ],
                 "ajax": {
-                    "url": '@Url.Action("getAllEmpToIndexAjax", "UsersAdmin")',
+                    "url": '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")',
                     "type": "GET",
                     "dataSrc": ""
                 },
@@ -668,61 +621,12 @@
                             $("td.action-btn").html(frag);
                         }
                     },
-                    { "data": "EmployeeID" },
-                    { "data": "Name" },
-                    {
-                        "data": "Role[,]",
-                        "render": function (d) {
-                            var arr = d.split(',');
-                            var arrAll = [];
-                            arr.forEach(x => {
-                                if (x == "Supplier") {
-                                    x = "供應商";
-                                    arrAll.push(x);
-                                    console.log(x)
-                                } else if (x == "Buyer") {
-                                    x = "採購";
-                                    arrAll.push(x);
-                                } else if (x == "Manager") {
-                                    x = "主管";
-                                    arrAll.push(x);
-                                } else if (x == "ProductionControl") {
-                                    x = "生管";
-                                    arrAll.push(x);
-                                } else if (x == "NewEmployee") {
-                                    x = "新進職員";
-                                    arrAll.push(x);
-                                } else if (x == "Admin") {
-                                    x = "系統管理員";
-                                    arrAll.push(x);
-                                } else if (x == "Warehouse") {
-                                    x = "倉管";
-                                    arrAll.push(x);
-                                }
-                            })
-                            return String(arrAll);
-                        }
-                    },
+                    { "data": "SupplierCode" },
+                    { "data": "SupplierName" },
+                    { "data": "SupplierAccountID" },
+                    { "data": "ContactName" },
                     {
                         "data": "Email",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "Mobile",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "Tel",
                         "render": function (d) {
                             if (d == null) {
                                 return "-";
@@ -746,7 +650,25 @@
                         }
                     },
                     {
-                        "data": "ManagerID",
+                        "data": "CreatorEmployeeID",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "Mobile",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        }
+                    },
+                    {
+                        "data": "Tel",
                         "render": function (d) {
                             if (d == null) {
                                 return "-";

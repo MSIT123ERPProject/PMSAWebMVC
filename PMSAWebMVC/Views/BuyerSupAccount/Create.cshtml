@@ -1,0 +1,177 @@
+﻿@model PMSAWebMVC.ViewModels.BuyerSupAccount.BuyerSupAcc_Parent
+
+@{
+    ViewBag.Title = "新增供應商帳號";
+}
+@section styles{
+    <style>
+        @@keyframes fadeinShowBody {
+            0% {
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeinShow {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        body {
+            /*animation: 0.3s fadeinShowBody 0.3s both;*/
+        }
+        /*標題 包在.wrapall中使用*/
+        .wrapall h2 {
+            font-weight: 500;
+            color: #909399;
+            letter-spacing: 2px;
+            margin-bottom: 0px;
+        }
+
+        .wrapall h6 {
+            font-size: 13px;
+            letter-spacing: 5px;
+            margin-left: 3px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #C0C4CC;
+        }
+
+        .wrapall h5 {
+            margin: 0;
+        }
+
+        .wrapall {
+            animation: 0.4s fadeinShow 0.3s both;
+        }
+        /*input ======================*/
+        .form-group label {
+            margin: 0;
+            margin-bottom: 2px;
+            /*font-weight: 600;*/
+        }
+
+        .disabled {
+            background-color: none;
+            border: 0;
+            font-size: 15px;
+            padding: 0;
+            padding-left: 2px;
+            height: auto;
+            color: #909399;
+        }
+
+        .row .left, .row .right {
+            box-shadow: 0 0 3px #aaa;
+            margin: 10px;
+            padding: 15px;
+        }
+    </style>
+}
+<div class="wrapall">
+    <h2>新增供應商帳號</h2>
+    <h6>新增、啟用/停用</h6>
+    <div class="card">
+        <div class="card-header">
+            <h5>
+                <i class="fas fa-table"></i>
+                採購員帳號 @ViewBag.msg
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="left col-lg-5 col-md-11 col-sm-11">
+                    <h4 style="font-size: 18px; margin-bottom:10px">1.選擇供應商公司</h4>
+                    <select id="SupNameCode" class="form-control col-lg-9">
+                        <option selected disabled>---- 請選擇 ----</option>
+                    </select>
+                    <div class="supCompanyInfoDiv mt-4">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SupInfoModel.SupplierCode)
+                            @Html.TextBoxFor(model => model.SupInfoModel.SupplierCode, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SupInfoModel.SupplierName)
+                            @Html.TextBoxFor(model => model.SupInfoModel.SupplierName, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SupInfoModel.TaxID)
+                            @Html.TextBoxFor(model => model.SupInfoModel.TaxID, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SupInfoModel.Address)
+                            @Html.TextBoxFor(model => model.SupInfoModel.Address, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SupInfoModel.Email)
+                            @Html.TextBoxFor(model => model.SupInfoModel.Email, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SupInfoModel.Tel)
+                            @Html.TextBoxFor(model => model.SupInfoModel.Tel, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SupInfoModel.SupplierRatingOID)
+                            @Html.TextBoxFor(model => model.SupInfoModel.SupplierRatingOID, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                    </div>
+                </div>
+                <div class="right col-lg-5 col-md-11 col-sm-11">
+                    <h4 style="font-size: 18px; margin-bottom:10px">2.新增供應商帳號</h4>
+                    <form action="@Url.Action("Index","BuyerSupAccount")" method="post">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode)
+                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName)
+                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName, new { @class = "form-control disabled col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.ContactName)
+                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.ContactName, new { @class = "form-control col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Email)
+                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Email, new { @class = "form-control col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Mobile)
+                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Mobile, new { @class = "form-control col-lg-6" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Tel)
+                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Tel, new { @class = "form-control col-lg-6" })
+                        </div>
+                        <button type="submit" class="btn btn-primary">確認新增</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        $.getJSON(
+            '@Url.Action("getAllSupInfoNoContactOnlySupInfoToIndexAjax")',
+            function (data) {
+                data.forEach(x => {
+                    $("#SupNameCode").append(`<option value="${x.SupplierCode}">${x.SupplierName} (${x.SupplierCode})</option>`);
+                })
+            }
+        )
+    </script>
+}

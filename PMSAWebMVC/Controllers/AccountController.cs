@@ -297,7 +297,6 @@ namespace PMSAWebMVC.Controllers
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             //失敗
-            //TODO 重設密碼失敗提示請在時間重設
             return RedirectToAction("Error");
         }
 
@@ -317,7 +316,7 @@ namespace PMSAWebMVC.Controllers
             db.Entry(emp).State = EntityState.Modified;
             var u2 = await db.SaveChangesAsync();
             //成功
-            if(u1.Succeeded && u2 > 0)
+            if (u1.Succeeded && u2 > 0)
             {
                 return 1;
             }

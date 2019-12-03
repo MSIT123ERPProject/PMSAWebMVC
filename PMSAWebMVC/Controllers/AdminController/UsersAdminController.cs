@@ -74,6 +74,38 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
+        //===========================================================================
+        [HttpPost]
+        public JsonResult GetUsersFromEmp(string EmpID)
+        {
+            List<System.Collections.Generic.KeyValuePair<string, string[]>> items = new List<KeyValuePair<string, string[]>>();
+
+            if (!string.IsNullOrWhiteSpace(EmpID))
+            {
+                var Emps = this.GetEmpID(EmpID);
+                if (Emps.Count() > 0)
+                {
+                    foreach (var Emp in Emps)
+                    {
+                        items.Add(new KeyValuePair<string, string[]>(
+                            Emp.EmployeeID.ToString(), new string[] { Emp.EmployeeID, Emp.Name, Emp.Email, Emp.Mobile, Emp.Tel }
+                        ));
+                    }
+                }
+            }
+            return this.Json(items);
+        }
+
+        private IEnumerable<Employee> GetEmpID(string EmpID)
+        {
+            using (PMSAEntities db = new PMSAEntities())
+            {
+                var query = db.Employee.Where(x => x.EmployeeID == EmpID);
+                return query.ToList();
+            }
+        }
+
+        //==========================================================================
         //
         // GET: /Users/
         public async Task<ActionResult> Index()
@@ -157,63 +189,6 @@ namespace PMSAWebMVC.Controllers
                 emps.Add(user);
             }
             return Json(emps, JsonRequestBehavior.AllowGet);
-        }
-
-        //
-        // GET: /Users/Details/5
-        [HttpGet]
-        public async Task<ActionResult> Details(string id)
-        {
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                // Process normally:
-                var user = await UserManager.FindByIdAsync(id);
-                ViewBag.RoleNames = await UserManager.GetRolesAsync(user.Id);
-                return View(user);
-            }
-            // Return Error:
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        }
-
-        //
-        // GET: /Users/Create
-        [HttpGet]
-        public async Task<ActionResult> Create()
-        {
-            //Get the list of Roles
-            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
-            ViewBag.empID = new SelectList(db.Employee, "EmployeeID", "EmployeeID");
-            return View();
-        }
-
-        [HttpPost]
-        public JsonResult GetUsersFromEmp(string EmpID)
-        {
-            List<System.Collections.Generic.KeyValuePair<string, string[]>> items = new List<KeyValuePair<string, string[]>>();
-
-            if (!string.IsNullOrWhiteSpace(EmpID))
-            {
-                var Emps = this.GetEmpID(EmpID);
-                if (Emps.Count() > 0)
-                {
-                    foreach (var Emp in Emps)
-                    {
-                        items.Add(new KeyValuePair<string, string[]>(
-                            Emp.EmployeeID.ToString(), new string[] { Emp.EmployeeID, Emp.Name, Emp.Email, Emp.Mobile, Emp.Tel }
-                        ));
-                    }
-                }
-            }
-            return this.Json(items);
-        }
-
-        private IEnumerable<Employee> GetEmpID(string EmpID)
-        {
-            using (PMSAEntities db = new PMSAEntities())
-            {
-                var query = db.Employee.Where(x => x.EmployeeID == EmpID);
-                return query.ToList();
-            }
         }
 
         public string generateFirstPwd()
@@ -449,133 +424,6 @@ namespace PMSAWebMVC.Controllers
             //Emp table
             db.Entry(emp).State = EntityState.Modified;
             await db.SaveChangesAsync();
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
-
-        //
-        // GET: /Users/Edit/1
-        [HttpGet]
-        public async Task<ActionResult> Edit(string id)
-        {
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                var user = await UserManager.FindByIdAsync(id);
-                if (user == null)
-                {
-                    return HttpNotFound();
-                }
-
-                var userRoles = await UserManager.GetRolesAsync(user.Id);
-                return View(new EditUserViewModel()
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    RolesList = RoleManager.Roles.ToList().Select(x => new SelectListItem()
-                    {
-                        Selected = userRoles.Contains(x.Name),
-                        Text = x.Name,
-                        Value = x.Name
-                    })
-                });
-            }
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        }
-
-        //
-        // POST: /Users/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Email,Id")] EditUserViewModel editUser, params string[] selectedRole)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await UserManager.FindByIdAsync(editUser.Id);
-                if (user == null)
-                {
-                    return HttpNotFound();
-                }
-
-                user.UserName = editUser.Email;
-                user.Email = editUser.Email;
-
-                var userRoles = await UserManager.GetRolesAsync(user.Id);
-
-                selectedRole = selectedRole ?? new string[] { };
-
-                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
-
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", result.Errors.First());
-                    return View();
-                }
-                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray<string>());
-
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", result.Errors.First());
-                    return View();
-                }
-                return RedirectToAction("Index");
-            }
-            ModelState.AddModelError("", "Something failed.");
-            return View();
-        }
-
-        //
-        // GET: /Users/Delete/5
-        [HttpGet]
-        public async Task<ActionResult> Delete(string id)
-        {
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                var user = await UserManager.FindByIdAsync(id);
-                if (user == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(user);
-            }
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        }
-
-        //
-        // POST: /Users/Delete/5
-        [HttpPost]
-        [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
-        {
-            if (ModelState.IsValid)
-            {
-                if (!string.IsNullOrWhiteSpace(id))
-                {
-                    var user = await UserManager.FindByIdAsync(id);
-                    if (user == null)
-                    {
-                        return HttpNotFound();
-                    }
-                    var result = await UserManager.DeleteAsync(user);
-                    if (!result.Succeeded)
-                    {
-                        ModelState.AddModelError("", result.Errors.First());
-                        return View();
-                    }
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-            }
-            return View();
         }
     }
 }

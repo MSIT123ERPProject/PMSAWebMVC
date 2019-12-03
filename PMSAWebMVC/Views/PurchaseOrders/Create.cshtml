@@ -9,16 +9,45 @@
 
 <div class="card mb-3">
     <div class="card-header">
-        <i class="fab fa-wpforms"></i> 採購單
+        <i class="fab fa-wpforms"></i> 採購單資訊
     </div>
-    <div class="card-body">
+    <div class="card-body pb-0">
         <div class="form-horizontal">
-            <div class="form-group row">
-                @Html.LabelFor(m => m.SelectedPurchaseRequisitionID, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-5">
+            <div class="row mb-0 align-items-center">
+
+                @Html.LabelFor(m => m.SelectedPurchaseRequisitionID, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
+                <div class="col-md-3">
                     @Html.DropDownListFor(m => m.SelectedPurchaseRequisitionID, Model.PurchaseRequisitionList, "請選擇", htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.SelectedPurchaseRequisitionID, "", new { @class = "text-danger" })
                 </div>
+
+                <div class="w-100"></div>
+
+                <div class="card-body mb-0 pb-0 pt-2 border-top mt-3">
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <strong>請購人員</strong>
+                            <br>
+                            <p class="text-muted">邱利雯</p>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <strong>請購日期</strong>
+                            <br>
+                            <p class="text-muted">2019/11/20</p>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <strong>電子信箱</strong>
+                            <br>
+                            <p class="text-muted">as123471@yahoo.com</p>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <strong>聯絡電話</strong>
+                            <br>
+                            <p class="text-muted">02-5656788#13</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

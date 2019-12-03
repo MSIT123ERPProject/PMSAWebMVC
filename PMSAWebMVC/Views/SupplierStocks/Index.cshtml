@@ -14,11 +14,10 @@
         <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
     </div>
     <div class="card-body">
-        <div class="dataTables_wrapper">
-            <table class="nowrap dataTable dtr-column collapsed" id="dataTable" cellspacing="0" style="width:100%">
+        <div class="table-responsive">
+            <table class="table" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
                     <tr role="row">
-
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -45,7 +44,6 @@
                 </thead>
                 <tfoot>
                     <tr>
-
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -89,7 +87,7 @@
                     $("#dataTable").DataTable().destroy();
                 }
               //  $.fn.dataTable.ext.errMode = 'throw';
-         table=        $('#dataTable').DataTable({
+         table=$('#dataTable').DataTable({
                   "ajax": {
                         "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
                         "type": "GET",
@@ -111,8 +109,8 @@
                             targets: -1,
                         }
                     ],
-                    "columns": [
-                        { "data": "SourceListID" },
+             "columns": [
+                 { "data": "SourceListID", orderable: true },
                         { "data": "PartNumber" },
                         { "data": "QtyPerUnit" },
                         { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
@@ -125,16 +123,19 @@
                             }
                         },
                         {
-                            "data": "SourceListID",
+                            "data": null,
                             orderable: false,
                             className: 'control',
                             render: function (data, type, row, meta) {
-                                return '';
+                                return '<a><i class="fas fa-fw fa-table"></i></a>';
                             }
                         }
                     ],
                     fixedColumns: {
                         leftColumns: 2,
+             },
+                      language: {
+                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
                     },
                     "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
                     "order": [[1, "asc"]],
@@ -191,7 +192,11 @@
                             });
                     }
                     else {
-                        toastr.error("已取消", "通知");
+<<<<<<< HEAD
+                        toastr.error("庫存不得小於零", "通知");
+=======
+                        toastr.error("庫存不得小於零", "警告");
+>>>>>>> 227ad28af608cfa1d660e3eb15412f28ca79b8d1
                     }
                 });
         }

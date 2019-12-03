@@ -53,7 +53,22 @@
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).PartName)
                 </td>
                 <td>
-                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                    @*出貨數量的調整要寫在這*@
+                    @if (Model.orderDtlItems.ElementAt(i).Unship == true)
+                    {
+                        if (Model.orderDtlItemCheckeds[i].IsEnough)
+                        {
+                            @Html.TextBoxFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                        }
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).QtyPerUnit)

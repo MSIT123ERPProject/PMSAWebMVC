@@ -37,23 +37,23 @@
         <h6 class="m-0 font-weight-bold text-primary">  採購單</h6>
     </div>
     <div class="card-body">
-        <div class="dataTables_wrapper">
-            <table class="nowrap dataTable dtr-column collapsed" id="dataTable" cellspacing="0" style="width:100%">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered tablesaw tablesaw-stack" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
                     <tr>
                         @*<th></th>*@
-                        @*<th>採購單狀態</th>*@
-                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>
-                        @*<th>採購單編號</th>*@
-                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>
-                        @*<th>收貨人名稱</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
-                        @*<th>收貨人電話</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>
-                        @*<th>收貨人手機</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>
-                        @*<th>收貨人地址</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>
+                        <th>採購單狀態</th>
+                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
+                        <th>採購單編號</th>
+                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>*@
+                        <th>收貨人名稱</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiverName)</th>*@
+                        <th>收貨人電話</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>*@
+                        <th>收貨人手機</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>*@
+                        <th>收貨人地址</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
                         <th></th>
                         <th></th>
                     </tr>
@@ -61,18 +61,18 @@
                 <tfoot>
                     <tr>
                         @*<th></th>*@
-                        @*<th>採購單狀態</th>*@
-                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>
-                        @*<th>採購單編號</th>*@
-                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>
-                        @*<th>收貨人名稱</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
-                        @*<th>收貨人電話</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>
-                        @*<th>收貨人手機</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>
-                        @*<th>收貨人地址</th>*@
-                        <th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>
+                        <th>採購單狀態</th>
+                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
+                        <th>採購單編號</th>
+                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>*@
+                        <th>收貨人名稱</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiverName)</th>*@
+                        <th>收貨人電話</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>*@
+                        <th>收貨人手機</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>*@
+                        <th>收貨人地址</th>
+                        @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
                         <th></th>
                         <th></th>
                     </tr>
@@ -169,7 +169,10 @@
                             return "";
                         }
                     }
-                 ],
+                ],
+                   language: {
+                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                    },
                  "lengthMenu":[[10,25,50,75,100,-1],[10,25,50,75,100,"All"]],
                 "order": [[1,"desc"]],
             });

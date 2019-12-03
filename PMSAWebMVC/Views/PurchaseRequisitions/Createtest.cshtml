@@ -14,10 +14,10 @@
     <div class="card-body">
         <div class="form-horizontal">
             <div class="form-group row">
-                @Html.LabelFor(m => m.SelectedProductNume, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(m => m.SelectedProductName, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-5">
-                    @Html.DropDownListFor(m => m.SelectedProductNume, Model.ProductList, "請選擇", htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.SelectedProductNume, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(m => m.SelectedProductName, Model.ProductList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SelectedProductName, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
@@ -60,17 +60,45 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Qty, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @class = "form-control" } })
-                @*@Html.EditorFor(model => model.MOQ, new { htmlAttributes = new { @class = "form-control" } })*@
-                @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
-            </div>
+            @*<div class="col-md-10">*@
+            @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
+            @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+            @*</div>*@
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateRequired, htmlAttributes: new { @class = "control-label col-md-2" })
+            @*<div class="col-md-10">*@
+            @Html.EditorFor(model => model.DateRequired, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
+            @Html.ValidationMessageFor(model => model.DateRequired, "", new { @class = "text-danger" })
+            @*</div>*@
         </div>
 
+
+        @*@using (Html.BeginForm("GetPurchaseRequisitionsDtlTab", "PurchaseRequisitions", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="card mb-3">
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-warning" id="warning">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                @TempData["ErrorMessage"]
+                            </div>
+                        }
+                        <div class="table-responsive" id="dataTablesContainer"></div>
+                </div>*@
+        <div class="form-group">
+            <div class="d-flex justify-content-center">
+                <button id="btnSubmit1" type="submit" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>新增</button>
+            </div>
+        </div>
+        @*}*@
     </div>
 </div>
 
-@using (Html.BeginForm("Create", "PurchaseRequisitions", FormMethod.Post))
+
+
+@using (Html.BeginForm("Createtest", "PurchaseRequisitions", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     <div class="card mb-3">
@@ -91,10 +119,11 @@
 
     <div class="form-group">
         <div class="d-flex justify-content-center">
-            <button id="btnSubmit" type="submit" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>送出申請</button>
+            @Html.ActionLink("送出申請", "CreatePR", null, new { @class = "btn btn-success btn-block" })
+            @*<button id="btnSubmit2" type="button" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>送出申請</button>*@
         </div>
     </div>
-
+   
 }
 
 @section scripts
@@ -102,13 +131,15 @@
     <script>
         $(document).ready(function () {
 
+            load();
+
             let PartListUrl = '@Url.Action("GetPartList", "PurchaseRequisitions")';
             let PartList = $('#SelectedPartName');
             $("#btnSubmit").prop("disabled", true);
 
-            $('#SelectedProductNume').change(function() {
+            $('#SelectedProductName').change(function() {
               PartList.empty();
-            $("#dataTablesContainer").html('');
+            //$("#dataTablesContainer").html('');
                 $.getJSON(PartListUrl, { id: $(this).val() }, function (data) {
                 if (!data) {
                     return;
@@ -127,7 +158,7 @@
 
             $('#SelectedPartName').change(function() {
             supplierList.empty();
-            $("#dataTablesContainer").html('');
+            //$("#dataTablesContainer").html('');
             $.getJSON(supplierListUrl, { id: $(this).val() }, function (data) {
                 if (!data) {
                     return;
@@ -140,19 +171,21 @@
             });
             })
 
-
-            $('#SelectedPartName').change(function () {//查詢料件名稱
+            $('#btnSubmit1').click(function () {//查詢暫存請購明細並存在站存表
                 $.ajax({
-                    url: "@Url.Action("GetPurchaseRequisitionsDtlList", "PurchaseRequisitions")",//取得請購單明細資料集,請購單
+                    url: "@Url.Action("GetPurchaseRequisitionsDtlTab", "PurchaseRequisitions")",//取得請購單明細資料集,請購單
                     type: "get",
                     data: {
-                        Name: $("#SelectedProductNume").val(),//查詢產品(ID)名稱
-                        partNumber: $("#SelectedPartName").val()//查詢料件名稱
+                        DateRequired: $("#DateRequired").val(),//傳回需求日期
+                        Qty: $("#Qty").val(),//傳回請購數量
+                        SupplierCode: $("#SelectedSupplierName").val(),
+                        productName: $("#SelectedProductName").val(),
+                        partNumber: $("#SelectedPartName").val()
                     },
                 }).done(function (result) {
                     $("#dataTablesContainer").html(result);
                     $("#warning").remove();
-                    $("#ProductNume").val($("#SelectedProductNume").val());//產品名稱(ID),查詢產品名稱
+                    $("#ProductNume").val($("#SelectedProductName").val());//產品名稱(ID),查詢產品名稱
 
                     //全選、全勾消
                     $("input[name=chkAll]").change(function () {
@@ -162,7 +195,7 @@
                     $("#btnSubmit").prop("disabled", false);
                 }).fail(function (e) {
                     alert(e.responseText);
-                    });
+                });
 
                 $.fn.dataTable.ext.errMode = 'throw';
 
@@ -172,11 +205,31 @@
                         ordering: false,
                         searching: false,
                         language: {
-                            url: "@Url.Content("~/Scripts/dataTables_js/i18n/Chinese-traditional.json")",
-                        },
-                    }
-                );
+                            url: "@Url.Content("~/Scripts/dataTables_js / i18n / Chinese - traditional.json")",
+                                  },
+                    });
             })
+
         });
+        function load() {
+            $.ajax({
+                    url: "@Url.Action("load", "PurchaseRequisitions")",//取得請購單明細資料集,請購單
+                    type: "get",
+            }).done(function (result) {
+                
+                    $("#dataTablesContainer").html(result);
+                    //$("#warning").remove();
+                    //$("#ProductNume").val($("#SelectedProductName").val());//產品名稱(ID),查詢產品名稱
+
+                    ////全選、全勾消
+                    //$("input[name=chkAll]").change(function () {
+                    //    let checked = $(this).prop("checked");
+                    //    $("#dataTable > tbody input:checkbox").prop("checked", checked);
+                    //});
+                    $("#btnSubmit1").prop("disabled", false);
+                }).fail(function (e) {
+                    alert(e.responseText);
+                });
+        }
     </script>
 }

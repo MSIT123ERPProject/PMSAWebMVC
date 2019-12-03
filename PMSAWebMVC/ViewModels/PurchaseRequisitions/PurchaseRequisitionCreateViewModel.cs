@@ -42,39 +42,49 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
 
     public class PurchaseRequisitionDtlItem//請購單明細模型
     {
-        [Display(Name = "選取")]
-        public bool Checked { get; set; }
+        [Display(Name = "請購單暫存識別碼")]
+        public int PurchaseRequisitionOID { get; set; }//請購單識別碼
+        [Display(Name = "產品編號")]
+        public string ProductNumber { get; set; }//產品料件編號
+        [Display(Name = "產品名稱")]
+        public string ProductName { get; set; }
+        [Display(Name = "員工編號")]
+        public string EmployeeID { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        [Display(Name = "產生日期")]
+        public DateTime PRBeginDate { get; set; }
+        [Display(Name = "處理狀態")]
+        public string ProcessStatus { get; set; }
+        [Display(Name = "簽核狀態")]
+        public string SignStatus { get; set; }
+        [Display(Name = "簽核流程表識別碼")]
+        public string SignFlowOID { get; set; }
+
+
+        [Display(Name = "請購單明細識別碼")]
+        public int PurchaseRequisitionDtlOID { get; set; }//請購單明細識別碼
         [Display(Name = "料件編號")]
         public string PartNumber { get; set; }
-        [Display(Name = "品名")]
+        [Display(Name = "料件名稱")]
         public string PartName { get; set; }
+        [Display(Name = "請購數量")]
+        public int Qty { get; set; }
+        [Display(Name = "建議供應商名稱")]
+        public string SupplierName { get; set; }
+        [Display(Name = "建議供應商編號")]
+        public string SuggestSupplierCode { get; set; }
+        [Display(Name = "需求日期")]
+        public DateTime DateRequired { get; set; }//需求日期
+
+
+        [Display(Name = "選取")]
+        public bool Checked { get; set; }
         [DisplayFormat(DataFormatString = "{0:C0}")]
         [DataType(DataType.Currency)]
         [Display(Name = "單價")]
         public int OriginalUnitPrice { get; set; }
-        [Display(Name = "數量")]
-        public int Qty { get; set; }
-        [Display(Name = "供應商名稱")]
-        public string SupplierName { get; set; }
-        [DisplayFormat(DataFormatString = "{0:P0}")]
-        [Column(TypeName = "decimal(3, 2)")]
-        [Display(Name = "折扣")]
-        public decimal Discount { get; set; }
-        [DisplayFormat(DataFormatString = "{0:C0}")]
-        [DataType(DataType.Currency)]
-        [Display(Name = "金額")]
-        public int Total { get; set; }
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DataType(DataType.Date)]
-        [Display(Name = "要求到貨日期")]
-        public DateTime DateRequired { get; set; }//需求日期
-        public string SourceListID { get; set; }//貨源清單編號
-        public int PurchaseRequisitionOID { get; set; }//請購單識別碼
-        public int QtyPerUnit { get; set; }//單價
-        public int TotalPartQty { get; set; }//總訂貨量
-        public string ProductNumber { get; set; }//產品料件編號
-        public int PurchaseRequisitionDtlOID { get; set; }//請購單明細識別碼
-        public int PurchaseUnitPrice { get; set; }//購買單價
+
     }
     //資料庫相關方法
     public class Repository
@@ -166,7 +176,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         }
 
         //取得請購單明細資料集
-        public static IEnumerable<PurchaseRequisitionDtlItem> GetPurchaseRequisitionDtlList(string productNumber, string partNumber)
+        public static IEnumerable<PurchaseRequisitionDtlItem> GetPurchaseRequisitionDtlList(string employeeID)
         {
             IEnumerable<PurchaseRequisitionDtlItem> pods = null;//建立空的請購單明細模型
             DateTime now = DateTime.Now;
@@ -174,51 +184,94 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
             now = new DateTime(now.Year, now.Month, now.Day);//取現在時間
             //取得顯示資料
             using (PMSAEntities db = new PMSAEntities())
-            { 
-                var podq = from pr in db.Product//產品
-                           join prp in db.ProductPart//產品料件
-                            on new { pr.ProductNumber, ID = pr.ProductNumber } equals//產品編號一樣的話
-                            new { prp.ProductNumber, ID = productNumber }
-                           join s1 in db.SourceList//貨源清單
-                           on new { prp.PartNumber ,number=prp.PartNumber  } equals
-                           new { s1.PartNumber ,number=partNumber}
-                           //where !s1.SourceListDtl.Where(d => d.DiscountBeginDate <= now && d.DiscountEndDate >= now).Any()//檢查是否過期
-                           orderby pr.ProductNumber//用產品料件編號排序
+            {
+                var podq = from prt in db.PurchaseRequisitionTemp
+                           join prdt in db.PurchaseRequisitionDtlTemp
+                           on new { prt.PurchaseRequisitionOID } equals new { prdt.PurchaseRequisitionOID }
+                           orderby prdt.PurchaseRequisitionDtlOID descending
                            select new PurchaseRequisitionDtlItem
                            {
-                               PartNumber = prp.PartNumber,//料件編號=產品料件明細的
-                               PartName = prp.Part.PartName,//料件名稱=料件的
-                               QtyPerUnit = s1.QtyPerUnit,//批量=貨源清單的
-                               OriginalUnitPrice = s1.UnitPrice,//價格=貨源清單的
-                               Qty = s1.QtyPerUnit,//請購數量=貨源清單.最小訂貨量
-                               SupplierName=s1.SupplierInfo.SupplierName,//取供應商名稱
-                               SourceListID = s1.SourceListID,//貨源清單ID=貨源清單的
-                               ProductNumber = prp.ProductNumber//料件編號=料件產品的
+                               PurchaseRequisitionOID=prt.PurchaseRequisitionOID,
+                               EmployeeID = prt.EmployeeID,
+                               PRBeginDate=prt.PRBeginDate,
+                               PartNumber = prdt.PartNumber,
+                               PartName = prdt.Part.PartName,
+                               
+                               Qty = prdt.Qty,
+                               SupplierName = prdt.SupplierInfo.SupplierName,
+                               DateRequired = prdt.DateRequired,
+                               ProductNumber=prt.ProductNumber,
+                               ProductName=prt.Product.ProductName,
+                               PurchaseRequisitionDtlOID=prdt.PurchaseRequisitionDtlOID
                            };
+
                 pods = podq.ToList();
-            }
-            //設定折扣
-            foreach (PurchaseRequisitionDtlItem item in pods)//採購單明細
-            {
-                using (PMSAEntities db = new PMSAEntities())//用資料庫
+                int id = 0;
+
+                if (pods.Count() == 0)
                 {
-                    IEnumerable<SourceListDtl> sldq = db.SourceListDtl.Where(s =>//用貨源清單明細的資料
-                    s.SourceListID == item.SourceListID &&//取出貨源清單編號
-                    s.DiscountBeginDate <= now &&
-                    s.DiscountEndDate >= now).OrderBy(o => o.QtyDemanded);//檢查是否過期
-                    foreach (SourceListDtl sld in sldq) //從篩選的資料裡面取得
+                    var prt = from prtt in db.PurchaseRequisitionTemp
+                              where (prtt.EmployeeID == employeeID)
+                              select prtt;
+                    if (prt.Count() > 0)
                     {
-                        if (item.Qty >= sld.QtyDemanded)//如果採購批量數量大於需求量的話(自動算折扣)
+                        foreach (var de in prt)
                         {
-                            item.Discount = sld.Discount;//取折扣
+                            id = de.PurchaseRequisitionOID;
+                            db.PurchaseRequisitionTemp.Remove(de);
                         }
+                        db.SaveChanges();
                     }
-                    item.TotalPartQty = item.QtyPerUnit * item.Qty;//請購料件總數=批量*請購數量
-                    item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - item.Discount));//購買單價=批量原始單價*(1-折扣)
-                    item.Total = item.PurchaseUnitPrice * item.Qty;//總價格=單價*數量
-                    //item.DateRequired = item.DateRequired.AddDays(-7);//要求到貨日期
+                    
+                    
                 }
+
+
+                //var podq = from pr in db.Product//產品
+                //           join prp in db.ProductPart//產品料件
+                //            on new { pr.ProductNumber} equals//產品編號一樣的話
+                //            new { prp.ProductNumber}
+                //           join s1 in db.SourceList//貨源清單
+                //           on new { prp.PartNumber  } equals
+                //           new { s1.PartNumber }
+                //           //where !s1.SourceListDtl.Where(d => d.DiscountBeginDate <= now && d.DiscountEndDate >= now).Any()//檢查是否過期
+                //           orderby pr.ProductNumber//用產品料件編號排序
+                //           select new PurchaseRequisitionDtlItem
+                //           {
+                //               PartNumber = prp.PartNumber,//料件編號=產品料件明細的
+                //               PartName = prp.Part.PartName,//料件名稱=料件的
+                //               QtyPerUnit = s1.QtyPerUnit,//批量=貨源清單的
+                //               OriginalUnitPrice = s1.UnitPrice,//價格=貨源清單的
+                //               Qty = s1.QtyPerUnit,//請購數量=貨源清單.最小訂貨量
+                //               SupplierName=s1.SupplierInfo.SupplierName,//取供應商名稱
+                //               SourceListID = s1.SourceListID,//貨源清單ID=貨源清單的
+                //               ProductNumber = prp.ProductNumber,//料件編號=料件產品的
+                //               ProductName=pr.ProductName
+                //           };
+                //pods = podq.ToList();
             }
+            ////設定折扣
+            //foreach (PurchaseRequisitionDtlItem item in pods)//採購單明細
+            //{
+            //    using (PMSAEntities db = new PMSAEntities())//用資料庫
+            //    {
+            //        IEnumerable<SourceListDtl> sldq = db.SourceListDtl.Where(s =>//用貨源清單明細的資料
+            //        s.SourceListID == item.SourceListID &&//取出貨源清單編號
+            //        s.DiscountBeginDate <= now &&
+            //        s.DiscountEndDate >= now).OrderBy(o => o.QtyDemanded);//檢查是否過期
+            //        foreach (SourceListDtl sld in sldq) //從篩選的資料裡面取得
+            //        {
+            //            if (item.Qty >= sld.QtyDemanded)//如果採購批量數量大於需求量的話(自動算折扣)
+            //            {
+            //                item.Discount = sld.Discount;//取折扣
+            //            }
+            //        }
+            //        item.TotalPartQty = item.QtyPerUnit * item.Qty;//請購料件總數=批量*請購數量
+            //        item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - item.Discount));//購買單價=批量原始單價*(1-折扣)
+            //        item.Total = item.PurchaseUnitPrice * item.Qty;//總價格=單價*數量
+            //        //item.DateRequired = item.DateRequired.AddDays(-7);//要求到貨日期
+            //    }
+            //}
 
             ////寫入暫存資料表
             //using (PMSAEntities db = new PMSAEntities())
@@ -298,20 +351,30 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
     {
         [Required(ErrorMessage = "請選擇產品")]
         [Display(Name = "產品名稱")]
-        public string SelectedProductNume { get; set; }
+        public string SelectedProductName { get; set; }
         [Required(ErrorMessage = "請選擇料件")]
         [Display(Name = "料件名稱")]
         public string SelectedPartName { get; set; }
         [Required(ErrorMessage = "請選擇建議供應商")]
-        [Display(Name = "供應商名稱")]
+        [Display(Name = "建議供應商")]
         public string SelectedSupplierName { get; set; }
-
-
+        
+       
         public SelectList ProductList { get; set; }
         public SelectList PartList { get; set; }
-        public SelectList DateRequired { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "需求日期")]
+        public System.DateTime DateRequired { get; set; }
+        [Display(Name = "請購數量")]
         public int Qty { get; set; }
-
+        [Display(Name = "建議供應商")]
+        public string SupplierName { get; set; }
+        [Display(Name = "產品名稱")]
+        public string ProductName { get; set; }
+        [Display(Name = "料件名稱")]
+        public string PartName { get; set; }
+        public string PurchaseRequisitionDtlOID { get; set; }
         //TODO: 應是多筆的狀況，之後需作修正
         public string ProductNumber { get; set; }
         //public string ProductName { get; set; }

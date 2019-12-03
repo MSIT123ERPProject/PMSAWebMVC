@@ -10,6 +10,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace PMSAWebMVC.Controllers
 {
     public class PurchaseRequisitionsController : BaseController
@@ -113,6 +114,9 @@ namespace PMSAWebMVC.Controllers
             ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
             return View(purchaseRequisition);
         }
+
+        
+
 
         // GET: PurchaseRequisitions/Edit/5
         public ActionResult Edit(string id)
@@ -273,51 +277,364 @@ namespace PMSAWebMVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        //取得請購單明細資料集
-        [HttpGet]
-        public ActionResult GetPurchaseRequisitionsDtlList(string Name, string partNumber)
-        {
-            string PrNuber = "";
-            var find = from prn in db.Product   //產品名轉產品編號
-                       where prn.ProductName == Name
-                       select prn;
-            foreach (var item in find)
-            {
-                PrNuber = item.ProductNumber;
-            }
+        ////取得請購單明細資料集
+        //[HttpGet]
+        //public ActionResult GetPurchaseRequisitionsDtlList(string Name, string partNumber)
+        //{
+        //    string PrNuber = "";
+        //    var find = from prn in db.Product   //產品名轉產品編號
+        //               where prn.ProductName == Name
+        //               select prn;
+        //    foreach (var item in find)
+        //    {
+        //        PrNuber = item.ProductNumber;
+        //    }
           
 
-            Repository rep = new Repository();
-            //string c = User.Identity.GetRealName();
-            var data = Repository.GetPurchaseRequisitionDtlList(PrNuber, partNumber);
-            IList<PurchaseRequisitionDtlItemChecked> resultSet = new List<PurchaseRequisitionDtlItemChecked>();
-            foreach (var item in data)
+        //    Repository rep = new Repository();
+        //    //string c = User.Identity.GetRealName();
+        //    var data = Repository.GetPurchaseRequisitionDtlList(PrNuber, partNumber);
+        //    IList<PurchaseRequisitionDtlItemChecked> resultSet = new List<PurchaseRequisitionDtlItemChecked>();
+        //    foreach (var item in data)
+        //    {
+        //        PurchaseRequisitionDtlItemChecked pod = new PurchaseRequisitionDtlItemChecked
+        //        {
+        //            ProductNumber = item.ProductNumber,//產品編號
+        //            PurchaseRequisitionDtlOID = item.PurchaseRequisitionDtlOID,//請購單識別碼
+        //            Checked = false//確認按鈕
+        //        };
+        //        resultSet.Add(pod);
+        //    }
+        //    PurchaseRequisitionCreateViewModel vm = new PurchaseRequisitionCreateViewModel
+        //    {
+        //        PurchaseRequisitionDtlSetVM = data,
+        //        CheckedResultSetVM = resultSet
+        //    };
+        //    vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;
+        //    return PartialView("_CreatePRItemPartial", vm);//注意
+        //}
+
+        ////新增寫進資料庫
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Createtest([Bind(Include = "PurchaseRequisitionOID,PurchaseRequisitionID,ProductNumber,EmployeeID,PRBeginDate,ProcessStatus,SignStatus,SignFlowOID")] PurchaseRequisition purchaseRequisition)
+        //{
+        //    int z = 1;
+        //    string x = "", year, month, day;
+        //    year = DateTime.Now.Year.ToString();
+        //    month = DateTime.Now.Month.ToString();
+        //    day = DateTime.Now.Day.ToString();
+        //    x = year + month + day;
+        //    string y = "PR-" + x + "-00" + z.ToString();
+
+        //    for (int i = 0; i < db.PurchaseRequisition.Count(); i++)
+        //    {
+        //        PurchaseRequisition test = db.PurchaseRequisition.Find(y);
+        //        if (z < 9)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = "PR-" + x + "-00" + z.ToString();
+        //                test = db.PurchaseRequisition.Find(y);
+        //            }
+        //        }
+        //        else if (z < 99)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = "PR-" + x + "-0" + z.ToString();
+        //                test = db.PurchaseRequisition.Find(y);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = "PR-" + x + "-" + z.ToString();
+        //                test = db.PurchaseRequisition.Find(y);
+        //            }
+        //        }
+
+
+        //    }
+            
+        //    purchaseRequisition.EmployeeID = "CE00002";
+        //    purchaseRequisition.ProcessStatus = "N";
+        //    purchaseRequisition.SignStatus = "S";
+        //    purchaseRequisition.PurchaseRequisitionID = y;
+        //    //PurchaseRequisitionID請購單編號=PR-yyyyMMdd-3碼流水號(PR-20191023-001)
+        //    if (ModelState.IsValid)
+        //    {
+        //        purchaseRequisition.PRBeginDate = DateTime.Now;
+        //        db.PurchaseRequisition.Add(purchaseRequisition);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseRequisition.EmployeeID);
+        //    ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName", purchaseRequisition.ProductNumber);
+        //    ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
+        //    return View(purchaseRequisition);
+        //}
+
+        //取得請購單明細資料集並且將資料寫入暫存表中
+        [HttpGet]
+        public ActionResult GetPurchaseRequisitionsDtlTab(System.DateTime dateRequired, int qty,string supplierCode, string productName,string partNumber)
+        {
+            if (qty == 0||supplierCode==""||productName==""||partNumber=="")
             {
-                PurchaseRequisitionDtlItemChecked pod = new PurchaseRequisitionDtlItemChecked
-                {
-                    ProductNumber = item.ProductNumber,//產品編號
-                    PurchaseRequisitionDtlOID = item.PurchaseRequisitionDtlOID,//請購單識別碼
-                    Checked = false//確認按鈕
-                };
-                resultSet.Add(pod);
+                return Json(new { a = 1 }, JsonRequestBehavior.AllowGet);
             }
+            PurchaseRequisitionTemp prt = new PurchaseRequisitionTemp();
+            PurchaseRequisitionDtlTemp prdt = new PurchaseRequisitionDtlTemp();
+
+
+            string SuName = "";
+            var find = from su in db.SupplierInfo   //供應商編號轉名稱
+                       where su.SupplierCode == supplierCode
+                       select su;
+            foreach (var item in find)
+            {
+                SuName = item.SupplierName;
+            }
+
+            string PtName = "";
+            var find1 = from pr in db.Part   //料件編號轉料件名稱
+                       where pr.PartNumber == partNumber
+                       select pr;
+            foreach (var item in find1)
+            {
+                PtName = item.PartName;
+            }
+
+            string PrNumber = "";
+            var find2 = from pr in db.Product   //供應商編號轉名稱
+                       where pr.ProductName == productName
+                       select pr;
+            foreach (var item in find2)
+            {
+                PrNumber = item.ProductNumber;
+            }
+
+            PurchaseRequisitionTemp purchaseRequisitionTemp = new PurchaseRequisitionTemp(); //new請購單暫存表實體
+            purchaseRequisitionTemp.ProductNumber = PrNumber;
+            var user = User.Identity.GetEmployee();
+            purchaseRequisitionTemp.EmployeeID = user.EmployeeID;
+            purchaseRequisitionTemp.ProcessStatus = "N";
+            purchaseRequisitionTemp.SignStatus = "S";
+            //purchaseRequisitionTemp.PurchaseRequisitionID = y;
+            var prtdata1 = from prtt1 in db.PurchaseRequisitionTemp   //取得全部暫存表
+                          select prtt1;
+            var prtdata2 = prtdata1.ToList();
+            if (prtdata2.Count() == 0)
+            {
+                if (ModelState.IsValid)//丟資料庫
+                {
+                    purchaseRequisitionTemp.PRBeginDate = DateTime.Now;
+                    db.PurchaseRequisitionTemp.Add(purchaseRequisitionTemp);
+
+                    db.SaveChanges();
+                }
+            }
+        
+
+            PurchaseRequisitionDtlTemp purchaseRequisitionDtlTemp = new PurchaseRequisitionDtlTemp();//new請購單明細暫存表
+            int OID;
+            var prtdata = from prtt in db.PurchaseRequisitionTemp   //取得全部暫存表
+                          select prtt;
+            var find4 = prtdata.Where(f => f.EmployeeID == purchaseRequisitionTemp.EmployeeID);//判斷採購人員
+            OID = find4.Max(f=>f.PurchaseRequisitionOID); //取得最新請購單暫存識別碼
+            purchaseRequisitionDtlTemp.PurchaseRequisitionOID = OID;
+            purchaseRequisitionDtlTemp.PartNumber = partNumber;
+            purchaseRequisitionDtlTemp.Qty = qty;
+            purchaseRequisitionDtlTemp.SuggestSupplierCode = supplierCode;
+            purchaseRequisitionDtlTemp.DateRequired = dateRequired;
+            if (ModelState.IsValid)//丟資料庫
+            {
+                db.PurchaseRequisitionDtlTemp.Add(purchaseRequisitionDtlTemp);
+                db.SaveChanges();
+            }
+
+            
+            var data = Repository.GetPurchaseRequisitionDtlList(purchaseRequisitionTemp.EmployeeID);
             PurchaseRequisitionCreateViewModel vm = new PurchaseRequisitionCreateViewModel
             {
-                PurchaseRequisitionDtlSetVM = data,
-                CheckedResultSetVM = resultSet
+                PurchaseRequisitionDtlSetVM = data, //採購單明細設定模型
+               
             };
-            vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;
-            return PartialView("_CreatePRItemPartial", vm);//注意
+            vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;//採購單識別碼
+
+
+
+            return PartialView("_CreatePRItemPartial",vm);//注意
+        }
+        [HttpGet] //資料寫入請購單
+        public ActionResult CreatePR()
+        {
+            
+            var user = User.Identity.GetEmployee();
+
+            var prtdata = from prt in db.PurchaseRequisitionTemp   //取得暫存表
+                          where prt.EmployeeID == user.EmployeeID
+                          select prt;
+            var prtdata2 = prtdata.ToList();
+            if (prtdata2.Count() > 0)
+            {
+                PurchaseRequisition purchaseRequisition = new PurchaseRequisition();//請購單
+                
+                List<PurchaseRequisitionDtl> purchaseRequisitionDtllist = new List<PurchaseRequisitionDtl>();//請購單明細陣列
+
+                int z = 1; //建立請購單編號
+                string x = "", year, month, day;
+                year = DateTime.Now.Year.ToString();
+                month = DateTime.Now.Month.ToString();
+                day = DateTime.Now.Day.ToString();
+                if (DateTime.Now.Day < 10) { day = "0" + day; }
+                if (DateTime.Now.Month < 10) { month = "0" + month; }
+                x = year + month + day;
+                string y = "PR-" + x + "-00" + z.ToString();
+
+                for (int i = 0; i < db.PurchaseRequisition.Count(); i++)
+                {
+                    PurchaseRequisition test = db.PurchaseRequisition.Find(y);
+                    if (z < 9)
+                    {
+                        if (test != null)
+                        {
+                            z += 1;
+                            y = "PR-" + x + "-00" + z.ToString();
+                            test = db.PurchaseRequisition.Find(y);
+                        }
+                    }
+                    else if (z < 99)
+                    {
+                        if (test != null)
+                        {
+                            z += 1;
+                            y = "PR-" + x + "-0" + z.ToString();
+                            test = db.PurchaseRequisition.Find(y);
+                        }
+                    }
+                    else
+                    {
+                        if (test != null)
+                        {
+                            z += 1;
+                            y = "PR-" + x + "-" + z.ToString();
+                            test = db.PurchaseRequisition.Find(y);
+                        }
+                    }
+                }
+                purchaseRequisition.PurchaseRequisitionID = y;  //寫入請購單
+                purchaseRequisition.ProductNumber = prtdata2[0].ProductNumber;
+                purchaseRequisition.EmployeeID = prtdata2[0].EmployeeID;
+                purchaseRequisition.PRBeginDate = DateTime.Now;
+                purchaseRequisition.ProcessStatus = "N";
+                purchaseRequisition.SignStatus = "S";
+
+
+                var prdtdata = from prdt in db.PurchaseRequisitionDtlTemp   //取得請購明細暫存表
+                               where prdt.PurchaseRequisitionTemp.EmployeeID== user.EmployeeID
+                               select prdt;
+                var prdtdata2 = prdtdata.ToList();
+                int ii = 1;  
+                foreach (var prdt in prdtdata2)//寫入請購單明細
+                {
+                    PurchaseRequisitionDtl purchaseRequisitionDtl = new PurchaseRequisitionDtl();//請購單明細
+                    string iii="";
+                    if (ii < 10) {  iii = y + "-" + "00" + ii; }
+                    else if (ii < 100) {  iii = y + "-" + "0" + ii; }
+                    else  {  iii = y + "-" + ii; }
+                    
+                    purchaseRequisitionDtl.PurchaseRequisitionDtlCode =iii ;
+                    purchaseRequisitionDtl.PurchaseRequisitionID = y;
+                    purchaseRequisitionDtl.PartNumber = prdt.PartNumber;
+                    purchaseRequisitionDtl.Qty = prdt.Qty;
+                    purchaseRequisitionDtl.SuggestSupplierCode = prdt.SuggestSupplierCode;
+                    purchaseRequisitionDtl.DateRequired = prdt.DateRequired;
+                    purchaseRequisitionDtllist.Add(purchaseRequisitionDtl);
+                    db.PurchaseRequisitionDtlTemp.Remove(prdt);
+                    ii += 1;
+                    
+                }
+                purchaseRequisitionDtllist.ToList();
+                
+                if (ModelState.IsValid)//丟資料庫
+                {
+                   
+                    db.PurchaseRequisition.Add(purchaseRequisition);
+                    foreach (var p in purchaseRequisitionDtllist)
+                    {
+                        db.PurchaseRequisitionDtl.Add(p);
+                    }
+                db.SaveChanges();
+                }
+
+                return RedirectToAction("Index");
+              
+            }
+            else
+            {
+                return Json(new { a = 1 }, JsonRequestBehavior.AllowGet);
+            }
+
+            
+        }
+        public ActionResult load() //請購單暫存明細刪除
+        {
+            var user = User.Identity.GetEmployee();
+            var data = Repository.GetPurchaseRequisitionDtlList(user.EmployeeID);
+            PurchaseRequisitionCreateViewModel vm = new PurchaseRequisitionCreateViewModel
+            {
+                PurchaseRequisitionDtlSetVM = data, //採購單明細設定模型
+
+            };
+            if (data.Count()>0)
+            {
+                vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;//採購單識別碼
+                return PartialView("_CreatePRItemPartial", vm);//注意
+            }
+            return Json(new { a = 1 },JsonRequestBehavior.AllowGet);
+
         }
 
+            public ActionResult Deletetest(string id) //請購單暫存明細刪除
+        {
+            //try
+            //{
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                PurchaseRequisitionDtlTemp purchaseRequisitionDtlTemp = db.PurchaseRequisitionDtlTemp.Find(int.Parse(id));
+                if (purchaseRequisitionDtlTemp == null)
+                {
+                    return HttpNotFound();
+                }
+                db.PurchaseRequisitionDtlTemp.Remove(purchaseRequisitionDtlTemp);
+                db.SaveChanges();
+
+                return RedirectToAction("Createtest");
+            //}
+            //catch
+            //{
+            //    //return RedirectToAction("Index");
+            //    return Content("<script> alert('刪除失敗');window.location.href='../Index'</script>");
+            //    //return Content("")
+            //}
+
+        }
         private void ConfigureViewModel(PurchaseRequisitionCreateViewModel model)
         {
             //參考資料：https://dotnetfiddle.net/PBi075
             IList<ProductItem> Product = Repository.GetProductList();
             model.ProductList = new SelectList(Product, "ProductNameValue", "ProductNameDisplay");
-            if (!string.IsNullOrEmpty(model.SelectedProductNume))
+            if (!string.IsNullOrEmpty(model.SelectedProductName))
             {
-                IEnumerable<PartItem> parts = Repository.GetPartList(model.SelectedProductNume);
+                IEnumerable<PartItem> parts = Repository.GetPartList(model.SelectedProductName);
                 model.PartList = new SelectList(parts, "PartNumber", "PartName");
             }
             else
@@ -329,6 +646,7 @@ namespace PMSAWebMVC.Controllers
         public ActionResult Createtest()
         {
             PurchaseRequisitionCreateViewModel model = new PurchaseRequisitionCreateViewModel();
+            model.DateRequired= DateTime.Now;
             ConfigureViewModel(model);
             return View(model);
         }

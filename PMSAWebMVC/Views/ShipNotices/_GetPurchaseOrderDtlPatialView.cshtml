@@ -8,6 +8,8 @@
             <th><input type="checkbox" name="chkAll" />@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().Checked)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PurchaseOrderDtlCode)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PartName)</th>
+            <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PartNumber)</th>
+            <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PurchaseQty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().Qty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().QtyPerUnit)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().CommittedArrivalDate)</th>
@@ -53,6 +55,12 @@
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).PartName)
                 </td>
                 <td>
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).PartNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).PurchaseQty)
+                </td>
+                <td>
                     @*出貨數量的調整要寫在這*@
                     @if (Model.orderDtlItems.ElementAt(i).Unship == true)
                     {
@@ -88,12 +96,13 @@
                         }
                         else
                         {
+                            <i class="fas fa-exclamation-triangle"></i>
                             @Html.Label("庫存不足")
                         }
                     }
                     else
                     {
-                            @Html.Label("已出貨")
+                        @Html.Label("已出貨")
                     }
                 </td>
             </tr>

@@ -469,7 +469,7 @@
     <Content Include="Content\DataTables\css\dataTables.semanticui.css" />
     <Content Include="Content\DataTables\css\dataTables.semanticui.min.css" />
     <Content Include="Content\DataTables\css\dataTables.site.examples.css" />
-    <Content Include="Content\DataTables\css\dataTables.site.table.css" />
+    <Content Include="Content\DataTables\css\dataTables.site.css" />
     <Content Include="Content\DataTables\css\dataTables.uikit.css" />
     <Content Include="Content\DataTables\css\dataTables.uikit.min.css" />
     <Content Include="Content\DataTables\css\fixedColumns.bootstrap.css" />
@@ -580,12 +580,13 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
-    <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fontawesome-all.css" />
     <Content Include="Content\fontawesome-all.min.css" />
     <Content Include="Content\fontawesome.css" />
     <Content Include="Content\fontawesome.min.css" />
+    <Content Include="Content\MagicInput\magic-input.css" />
+    <Content Include="Content\MagicInput\magic-input.min.css" />
+    <Content Include="Content\MagicInput\magic-input.site.css" />
     <Content Include="Content\MDB\css\addons\datatables-select.min.css" />
     <Content Include="Content\MDB\css\addons\datatables.min.css" />
     <Content Include="Content\MDB\css\addons\directives.min.css" />
@@ -600,10 +601,17 @@
     <Content Include="Content\MDB\css\fonts\iconkit.svg" />
     <Content Include="Content\MDB\css\fonts\ionicons.svg" />
     <Content Include="Content\MDB\css\mdb.css" />
+    <Content Include="Content\MDB\css\mdb.min.css">
+      <DependentUpon>mdb.css</DependentUpon>
+    </Content>
     <Content Include="Content\MDB\css\mdb.lite.css" />
-    <Content Include="Content\MDB\css\mdb.lite.min.css" />
-    <Content Include="Content\MDB\css\mdb.min.css" />
-    <Content Include="Content\MDB\css\modules\animations-extended.min.css" />
+    <Content Include="Content\MDB\css\mdb.lite.min.css">
+      <DependentUpon>mdb.lite.css</DependentUpon>
+    </Content>
+    <Content Include="Content\MDB\css\modules\animations-extended.css" />
+    <Content Include="Content\MDB\css\modules\animations-extended.min.css">
+      <DependentUpon>animations-extended.css</DependentUpon>
+    </Content>
     <Content Include="Content\MDB\css\plugins\all.min.css" />
     <Content Include="Content\MDB\css\plugins\bootstrap.min.css" />
     <Content Include="Content\MDB\css\plugins\c3.min.css" />
@@ -676,7 +684,7 @@
     <Content Include="css\RESXManager\ResourceEditor.css" />
     <Content Include="css\RESXManager\spellchecker.css" />
     <Content Include="css\RESXManager\webos.css" />
-    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\NoImage.jpg" />
@@ -1561,11 +1569,6 @@
     <Content Include="Scripts\highcharts\7.1.2\css\stocktools\gui.scss" />
     <Content Include="Scripts\highcharts\7.1.2\css\highcharts.scss" />
     <Content Include="Scripts\highcharts\7.1.2\css\annotations\popup.scss" />
-    <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="fonts\fontawesome-webfont.woff2" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
     <Content Include="Scripts\highcharts\7.1.2\themes\sunset.src.js" />
@@ -2197,6 +2200,7 @@
     <Content Include="Scripts\sbTemplate\mdb.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.min.js" />
+    <Content Include="Scripts\Site.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.all.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.all.min.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.js" />
@@ -2351,6 +2355,7 @@
     <Folder Include="Utilities\ShiYuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

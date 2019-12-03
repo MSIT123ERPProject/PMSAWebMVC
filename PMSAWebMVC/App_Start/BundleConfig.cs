@@ -23,39 +23,28 @@ namespace PMSAWebMVC
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
-                "~/Content/font-awesome.css",
                 //Bootstrap
-                "~/Content/bootstrap.css",
+                //"~/Content/bootstrap.css",
+                "~/Content/MDB/css/bootstrap.css",                
                 //MDB
                 "~/Content/MDB/css/mdb.css",
                 "~/Content/MDB/css/addons/datatables.min.css",
-                 "~/Content/MDB/css/addons/datatables-select.min.css",
-                 "~/Content/MDB/css/addons/directives.min.css",
+                "~/Content/MDB/css/addons/datatables-select.min.css",
+                "~/Content/MDB/css/addons/directives.min.css",
                 "~/Content/MDB/css/addons/flag.min.css",
-                 "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
-                  "~/Content/MDB/css/addons/rating.min.css",
-                 "~/Content/MDB/css/modules/animations-extended.min.css",
-
-                //ThemeKit //都放在MDB/plugins資料夾
-                //"~/Content/MDB/css/plugins/all.min.css",
-                //"~/Content/MDB/css/plugins/c3.min.css",
-                //"~/Content/MDB/css/plugins/dataTables.bootstrap4.min.css",
-                //"~/Content/MDB/css/plugins/iconkit.min.css",
-                //"~/Content/MDB/css/plugins/ionicons.min.css",
-                //"~/Content/MDB/css/plugins/jquery-jvectormap.css",
-                //"~/Content/MDB/css/plugins/owl.carousel.min.css",
-                //"~/Content/MDB/css/plugins/owl.theme.default.min.css",
-                //"~/Content/MDB/css/plugins/perfect-scrollbar.css",
-                //"~/Content/MDB/css/plugins/theme.css",
-                //"~/Content/MDB/css/plugins/weather-icons.min.css",
-                //"~/Content/MDB/css/plugins/responsive.bootstrap4.min.css",
+                "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
+                "~/Content/MDB/css/addons/rating.min.css",
+                "~/Content/MDB/css/modules/animations-extended.css",
+                //SB Admin
+                //"~/Content/sbTemplate/sb-admin.css",
                 //Site
                 "~/Content/Site.css"
                 ));
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
-                "~/Scripts/bootstrap.js",
+                //"~/Scripts/bootstrap.js",
+                "~/Scripts/MDB/bootstrap.js",
                 //MDB
                 "~/Scripts/MDB/mdb.js",
                 "~/Scripts/MDB/addons/datatables.min.js",
@@ -71,24 +60,11 @@ namespace PMSAWebMVC
                    "~/Scripts/MDB/modules/scrolling-navbar.min.js",
                    "~/Scripts/MDB/modules/treeview.min.js",
                    "~/Scripts/MDB/modules/wow.min.js",
-
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
-                "~/Scripts/sbTemplate/sb-admin.js"
-                 //ThemeKit 都放在MDB/plugins資料夾
-               // "~/Scripts/MDB/plugins/perfect-scrollbar.min.js",
-               // "~/Scripts/MDB/plugins/screenfull.js",
-               //// "~/Scripts/MDB/plugins/jquery.dataTables.min.js",
-               // "~/Scripts/MDB/plugins/dataTables.bootstrap4.min.js",
-               // //"~/Scripts/MDB/plugins/datatables.js",
-               // "~/Scripts/MDB/plugins/dataTables.responsive.min.js",
-               // "~/Scripts/MDB/plugins/responsive.bootstrap4.min.js",
-               // "~/Scripts/MDB/plugins/moment.js",
-               // "~/Scripts/MDB/plugins/d3.js",
-               // "~/Scripts/MDB/plugins/c3.min.js",
-               // "~/Scripts/MDB/plugins/tables.js",
-               // "~/Scripts/MDB/plugins/charts.js",
-               // "~/Scripts/MDB/plugins/theme.js"
+                "~/Scripts/sbTemplate/sb-admin.js",
+                //Site
+                "~/Scripts/Site.js"
                 ));
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
@@ -99,9 +75,11 @@ namespace PMSAWebMVC
                  "~/Content/pickadate/themes/classic.date.css",
                  "~/Content/pickadate/themes/classic.time.css",
                 //SweetAlert
-                "~/Content/sweetAlert/sweetalert2.css"
+                "~/Content/sweetAlert/sweetalert2.css",
+                //MagicInput
+                "~/Content/MagicInput/magic-input.css",
+                "~/Content/MagicInput/magic-input.site.css"
                 ));
-
             bundles.Add(new ScriptBundle("~/bundles/form").Include(
                 //DataTables、DatetimePicker
                 "~/Scripts/moment-with-locales.js",
@@ -119,7 +97,8 @@ namespace PMSAWebMVC
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-               "~/Content/DataTables/css/datatables.css"
+                "~/Content/DataTables/css/datatables.css",
+                "~/Content/DataTables/css/dataTables.site.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(

@@ -22,9 +22,9 @@ namespace PMSAWebMVC
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
-                "~/Content/font-awesome.css",
-                //Bootstrap
-                "~/Content/bootstrap.css",
+                 //Bootstrap
+                 //"~/Content/bootstrap.css",
+                 "~/Content/MDB/css/bootstrap.css",                
                 //MDB
                 "~/Content/MDB/css/mdb.css",
                 "~/Content/MDB/css/addons/datatables.min.css",
@@ -33,7 +33,7 @@ namespace PMSAWebMVC
                 "~/Content/MDB/css/addons/flag.min.css",
                 "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
                 "~/Content/MDB/css/addons/rating.min.css",
-                "~/Content/MDB/css/modules/animations-extended.min.css",
+                "~/Content/MDB/css/modules/animations-extended.css",
                 //SB Admin
                 //"~/Content/sbTemplate/sb-admin.css",
                 //Site
@@ -42,7 +42,8 @@ namespace PMSAWebMVC
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
-                "~/Scripts/bootstrap.js",
+                //"~/Scripts/bootstrap.js",
+                "~/Scripts/MDB/bootstrap.js",
                 //MDB
                 "~/Scripts/MDB/mdb.js",
                 "~/Scripts/MDB/addons/datatables.min.js",
@@ -60,7 +61,9 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
-                "~/Scripts/sbTemplate/sb-admin.js"
+                "~/Scripts/sbTemplate/sb-admin.js",
+                //Site
+                "~/Scripts/Site.js"
                 ));
 
             //表單
@@ -72,9 +75,11 @@ namespace PMSAWebMVC
                  "~/Content/pickadate/themes/classic.date.css",
                  "~/Content/pickadate/themes/classic.time.css",
                 //SweetAlert
-                "~/Content/sweetAlert/sweetalert2.css"
+                "~/Content/sweetAlert/sweetalert2.css",
+                //MagicInput
+                "~/Content/MagicInput/magic-input.css",
+                "~/Content/MagicInput/magic-input.site.css"
                 ));
-
             bundles.Add(new ScriptBundle("~/bundles/form").Include(
                 //DataTables、DatetimePicker
                 "~/Scripts/moment-with-locales.js",
@@ -92,7 +97,8 @@ namespace PMSAWebMVC
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-                "~/Content/DataTables/css/datatables.css"
+                "~/Content/DataTables/css/datatables.css",
+                "~/Content/DataTables/css/dataTables.site.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(

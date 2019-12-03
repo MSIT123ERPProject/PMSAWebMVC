@@ -1,6 +1,7 @@
 ﻿$.extend(true, $.fn.dataTable.defaults, {
     responsive: true,
     fixedHeader: true,
+    ordering: false,
     "errMode": 'throw',
     "language": {
         "emptyTable": "No data available in table",

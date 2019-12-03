@@ -1,0 +1,6 @@
+.mgc:checked:after {
+  height: 6px;
+  width: 8px;
+  top: 3px;
+  left: 3px;
+}

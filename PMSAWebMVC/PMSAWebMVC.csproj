@@ -209,6 +209,7 @@
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
     <Compile Include="Controllers\AdminController\RolesAdminController.cs" />
+    <Compile Include="Controllers\SupplierController\OrdersController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
     <Compile Include="Controllers\SourceListsController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
@@ -2341,6 +2342,7 @@
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
     <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
     <Content Include="Views\Account\ConfirmEmailError.cshtml" />
+    <Content Include="Views\Orders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

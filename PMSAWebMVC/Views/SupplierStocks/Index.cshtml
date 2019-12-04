@@ -14,36 +14,40 @@
         <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table" id="dataTable" cellspacing="0" style="width:100%">
-                <thead>
-                    <tr role="row">
-                        <th>
-                            @Html.DisplayNameFor(model => model.SourceListID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PartNumber)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.QtyPerUnit)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitPrice)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitsOnOrder)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitsInStock)
-                        </th>
-                        <th>
-                            調整庫存
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tfoot>
+        <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
+            <thead>
+                <tr role="row" class="bg-primary text-white text-center">
+                    <th data-priority="1"></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SourceListID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PartNumber)
+                    </th>
+                    <th>
+                        料件名稱
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.QtyPerUnit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnitPrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnitsOnOrder)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnitsInStock)
+                    </th>
+                    <th>安全庫存量</th>
+                    <th data-priority="1">
+                        調整庫存
+                    </th>
+                </tr>
+            </thead>
+            @*<tfoot>
                     <tr>
+                        <th></th>
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -62,14 +66,12 @@
                         <th>
                             @Html.DisplayNameFor(model => model.UnitsInStock)
                         </th>
-                        <th>
+                        <th data-priority="1">
                             調整庫存
                         </th>
-                        <th></th>
                     </tr>
-                </tfoot>
-            </table>
-        </div>
+                </tfoot>*@
+        </table>
     </div>
 </div>
 @section scripts
@@ -96,40 +98,48 @@
                         "contentType": "application/json;charset=utf-8",
                         "cache": true
                     },
-                    responsive: {
-                        details: {
-                            type: 'column',
-                           target:-1
-                        }
-                    },
-                    columnDefs: [
-                        {
-                            className: 'control',
-                            orderable: false,
-                            targets: -1,
-                        }
-                    ],
+             ordering: false,
+             //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+             order: [[2, 'desc']],
+             //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+             responsive: {
+                 details: {
+                     type: 'column',
+                     target: 0
+                 }
+             },
+             columnDefs: [{
+                 targets: 0,
+                 className: 'control'
+             },
+                 { orderable: false, targets: [0, 1, -1] },
+                 { targets: [4, 5, 6, 7, 8], className: 'dt-body-right'}
+             ],
              "columns": [
+                 {
+                     "data": null, render: function (d) {
+                         if (d == null) { return "-"; }
+                         return "";
+                     }
+                 },
                  { "data": "SourceListID", orderable: true },
-                        { "data": "PartNumber" },
-                        { "data": "QtyPerUnit" },
+                 { "data": "PartNumber" },
+                 { "data": "PartName" },
+                         { "data": "QtyPerUnit" },
                         { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
                         { "data": "UnitsOnOrder" },
-                        { "data": "UnitsInStock"},
+                        { "data": "UnitsInStock" },
+                        {
+                         "data": "SafetyQty",
+                          orderable: false
+                        },
                         {
                             "data": "SourceListID",
                             "render": function (data, type, row, meta) {
-                                return '<button class="btn btn-primary"' + 'name="UpdateStock"' + 'id="' + data + '">調整庫存</button>';
+                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" name="UpdateStock" id="${data}"><i class="far fa-edit"></i></button></div>`;
+                                //return '<button class="btn btn-primary"' + 'name="UpdateStock"' + 'id="' + data + '">調整庫存</button>';
                             }
                         },
-                        {
-                            "data": null,
-                            orderable: false,
-                            className: 'control',
-                            render: function (data, type, row, meta) {
-                                return '<a><i class="fas fa-fw fa-table"></i></a>';
-                            }
-                        }
                     ],
                     fixedColumns: {
                         leftColumns: 2,

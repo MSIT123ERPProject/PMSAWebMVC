@@ -37,6 +37,7 @@
             //改用partialView
             purchaseOrderDtlForPartialView();
             QtyText();
+            dataTableUOD();
         });
         //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面 partialView方法
         function purchaseOrderDtlForPartialView() {
@@ -211,6 +212,27 @@
             //if (purchaseQty < shipQty) {
             //    toastr.warning( "出貨數量不得大於採購數量","通知" );
             //}
+        }
+        //dataTable
+        function dataTableUOD() {
+            $('#dataTableUOD').DataTable({
+                ordering: false,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [[2, 'desc']],
+                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                columnDefs: [{
+                    targets: 0,
+                    className: 'control'
+                },
+                { orderable: false, targets: [0, 1, -1] },
+                ],
+            });
         }
     </script>
 }

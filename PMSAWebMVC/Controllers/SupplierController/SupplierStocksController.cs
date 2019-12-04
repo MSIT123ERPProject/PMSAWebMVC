@@ -36,18 +36,22 @@ namespace PMSAWebMVC.Controllers
         {
             //注意  :   dataTable只接受Enumerable類別 ，所以要加上AsEnumerable()方法
             var query = from sl in db.SourceList.AsEnumerable()
+                        join pt in db.Part on sl.PartNumber equals pt.PartNumber
                         where sl.SupplierCode == supplierCode
-                        select new SourceList
+                        select new
                         {
                             SourceListID = sl.SourceListID,
                             PartNumber = sl.PartNumber,
+                            PartName = pt.PartName,
                             QtyPerUnit = sl.QtyPerUnit,
                             UnitPrice = sl.UnitPrice,
                             UnitsOnOrder = sl.UnitsOnOrder,
-                            UnitsInStock = sl.UnitsInStock
+                            UnitsInStock = sl.UnitsInStock,
+                            SafetyQty =sl.SafetyQty
                         };
             var json = new { data = query };
-            return Json( json , JsonRequestBehavior.AllowGet);
+            var s = query.ToList();
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
         //sweetalert2 修改庫存視窗用ajax方法
         [HttpPost]

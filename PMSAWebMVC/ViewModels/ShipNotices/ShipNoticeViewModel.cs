@@ -28,6 +28,9 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         //要傳回controller的話要用list
         //此集合是用來存放訂單出貨明細檢視時，判斷有無被選取使用
         public IList<OrderDtlItemChecked> orderDtlItemCheckeds { get; set; }
+        //此屬性是要給訂單管理頁面查詢未答交訂單使用，
+        [Display(Name ="採購單總金額")]
+        public decimal PurchaseOrderTotalAmount { get; set; }
     }
     public class OrderDtlItem
     {

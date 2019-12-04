@@ -11,6 +11,7 @@
             <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PartNumber)</th>
             <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().PurchaseQty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().Qty)</th>
+            <th>@Html.DisplayNameFor(model=>model.orderDtlItems.FirstOrDefault().ShipQty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().QtyPerUnit)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().CommittedArrivalDate)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().UnitsInStock)</th>
@@ -80,6 +81,9 @@
                     {
                         @Html.DisplayFor(x => Model.orderDtlItemCheckeds[i].Qty)
                     }
+                </td>
+                <td>
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).ShipQty)
                 </td>
                 <td>
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).QtyPerUnit)

@@ -47,8 +47,18 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         //此欄位對應到的是採購單的QTY欄位
         [Display(Name = "採購數量")]
         public int PurchaseQty { get; set; }
+
+        //此欄位是要供應商調整出貨數量用
+        [Display(Name = "出貨數量")]
+        public int Qty { get; set; }
+
+        //出貨明細的SHIPQTY，在此MODEL用來顯示已出貨數量
+        [Display(Name = "已出貨數量")]
+        public int ShipQty { get; set; }
+
         [Display(Name = "貨源清單編號")]
         public string SourceListID { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [DataType(DataType.Date)]
         [Display(Name = "承諾交貨日期")]

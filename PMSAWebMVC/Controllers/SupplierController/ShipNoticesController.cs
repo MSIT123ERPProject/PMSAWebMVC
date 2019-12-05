@@ -113,6 +113,9 @@ namespace PMSAWebMVC.Controllers
         public ActionResult shipCheckDtl(shipOrderViewModel unshipOrderDtl)
         {
             string message = "";
+            //此LIST要用來存放出貨明細ID 用來寄送電子郵件給公司採購員
+            List<int> shipDtlList = new List<int>();
+            string shipNoticeID = "";
             //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
             //用來存放確定有要出貨的LIST(有勾選)
@@ -133,8 +136,7 @@ namespace PMSAWebMVC.Controllers
                 message = "請選擇欲出貨商品!";
                 return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
             }
-            DateTime now = DateTime.Now;
-            List<SourceList> sourceLists = new List<SourceList>(); //這個LIST目前沒有用
+            DateTime now = DateTime.Now; 
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
             //並新增該採購單明細實際出貨日期，新增出貨明細//
             foreach (var dtl in orderDtls)
@@ -171,7 +173,6 @@ namespace PMSAWebMVC.Controllers
                     {
                         sourceList.UnitsOnOrder = sourceList.UnitsOnOrder - dtl.Qty;
                     }
-                    sourceLists.Add(sourceList);
                 }
                 //新增出貨通知 應該在這 先檢查是否有該筆出貨通知(因為有可能分開出貨，所以同筆訂單後出貨的就不用在增加出貨通知，只要增加出貨明細即可)
                 if (db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault() == null)
@@ -204,6 +205,8 @@ namespace PMSAWebMVC.Controllers
                     shipNoticeDtl.ShipAmount = Convert.ToInt32(shipNoticeDtl.ShipQty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
                     //把新出貨明細資料加進資料庫
                     db.ShipNoticeDtl.Add(shipNoticeDtl);
+                    //存進出貨明細OID給寄送電子郵件用
+                    shipDtlList.Add(shipNoticeDtl.ShipNoticeDtlOID);
                 }
                 //有的話，則去修改出貨明細表的出貨數量和出貨金額
                 else
@@ -212,6 +215,8 @@ namespace PMSAWebMVC.Controllers
                     snd.ShipQty += unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty;
                     snd.ShipAmount = Convert.ToInt32(snd.ShipQty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
                     db.Entry(snd).State = EntityState.Modified;
+                    //存進出貨明細OID給寄送電子郵件用
+                    shipDtlList.Add(snd.ShipNoticeDtlOID);
                 }
                 //不管是採購單明細或是採購單有異動都要新增採購單異動總表
                 //新增採購單異動總表(明細)

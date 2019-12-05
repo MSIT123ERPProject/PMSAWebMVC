@@ -34,7 +34,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
         }
         public JsonResult GetPurchaseOrderS()
         {
-            var qpo = from po in db.PurchaseOrder
+            var qpo =( from po in db.PurchaseOrder
                       where po.PurchaseOrderStatus == "P" && po.SupplierCode==supplierCode
                       select new shipOrderViewModel
                       {
@@ -44,17 +44,27 @@ namespace PMSAWebMVC.Controllers.SupplierController
                           ReceiverTel=po.ReceiverTel,
                           ReceiptAddress=po.ReceiptAddress,
                           PurchaseOrderTotalAmount =0
-                      };
+                      }).ToList();
             //計算每筆訂單總金額
-            foreach ( var order in qpo ) {
-               var qorderTotal= db.PurchaseOrderDtl.Where(x => x.PurchaseOrderID == order.PurchaseOrderID).Select(x=>x.Total);
-                int?  orderTotal= 0;
-                foreach ( var total in qorderTotal ) {
+            //foreach ( var order in qpo ) {
+            //   var qorderTotal= db.PurchaseOrderDtl.Where(x => x.PurchaseOrderID == order.PurchaseOrderID).Select(x=>x.Total);
+            //    int?  orderTotal= 0;
+            //    foreach ( var total in qorderTotal ) {
+            //        orderTotal += total;
+            //    }
+            //    order.PurchaseOrderTotalAmount = (int)orderTotal;
+            //}
+            for ( int i =0;i<qpo.Count();i++ ) {
+                string purchaseOrderID = qpo[i].PurchaseOrderID;
+                var qorderTotal = db.PurchaseOrderDtl.Where(x => x.PurchaseOrderID == purchaseOrderID).Select(x => x.Total);
+                int? orderTotal = 0;
+                foreach (int? total in qorderTotal)
+                {
                     orderTotal += total;
                 }
-                order.PurchaseOrderTotalAmount = (int)orderTotal;
+                qpo[i].PurchaseOrderTotalAmount = (int)orderTotal;
             }
-            var json = new {data= qpo.ToList() } ;
+            var json = new {data= qpo } ;
             return Json(json, JsonRequestBehavior.AllowGet);
         }
     }

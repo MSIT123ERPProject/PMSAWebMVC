@@ -14,7 +14,7 @@
         <div class="table-responsive">
             <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTableOUA" cellspacing="0">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary text-white text-center">
                         <th>訂單編號</th>
                         <th>訂單總金額</th>
                         <th>收貨人名稱</th>
@@ -56,7 +56,7 @@
                 },
                 columns: [
                     { data: "PurchaseOrderID" },
-                    { data: "PurchaseOrderTotalAmount" },
+                    { data: "PurchaseOrderTotalAmount", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
                     { data: "ReceiverName" },
                     { data: "ReceiverMobile" },
                     { data: "ReceiverTel" },

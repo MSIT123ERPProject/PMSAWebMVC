@@ -80,6 +80,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
                 temp.PartName = data.PartName;
                 list.Add(temp);
             }
+            return Json(list, JsonRequestBehavior.AllowGet);
             decimal total = 0;
             for (int i = 0; i < list.Count(); i++)
             {

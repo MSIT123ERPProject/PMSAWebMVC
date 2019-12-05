@@ -9,8 +9,12 @@
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+        }
         body, html {
-            background-image: linear-gradient(to right, #304352 0%, #d7d2cc 100%);
+            background-image: linear-gradient(to right, #74ebd5 0%, #9face6 100%);
         }
 
         .container {

@@ -22,9 +22,11 @@ namespace PMSAWebMVC
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
+                 //SB Admin
+                 //"~/Content/sbTemplate/sb-admin.css",
                  //Bootstrap
                  //"~/Content/bootstrap.css",
-                 "~/Content/MDB/css/bootstrap.css",                
+                 "~/Content/MDB/css/bootstrap.css",
                 //MDB
                 "~/Content/MDB/css/mdb.css",
                 "~/Content/MDB/css/bootstrap.theme.css",
@@ -35,8 +37,6 @@ namespace PMSAWebMVC
                 "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
                 "~/Content/MDB/css/addons/rating.min.css",
                 "~/Content/MDB/css/modules/animations-extended.css",
-                //SB Admin
-                //"~/Content/sbTemplate/sb-admin.css",
                 //Site
                 "~/Content/Site.css"));
 
@@ -45,6 +45,9 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/popper.js",
                 //"~/Scripts/bootstrap.js",
                 "~/Scripts/MDB/bootstrap.js",
+                //SB Admin
+                "~/Scripts/jquery.easing.js",
+                "~/Scripts/sbTemplate/sb-admin.js",
                 //MDB
                 "~/Scripts/MDB/mdb.js",
                 "~/Scripts/MDB/addons/datatables.min.js",
@@ -60,9 +63,6 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/modules/scrolling-navbar.min.js",
                 "~/Scripts/MDB/modules/treeview.min.js",
                 "~/Scripts/MDB/modules/wow.min.js",
-                //SB Admin
-                "~/Scripts/jquery.easing.js",
-                "~/Scripts/sbTemplate/sb-admin.js",
                 //Site
                 "~/Scripts/Site.js"
                 ));
@@ -119,7 +119,7 @@ namespace PMSAWebMVC
             bundles.Add(new ScriptBundle("~/bundles/toastrjs").Include(
                 "~/Scripts/toastr.min.js"
                 ));
-            
+
         }
     }
 }

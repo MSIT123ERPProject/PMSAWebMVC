@@ -10,7 +10,7 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/form")
     @Styles.Render("~/Content/DataTables")
-    @Scripts.Render("~/bundles/modernizr")    
+    @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
     <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
     @*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
@@ -26,11 +26,11 @@
             <nav class="sidebar-wrapper navbar navbar-expand navbar-dark sidebar-menu sidebar nav">
                 <div class="sidebar-menu">
                     <ul>
-                        <li>
-                            <button class="navbtn btn btn-link btn-sm text-white" id="sidebarToggle" href="#">
+                        <li class="d-flex align-items-center justify-content-center">
+                            <button class="navbtn btn btn-link btn-sm text-white text-decoration-none" id="sidebarToggle" href="#">
                                 <i class="fas fa-bars"></i>
                             </button>
-                            <div class="sidebar-brand nav-item" style="height:40px;">
+                            <div class="sidebar-brand nav-item mb-0">
                                 <a class="navbar-brand d-none" id="navbrand" href="@Url.Action("Index", "Home")" style="font-family:'NSimSun';color:#EBEEF5;letter-spacing: 5px;"><i class="fas fa-bicycle mr-1"></i>@PMSAWebMVC.Resources.AppResource.chokobo</a>
                             </div>
                         </li>

@@ -93,7 +93,7 @@
 <table id="dataTablesId" class="table table-striped hover order-column nowrap text-left" style="width:100%">
     <thead>
         <tr class="bg-primary text-white text-center">
-            <th></th>
+            <th>&nbsp;</th>
             <th data-priority="1">
                 <input type="checkbox" class="mgc" />
             </th>
@@ -106,7 +106,7 @@
             <th>Salary</th>
             <th>Extn.</th>
             <th>E-mail</th>
-            <th data-priority="1">動作</th>
+            <th data-priority="1">功能</th>
         </tr>
     </thead>
     <tbody>
@@ -628,9 +628,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $('#dataTablesId').DataTable({
+            let dataTablesId = $('#dataTablesId').DataTable({
                 ordering: false,
-                fixedHeader: true,
+                fixedHeader: false,
                 //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
                 order: [[2, 'desc']],
                 //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
@@ -642,10 +642,16 @@
                 },
                 columnDefs: [{
                     targets: 0,
-                    className: 'control'
+                    className: 'control',
+                    searchable: false
                 },
                 { orderable: false, targets: [0, 1, -1] },
                 ],
+            });
+
+            dataTablesId.on('responsive-resize', function (e, datatable, columns) {
+                //修正縮放大小不正確的問題
+                dataTablesId.columns.adjust().responsive.recalc();
             });
 
             $('#datetimepickerId').datetimepicker();

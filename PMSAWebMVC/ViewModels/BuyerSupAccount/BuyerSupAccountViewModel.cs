@@ -32,7 +32,7 @@ namespace PMSAWebMVC.ViewModels.BuyerSupAccount
         [DisplayName("帳號狀態")]
         public string AccountStatus { get; set; }
 
-        [DisplayName("新增帳號採購員")]
+        [DisplayName("新增帳號者")]
         public string CreatorEmployeeID { get; set; }
 
         [DisplayName("修改日期")]

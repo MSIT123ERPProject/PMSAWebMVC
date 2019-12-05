@@ -74,10 +74,44 @@
         }
 
         .row .left, .row .right {
-            box-shadow: 0 0 3px #aaa;
+            /*box-shadow: 0 0 3px #909399;*/
+            border: 1px solid #E4E7ED;
+            background-color: #F4F4F5;
             margin: 10px;
-            padding: 15px;
+            padding: 20px;
         }
+        .supCompanyInfoDiv .form-group {
+            background-color: white;
+            border: 1px solid #DCDFE6;
+            box-shadow: 0 0 2px #DCDFE6;
+            border-left: 4px solid #606266;
+            padding: 5px;
+        }
+        .row {
+            counter-reset: section;
+        }
+        .row h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            color: #007bff;
+            font-weight: 800 !important;
+        }
+            .row h4::before {
+                counter-increment: section;
+                display: inline-block;
+                content: counter(section);
+                background-color: #007bff;
+                color: white;
+                font-size: 16px;
+                border-radius: 10px;
+                text-align: center;
+                width: 20px;
+                height: 20px;
+                margin-right: 3px;
+                transform: translateY(-2px)
+            }
     </style>
 }
 <div class="wrapall">
@@ -91,72 +125,103 @@
             </h5>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="left col-lg-5 col-md-11 col-sm-11">
-                    <h4 style="font-size: 18px; margin-bottom:10px">1.選擇供應商公司</h4>
-                    <select id="SupNameCode" class="form-control col-lg-9">
-                        <option selected disabled>---- 請選擇 ----</option>
-                    </select>
-                    <div class="supCompanyInfoDiv mt-4">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupInfoModel.SupplierCode)
-                            @Html.TextBoxFor(model => model.SupInfoModel.SupplierCode, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupInfoModel.SupplierName)
-                            @Html.TextBoxFor(model => model.SupInfoModel.SupplierName, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupInfoModel.TaxID)
-                            @Html.TextBoxFor(model => model.SupInfoModel.TaxID, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupInfoModel.Address)
-                            @Html.TextBoxFor(model => model.SupInfoModel.Address, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupInfoModel.Email)
-                            @Html.TextBoxFor(model => model.SupInfoModel.Email, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupInfoModel.Tel)
-                            @Html.TextBoxFor(model => model.SupInfoModel.Tel, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupInfoModel.SupplierRatingOID)
-                            @Html.TextBoxFor(model => model.SupInfoModel.SupplierRatingOID, new { @class = "form-control disabled col-lg-6" })
-                        </div>
+            <div class="row" style="margin: 12px;">
+                <div class="col-lg-5 col-md-11 col-sm-11">
+                    <h4>先選擇供應商公司</h4>
+                    <div class="left" style="margin:0">
+                        <select id="SupNameCode" class="form-control col-lg-9">
+                            <option selected disabled>---- 請選擇 ----</option>
+                        </select>
+                        <form class="supCompanyInfoDiv mt-4 fade">
+                            <p id="pNoCompany" class="text-danger fade d-none">尚無公司可供新增聯絡人，請先新增公司</p>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupInfoModel.SupplierCode)
+                                @Html.TextBoxFor(model => model.SupInfoModel.SupplierCode, new { @class = "form-control disabled col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupInfoModel.SupplierName)
+                                @Html.TextBoxFor(model => model.SupInfoModel.SupplierName, new { @class = "form-control disabled col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupInfoModel.TaxID)
+                                @Html.TextBoxFor(model => model.SupInfoModel.TaxID, new { @class = "form-control disabled col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupInfoModel.Address)
+                                @Html.TextBoxFor(model => model.SupInfoModel.Address, new { @class = "form-control disabled col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupInfoModel.Email)
+                                @Html.TextBoxFor(model => model.SupInfoModel.Email, new { @class = "form-control disabled col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupInfoModel.Tel)
+                                @Html.TextBoxFor(model => model.SupInfoModel.Tel, new { @class = "form-control disabled col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupInfoModel.SupplierRatingOID)
+                                @Html.TextBoxFor(model => model.SupInfoModel.SupplierRatingOID, new { @class = "form-control disabled col-lg-12" })
+                            </div>
+                            <button id="btnNoCompany" type="submit" class="btn btn-primary fade">確認新增公司</button>
+                        </form>
                     </div>
                 </div>
-                <div class="right col-lg-5 col-md-11 col-sm-11">
-                    <h4 style="font-size: 18px; margin-bottom:10px">2.新增供應商帳號</h4>
-                    <form action="@Url.Action("Index","BuyerSupAccount")" method="post">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode)
-                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName)
-                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName, new { @class = "form-control disabled col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.ContactName)
-                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.ContactName, new { @class = "form-control col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Email)
-                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Email, new { @class = "form-control col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Mobile)
-                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Mobile, new { @class = "form-control col-lg-6" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Tel)
-                            @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Tel, new { @class = "form-control col-lg-6" })
-                        </div>
-                        <button type="submit" class="btn btn-primary">確認新增</button>
-                    </form>
+                <div class="col-lg-5 col-md-11 col-sm-11">
+                    <h4>再新增供應商帳號</h4>
+                    <div class="right" style="margin:0">
+                        <form action="@Url.Action("Index","BuyerSupAccount")" method="post">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode)
+                                @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode, new { @class = "form-control disabled col-lg-6" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName)
+                                @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName, new { @class = "form-control disabled col-lg-6" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.ContactName)
+                                @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.ContactName, new { @class = "form-control col-lg-6" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Email)
+                                @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Email, new { @class = "form-control col-lg-6" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Mobile)
+                                @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Mobile, new { @class = "form-control col-lg-6" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Tel)
+                                @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Tel, new { @class = "form-control col-lg-6" })
+                            </div>
+                            <div class="form-group">
+                                <div class="editAcc">
+                                    <label class="d-block">
+                                        編輯帳號狀態
+                                    </label>
+                                    <div class="setAcc">
+                                        <span>
+                                            <label for="AccountStatusSwitch">
+                                                停用
+                                            </label>
+                                        </span>
+                                        <span class="custom-control custom-switch d-inline-block">
+                                            <span>
+                                                <input type="checkbox" name="AccStatus" class="custom-control-input" id="AccountStatusSwitch">
+                                                <label class="custom-control-label" for="AccountStatusSwitch">
+                                                    啟用
+                                                </label>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div id="lert" class="alert alert-warning fade" role="alert" style="font-size: 16px; padding: 5px">
+                                        <strong>注意!</strong>啟用將直接 Emial 帳密給此供應商聯絡人
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">確認新增</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -171,7 +236,58 @@
                 data.forEach(x => {
                     $("#SupNameCode").append(`<option value="${x.SupplierCode}">${x.SupplierName} (${x.SupplierCode})</option>`);
                 })
+                console.log(data)
+                //NoCompany
+                if (data.length == 0) {
+                    $(".supCompanyInfoDiv").addClass("show");
+                    //form-group
+                    $(".supCompanyInfoDiv .form-group input").removeClass("disabled");
+                    $("#SupInfoModel_SupplierCode").focus();
+                    //pNoCompany
+                    $("#pNoCompany").removeClass('d-none').addClass("show");
+                    $("#btnNoCompany").addClass("show");
+                }
             }
         )
+        $("#SupNameCode").change(function () {
+            console.log($("#SupNameCode").val())
+        $.getJSON(
+            '@Url.Action("getSupInfoBySupCodeToIndexAjax")',
+            { id: $("#SupNameCode").val()},
+            function (data) {
+                console.log(data)
+                data.forEach(x => {
+                    $("#SupInfoModel_SupplierCode").val(x.SupplierCode);
+                    $("#SupInfoModel_SupplierName").val(x.SupplierName);
+                    $("#SupInfoModel_TaxID").val(x.TaxID);
+                    $("#SupInfoModel_Address").val(x.Address);
+                    $("#SupInfoModel_Email").val(x.Email);
+                    $("#SupInfoModel_Tel").val(x.Tel);
+                    $("#SupInfoModel_SupplierRatingOID").val(x.SupplierRatingOID);
+                    //BuyerSupAccount_CreateViewModel_SupplierCode
+                    $("#BuyerSupAccount_CreateViewModel_SupplierCode").val(x.SupplierCode);
+                    $("#BuyerSupAccount_CreateViewModel_SupplierName").val(x.SupplierName);
+                })
+                $(".supCompanyInfoDiv").addClass("show");
+                $("#BuyerSupAccount_CreateViewModel_ContactName").focus();
+            }
+        )
+        });
+
+        $(document).ready(function () {
+            if ($('#AccountStatusSwitch').prop('checked') == true) {
+                $('#lert').addClass('show');
+            } else {
+                $('#lert').removeClass('show');
+            }
+            $('#AccountStatusSwitch').change(() => {
+                console.log("sssss")
+                if ($('#AccountStatusSwitch').prop('checked') == true) {
+                    $('#lert').addClass('show');
+                } else {
+                    $('#lert').removeClass('show');
+                }
+            })
+        })
     </script>
 }

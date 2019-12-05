@@ -276,31 +276,74 @@ namespace PMSAWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            var EmpId = User.Identity.GetEmployee().EmployeeID;
+            //登入可能為供應商或採購系統
+            var LoginId = User.Identity.GetUserName();
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
-            var user = await UserManager.FindByNameAsync(EmpId);
-            user.PasswordHash = UserManager.PasswordHasher.HashPassword(model.ConfirmPassword);
-            await UserManager.UpdateSecurityStampAsync(user.Id);
-            emp.PasswordHash = user.PasswordHash;
-            user.LastPasswordChangedDate = DateTime.Now;
-            emp.AccountStatus = "E";
-
-            //按下重設確定後要判斷是否成功修改
-            var isResetPwd = await updateEmpUserTable(user, emp);
-            //成功
-            if (isResetPwd > 0)
+            if (LoginId.Contains("C"))
             {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                var emp = db.Employee.Where(x => x.EmployeeID == LoginId).SingleOrDefault();
+                var user = await UserManager.FindByNameAsync(LoginId);
+                user.PasswordHash = UserManager.PasswordHasher.HashPassword(model.ConfirmPassword);
+                await UserManager.UpdateSecurityStampAsync(user.Id);
+                emp.PasswordHash = user.PasswordHash;
+                user.LastPasswordChangedDate = DateTime.Now;
+                emp.AccountStatus = "E";
+
+                //按下重設確定後要判斷是否成功修改
+                var isResetPwd = await updateEmpUserTable(user, emp);
+                //成功
+                if (isResetPwd > 0)
+                {
+                    return RedirectToAction("ResetPasswordConfirmation", "Account");
+                }
+            }
+            else if (LoginId.Contains("S"))
+            {
+                var supAcc = db.SupplierAccount.Where(x => x.SupplierAccountID == LoginId).SingleOrDefault();
+                var user = await UserManager.FindByNameAsync(LoginId);
+                user.PasswordHash = UserManager.PasswordHasher.HashPassword(model.ConfirmPassword);
+                await UserManager.UpdateSecurityStampAsync(user.Id);
+                supAcc.PasswordHash = user.PasswordHash;
+                user.LastPasswordChangedDate = DateTime.Now;
+                supAcc.AccountStatus = "E";
+
+                //按下重設確定後要判斷是否成功修改
+                var isResetPwd = await updateTable(user, supAcc);
+                //成功
+                if (isResetPwd > 0)
+                {
+                    return RedirectToAction("ResetPasswordConfirmation", "Account");
+                }
             }
             //失敗
             return RedirectToAction("Error");
         }
 
+        //TODO BuyerSup Admin 學這邊把update結果變回傳0 1 //判斷一起成敗 改成用交易
         //4.存到資料庫
+        //更新此 user table
+        private async Task<int> updateTable(ApplicationUser user, SupplierAccount sa)
+        {
+            //更新此 user table
+            var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var u1 = await UserManager.UpdateAsync(user);
+            var ctx = store.Context;
+            await ctx.SaveChangesAsync();
+            //sa table
+            db.Entry(sa).State = EntityState.Modified;
+            var u2 = await db.SaveChangesAsync();
+            //成功
+            if (u1.Succeeded && u2 > 0)
+            {
+                return 1;
+            }
+            //失敗
+            return 0;
+        }
+
         //更新此 user table
         //await updateEmpUserTable(user, emp);
         private async Task<int> updateEmpUserTable(ApplicationUser user, Employee emp)

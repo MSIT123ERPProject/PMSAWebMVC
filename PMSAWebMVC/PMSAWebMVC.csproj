@@ -2149,6 +2149,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Shared\ResetPwdSupEmailTemplate.html" />
     <Content Include="Views\Shared\ResetPwdEmailTemplate.html" />
     <Content Include="Views\ShipNotices\ShipNoticeDisplay.cshtml" />
     <Content Include="Views\ShipNotices\purchaseOrderSended.cshtml" />

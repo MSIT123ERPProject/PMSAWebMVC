@@ -18,8 +18,8 @@
                 <thead>
                     <tr>
                         @*<th>
-            @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
-        </th>*@
+                                @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
+                            </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
                         </th>
@@ -36,19 +36,19 @@
                             @Html.DisplayNameFor(model => model.SignStatus)
                         </th>
                         @*<th>
-                            @Html.DisplayNameFor(model => model.Employee.Name)
-                        </th>*@
+                                @Html.DisplayNameFor(model => model.Employee.Name)
+                            </th>*@
                         @*<th>
-            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
-        </th>*@
+                                @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
+                            </th>*@
                         <th>動作</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         @*<th>
-            @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
-        </th>*@
+                                @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
+                            </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
                         </th>
@@ -65,47 +65,57 @@
                             @Html.DisplayNameFor(model => model.SignStatus)
                         </th>
                         @*<th>
-                            @Html.DisplayNameFor(model => model.Employee.Name)
-                        </th>*@
+                                @Html.DisplayNameFor(model => model.Employee.Name)
+                            </th>*@
                         @*<th>
-            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
-        </th>*@
+                                @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
+                            </th>*@
                         <th>動作</th>
                     </tr>
                 </tfoot>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.PurchaseRequisitionOID)
-        </td>*@
-                    <th>
-                        @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
-                    </th>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Product.ProductName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PRBeginDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProcessStatus)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SignStatus)
-                    </td>
-                    @*<td>
-                        @Html.DisplayFor(modelItem => item.Employee.Name)
-                    </td>*@
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)
-        </td>*@
-                    <td>
-                        @Html.ActionLink("新增明細", "CreateDtl2", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })
-                        @Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" }) |
-                        @Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" }) 
-                    </td>
-                </tr>
+                    <tr>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.PurchaseRequisitionOID)
+                            </td>*@
+                        <th>
+                            @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PRBeginDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProcessStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SignStatus)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.Employee.Name)
+                            </td>*@
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)
+                            </td>*@
+                        <td>
+                            @*@Html.ActionLink("新增明細", "CreateDtl2", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
+
+                            @*@Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
+                            @*@Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
+                            @*<button name="click1" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                    <i class="far fa-edit"></i>
+                                </button>*@
+                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" data-dc="@item.PurchaseRequisitionID">
+                                <i class="far fa-eye"></i>
+                            </button>
+                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" data-dc="@item.PurchaseRequisitionID">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
                 }
             </table>
         </div>
@@ -120,14 +130,214 @@
         $(document).ready(function () {
             $('#dataTable').DataTable();
 
+
+
+            //檢視
+            $(document).on('click', "button[name = 'click1']", function () {
+                document.getElementById("btnClose").innerHTML = "關閉";
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Detail", "PurchaseRequisitions")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視請購單資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                //$('*[id="btnUpdate"]').attr('display', false);
+                $('#btnSave').hide();
+                $('#btnUpdate').hide();
+                $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
+                $("#ProductNumber").val(datas[0].ProductNumber);
+                $("#EmployeeID").val(datas[0].EmployeeID);
+                //$("#PRBeginDate").val(datas[0].PRBeginDate);
+                //$(if (datas[0].ProcessStatus == "N") { document.getElementById("ProcessStatus").selectedIndex=0 });
+                $("#ProcessStatus").val(datas[0].ProcessStatus);
+                //$("#opt1").val(datas[0].ProcessStatus);
+                //$("#opt1").text(datas[0].ProcessStatus);
+                $("#SignStatus").val(datas[0].SignStatus);
+                $('#PRBeginDate').datetimepicker({
+                    defaultDate: datas[0].PRBeginDate
+                });
+            })
+            });
+            //修改
+            $(document).on('click', "button[name = 'click2']", function () {
+                document.getElementById("btnClose").innerHTML = "取消";
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Detail", "PurchaseRequisitions")/" + id1, function (datas) {
+                //document.getElementById("code2").innerHTML = '';
+                //document.getElementById("name2").innerHTML = '';
+                //document.getElementById("add2").innerHTML = '';
+                //document.getElementById("tel2").innerHTML = '';
+                $('#ModalTitle').text('檢視請購單資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', false);
+                //$('*[id="btnUpdate"]').attr('display', true);
+                $('#btnSave').hide();
+                //$('#btnUpdate').hide();
+                $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
+                $("#ProductNumber").val(datas[0].ProductNumber);
+                $("#EmployeeID").val(datas[0].EmployeeID);
+                //$("#PRBeginDate").val(datas[0].PRBeginDate);
+                $("#ProcessStatus").val(datas[0].ProcessStatus);
+                $("#SignStatus").val(datas[0].SignStatus);
+                $('#PRBeginDate').datetimepicker({
+                    defaultDate: datas[0].PRBeginDate
+                });
+            })
+            });
+
+            $(document).on('click', "button[id = 'btnClose']", function () {
+                document.getElementById("SS").innerHTML = "";
+                document.getElementById("PS").innerHTML = "";
+
+            });
+
+            $('#btnUpdate').click(function () {
+            var table = $('#dataTable').DataTable();
+            if($("#Address").val() == ''){
+                toastr.error("'*' 為必填欄位","警告");
+            }else{
+                var warehouseinfoObj = {
+                    WarehouseCode:$("#WarehouseCode").val(),
+                    WarehouseName:$("#WarehouseName").val(),
+                    Address:$("#Address").val(),
+                    EmployeeID:$("#EmployeeID").val(),
+                    Tel:$("#Tel").val(),
+                    Remark:$("#Remark").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Edit", "WarehouseInfoes")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(warehouseinfoObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        sell.data($("#Address").val()).draw();
+                    }
+                }).fail(function(response){
+                    toastr.error(response.message, "警告");
+                })
+                $('#warehouseModal').modal('hide');
+            }
+        })
         });
+
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();
         });
         function A() {
             window.location.reload();
         }
-        
+
+        function ps() {
+            let thepwd = document.getElementById("ProcessStatus").value.trim();
+            let str1 = "";
+
+            if (thepwd.length <= 0) {
+                str1 = '<i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;不可為空值';
+            }
+
+            document.getElementById("PS").innerHTML = str1;
+        }
+        function ss() {
+            let thepwd = document.getElementById("SignStatus").value.trim();
+            let str1 = "";
+
+            if (thepwd.length <= 0) {
+                str1 = '<i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;不可為空值';
+            }
+
+            document.getElementById("SS").innerHTML = str1;
+        }
+        loadProcessStatus();
+        async function loadProcessStatus() {
+            var response = await fetch('@Url.Action("getProcessStatus", "PurchaseRequisitions")');
+            var datas = await response.json();
+            var x = "新增"; var y = "請購中"; var z = "結案"
+            for (var i = 0, max = datas.length; i < max; i++) {
+                //if (datas[i].ProcessStatus == "N") { var opt = new Option(x); }
+                //else if (datas[i].ProcessStatus == "O") { var opt = new Option(y); }
+                //else { var opt = new Option(z); }
+                var opt = new Option(datas[i].ProcessStatus);
+                $('#ProcessStatus').append(opt)
+            }
+        }
+        loadSignStatus();
+        async function loadSignStatus() {
+            var response = await fetch('@Url.Action("getSignStatus", "PurchaseRequisitions")');
+            var datas = await response.json();
+            for (var i = 0, max = datas.length; i < max; i++) {
+                var opt1 = new Option(datas[i].SignStatus);
+                $('#SignStatus').append(opt1)
+            }
+        }
+
+
     </script>
 
-}
+}<!--Model-->
+<div class="modal fade bd-example-modal-lg" id="warehouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label class="required" for="PurchaseRequisitionID">@Html.DisplayNameFor(model => model.PurchaseRequisitionID)</label>
+                        <input type="text" class="form-control" id="PurchaseRequisitionID" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="ProductNumber">@Html.DisplayNameFor(model => model.ProductNumber)</label>
+                        <input type="text" class="form-control" id="ProductNumber" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="EmployeeID">@Html.DisplayNameFor(model => model.EmployeeID)</label>
+                        <input type="text" class="form-control" id="EmployeeID" name="da">
+                    </div>
+                    @*<div class="form-group">
+            <label for="ProcessStatus">@Html.DisplayNameFor(model => model.ProcessStatus)</label>
+            <input type="text" class="form-control" id="ProcessStatus" name="dta" onblur="ps()">
+            <span id="PS" style="color:red"></span>
+        </div>*@
+                    <div class="form-group">
+                        <label for="ProcessStatus">處理狀態代碼</label>
+                        <br />
+                        <select class="form-control" id="ProcessStatus" name="dta">
+                            @*<option id="opt1" value="新增">新增</option>
+                <option id="opt2" value="請購中">請購中</option>
+                <option id="opt3" value="結案">結案</option>*@
+                        </select>
+                    </div>
+                    @*<div class="form-group">
+            <label for="SignStatus">@Html.DisplayNameFor(model => model.SignStatus)</label>
+            <input type="text" class="form-control" id="SignStatus" name="dta" onblur="ss()">
+            <span id="SS" style="color:red"></span>
+        </div>*@
+                    <div class="form-group">
+                        <label for="SignStatus">簽核狀態代碼</label>
+                        <br />
+                        <select class="form-control" id="SignStatus" name="dta">
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
+                <button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>
+                <button id="btnSave" type="button" class="btn btn-primary" data-dismiss="modal">新增</button>
+                @*<button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>*@
+                @*<button id="btnSave" type="button" class="btn btn-success" data-dismiss="modal">新增</button>*@
+                @*<button id="btnSave" name="btnSave" type="button" class="btn btn-primary">新增</button>*@
+                @*<button id="btnUpdate" name="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>*@
+            </div>
+        </div>
+    </div>
+</div>

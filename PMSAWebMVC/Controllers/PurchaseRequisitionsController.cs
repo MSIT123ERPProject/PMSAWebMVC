@@ -29,20 +29,22 @@ namespace PMSAWebMVC.Controllers
             return View(purchaseRequisition.ToList());
         }
 
-        // GET: PurchaseRequisitions/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
-            if (purchaseRequisition == null)
-            {
-                return HttpNotFound();
-            }
-            return View(purchaseRequisition);
-        }
+        //// GET: PurchaseRequisitions/Details/5
+        //public ActionResult Details(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
+        //    if (purchaseRequisition == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(purchaseRequisition);
+        //}
+
+     
 
         // GET: PurchaseRequisitions/Create
         public ActionResult Create()
@@ -232,6 +234,41 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
+        //檢視
+        public ActionResult Detail(string id) 
+        {
+            var user = User.Identity.GetEmployee();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
+            if (purchaseRequisition == null)
+            {
+                return HttpNotFound();
+            }
+            // p.PRBeginDate, p.ProcessStatus, p.SignStatus
+            //, ProcessStatus= GetProcessStatus(p.ProcessStatus), SignStatus = GetSignStatus(p.SignStatus)
+            //var datas = db.PurchaseRequisition.Where(p => (p.EmployeeID == user.EmployeeID && p.PurchaseRequisitionID == id))
+            //    .Select(p => new { p.PurchaseRequisitionID, p.ProductNumber, p.EmployeeID, p.PRBeginDate,
+            //        p.ProcessStatus,p.SignStatus
+            //    });
+            var datas = from p in db.PurchaseRequisition.AsEnumerable()
+                        where p.EmployeeID == user.EmployeeID
+                        select new /*PurchaseRequisitionIndexViewModel*/
+                        {
+                            PurchaseRequisitionID=p.PurchaseRequisitionID,
+                            ProductNumber=p.ProductNumber,
+                            EmployeeID=p.EmployeeID,
+                            PRBeginDate=p.PRBeginDate.ToString("yyyy/MM/dd"),
+                            //ProcessStatus = GetProcessStatus(p.ProcessStatus),
+                            //SignStatus = GetSignStatus(p.SignStatus)
+                            ProcessStatus = p.ProcessStatus,
+                            SignStatus = p.SignStatus
+                        };
+            //var da=datas.ToList();
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
 
         //取得請購單資料集
         public JsonResult GetPurchaseRequisitionsList()
@@ -605,8 +642,26 @@ namespace PMSAWebMVC.Controllers
             return Json(new { a = 1 },JsonRequestBehavior.AllowGet);
 
         }
+        //下拉選單
+        public ActionResult getProcessStatus()
+        {
+            var ProcessStatus = db.PurchaseRequisition.Select(p => new
+            {
+                
+                p.ProcessStatus,
+            }).Distinct();
+            return Json(ProcessStatus, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult getSignStatus()
+        {
+            var SignStatus = db.PurchaseRequisition.Select(p => new
+            {
+                p.SignStatus
+            }).Distinct();
+            return Json(SignStatus, JsonRequestBehavior.AllowGet);
+        }
 
-            public ActionResult Deletetest(string id) //請購單暫存明細刪除
+        public ActionResult Deletetest(string id) //請購單暫存明細刪除
         {
             //try
             //{

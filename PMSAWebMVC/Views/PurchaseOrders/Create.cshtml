@@ -16,7 +16,7 @@
             <div class="row mb-0 align-items-center">
 
                 @Html.LabelFor(m => m.SelectedPurchaseRequisitionID, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
-                <div class="col-md-3">
+                <div class="col-md-6">
                     @Html.DropDownListFor(m => m.SelectedPurchaseRequisitionID, Model.PurchaseRequisitionList, "請選擇", htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.SelectedPurchaseRequisitionID, "", new { @class = "text-danger" })
                 </div>
@@ -57,49 +57,104 @@
     <div class="card-header">
         <i class="far fa-building"></i> 供應商
     </div>
-    <div class="card-body">
+    <div class="card-body pb-0 pt-0">
         <div class="form-horizontal">
-            <div class="form-group row">
-                @Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-5">
-                    @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
+            <div class="row mb-0 mt-0 align-items-center">
+
+                @*@Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="w-100"></div>*@
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <strong>供應商名稱</strong>
+                            <br>
+                            <p class="text-muted">誌慶股份有限公司</p>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <strong>聯絡人</strong>
+                            <br>
+                            <p class="text-muted">林政苓</p>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <strong>電子信箱</strong>
+                            <br>
+                            <p class="text-muted">h1051235@gmail.com</p>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <strong>聯絡電話</strong>
+                            <br>
+                            <p class="text-muted">02-4076125</p>
+                        </div>
+                    </div>
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
-@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-list"></i> 採購細項
-        </div>
-        <div class="card-body">
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-warning" id="warning">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    @TempData["ErrorMessage"]
+
+<div id="tab" class="btn-group btn-group-toggle btn-block mb-3" data-toggle="buttons">
+
+    <a href="#features" class="btn btn-outline-primary active" data-toggle="tab">
+        <input type="radio" name="options" id="option1" autocomplete="off" checked>
+        請購明細 <span class="badge badge-pill badge-danger">10</span>
+    </a>
+    <a href="#contact" class="btn btn-outline-primary" data-toggle="tab">
+        <input type="radio" name="options" id="option3" autocomplete="off">
+        採購明細 <span class="badge badge-pill badge-danger">5</span>
+    </a>
+
+</div>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="features">
+        @using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-list"></i> 採購細項
                 </div>
-            }
-            <div class="table-responsive" id="dataTablesContainer"></div>
-        </div>
-    </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-warning" id="warning">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    <div class="table-responsive" id="dataTablesContainer"></div>
+                </div>
+            </div>
 
-    <div class="form-group">
-        <div class="d-flex justify-content-center">
-            <button id="btnSubmit" type="submit" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>送出申請</button>
-        </div>
-    </div>
+            <div class="form-group">
+                <button id="btnSubmit" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
+            </div>
 
-}
+        }
+
+    </div>
+    <div class="tab-pane" id="contact">Contact Content</div>
+</div>
 
 @section scripts
 {
+
+    <script src="~/Scripts/bootstrap4-responsive-tabs/responsive-tabs.js"></script>
     <script>
         $(document).ready(function () {
+
+            $(".btn-group-toggle a[data-toggle='tab']").click(function () {
+                $(this).tab('show');
+                $(this).addClass("active").siblings().removeClass("active");
+            });
 
             let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseOrders")';
             let supplierList = $('#SelectedSupplierName');

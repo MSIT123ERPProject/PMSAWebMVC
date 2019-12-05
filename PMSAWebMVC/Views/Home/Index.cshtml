@@ -45,15 +45,15 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <h2><i class="fas fa-fw fa-tachometer-alt"></i>出貨金額比例</h2>
+            <h2><i class="fas fa-money-check-alt"></i>出貨金額比例</h2>
             <div id="container"></div>
         </div>
         <div class="col-md-4">
-            <h2><i class="fas fa-fw fa-table"></i>料件庫存數量</h2>
+            <h2><i class="fas fa-chart-bar"></i>料件庫存數量</h2>
             <div id="container2"></div>
         </div>
         <div class="col-md-4">
-            <h2><i class="fas fa-fw fa-chart-area"></i>料件出貨數量</h2>
+            <h2><i class="fas fa-boxes"></i>料件出貨數量</h2>
             <div id="container3"></div>
         </div>
     </div>
@@ -86,6 +86,7 @@
                     width: 500,
                 },
                 title: {
+                    useHTML: true,
                     style: {
                         fontWeight: 'bold',
                         fontFamily: "微軟正黑體",
@@ -159,7 +160,10 @@
                     unitsOnOrder.push(datas[i].UnitsOnOrder);
                 };
                 var chart2 = new Highcharts.chart({
-                    title: { text: '目前庫存量' },
+                    title: {
+                        useHTML: true,
+                        text: '<i class="fas fa - chart - bar"></i>目前庫存量' ,
+                    },
                     subtitle: { text: '料件' },
                     chart: {
                         renderTo: 'container2',
@@ -233,11 +237,12 @@
             $.getJSON(`@Url.Action("GetPartTotalPricePercentage", "SupplierHomePage")`, function (datas) {
                 let percentage = [];
                 let partname = [];
-                let pie = [];
+                let pie = [];   
+                console.log(datas);
                 for (var i = 0; i < datas.length; i++) {
                     percentage.push(datas[i].Percentage);
                     partname.push(datas[i].PartName);
-                    pie.push( { name: datas[i].PartName, y: datas[i].ToalPrice });
+                    pie.push({ name: datas[i].SourceListID, y: datas[i].ToalPrice });
                     //pie.push([datas[i].PartName, datas[i].Percentage]);
                 }
                 var chart = new Highcharts.chart({

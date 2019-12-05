@@ -263,19 +263,12 @@ namespace PMSAWebMVC.Controllers
         public async Task sendMail(string EmpId)
         {
             var user = await UserManager.Users.Where(x => x.UserName.Contains("C") && x.UserName == EmpId).SingleOrDefaultAsync();
-            // 傳送包含此連結的電子郵件
-            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
-            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdEmailTemplate.html"));
-            // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
-            string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
-            string pwd = generateFirstPwd();
-            string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
+
             //emp table user table
             //重設資料庫該 user 密碼 並 hash 存入 db
             //重設db密碼
             //1.重設 user 密碼
+            string pwd = generateFirstPwd();
             await UserManager.UpdateSecurityStampAsync(user.Id);
             user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
             user.LastPasswordChangedDate = null;
@@ -283,6 +276,14 @@ namespace PMSAWebMVC.Controllers
             var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
             emp.PasswordHash = user.PasswordHash;
 
+            // 傳送包含此連結的電子郵件
+            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdEmailTemplate.html"));
+            // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
+            string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
+            string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
             //寄信
             await UserManager.SendEmailAsync(user.Id, "重設您的密碼", MailBody);
 
@@ -299,25 +300,27 @@ namespace PMSAWebMVC.Controllers
         // 帳戶確認及密碼重設
         private async Task sendMailatIndex(ApplicationUser user, string EmpId)
         {
-            // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
-            // 傳送包含此連結的電子郵件
-            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
-            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdEmailTemplate.html"));
-            // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
-            string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
-            string pwd = generateFirstPwd();
-            string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
             //emp table user table
             //重設資料庫該 user 密碼 並 hash 存入 db
             //重設db密碼
             //1.重設 user 密碼
+            string pwd = generateFirstPwd();
             await UserManager.UpdateSecurityStampAsync(user.Id);
             user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
 
             var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
             emp.PasswordHash = user.PasswordHash;
+
+            // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
+            // 傳送包含此連結的電子郵件
+            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
+            //更改密碼要在code之前不然他是拿UpdateSecurityStampAsync 來生code的
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdEmailTemplate.html"));
+            // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
+            string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
+            string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
 
             //寄信
             await UserManager.SendEmailAsync(user.Id, "重設您的密碼", MailBody);

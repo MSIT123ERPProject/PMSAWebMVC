@@ -14,38 +14,40 @@
         <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
     </div>
     <div class="card-body">
-        <div class="dataTables_wrapper">
-            <table class="nowrap dataTable dtr-column collapsed" id="dataTable" cellspacing="0" style="width:100%">
-                <thead>
-                    <tr role="row">
-
-                        <th>
-                            @Html.DisplayNameFor(model => model.SourceListID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PartNumber)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.QtyPerUnit)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitPrice)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitsOnOrder)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitsInStock)
-                        </th>
-                        <th>
-                            調整庫存
-                        </th>
-                        <th>檢視</th>
-                    </tr>
-                </thead>
-                <tfoot>
+        <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
+            <thead>
+                <tr  class="bg-primary text-white text-center">
+                    <th data-priority="1"></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SourceListID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PartNumber)
+                    </th>
+                    <th>
+                        料件名稱
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.QtyPerUnit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnitPrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnitsOnOrder)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnitsInStock)
+                    </th>
+                    <th>安全庫存量</th>
+                    <th data-priority="1">
+                        調整庫存
+                    </th>
+                </tr>
+            </thead>
+            @*<tfoot>
                     <tr>
-
+                        <th></th>
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -64,14 +66,12 @@
                         <th>
                             @Html.DisplayNameFor(model => model.UnitsInStock)
                         </th>
-                        <th>
+                        <th data-priority="1">
                             調整庫存
                         </th>
-                        <th>檢視</th>
                     </tr>
-                </tfoot>
-            </table>
-        </div>
+                </tfoot>*@
+        </table>
     </div>
 </div>
 @section scripts
@@ -79,13 +79,17 @@
     <script>
             $(document).ready(function () {
                 dataTableDisplay();
-            });
+                ClickUpdateButton()
+        });
+        /////////////////////////////////////////////
+        let table;
+        //dataTable顯示方法
             function dataTableDisplay() {
-                if ($.fn.DataTable.isDataTable("#dataTable")) {
+              if ($.fn.DataTable.isDataTable("#dataTable")) {
                     $("#dataTable").DataTable().destroy();
                 }
               //  $.fn.dataTable.ext.errMode = 'throw';
-                $('#dataTable').DataTable({
+         table=$('#dataTable').DataTable({
                   "ajax": {
                         "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
                         "type": "GET",
@@ -94,106 +98,119 @@
                         "contentType": "application/json;charset=utf-8",
                         "cache": true
                     },
-                    responsive: {
-                        details: {
-                            type: 'column',
-                           target:-1
-                        }
-                    },
-                    columnDefs: [
-                        {
-                            className: 'control',
-                            orderable: false,
-                            targets: -1,
-                        }
-                    ],
-                    "columns": [
-                        { "data": "SourceListID" },
-                        { "data": "PartNumber" },
-                        { "data": "QtyPerUnit" },
+             ordering: false,
+             //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+             order: [[2, 'desc']],
+             //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+             responsive: {
+                 details: {
+                     type: 'column',
+                     target: 0
+                 }
+             },
+             columnDefs: [{
+                 targets: 0,
+                 className: 'control'
+             },
+                 { orderable: false, targets: [0, 1, -1] },
+                 { targets: [4, 5, 6, 7, 8], className: 'dt-body-right'}
+             ],
+             "columns": [
+                 {
+                     "data": null, render: function (d) {
+                         if (d == null) { return "-"; }
+                         return "";
+                     }
+                 },
+                 { "data": "SourceListID", orderable: true },
+                 { "data": "PartNumber" },
+                 { "data": "PartName" },
+                         { "data": "QtyPerUnit" },
                         { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
                         { "data": "UnitsOnOrder" },
-                        { "data": "UnitsInStock"},
+                        { "data": "UnitsInStock" },
                         {
-                            "data": "SourceListID",
-                            "render": function (data, type, row, meta) {
-                                return '<button class="btn btn-primary"' + 'name="UpdateStock"' + 'id="' + data + '">調整庫存</button>';
-                            }
+                         "data": "SafetyQty",
+                          orderable: false
                         },
                         {
                             "data": "SourceListID",
-                            orderable: false,
-                            className: 'control',
-                            render: function (data, type, row, meta) {
-                                return "";
+                            "render": function (data, type, row, meta) {
+                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" name="UpdateStock" id="${data}"><i class="far fa-edit"></i></button></div>`;
+                                //return '<button class="btn btn-primary"' + 'name="UpdateStock"' + 'id="' + data + '">調整庫存</button>';
                             }
-                        }
+                        },
                     ],
                     fixedColumns: {
                         leftColumns: 2,
+             },
+                      language: {
+                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
                     },
                     "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
                     "order": [[1, "asc"]],
                     "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
                     "autoWidth": false
                 });
-                //抓 table 裡按鈕請 如此 $("tbody").on()
-                $("tbody").on('click', '.addBtn', function (e) {
-                    console.log(e.currentTarget);
-                });
-                //////
-                $(document).on('click', "button[name='UpdateStock']", async function () {
-                    let td = $(this).parent('td');
-                    let tr = td.parent('tr');
-                    let stock = tr.children('td:nth-child(6)').text();
-                    let id = $(this).prop('id');
-                     const { value: formValues } = await Swal.fire({
-                        title: '庫存數量修改',
-                        html:
-                            '<Label swal-label>PartNumber</Label>' +
-                             `<input id="stock" class="swal2-input" value="${stock}">`,
-                         showCancelButton: true,
-                         cancelButtonColor: '#d33',
-                         cancelButtonText:'取消',
-                        focusConfirm: false,
-                        preConfirm: () => {
-                            return [
-                                document.getElementById('stock').value,
-                            ]
+        }
+        /////////////////////////////////////////////////////
+        //調整庫存按鈕
+        function ClickUpdateButton() {
+            $(document).on('click', "button[name='UpdateStock']", async function () {
+                let td = $(this).parent('td');
+                let tr = td.parent('tr');
+                let stock = tr.children('td:nth-child(6)').text();
+                let id = $(this).prop('id');
+                const { value: formValues } = await Swal.fire({
+                    title: '庫存數量修改',
+                    html:
+                        '<Label swal-label>PartNumber</Label>' +
+                        `<input id="stock" class="swal2-input" value="${stock}">`,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: '取消',
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        return [
+                            document.getElementById('stock').value,
+                        ]
+                    }
+                })
+                    //呼叫UpdateStock方法修改庫存
+                if (formValues && parseInt(formValues[0]) >= 0) {
+                    let uisChange = parseInt(formValues[0]);
+                    let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
+                    $.ajax({
+                        url: "@Url.Action("UpdateStock", "SupplierStocks")",
+                        type: "POST",
+                        data: jsondata,
+                        contentType: "application/json",
+                        dataType: "JSON"
+                    }).done(function (res) {
+                        console.log(res);
+                        if (res.status == "saved") {
+                            // alert("庫存已修改");
+                            dataTableDisplay();
+                            toastr.success(res.message, "通知");
+                            //  table.row(tr).cell(':eq(6)').data(uisChange).draw();
                         }
+                        if (res.status == "savefail") {
+                            //alert("庫存修改失敗，庫存不得小於零");
+                            toastr.error(res.message, "通知");
+                        }
+                    }).fail(function (err) {
+                        alert("ajax fail  " + err.responseJSON);
                     });
-                    //此處無法傳值進UpdateStock方法裡面 2019 11/22 17:30
-                    //成功了，改成POST就可以了，不知道為甚麼PUT不行
-                    if (formValues && formValues[0] >= 0) {
-                        let uisChange = parseInt(formValues[0]);
-                        let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
-                        $.ajax({
-                            url: "@Url.Action("UpdateStock", "SupplierStocks")",
-                            type: "POST",
-                            data: jsondata,
-                            contentType: "application/json",
-                            dataType: "JSON"
-                        }).done(function (res) {
-                            if (res == "saved") {
-                                alert("庫存已修改");
-                                setTimeout("dataTableDisplay()", 0);
-                            }
-                            if (res == "savefail") {
-                                alert("庫存修改失敗，庫存不得小於零");
-                            }
-                        }).fail(function (err) {
-                            alert("ajax fail  " + err.responseJSON);
-                        });
-                        //Swal.fire(JSON.stringify(formValues))
-                    }
-                    else {
-                       // alert("取消");
-                    }
-                });
-            }
-            //function reload() {
-            //    window.location.reload();
-            //}
+                }
+                else if (parseInt(formValues[0]) < 0) {
+                    toastr.error("庫存不得小於零", "警告");
+                }
+                else {
+                    toastr.error("取消", "警告");
+                }
+            }); 
+        }
+        ///////////////////////////////////////////////////
     </script>
 }
 

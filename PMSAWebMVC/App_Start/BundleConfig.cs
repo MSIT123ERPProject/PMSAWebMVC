@@ -27,6 +27,7 @@ namespace PMSAWebMVC
                  "~/Content/MDB/css/bootstrap.css",                
                 //MDB
                 "~/Content/MDB/css/mdb.css",
+                "~/Content/MDB/css/bootstrap.theme.css",
                 "~/Content/MDB/css/addons/datatables.min.css",
                 "~/Content/MDB/css/addons/datatables-select.min.css",
                 "~/Content/MDB/css/addons/directives.min.css",

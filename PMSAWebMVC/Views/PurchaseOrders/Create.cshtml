@@ -61,13 +61,13 @@
         <div class="form-horizontal">
             <div class="row mb-0 mt-0 align-items-center">
 
-                @*@Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
+                @Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
                     <div class="col-md-5">
                         @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="w-100"></div>*@
+                    <div class="w-100"></div>
 
                 <div class="card-body">
                     <div class="row">
@@ -120,7 +120,7 @@
             @Html.AntiForgeryToken()
             <div class="card mb-3">
                 <div class="card-header">
-                    <i class="fas fa-list"></i> 採購細項
+                    <i class="fas fa-list"></i> 請購明細
                 </div>
                 <div class="card-body">
                     @if (TempData["ErrorMessage"] != null)
@@ -141,20 +141,148 @@
         }
 
     </div>
-    <div class="tab-pane" id="contact">Contact Content</div>
+    <div class="tab-pane" id="contact">
+
+        <table id="dataTablesId" class="table table-striped hover order-column nowrap text-left" style="width:100%">
+            <thead>
+                <tr class="bg-primary text-white text-center">
+                    <th></th>
+                    <th data-priority="1">
+                        <input type="checkbox" class="mgc" />
+                    </th>
+                    <th data-priority="1">First name</th>
+                    <th>Last name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                    <th>Extn.</th>
+                    <th>E-mail</th>
+                    <th data-priority="1">動作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" class="mgc"></td>
+                    <td>Tiger</td>
+                    <td>Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                    <td>5421</td>
+                    <td>t.nixon@datatables.net</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視">
+                                <i class="far fa-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="明細">
+                                <i class="far fa-file-alt"></i>
+                            </button>
+                            <div class="dropdown" data-toggle="popover-dropdown">
+                                <button class="btn btn-outline-secondary btn-icon">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">新增</a>
+                                    <a class="dropdown-item" href="#">表單</a>
+                                    <a class="dropdown-item" href="#">簽核</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" class="mgc"></td>
+                    <td>Tiger</td>
+                    <td>Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                    <td>5421</td>
+                    <td>t.nixon@datatables.net</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視">
+                                <i class="far fa-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="明細">
+                                <i class="far fa-file-alt"></i>
+                            </button>
+                            <div class="dropdown" data-toggle="popover-dropdown">
+                                <button class="btn btn-outline-secondary btn-icon">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">新增</a>
+                                    <a class="dropdown-item" href="#">表單</a>
+                                    <a class="dropdown-item" href="#">簽核</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <button id="btnSubmit2" type="submit" class="btn btn-secondary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
+        </div>
+
+    </div>
 </div>
 
 @section scripts
 {
 
-    <script src="~/Scripts/bootstrap4-responsive-tabs/responsive-tabs.js"></script>
-    <script>
+        <script>
         $(document).ready(function () {
-
+            //分頁樣式
             $(".btn-group-toggle a[data-toggle='tab']").click(function () {
                 $(this).tab('show');
                 $(this).addClass("active").siblings().removeClass("active");
             });
+
+            //採購明細
+            $('#dataTablesId').DataTable({
+                ordering: false,
+                fixedHeader: false,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [[2, 'desc']],
+                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                columnDefs: [{
+                    targets: 0,
+                    className: 'control'
+                },
+                { orderable: false, targets: [0, 1, -1] },
+                ],
+            });
+
 
             let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseOrders")';
             let supplierList = $('#SelectedSupplierName');

@@ -591,6 +591,7 @@
     <Content Include="Content\MDB\css\addons\rating.min.css" />
     <Content Include="Content\MDB\css\bootstrap.css" />
     <Content Include="Content\MDB\css\bootstrap.min.css" />
+    <Content Include="Content\MDB\css\bootstrap.theme.css" />
     <Content Include="Content\MDB\css\mdb.css" />
     <Content Include="Content\MDB\css\mdb.lite.css" />
     <Content Include="Content\MDB\css\mdb.lite.min.css">

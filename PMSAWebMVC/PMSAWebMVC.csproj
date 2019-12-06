@@ -2350,6 +2350,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="assets\parts\" />
     <Folder Include="assets\products\" />
+    <Folder Include="Controllers\ReportsController\" />
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />
     <Folder Include="Utilities\ShiYuan\" />

@@ -353,6 +353,56 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
             return Json(sups, JsonRequestBehavior.AllowGet);
         }
 
+        public async Task<ActionResult> getManagerAllSupAccToIndexAjax()
+        {
+            List<object> sups = new List<object>();
+            var supInfo = db.SupplierInfo;
+            var supAcc = db.SupplierAccount;
+            var rating = db.SupplierRating;
+            //datatime 要轉型
+            var js = new JsonSerializerSettings()
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
+            //判斷登入者是誰顯示專屬廠商
+            string LoginAccId = User.Identity.GetUserName();
+            string LognId = User.Identity.GetUserId();
+
+            //供應商帳號
+            var usersWithSupplierAccountID = UserManager.Users.Where(x => x.UserName.Contains("S")).ToList();
+            var usersOfsupAccfromCreator = usersWithSupplierAccountID.Join(supAcc, u => u.UserName, sa => sa.SupplierAccountID, (u, sa) => new
+            {
+                UserName = u.UserName,
+                Email = u.Email,
+                RealName = u.RealName,
+                CreatorEmployeeID = sa.CreatorEmployeeID,
+                SupplierAccountID = sa.SupplierAccountID,
+                SupplierCode = sa.SupplierCode
+            }).Where(y => y.CreatorEmployeeID == LoginAccId);
+
+            foreach (var x in usersOfsupAccfromCreator)
+            {
+                var user = new
+                {
+                    SupplierCode = await supInfo.Join(supAcc, s => s.SupplierCode, sa => sa.SupplierCode, (s, sa) => new { SupplierCode = s.SupplierCode, SupplierAccountID = sa.SupplierAccountID }).Where(y => y.SupplierAccountID == x.UserName).Select(y => y.SupplierCode).FirstOrDefaultAsync(),
+                    SupplierName = await supInfo.Join(supAcc, s => s.SupplierCode, sa => sa.SupplierCode, (s, sa) => new { SupplierName = s.SupplierName, SupplierAccountID = sa.SupplierAccountID }).Where(y => y.SupplierAccountID == x.UserName).Select(y => y.SupplierName).FirstOrDefaultAsync(),
+                    SupplierAccountID = x.UserName,
+                    ContactName = x.RealName,
+                    Email = x.Email,
+                    Mobile = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
+                    Tel = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
+                    AccountStatus = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
+                    ModifiedDate = JsonConvert.SerializeObject(await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
+                    CreatorEmployeeID = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.CreatorEmployeeID).FirstOrDefaultAsync(),
+                    CreateDate = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.SupplierAccount.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
+                    SendLetterDate = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.SupplierAccount.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
+                    LastPasswordChangedDate = await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync(), js)
+                };
+                sups.Add(user);
+            }
+            return Json(sups, JsonRequestBehavior.AllowGet);
+        }
+
         //SupCode 拿 supAcc
         public async Task<ActionResult> getAllSupAccBySupCodeToIndexAjax(string id)
         {

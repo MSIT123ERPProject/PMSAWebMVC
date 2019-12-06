@@ -123,52 +123,58 @@
         }
     </style>
 }
-<div class="wrapall">
-    <h2>新增供應商公司</h2>
-    <h6>新增公司供新增供應商帳號用</h6>
-    <div class="card">
-        <div class="card-body">
-            <div class="row" style="margin: 12px;">
-                <div class="col-lg-5 col-md-11 col-sm-11">
-                    <h4>填寫供應商公司資料</h4>
-                    <div class="left" style="margin:0">
-                        <form class="supCompanyInfoDiv">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.SupplierCode)
-                                @Html.TextBoxFor(model => model.SupplierCode, new { @class = "form-control col-lg-12" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.SupplierName)
-                                @Html.TextBoxFor(model => model.SupplierName, new { @class = "form-control col-lg-12" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.TaxID)
-                                @Html.TextBoxFor(model => model.TaxID, new { @class = "form-control col-lg-12" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Address)
-                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control col-lg-12" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Email)
-                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control col-lg-12" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.Tel)
-                                @Html.TextBoxFor(model => model.Tel, new { @class = "form-control col-lg-12" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.SupplierRatingOID)
-                                @Html.DropDownListFor(m => m.SupplierRatingOID, new List<SelectListItem>{ new SelectListItem { Text = "1", Value = "1" }, new SelectListItem { Text = "2", Value = "2" } }, new { @class = "form-control" })
-                            </div>
-                            <button id="btnNoCompany" type="submit" class="btn btn-primary">確認新增公司</button>
-                        </form>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")"><i class="fas fa-building"></i> 供應商公司總覽</a></li>
+            <li class="breadcrumb-item active" aria-current="page">新增供應商公司</li>
+        </ol>
+    </nav>
+    <div class="wrapall">
+        <h2>新增供應商公司</h2>
+        <h6>新增公司以新增供應商帳號</h6>
+        <div class="card">
+            <div class="card-body">
+                <div class="row" style="margin: 12px;">
+                    <div class="col-lg-5 col-md-11 col-sm-11">
+                        <h4>填寫供應商公司資料</h4>
+                        <div class="left" style="margin:0">
+                            <form class="supCompanyInfoDiv">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SupplierCode)
+                                    @Html.TextBoxFor(model => model.SupplierCode, new { @class = "form-control col-lg-12" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SupplierName)
+                                    @Html.TextBoxFor(model => model.SupplierName, new { @class = "form-control col-lg-12" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.TaxID)
+                                    @Html.TextBoxFor(model => model.TaxID, new { @class = "form-control col-lg-12" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Address)
+                                    @Html.TextBoxFor(model => model.Address, new { @class = "form-control col-lg-12" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Email)
+                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control col-lg-12" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Tel)
+                                    @Html.TextBoxFor(model => model.Tel, new { @class = "form-control col-lg-12" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SupplierRatingOID)
+                                    @Html.DropDownListFor(m => m.SupplierRatingOID, new List<SelectListItem> { new SelectListItem { Text = "1", Value = "1" }, new SelectListItem { Text = "2", Value = "2" } }, new { @class = "form-control" })
+                                </div>
+                                <button id="btnNoCompany" type="submit" class="btn btn-primary">確認新增公司</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @section scripts
 {
     <script>

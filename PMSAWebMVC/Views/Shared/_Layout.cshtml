@@ -52,7 +52,16 @@
                                 </div>
                             </a>
                             <div class="sidebar-submenu dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">基本資料設定</a>
+
+                                @if (User.IsInRole("Buyer")|| User.IsInRole("Warehouse")|| User.IsInRole("Admin")|| User.IsInRole("Manager") || User.IsInRole("ProductionControl"))
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Index", "BuyerSetting")">基本資料設定</a>
+                                }
+
+                                @if (User.IsInRole("Supplier"))
+                                {
+                                    <a class="dropdown-item" href="@Url.Action("Index", "SupSetting")">基本資料設定</a>
+                                }
                                 <a class="dropdown-item" href="@Url.Action("ResetPassword", "Account")">重設密碼</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" style="font-weight: 600;letter-spacing:2px;" href="@Url.Action( "LogOff", "Account")"><i class="fas fa-power-off"></i>登出</a>

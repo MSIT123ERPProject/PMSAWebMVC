@@ -200,6 +200,8 @@
     <Compile Include="Common\IdentityExtensions.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccSettingController\BuyerSettingController.cs" />
+    <Compile Include="Controllers\AccSettingController\SupSettingController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\SupInfoCompanyController.cs" />
@@ -2351,6 +2353,8 @@
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
     <Content Include="Views\SupInfoCompany\Index.cshtml" />
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
+    <Content Include="Views\BuyerSetting\Index.cshtml" />
+    <Content Include="Views\SupSetting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2361,6 +2365,7 @@
     <Folder Include="Utilities\ShiYuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
+    <Folder Include="Views\Buyer\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

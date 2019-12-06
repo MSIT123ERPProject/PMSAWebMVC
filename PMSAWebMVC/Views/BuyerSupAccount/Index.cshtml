@@ -351,6 +351,17 @@
         .modal-footer {
             background-color: #eee;
         }
+
+        .card-header {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+        }
+
+            .card-header h5 {
+                font-size: 18px;
+                margin: 0;
+            }
     </style>
 }
 <div class="wrapall">
@@ -359,13 +370,27 @@
 
     <div class="card">
         <div class="card-header">
-            <h5>
-                <i class="fas fa-table"></i>
-                採購員帳號
-            </h5>
+            @if (User.IsInRole("Manager"))
+            {
+                <button type="button" id="All" style="height: 50px; width:100%; justify-content: center; border-right: 1px solid #E4E7ED; border-radius: 0;" class="btn col-md-6">
+                    <i class="fas fa-user-friends"></i>
+                    供應商帳號總覽
+                </button>
+                <button type="button" id="Non" style="height: 50px; width:100%; justify-content: center; border-radius: 0;" class="btn col-md-6">
+                    <i class="fas fa-table"></i>
+                    專屬供應商帳號總覽
+                </button>
+            }
+            else
+            {
+                <h5 style="margin: 15px; padding-left: 10px;">
+                    <i class="fas fa-table"></i>
+                    專屬供應商帳號總覽
+                </h5>
+            }
         </div>
         <div class="card-body">
-            <a class="btn btn-warning" href="@Url.Action("Create","BuyerSupAccount")"><i class="fas fa-plus"></i> 新增帳號</a>
+            <a class="btn btn-warning" href="@Url.Action("Create","BuyerSupAccount")"><i class="fas fa-user-plus"></i> 新增帳號</a>
             <div class="table-responsive" style="width:98%; padding: 10px">
                 <table class="table table-striped table-border nowrap" id="Table" style="width:100%;">
                     <thead>
@@ -579,7 +604,7 @@
 @section scripts{
     @*https://datatables.net/forums/discussion/56914*@
     <script type="text/javascript">
-
+        var url = '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")';
         $("#Table").ready(() => {
             var oTable = $('#Table').DataTable({
                 responsive: {
@@ -603,7 +628,7 @@
                     },
                 ],
                 "ajax": {
-                    "url": '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")',
+                    "url": url,
                     "type": "GET",
                     "dataSrc": ""
                 },
@@ -731,7 +756,13 @@
                 ]
                 },
             )
-
+            
+            $("#Non").click(() => {
+                oTable.ajax.url('@Url.Action("getManagerAllSupAccToIndexAjax", "BuyerSupAccount")').load();
+            })
+            $("#All").click(() => {
+                oTable.ajax.url(url).load();
+            })
             //抓 table 裡按鈕請 如此 $("tbody").on()
             $("tbody").on('click', '.editBtn', function (e) {
 

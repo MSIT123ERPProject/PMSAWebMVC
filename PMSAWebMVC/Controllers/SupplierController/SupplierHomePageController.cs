@@ -67,9 +67,9 @@ namespace PMSAWebMVC.Controllers.SupplierController
                           join pod in db.PurchaseOrderDtl
                           on po.PurchaseOrderID equals pod.PurchaseOrderID
                           where po.CreateDate > dateStartD && po.CreateDate < dateEndD
-                                       && po.PurchaseOrderStatus == "E" || po.PurchaseOrderStatus == "S"
+                                       //&& po.PurchaseOrderStatus == "E" || po.PurchaseOrderStatus == "S"
                                             && po.SupplierCode == supplierCode
-                          select new
+                      select new
                           {
                               pod.PartName,
                               pod.PartNumber,

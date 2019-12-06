@@ -91,9 +91,9 @@
                 partTotalPrice();
                 SplitBubbleChart();
             });
+            //時間選擇器
             $('#datetimepickerIdStart').datetimepicker(
                 {
-                    //startDate: '-3d',
                     defaultDate: new Date("2019/12/01"),
                 }
             );
@@ -105,18 +105,11 @@
             let dateTimeStart ;
             let dateTimeEnd ;
             $('#datetimepickerIdStart').on('change.datetimepicker', function (e) {
-                console.log(e.date);
-                console.log(e);
-                console.log(this);
-                console.log(e.target.children["0"].value);
                 dateTimeStart = $(this).find("input").val();
-                console.log(dateTimeStart);
             });
             $('#datetimepickerIdEnd').on('change.datetimepicker', function (e) {
-                console.log(e.date);
                 dateTimeEnd = $(this).find("input").val();
-                console.log(dateTimeEnd);
-                console.log(dateTimeStart - dateTimeEnd);
+                //檢查是否日期選擇正確
                 if (dateTimeStart > dateTimeEnd) {
                     toastr.error("起始日期不得小於結束日期", "警告");
                 }
@@ -124,7 +117,7 @@
                     partTotalPrice();
                 }
             });
-
+            //設定HIGHCHART公用設定
             Highcharts.setOptions({
                 chart: {
                     style: {
@@ -195,7 +188,7 @@
                 },
 
             });
-
+            ////////////////////////////////////
         //庫存不足料件圖 column chart
         function unitsInStockChart() {
                $.getJSON(`@Url.Action("GetStockData", "SupplierHomePage")`, function (datas) {
@@ -285,16 +278,15 @@
         }
         //三個月內各料件出貨金額 PIE CHART
             function partTotalPrice() {
+                //先把日期分別放進物件中
                 let data = {
                     dateStart : dateTimeStart,
                     dateEnd: dateTimeEnd
                 };
-                console.log(data);
                 $.getJSON(`@Url.Action("GetPartTotalPricePercentage", "SupplierHomePage")`, data, function (datas) {
                 let percentage = [];
                 let partname = [];
                 let pie = [];
-                console.log(datas);
                 for (var i = 0; i < datas.length; i++) {
                     percentage.push(datas[i].Percentage);
                     partname.push(datas[i].PartName);

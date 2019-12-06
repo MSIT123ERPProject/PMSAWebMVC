@@ -45,15 +45,6 @@ namespace PMSAWebMVC.Controllers.SupplierController
                           ReceiptAddress=po.ReceiptAddress,
                           PurchaseOrderTotalAmount =0
                       }).ToList();
-            //計算每筆訂單總金額
-            //foreach ( var order in qpo ) {
-            //   var qorderTotal= db.PurchaseOrderDtl.Where(x => x.PurchaseOrderID == order.PurchaseOrderID).Select(x=>x.Total);
-            //    int?  orderTotal= 0;
-            //    foreach ( var total in qorderTotal ) {
-            //        orderTotal += total;
-            //    }
-            //    order.PurchaseOrderTotalAmount = (int)orderTotal;
-            //}
             for ( int i =0;i<qpo.Count();i++ ) {
                 string purchaseOrderID = qpo[i].PurchaseOrderID;
                 var qorderTotal = db.PurchaseOrderDtl.Where(x => x.PurchaseOrderID == purchaseOrderID).Select(x => x.Total);
@@ -66,6 +57,11 @@ namespace PMSAWebMVC.Controllers.SupplierController
             }
             var json = new {data= qpo } ;
             return Json(json, JsonRequestBehavior.AllowGet);
+        }
+        //此方法為答交按鈕的方法，此功能為辰哥負責
+        public ActionResult OrderApply() {
+            //供應商答交程式碼
+            return View();
         }
     }
 }

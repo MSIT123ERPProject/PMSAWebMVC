@@ -4,36 +4,37 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace PMSAWebMVC.ViewModels.BuyerSupAccount
 {
-    public class BuyerSupAccount_CreateViewModel
+    public class SupInfoViewModel
     {
         [DisplayName("供應商名稱")]
         [Required(ErrorMessage = "{0}為必填欄位")]
         public string SupplierName { get; set; }
 
         [DisplayName("供應商代碼")]
-        [Required(ErrorMessage = "{0}為必填欄位")]
         public string SupplierCode { get; set; }
 
-        [DisplayName("聯絡人")]
+        [DisplayName("統一編號")]
         [Required(ErrorMessage = "{0}為必填欄位")]
-        public string ContactName { get; set; }
+        public string TaxID { get; set; }
 
         [DisplayName("信箱")]
-        [EmailAddress]
         [Required(ErrorMessage = "{0}為必填欄位")]
         public string Email { get; set; }
 
-        [DisplayName("手機")]
-        public string Mobile { get; set; }
-
         [DisplayName("市話")]
+        [Required(ErrorMessage = "{0}為必填欄位")]
         public string Tel { get; set; }
 
-        [DisplayName("帳號狀態")]
+        [DisplayName("地址")]
         [Required(ErrorMessage = "{0}為必填欄位")]
-        public bool AccountStatus { get; set; }
+        public string Address { get; set; }
+
+        [DisplayName("供應商等級")]
+        [Required(ErrorMessage = "{0}為必填欄位")]
+        public List<SelectListItem> SupplierRatingOID { get; set; }
     }
 }

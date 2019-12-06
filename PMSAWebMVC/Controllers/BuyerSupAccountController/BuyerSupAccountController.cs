@@ -77,12 +77,81 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
             return View(m);
         }
 
+        [HttpPost]
+        public ActionResult CreateSupInfo(SupInfoViewModel SupInfoModel)
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    BuyerSupAcc_Parent p = new BuyerSupAcc_Parent();
+            //    p.SupInfoModel = SupInfoModel;
+            //    return View("Create", p);
+            //}
+
+            //檢查是否有公司可選
+            var result = getAllSupInfoNoContactOnlySupInfoToIndexAjax().Data;
+            var data = JsonConvert.SerializeObject(result);
+            if (data == "[]")
+            {
+                try
+                {
+                    //supInfo
+                    var maxsupThanOID = db.SupplierInfo.Select(x => x.SupplierInfoOID).Max() + 1;
+                    string SupCodestr = String.Format("S{0:00000}", Convert.ToDouble(maxsupThanOID));
+                    SupplierInfo supinfo = new SupplierInfo();
+                    supinfo.SupplierCode = SupCodestr;
+                    supinfo.SupplierName = SupInfoModel.SupplierName;
+                    supinfo.TaxID = SupInfoModel.TaxID;
+                    supinfo.Tel = SupInfoModel.Tel;
+                    supinfo.Email = SupInfoModel.Email;
+                    supinfo.Address = SupInfoModel.Address;
+                    supinfo.SupplierRatingOID = null;
+
+                    db.SupplierInfo.Add(supinfo);
+                    var r1 = db.SaveChanges();
+                    if (r1 > 0)
+                    {
+                        //新增公司後回到view
+                        return RedirectToAction("Create");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "填寫欄位有錯誤");
+                        BuyerSupAcc_Parent p = new BuyerSupAcc_Parent();
+                        p.SupInfoModel = SupInfoModel;
+                        return View("Create", p);
+                    }
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    var entityError = ex.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(x => x.ErrorMessage);
+                    var getFullMessage = string.Join("; ", entityError);
+                    var exceptionMessage = string.Concat(ex.Message, "errors are: ", getFullMessage);
+                    Console.WriteLine(exceptionMessage);
+                    if (!ModelState.IsValid)
+                    {
+                        BuyerSupAcc_Parent p = new BuyerSupAcc_Parent();
+                        p.SupInfoModel = SupInfoModel;
+                        return View("Create", p);
+                    }
+                }
+            }
+            //新增公司後回到view
+            return RedirectToAction("Create");
+        }
+
         // POST: BuyerSupAccount/Create
         [HttpPost]
         public ActionResult Create(BuyerSupAcc_Parent m)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "填寫欄位有錯誤");
+                    return View(m);
+                }
+
+                //==================================================================================
                 var maxThanOID = db.SupplierAccount.Select(x => x.SupplierAccountOID).Max() + 1;
 
                 string SupAccIDstr = String.Format("SE{0:00000}", Convert.ToDouble(maxThanOID));
@@ -108,21 +177,32 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                 sa.SendLetterStatus = null;
                 sa.SendLetterDate = null;
 
-                db.SaveChanges();
-
                 //user
                 ApplicationUser user = new ApplicationUser();
                 user.Id = Guid.NewGuid().ToString();
                 user.Email = m.BuyerSupAccount_CreateViewModel.Email;
                 user.PasswordHash = hashpwd;
-                UserManager.UpdateSecurityStamp(user.Id);
                 user.PhoneNumber = m.BuyerSupAccount_CreateViewModel.Mobile;
                 user.UserName = SupAccIDstr;
                 user.RealName = m.BuyerSupAccount_CreateViewModel.ContactName;
                 user.LastPasswordChangedDate = null;
 
-                UserManager.Create(user);
-                ViewBag.msg = "新增成功!";
+                //TODO 判斷是否要寄信 補寄信...
+
+                var r1 = UserManager.Create(user);
+                //var r2 = UserManager.Update(user);
+                if (r1.Succeeded)
+                {
+                    db.SupplierAccount.Add(sa);
+                    db.SaveChanges();
+                    return View("Index");
+                }
+                else
+                {
+                    var err = string.Join(",", r1.Errors);
+                    ModelState.AddModelError("", err);
+                    return View("Create");
+                }
             }
             catch (DbEntityValidationException ex)
             {
@@ -142,10 +222,9 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                         Console.WriteLine(message);
                     }
                 }
-                ViewBag.msg = "對不起，新增失敗，請檢查網路連線再重試一次";
+                TempData["msg"] = "對不起，新增失敗，請檢查網路連線再重試一次";
                 return View();
             }
-            return View("Index");
         }
 
         //updateSupAccUsersAtIndex
@@ -173,8 +252,11 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
                 //新增Supplier
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
-                user.Roles.Clear();
-                var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+                if (!userRoles.Contains("Supplier"))
+                {
+                    user.Roles.Clear();
+                    var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+                }
                 //更新紀錄狀態的欄位
                 await AccStatusReset(SupId);
             }
@@ -308,7 +390,7 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
         }
 
         //SupInfoNoContactOnlySupInfo
-        public ActionResult getAllSupInfoNoContactOnlySupInfoToIndexAjax()
+        public JsonResult getAllSupInfoNoContactOnlySupInfoToIndexAjax()
         {
             var supInfos = db.SupplierInfo.Select(x => x.SupplierCode).ToList();
             var supAccs = db.SupplierAccount.Select(x => x.SupplierCode).ToList();
@@ -335,6 +417,10 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                     SupplierRatingOID = s.SupplierRatingOID
                 };
                 list.Add(company);
+            }
+            if (list == null)
+            {
+                return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
             }
             return Json(list, JsonRequestBehavior.AllowGet);
         }
@@ -406,8 +492,11 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
             //新增Supplier
             var userRoles = await UserManager.GetRolesAsync(user.Id);
-            user.Roles.Clear();
-            var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            if (!userRoles.Contains("Supplier"))
+            {
+                user.Roles.Clear();
+                var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            }
 
             //更新狀態欄位 user sa table
             await AccStatusReset(Id);
@@ -452,8 +541,11 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
             //新增Supplier
             var userRoles = await UserManager.GetRolesAsync(user.Id);
-            user.Roles.Clear();
-            var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            if (!userRoles.Contains("Supplier"))
+            {
+                user.Roles.Clear();
+                var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            }
 
             await updateTable(user, supAcc);
             //更新狀態欄位 user supAcc table

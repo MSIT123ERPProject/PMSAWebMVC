@@ -87,80 +87,86 @@
             border-left: 4px solid #606266;
             padding: 5px;
         }
+
         .row {
             counter-reset: section;
         }
-        .row h4 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 5px;
-            color: #007bff;
-            font-weight: 800 !important;
-        }
-            .row h4::before {
-                counter-increment: section;
-                display: inline-block;
-                content: counter(section);
-                background-color: #007bff;
-                color: white;
-                font-size: 16px;
-                border-radius: 10px;
-                text-align: center;
-                width: 20px;
-                height: 20px;
-                margin-right: 3px;
-                transform: translateY(-2px)
+
+            .row h4 {
+                font-size: 18px;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 5px;
+                color: #007bff;
+                font-weight: 800 !important;
             }
+
+                .row h4::before {
+                    counter-increment: section;
+                    display: inline-block;
+                    content: counter(section);
+                    background-color: #007bff;
+                    color: white;
+                    font-size: 16px;
+                    border-radius: 10px;
+                    text-align: center;
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 3px;
+                    transform: translateY(-2px)
+                }
+
+        .card-header h5 {
+            font-size: 18px;
+            margin: 0;
+        }
     </style>
 }
 <div class="wrapall">
     <h2>新增供應商帳號</h2>
     <h6>新增、啟用/停用</h6>
     <div class="card">
-        <div class="card-header">
-            <h5>
-                <i class="fas fa-table"></i>
-                採購員帳號 @ViewBag.msg
-            </h5>
-        </div>
         <div class="card-body">
             <div class="row" style="margin: 12px;">
-                <div class="col-lg-5 col-md-11 col-sm-11">
+                <div class="col-lg-5 col-md-11 col-sm-11 mb-3">
                     <h4>先選擇供應商公司</h4>
                     <div class="left" style="margin:0">
                         <select id="SupNameCode" class="form-control col-lg-9">
                             <option selected disabled>---- 請選擇 ----</option>
                         </select>
-                        <form class="supCompanyInfoDiv mt-4 fade">
+                        <form class="supCompanyInfoDiv mt-4 fade" action="@Url.Action("CreateSupInfo","BuyerSupAccount")" method="post">
                             <p id="pNoCompany" class="text-danger fade d-none">尚無公司可供新增聯絡人，請先新增公司</p>
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.SupInfoModel.SupplierCode)
-                                @Html.TextBoxFor(model => model.SupInfoModel.SupplierCode, new { @class = "form-control disabled col-lg-12" })
-                            </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupInfoModel.SupplierName)
                                 @Html.TextBoxFor(model => model.SupInfoModel.SupplierName, new { @class = "form-control disabled col-lg-12" })
+                                @Html.ValidationMessageFor(m => m.SupInfoModel.SupplierName, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupInfoModel.TaxID)
                                 @Html.TextBoxFor(model => model.SupInfoModel.TaxID, new { @class = "form-control disabled col-lg-12" })
+                                @Html.ValidationMessageFor(m => m.SupInfoModel.TaxID, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupInfoModel.Address)
                                 @Html.TextBoxFor(model => model.SupInfoModel.Address, new { @class = "form-control disabled col-lg-12" })
+                                @Html.ValidationMessageFor(m => m.SupInfoModel.Address, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupInfoModel.Email)
                                 @Html.TextBoxFor(model => model.SupInfoModel.Email, new { @class = "form-control disabled col-lg-12" })
+                                @Html.ValidationMessageFor(m => m.SupInfoModel.Email, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupInfoModel.Tel)
                                 @Html.TextBoxFor(model => model.SupInfoModel.Tel, new { @class = "form-control disabled col-lg-12" })
+                                @Html.ValidationMessageFor(m => m.SupInfoModel.Tel, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupInfoModel.SupplierRatingOID)
-                                @Html.TextBoxFor(model => model.SupInfoModel.SupplierRatingOID, new { @class = "form-control disabled col-lg-12" })
+                                @Html.DropDownListFor(model => model.SupInfoModel.SupplierRatingOID,new List<SelectListItem>() { new SelectListItem() { Text = "1", Value = "1", Selected = true },
+                                                                                                                                 new SelectListItem() { Text = "2", Value = "2", Selected = false },
+                                                                                                                                 new SelectListItem() { Text = "3", Value = "3", Selected = false },
+                                                                                                                                        }, new { @class = "form-control col-lg-12" })
                             </div>
                             <button id="btnNoCompany" type="submit" class="btn btn-primary fade">確認新增公司</button>
                         </form>
@@ -169,30 +175,37 @@
                 <div class="col-lg-5 col-md-11 col-sm-11">
                     <h4>再新增供應商帳號</h4>
                     <div class="right" style="margin:0">
-                        <form action="@Url.Action("Index","BuyerSupAccount")" method="post">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <form action="@Url.Action("Create","BuyerSupAccount")" method="post">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode)
                                 @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierCode, new { @class = "form-control disabled col-lg-6" })
+                                @Html.ValidationMessageFor(m => m.BuyerSupAccount_CreateViewModel.SupplierCode, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName)
                                 @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.SupplierName, new { @class = "form-control disabled col-lg-6" })
+                                @Html.ValidationMessageFor(m => m.BuyerSupAccount_CreateViewModel.SupplierName, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.ContactName)
                                 @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.ContactName, new { @class = "form-control col-lg-6" })
+                                @Html.ValidationMessageFor(m => m.BuyerSupAccount_CreateViewModel.ContactName, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Email)
                                 @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Email, new { @class = "form-control col-lg-6" })
+                                @Html.ValidationMessageFor(m => m.BuyerSupAccount_CreateViewModel.Email, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Mobile)
                                 @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Mobile, new { @class = "form-control col-lg-6" })
+                                @Html.ValidationMessageFor(m => m.BuyerSupAccount_CreateViewModel.Mobile, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.BuyerSupAccount_CreateViewModel.Tel)
                                 @Html.TextBoxFor(model => model.BuyerSupAccount_CreateViewModel.Tel, new { @class = "form-control col-lg-6" })
+                                @Html.ValidationMessageFor(m => m.BuyerSupAccount_CreateViewModel.Tel, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 <div class="editAcc">
@@ -273,6 +286,15 @@
             }
         )
         });
+        $(".left form button[type='submit']").submit(function () {
+            console.log("hi")
+            console.log($(".right form").serializeArray())
+        })
+
+        $(".right form button[type='submit']").submit(function () {
+            console.log("hi")
+            console.log($(".right form").serializeArray())
+        })
 
         $(document).ready(function () {
             if ($('#AccountStatusSwitch').prop('checked') == true) {

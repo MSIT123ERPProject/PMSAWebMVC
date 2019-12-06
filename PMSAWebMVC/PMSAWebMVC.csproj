@@ -202,6 +202,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
+    <Compile Include="Controllers\BuyerSupAccountController\SupInfoCompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryDtlsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -406,7 +407,7 @@
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccount_CreateViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
-    <Compile Include="ViewModels\BuyerSupAccount\SupCompanyInfoViewModel.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\SupInfoViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
@@ -2348,6 +2349,8 @@
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
+    <Content Include="Views\SupInfoCompany\Index.cshtml" />
+    <Content Include="Views\SupInfoCompany\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

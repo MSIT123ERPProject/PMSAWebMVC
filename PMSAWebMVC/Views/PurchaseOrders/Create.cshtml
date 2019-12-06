@@ -4,100 +4,135 @@
     ViewBag.Title = "新增採購單";
 }
 
+<style>
+    .border-top-dashed {
+        border-top: 1px dashed #3C4055;
+    }
+
+    .nounderline {
+        text-decoration: none !important
+    }
+
+    .card-header .fa {
+        transition: .3s transform ease-in-out;
+    }
+
+    .card-header .collapsed .fa-chevron-down {
+        transform: rotate(90deg);
+    }
+</style>
+
+
 <h2>@ViewBag.Title</h2>
 
 
 <div class="card mb-3">
     <div class="card-header">
-        <i class="fab fa-wpforms"></i> 採購單資訊
+        <a data-toggle="collapse" href="#collapse-rpinfo" aria-expanded="true" aria-controls="collapse-rpinfo" id="heading-rpinfo" class="d-block nounderline">
+            <i class="fab fa-wpforms"></i> 請購單資訊 <i class="fa fa-chevron-down"></i>
+        </a>
     </div>
-    <div class="card-body pb-0">
-        <div class="form-horizontal">
-            <div class="row mb-0 align-items-center">
 
-                @Html.LabelFor(m => m.SelectedPurchaseRequisitionID, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
-                <div class="col-md-6">
-                    @Html.DropDownListFor(m => m.SelectedPurchaseRequisitionID, Model.PurchaseRequisitionList, "請選擇", htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.SelectedPurchaseRequisitionID, "", new { @class = "text-danger" })
-                </div>
+    <div id="collapse-rpinfo" class="collapse show" aria-labelledby="heading-rpinfo">
+        <div class="card-body pb-0">
+            <div class="form-horizontal">
+                <div class="row mb-0 align-items-center">
 
-                <div class="w-100"></div>
+                    @Html.LabelFor(m => m.SelectedPurchaseRequisitionID, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
+                    <div class="col-md-6">
+                        @Html.DropDownListFor(m => m.SelectedPurchaseRequisitionID, Model.PurchaseRequisitionList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.SelectedPurchaseRequisitionID, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="card-body mb-0 pb-0 pt-2 border-top mt-3">
-                    <div class="row">
-                        <div class="col-md-3 col-6">
-                            <strong>請購人員</strong>
-                            <br>
-                            <p class="text-muted">邱利雯</p>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <strong>請購日期</strong>
-                            <br>
-                            <p class="text-muted">2019/11/20</p>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <strong>電子信箱</strong>
-                            <br>
-                            <p class="text-muted">as123471@yahoo.com</p>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <strong>聯絡電話</strong>
-                            <br>
-                            <p class="text-muted">02-5656788#13</p>
+                    <div class="w-100"></div>
+
+                    <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
+                        <div class="row">
+                            <div class="col-md-3 col-6">
+                                <strong>請購人員</strong>
+                                <br>
+                                <p class="text-muted">邱利雯</p>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>請購日期</strong>
+                                <br>
+                                <p class="text-muted">2019/11/20</p>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>電子信箱</strong>
+                                <br>
+                                <p class="text-muted">as123471@yahoo.com</p>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>聯絡電話</strong>
+                                <br>
+                                <p class="text-muted">02-5656788#13</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
+
+
     </div>
+
+
 </div>
 
 <div class="card mb-3">
     <div class="card-header">
-        <i class="far fa-building"></i> 供應商
+        <a data-toggle="collapse" href="#collapse-supplierinfo" aria-expanded="true" aria-controls="collapse-supplierinfo" id="heading-supplierinfo" class="d-block nounderline">
+            <i class="far fa-building"></i> 供應商 <i class="fa fa-chevron-down"></i>
+        </a>
     </div>
-    <div class="card-body pb-0 pt-0">
-        <div class="form-horizontal">
-            <div class="row mb-0 mt-0 align-items-center">
 
-                @Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
-                <div class="col-md-5">
-                    @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
-                </div>
+    <div id="collapse-supplierinfo" class="collapse show" aria-labelledby="heading-supplierinfo">
+        <div class="card-body pb-0 pt-0">
+            <div class="form-horizontal">
+                <div class="row mb-0 mt-0 align-items-center">
 
-                <div class="w-100"></div>
+                    @Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3 col-6">
-                            <strong>供應商名稱</strong>
-                            <br>
-                            <p class="text-muted">誌慶股份有限公司</p>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <strong>聯絡人</strong>
-                            <br>
-                            <p class="text-muted">林政苓</p>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <strong>電子信箱</strong>
-                            <br>
-                            <p class="text-muted">h1051235@gmail.com</p>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <strong>聯絡電話</strong>
-                            <br>
-                            <p class="text-muted">02-4076125</p>
+                    <div class="w-100"></div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 col-6">
+                                <strong>供應商名稱</strong>
+                                <br>
+                                <p class="text-muted">誌慶股份有限公司</p>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>聯絡人</strong>
+                                <br>
+                                <p class="text-muted">林政苓</p>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>電子信箱</strong>
+                                <br>
+                                <p class="text-muted">h1051235@gmail.com</p>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>聯絡電話</strong>
+                                <br>
+                                <p class="text-muted">02-4076125</p>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
-
         </div>
     </div>
+
+
 </div>
 
 <div id="tab" class="btn-group btn-group-toggle btn-block mb-3" data-toggle="buttons">

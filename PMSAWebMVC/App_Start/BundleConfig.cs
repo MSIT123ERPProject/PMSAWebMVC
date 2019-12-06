@@ -17,7 +17,8 @@ namespace PMSAWebMVC
             // 使用開發版本的 Modernizr 進行開發並學習。然後，當您
             // 準備好可進行生產時，請使用 https://modernizr.com 的建置工具，只挑選您需要的測試。
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                "~/Scripts/modernizr-*"));
+                  "~/Scripts/modernizr-*"
+                ));
 
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
@@ -38,8 +39,8 @@ namespace PMSAWebMVC
                 "~/Content/MDB/css/addons/rating.min.css",
                 "~/Content/MDB/css/modules/animations-extended.css",
                 //Site
-                "~/Content/Site.css"));
-
+                "~/Content/Site.css"
+                ));
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
@@ -66,15 +67,14 @@ namespace PMSAWebMVC
                 //Site
                 "~/Scripts/Site.js"
                 ));
-
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
                 //DatetimePicker
                 "~/Content/tempusdominus/tempusdominus-bootstrap-4.css",
-                 //pickadate
-                 "~/Content/pickadate/themes/classic.css",
-                 "~/Content/pickadate/themes/classic.date.css",
-                 "~/Content/pickadate/themes/classic.time.css",
+                //pickadate
+                "~/Content/pickadate/themes/classic.css",
+                "~/Content/pickadate/themes/classic.date.css",
+                "~/Content/pickadate/themes/classic.time.css",
                 //SweetAlert
                 "~/Content/sweetAlert/sweetalert2.css",
                 //MagicInput
@@ -87,11 +87,11 @@ namespace PMSAWebMVC
                 //DatetimePicker
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.js",
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.zh-TW.js",
-                 //pickadate
-                 "~/Scripts/pickadate/picker.js",
-                 "~/Scripts/pickadate/picker.date.js",
-                 "~/Scripts/pickadate/picker.time.js",
-                 "~/Scripts/pickadate/translations/zh_TW.js",
+                //pickadate
+                "~/Scripts/pickadate/picker.js",
+                "~/Scripts/pickadate/picker.date.js",
+                "~/Scripts/pickadate/picker.time.js",
+                "~/Scripts/pickadate/translations/zh_TW.js",
                 //SweetAlert
                 "~/Scripts/sweetAlert/sweetalert2.all.js"
                 ));
@@ -119,7 +119,6 @@ namespace PMSAWebMVC
             bundles.Add(new ScriptBundle("~/bundles/toastrjs").Include(
                 "~/Scripts/toastr.min.js"
                 ));
-
         }
     }
 }

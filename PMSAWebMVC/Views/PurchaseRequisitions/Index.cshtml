@@ -6,7 +6,7 @@
 
 <h2>請購單</h2>
 
-<p>@Html.ActionLink("查詢請購單明細", "IndexDtl", null, new { @class = "btn btn-success" })</p>
+@*<p>@Html.ActionLink("查詢請購單明細", "IndexDtl", null, new { @class = "btn btn-success" })</p>*@
 <div class="card mb-3">
     <div class="card-header">
         <i class="fas fa-table"></i>
@@ -114,11 +114,11 @@
                             <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
                                 <i class="far fa-edit"></i>
                             </button>
-                            <button name="click3" type="button"  class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.PurchaseRequisitionID">
+                            @*<button name="click3" type="button" class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.PurchaseRequisitionID" onclick="'location.href='+@Url.Action("IndexDtl","PurchaseRequisitions")+'?PurchaseRequisitionID='+'@item.PurchaseRequisitionID'">
                                 <i class="far fa-file-alt"></i>
-                            </button>
-                            
-
+                            </button>*@
+                            <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt" })</button>
+                           
                         </td>
                     </tr>
                 }
@@ -323,7 +323,7 @@
             <div class="modal-footer">
                 <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
                 <button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>
-                <button id="btnSave" type="button" class="btn btn-primary" data-dismiss="modal">新增</button>
+                @*<button id="btnSave" type="button" class="btn btn-primary" data-dismiss="modal">新增</button>*@
                 
             </div>
         </div>

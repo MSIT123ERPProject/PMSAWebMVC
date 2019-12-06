@@ -723,19 +723,16 @@ namespace PMSAWebMVC.Controllers
             ConfigureViewModel(model);
             return View(model);
         }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // GET: PurchaseRequisitionDtls
-        public ActionResult IndexDtl()
+        //請購明細顯示
+        public ActionResult IndexDtl(string id)
         {
-            var purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Include(p => p.Part).Include(p => p.PurchaseRequisition).Include(p => p.SupplierInfo);
+            var purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Include(p => p.Part).Include(p => p.PurchaseRequisition).Include(p => p.SupplierInfo).Where(p=>p.PurchaseRequisitionID==id);
             return View(purchaseRequisitionDtl.ToList());
         }
-
-        // GET: PurchaseRequisitionDtls/Details/5
-        public ActionResult DetailsDtl(string id)
+        //請購明細檢視
+        public ActionResult DetailDtl(string id)
         {
+            var user = User.Identity.GetEmployee();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -745,37 +742,74 @@ namespace PMSAWebMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(purchaseRequisitionDtl);
+            var datas = from p in db.PurchaseRequisitionDtl.AsEnumerable()
+                        where p.PurchaseRequisition.EmployeeID == user.EmployeeID && p.PurchaseRequisitionDtlCode == id
+                        select new /*PurchaseRequisitionIndexViewModel*/
+                        {
+                            PurchaseRequisitionDtlCode = p.PurchaseRequisitionDtlCode,
+                            PurchaseRequisitionID = p.PurchaseRequisitionID,
+                            PartNumber = p.PartNumber,
+                            Qty = p.Qty,
+                            SuggestSupplierCode=p.SuggestSupplierCode,
+                            DateRequired = p.DateRequired.ToString("yyyy/MM/dd"),
+                          
+                        };
+            var da = datas.ToList();
+            return Json(datas, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: PurchaseRequisitionDtls/Create
-        public ActionResult CreateDtl()
-        {
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName");
-            ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "PurchaseRequisitionID");
-            ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName");
-            PurchaseRequisitionDtl p = new PurchaseRequisitionDtl();
-            p.DateRequired = DateTime.Now;
-            return View(p);
-        }
-        // GET: PurchaseRequisitionDtls/Create
-        public ActionResult CreateDtl2(string id)
-        {
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName");
-            ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber");
-            ///
-            ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName");
-            //var q = from x in db.SupplierInfo select x.SupplierCode;
-            //var q1 = from y in db.PurchaseRequisitionDtl select y.SuggestSupplierCode;
-            //var q2 = q.Union(q1);
-            //ViewBag.SuggestSupplierCode = new SelectList(q2);
-            ///
-            ViewBag.PurchaseRequisitionIDD = id;
-            PurchaseRequisitionDtl p = new PurchaseRequisitionDtl();
-            p.PurchaseRequisitionID = id;
-            p.DateRequired = DateTime.Now;
-            return View(p);
-        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // GET: PurchaseRequisitionDtls
+        //public ActionResult IndexDtl()
+        //{
+        //    var purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Include(p => p.Part).Include(p => p.PurchaseRequisition).Include(p => p.SupplierInfo);
+        //    return View(purchaseRequisitionDtl.ToList());
+        //}
+
+        // GET: PurchaseRequisitionDtls/Details/5
+        //public ActionResult DetailsDtl(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    PurchaseRequisitionDtl purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Find(id);
+        //    if (purchaseRequisitionDtl == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(purchaseRequisitionDtl);
+        //}
+
+        //// GET: PurchaseRequisitionDtls/Create
+        //public ActionResult CreateDtl()
+        //{
+        //    ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName");
+        //    ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "PurchaseRequisitionID");
+        //    ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName");
+        //    PurchaseRequisitionDtl p = new PurchaseRequisitionDtl();
+        //    p.DateRequired = DateTime.Now;
+        //    return View(p);
+        //}
+        //// GET: PurchaseRequisitionDtls/Create
+        //public ActionResult CreateDtl2(string id)
+        //{
+        //    ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName");
+        //    ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber");
+        //    ///
+        //    ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName");
+        //    //var q = from x in db.SupplierInfo select x.SupplierCode;
+        //    //var q1 = from y in db.PurchaseRequisitionDtl select y.SuggestSupplierCode;
+        //    //var q2 = q.Union(q1);
+        //    //ViewBag.SuggestSupplierCode = new SelectList(q2);
+        //    ///
+        //    ViewBag.PurchaseRequisitionIDD = id;
+        //    PurchaseRequisitionDtl p = new PurchaseRequisitionDtl();
+        //    p.PurchaseRequisitionID = id;
+        //    p.DateRequired = DateTime.Now;
+        //    return View(p);
+        //}
         //public ActionResult CreateDtl2(string id)
         //{
         //    ViewBag.SourceListID = new SelectList(db.SourceList, "SourceListID", "PartNumber");
@@ -789,180 +823,180 @@ namespace PMSAWebMVC.Controllers
         // POST: PurchaseRequisitionDtls/Create
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateDtl([Bind(Include = "PurchaseRequisitionDtlOID,PurchaseRequisitionDtlCode,PurchaseRequisitionID,PartNumber,Qty,SuggestSupplierCode,DateRequired")] PurchaseRequisitionDtl purchaseRequisitionDtl)
-        {
-            int z = 1;
-            string y = "", x = purchaseRequisitionDtl.PurchaseRequisitionID;
-            y = x + "-00" + z.ToString();
-            purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
-            for (int i = 0; i < db.PurchaseRequisitionDtl.Count(); i++)
-            {
-                PurchaseRequisitionDtl test = db.PurchaseRequisitionDtl.Find(y);
-                if (z < 9)
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = x + "-00" + z.ToString();
-                        test = db.PurchaseRequisitionDtl.Find(y);
-                    }
-                }
-                else if (z < 99)
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = x + "-0" + z.ToString();
-                        test = db.PurchaseRequisitionDtl.Find(y);
-                    }
-                }
-                else
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = x + "-" + z.ToString();
-                        test = db.PurchaseRequisitionDtl.Find(y);
-                    }
-                }
-            }
-            purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
-            //請購單明細代碼 PR-20191016-001-001
-            if (ModelState.IsValid)
-            {
-                db.PurchaseRequisitionDtl.Add(purchaseRequisitionDtl);
-                db.SaveChanges();
-                return RedirectToAction("IndexDtl");
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult CreateDtl([Bind(Include = "PurchaseRequisitionDtlOID,PurchaseRequisitionDtlCode,PurchaseRequisitionID,PartNumber,Qty,SuggestSupplierCode,DateRequired")] PurchaseRequisitionDtl purchaseRequisitionDtl)
+        //{
+        //    int z = 1;
+        //    string y = "", x = purchaseRequisitionDtl.PurchaseRequisitionID;
+        //    y = x + "-00" + z.ToString();
+        //    purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
+        //    for (int i = 0; i < db.PurchaseRequisitionDtl.Count(); i++)
+        //    {
+        //        PurchaseRequisitionDtl test = db.PurchaseRequisitionDtl.Find(y);
+        //        if (z < 9)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = x + "-00" + z.ToString();
+        //                test = db.PurchaseRequisitionDtl.Find(y);
+        //            }
+        //        }
+        //        else if (z < 99)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = x + "-0" + z.ToString();
+        //                test = db.PurchaseRequisitionDtl.Find(y);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = x + "-" + z.ToString();
+        //                test = db.PurchaseRequisitionDtl.Find(y);
+        //            }
+        //        }
+        //    }
+        //    purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
+        //    //請購單明細代碼 PR-20191016-001-001
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.PurchaseRequisitionDtl.Add(purchaseRequisitionDtl);
+        //        db.SaveChanges();
+        //        return RedirectToAction("IndexDtl");
+        //    }
 
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
-            ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
-            ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
-            return View(purchaseRequisitionDtl);
-        }
+        //    ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
+        //    ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
+        //    ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
+        //    return View(purchaseRequisitionDtl);
+        //}
 
 
-        // POST: PurchaseRequisitionDtls/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CreateDtl2([Bind(Include = "PurchaseRequisitionDtlOID,PurchaseRequisitionDtlCode,PurchaseRequisitionID,PartNumber,Qty,SuggestSupplierCode,DateRequired")] PurchaseRequisitionDtl purchaseRequisitionDtl)
-        {
-            int z = 1;
-            string y = "", x = purchaseRequisitionDtl.PurchaseRequisitionID;
-            y = x + "-00" + z.ToString();
-            purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
-            for (int i = 0; i < db.PurchaseRequisitionDtl.Count(); i++)
-            {
-                PurchaseRequisitionDtl test = db.PurchaseRequisitionDtl.Find(y);
-                if (z < 9)
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = x + "-00" + z.ToString();
-                        test = db.PurchaseRequisitionDtl.Find(y);
-                    }
-                }
-                else if (z < 99)
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = x + "-0" + z.ToString();
-                        test = db.PurchaseRequisitionDtl.Find(y);
-                    }
-                }
-                else
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = x + "-" + z.ToString();
-                        test = db.PurchaseRequisitionDtl.Find(y);
-                    }
-                }
-            }
-            purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
-            //請購單明細代碼 PR-20191016-001-001
-            if (ModelState.IsValid)
-            {
-                db.PurchaseRequisitionDtl.Add(purchaseRequisitionDtl);
-                db.SaveChanges();
-                return RedirectToAction("IndexDtl");
-            }
+        //// POST: PurchaseRequisitionDtls/Create
+        //// 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        //// 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult CreateDtl2([Bind(Include = "PurchaseRequisitionDtlOID,PurchaseRequisitionDtlCode,PurchaseRequisitionID,PartNumber,Qty,SuggestSupplierCode,DateRequired")] PurchaseRequisitionDtl purchaseRequisitionDtl)
+        //{
+        //    int z = 1;
+        //    string y = "", x = purchaseRequisitionDtl.PurchaseRequisitionID;
+        //    y = x + "-00" + z.ToString();
+        //    purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
+        //    for (int i = 0; i < db.PurchaseRequisitionDtl.Count(); i++)
+        //    {
+        //        PurchaseRequisitionDtl test = db.PurchaseRequisitionDtl.Find(y);
+        //        if (z < 9)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = x + "-00" + z.ToString();
+        //                test = db.PurchaseRequisitionDtl.Find(y);
+        //            }
+        //        }
+        //        else if (z < 99)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = x + "-0" + z.ToString();
+        //                test = db.PurchaseRequisitionDtl.Find(y);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = x + "-" + z.ToString();
+        //                test = db.PurchaseRequisitionDtl.Find(y);
+        //            }
+        //        }
+        //    }
+        //    purchaseRequisitionDtl.PurchaseRequisitionDtlCode = y;
+        //    //請購單明細代碼 PR-20191016-001-001
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.PurchaseRequisitionDtl.Add(purchaseRequisitionDtl);
+        //        db.SaveChanges();
+        //        return RedirectToAction("IndexDtl");
+        //    }
 
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
-            ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
-            ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
-            return View(purchaseRequisitionDtl);
-        }
+        //    ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
+        //    ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
+        //    ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
+        //    return View(purchaseRequisitionDtl);
+        //}
 
-        // GET: PurchaseRequisitionDtls/Edit/5
-        public ActionResult EditDtl(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PurchaseRequisitionDtl purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Find(id);
-            if (purchaseRequisitionDtl == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
-            ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
-            ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
-            return View(purchaseRequisitionDtl);
-        }
+        //// GET: PurchaseRequisitionDtls/Edit/5
+        //public ActionResult EditDtl(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    PurchaseRequisitionDtl purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Find(id);
+        //    if (purchaseRequisitionDtl == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
+        //    ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
+        //    ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
+        //    return View(purchaseRequisitionDtl);
+        //}
 
-        // POST: PurchaseRequisitionDtls/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditDtl([Bind(Include = "PurchaseRequisitionDtlOID,PurchaseRequisitionDtlCode,PurchaseRequisitionID,PartNumber,Qty,SuggestSupplierCode,DateRequired")] PurchaseRequisitionDtl purchaseRequisitionDtl)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(purchaseRequisitionDtl).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("IndexDtl");
-            }
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
-            ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
-            ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
-            return View(purchaseRequisitionDtl);
-        }
+        //// POST: PurchaseRequisitionDtls/Edit/5
+        //// 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        //// 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EditDtl([Bind(Include = "PurchaseRequisitionDtlOID,PurchaseRequisitionDtlCode,PurchaseRequisitionID,PartNumber,Qty,SuggestSupplierCode,DateRequired")] PurchaseRequisitionDtl purchaseRequisitionDtl)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(purchaseRequisitionDtl).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("IndexDtl");
+        //    }
+        //    ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", purchaseRequisitionDtl.PartNumber);
+        //    ViewBag.PurchaseRequisitionID = new SelectList(db.PurchaseRequisition, "PurchaseRequisitionID", "ProductNumber", purchaseRequisitionDtl.PurchaseRequisitionID);
+        //    ViewBag.SuggestSupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseRequisitionDtl.SuggestSupplierCode);
+        //    return View(purchaseRequisitionDtl);
+        //}
 
-        // GET: PurchaseRequisitionDtls/Delete/5
-        [HttpPost]
-        public ActionResult DeleteDtl(string id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                PurchaseRequisitionDtl purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Find(id);
-                if (purchaseRequisitionDtl == null)
-                {
-                    return HttpNotFound();
-                }
-                db.PurchaseRequisitionDtl.Remove(purchaseRequisitionDtl);
-                db.SaveChanges();
-                return RedirectToAction("IndexDtl");
-            }
-            catch
-            {
-                return Content("<script> alert('刪除失敗');window.location.href='../Index'</script>");
-            }
+        //// GET: PurchaseRequisitionDtls/Delete/5
+        //[HttpPost]
+        //public ActionResult DeleteDtl(string id)
+        //{
+        //    try
+        //    {
+        //        if (id == null)
+        //        {
+        //            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //        }
+        //        PurchaseRequisitionDtl purchaseRequisitionDtl = db.PurchaseRequisitionDtl.Find(id);
+        //        if (purchaseRequisitionDtl == null)
+        //        {
+        //            return HttpNotFound();
+        //        }
+        //        db.PurchaseRequisitionDtl.Remove(purchaseRequisitionDtl);
+        //        db.SaveChanges();
+        //        return RedirectToAction("IndexDtl");
+        //    }
+        //    catch
+        //    {
+        //        return Content("<script> alert('刪除失敗');window.location.href='../Index'</script>");
+        //    }
 
-        }
+        //}
 
 
         //[HttpPost]

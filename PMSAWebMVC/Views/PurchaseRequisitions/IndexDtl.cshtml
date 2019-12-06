@@ -6,11 +6,12 @@
 
 <h2>請購單明細</h2>
 
-<p>@Html.ActionLink("查詢請購單", "Index", null, new { @class = "btn btn-success" })</p>
+
 <div class="card mb-3">
     <div class="card-header">
-        <i class="fas fa-table"></i>
+        <i class="fas fa-table">@Html.ActionLink("返回請購單", "Index", null, new { @class = "btn btn-success" })</i>
         @*@Html.ActionLink("新增請購單明細", "CreateDtl", null, new { @class = "btn btn-info" })*@
+
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -69,37 +70,43 @@
                 </tfoot>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlOID)
-        </td>*@
-                    <th>
-                        @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlCode)
-                    </th>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Qty)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateRequired)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Part.PartName)
-                    </td>
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.PurchaseRequisition.ProductNumber)
-        </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PurchaseRequisition.Product.ProductName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
-                    </td>
-                    <td>
-                        @Html.ActionLink("編輯", "EditDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) |
-                        @Html.ActionLink("檢視", "DetailsDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) 
-                        @*<a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionDtlCode"><i class="fa fa-close"></i> 刪除</a>*@
-                    </td>
-                </tr>
+                    <tr>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlOID)
+                            </td>*@
+                        <th>
+                            @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlCode)
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Qty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateRequired)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Part.PartName)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.PurchaseRequisition.ProductNumber)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PurchaseRequisition.Product.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
+                        </td>
+                        <td>
+                            @*@Html.ActionLink("編輯", "EditDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) |
+                                @Html.ActionLink("檢視", "DetailsDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" })*@
+                            @*<a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionDtlCode"><i class="fa fa-close"></i> 刪除</a>*@
+                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionDtlCode">
+                                <i class="far fa-eye"></i>
+                            </button>
+                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionDtlCode">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
                 }
             </table>
         </div>
@@ -115,12 +122,10 @@
             $('#dataTable').DataTable();
 
         });
-        $('#myInput').on('keyup', function () {
-            table.search(this.value).draw();
-        });
-        function A() {
-            window.location.reload();
-        }
+        //$('#myInput').on('keyup', function () {
+        //    table.search(this.value).draw();
+        //});
+
         @*$("a[name = 'click01']").click(function () {
             Swal.fire({
                 title: '確定要刪除 ?',
@@ -152,6 +157,103 @@
                     }
                 })
         });*@
+
+        //檢視
+            $(document).on('click', "button[name = 'click1']", function () {
+                document.getElementById("btnClose").innerHTML = "關閉";
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("DetailDtl", "PurchaseRequisitions")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視請購單明細資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('#btnUpdate').hide();
+                $("#PurchaseRequisitionDtlCode").val(datas[0].PurchaseRequisitionDtlCode);
+                $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
+                $("#PartNumber").val(datas[0].PartNumber);
+                $("#Qty").val(datas[0].Qty);
+                $("#SuggestSupplierCode").val(datas[0].SuggestSupplierCode);
+                $('#DateRequired').datetimepicker({
+                    defaultDate: datas[0].DateRequired
+                });
+            })
+        });
+
+        //修改檢視
+            $(document).on('click', "button[name = 'click2']", function () {
+                document.getElementById("btnClose").innerHTML = "關閉";
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("DetailDtl", "PurchaseRequisitions")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視請購單明細資訊');
+                $('*[name="da"]').attr('disabled', true);
+                //$('#btnUpdate').hide();
+                $("#PurchaseRequisitionDtlCode").val(datas[0].PurchaseRequisitionDtlCode);
+                $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
+                $("#PartNumber").val(datas[0].PartNumber);
+                $("#Qty").val(datas[0].Qty);
+                $("#SuggestSupplierCode").val(datas[0].SuggestSupplierCode);
+                $('#DateRequired').datetimepicker({
+                    defaultDate: datas[0].DateRequired
+                });
+            })
+        });
+
     </script>
 
 }
+<!--Model-->
+<div class="modal fade bd-example-modal-lg" id="purchaserequisitionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label class="required" for="PurchaseRequisitionDtlCode">@Html.DisplayNameFor(model => model.PurchaseRequisitionDtlCode)</label>
+                        <input type="text" class="form-control" id="PurchaseRequisitionDtlCode" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="PurchaseRequisitionID">@Html.DisplayNameFor(model => model.PurchaseRequisitionID)</label>
+                        <input type="text" class="form-control" id="PurchaseRequisitionID" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="PartNumber">@Html.DisplayNameFor(model => model.PartNumber)</label>
+                        <input type="text" class="form-control" id="PartNumber" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="Qty">@Html.DisplayNameFor(model => model.Qty)</label>
+                        <input type="text" class="form-control" id="Qty" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="SuggestSupplierCode">@Html.DisplayNameFor(model => model.SuggestSupplierCode)</label>
+                        <input type="text" class="form-control" id="SuggestSupplierCode" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="PRBeginDate">@Html.DisplayNameFor(model => model.DateRequired)</label>
+                        <div class="input-group date" data-target-input="nearest">
+                            <input type="text" id="DateRequired" class="form-control datetimepicker-input" data-target="#DateRequired" data-toggle="datetimepicker" name="dta" />
+                            <div class="input-group-append" data-target="#DateRequired" data-toggle="datetimepicker">
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
+                <button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>
+            </div>
+        </div>
+    </div>
+</div>

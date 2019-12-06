@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <h2>訂單管理</h2>
+</nav>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <i class="fas fa-table"></i>
+        <h6 class="m-0 font-weight-bold text-primary">  訂單管理</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTableOUA" cellspacing="0">
+                <thead>
+                    <tr class="bg-primary text-white text-center">
+                        <th>訂單編號</th>
+                        <th>訂單總金額</th>
+                        <th>收貨人名稱</th>
+                        <th>收貨人電話</th>
+                        <th>收貨人手機</th>
+                        <th>收貨人地址</th>
+                        <th>訂單明細</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>訂單總金額</th>
+                        <th>收貨人名稱</th>
+                        <th>收貨人電話</th>
+                        <th>收貨人手機</th>
+                        <th>收貨人地址</th>
+                        <th>訂單明細</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted"></div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            GetPurchaseOrderS();
+        });
+        //呼叫GetPurchaseOrderS ( )方法用來取得dataTable的資料
+        function GetPurchaseOrderS ( ) {
+            $("#dataTableOUA").DataTable({
+                ajax: {
+                    url: `@Url.Action("GetPurchaseOrderS", "Orders")`,
+                    type: "GET",
+                    "dataType": "json",
+                },
+                columns: [
+                    { data: "PurchaseOrderID" },
+                    { data: "PurchaseOrderTotalAmount", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+                    { data: "ReceiverName" },
+                    { data: "ReceiverMobile" },
+                    { data: "ReceiverTel" },
+                    { data: "ReceiptAddress" },
+                    {
+                        data: "PurchaseOrderID",
+                        render: function (data, type, row, meta) {
+                            //OrderApply方法還沒寫，此按鈕為供應商答交按鈕
+                            return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視">
+                                         <i class="far fa-eye"></i>
+                                         </button>
+                                         <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" onclick="location.href='@Url.Action("OrderApply", "Orders")?id=${data}'">
+                                         <i class="fas fa-pen-nib"></i>
+                                         </button>
+                                         </div>`;
+                        }
+                    }
+                ]
+            });
+        }
+    </script>
+}

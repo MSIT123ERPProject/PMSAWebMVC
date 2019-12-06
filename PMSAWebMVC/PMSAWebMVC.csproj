@@ -201,6 +201,7 @@
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryDtlsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
     <Compile Include="Controllers\AdminController\RolesAdminController.cs" />
+    <Compile Include="Controllers\SupplierController\OrdersController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
     <Compile Include="Controllers\SourceListsController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
@@ -218,6 +220,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Metadata\SupplierAccount.cs" />
+    <Compile Include="Metadata\SupplierRating.cs" />
     <Compile Include="Metadata\CompanyInfo.cs" />
     <Compile Include="Metadata\Employee.cs" />
     <Compile Include="Metadata\EmployeeMetadata.cs" />
@@ -399,6 +403,10 @@
     <Compile Include="Services\MembersDBService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccount_CreateViewModel.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\SupCompanyInfoViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionCreateViewModel.cs" />
@@ -593,19 +601,43 @@
     <Content Include="Content\MDB\css\addons\rating.min.css" />
     <Content Include="Content\MDB\css\bootstrap.css" />
     <Content Include="Content\MDB\css\bootstrap.min.css" />
+    <Content Include="Content\MDB\css\fonts\fa-brands-400.svg" />
+    <Content Include="Content\MDB\css\fonts\fa-regular-400.svg" />
+    <Content Include="Content\MDB\css\fonts\fa-solid-900.svg" />
+    <Content Include="Content\MDB\css\fonts\iconkit.svg" />
+    <Content Include="Content\MDB\css\fonts\ionicons.svg" />
     <Content Include="Content\MDB\css\mdb.css" />
+    <Content Include="Content\MDB\css\mdb.min.css">
+      <DependentUpon>mdb.css</DependentUpon>
+    </Content>
     <Content Include="Content\MDB\css\mdb.lite.css" />
     <Content Include="Content\MDB\css\mdb.lite.min.css">
       <DependentUpon>mdb.lite.css</DependentUpon>
-    </Content>
-    <Content Include="Content\MDB\css\mdb.min.css">
-      <DependentUpon>mdb.css</DependentUpon>
     </Content>
     <Content Include="Content\MDB\css\modules\animations-extended.css" />
     <Content Include="Content\MDB\css\modules\animations-extended.min.css">
       <DependentUpon>animations-extended.css</DependentUpon>
     </Content>
+    <Content Include="Content\MDB\css\plugins\all.min.css" />
+    <Content Include="Content\MDB\css\plugins\bootstrap.min.css" />
+    <Content Include="Content\MDB\css\plugins\c3.min.css" />
+    <Content Include="Content\MDB\css\plugins\dataTables.bootstrap4.min.css" />
+    <Content Include="Content\MDB\css\plugins\iconkit.min.css" />
+    <Content Include="Content\MDB\css\plugins\ionicons.min.css" />
+    <Content Include="Content\MDB\css\plugins\jquery-jvectormap.css" />
+    <Content Include="Content\MDB\css\plugins\owl.carousel.min.css" />
+    <Content Include="Content\MDB\css\plugins\owl.theme.default.min.css" />
+    <Content Include="Content\MDB\css\plugins\perfect-scrollbar.css" />
+    <Content Include="Content\MDB\css\plugins\responsive.bootstrap4.min.css" />
+    <Content Include="Content\MDB\css\plugins\tempusdominus-bootstrap-4.min.css" />
+    <Content Include="Content\MDB\css\plugins\theme.css" />
+    <Content Include="Content\MDB\css\plugins\theme.min.css" />
+    <Content Include="Content\MDB\css\plugins\weather-icons.min.css" />
     <Content Include="Content\MDB\css\style.css" />
+    <Content Include="Content\MDB\css\webfonts\fa-brands-400.svg" />
+    <Content Include="Content\MDB\css\webfonts\fa-regular-400.svg" />
+    <Content Include="Content\MDB\css\webfonts\fa-solid-900.svg" />
+    <Content Include="Content\MDB\favicon.ico" />
     <Content Include="Content\MDB\img\mdb-favicon.ico" />
     <Content Include="Content\MDB\img\overlays\01.png" />
     <Content Include="Content\MDB\img\overlays\02.png" />
@@ -1545,7 +1577,6 @@
     <Content Include="Scripts\highcharts\7.1.2\css\annotations\popup.scss" />
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
-    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\highcharts\7.1.2\themes\sunset.src.js" />
     <Content Include="Scripts\highcharts\es-modules\annotations\annotations.src.js" />
     <Content Include="Scripts\highcharts\es-modules\annotations\controllable\ControllableCircle.js" />
@@ -2017,6 +2048,40 @@
     <Content Include="Scripts\highcharts\themes\skies.src.js" />
     <Content Include="Scripts\highcharts\themes\sunset.js" />
     <Content Include="Scripts\highcharts\themes\sunset.src.js" />
+    <Content Include="Content\MDB\css\fonts\iconkit.eot" />
+    <Content Include="Content\MDB\css\fonts\iconkit.otf" />
+    <Content Include="Content\MDB\css\fonts\iconkit.ttf" />
+    <Content Include="Content\MDB\css\fonts\iconkit.woff" />
+    <Content Include="Content\MDB\css\fonts\iconkit.woff2" />
+    <Content Include="Content\MDB\css\fonts\ionicons.eot" />
+    <Content Include="Content\MDB\css\fonts\ionicons.ttf" />
+    <Content Include="Content\MDB\css\fonts\ionicons.woff" />
+    <Content Include="Content\MDB\css\fonts\ionicons.woff2" />
+    <Content Include="Content\MDB\css\fonts\fa-brands-400.eot" />
+    <Content Include="Content\MDB\css\fonts\fa-brands-400.ttf" />
+    <Content Include="Content\MDB\css\fonts\fa-brands-400.woff" />
+    <Content Include="Content\MDB\css\fonts\fa-brands-400.woff2" />
+    <Content Include="Content\MDB\css\fonts\fa-regular-400.eot" />
+    <Content Include="Content\MDB\css\fonts\fa-regular-400.ttf" />
+    <Content Include="Content\MDB\css\fonts\fa-regular-400.woff" />
+    <Content Include="Content\MDB\css\fonts\fa-regular-400.woff2" />
+    <Content Include="Content\MDB\css\fonts\fa-solid-900.eot" />
+    <Content Include="Content\MDB\css\fonts\fa-solid-900.ttf" />
+    <Content Include="Content\MDB\css\fonts\fa-solid-900.woff" />
+    <Content Include="Content\MDB\css\fonts\fa-solid-900.woff2" />
+    <Content Include="Content\MDB\css\webfonts\fa-brands-400.eot" />
+    <Content Include="Content\MDB\css\webfonts\fa-brands-400.ttf" />
+    <Content Include="Content\MDB\css\webfonts\fa-brands-400.woff" />
+    <Content Include="Content\MDB\css\webfonts\fa-brands-400.woff2" />
+    <Content Include="Content\MDB\css\webfonts\fa-regular-400.eot" />
+    <Content Include="Content\MDB\css\webfonts\fa-regular-400.ttf" />
+    <Content Include="Content\MDB\css\webfonts\fa-regular-400.woff" />
+    <Content Include="Content\MDB\css\webfonts\fa-regular-400.woff2" />
+    <Content Include="Content\MDB\css\webfonts\fa-solid-900.eot" />
+    <Content Include="Content\MDB\css\webfonts\fa-solid-900.ttf" />
+    <Content Include="Content\MDB\css\webfonts\fa-solid-900.woff" />
+    <Content Include="Content\MDB\css\webfonts\fa-solid-900.woff2" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -2043,7 +2108,6 @@
     <Content Include="Scripts\MDB\bootstrap.min.js" />
     <Content Include="Scripts\MDB\jquery.js" />
     <Content Include="Scripts\MDB\jquery.min.js" />
-    <Content Include="Scripts\MDB\mdb.js" />
     <Content Include="Scripts\MDB\mdb.lite.min.js" />
     <Content Include="Scripts\MDB\mdb.min.js" />
     <Content Include="Scripts\MDB\modules\animations-extended.min.js" />
@@ -2051,6 +2115,26 @@
     <Content Include="Scripts\MDB\modules\scrolling-navbar.min.js" />
     <Content Include="Scripts\MDB\modules\treeview.min.js" />
     <Content Include="Scripts\MDB\modules\wow.min.js" />
+    <Content Include="Scripts\MDB\plugins\bootstrap.min.js" />
+    <Content Include="Scripts\MDB\plugins\c3.min.js" />
+    <Content Include="Scripts\MDB\plugins\charts.js" />
+    <Content Include="Scripts\MDB\plugins\d3.js" />
+    <Content Include="Scripts\MDB\plugins\d3.min.js" />
+    <Content Include="Scripts\MDB\plugins\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\MDB\plugins\datatables.js" />
+    <Content Include="Scripts\MDB\plugins\dataTables.responsive.min.js" />
+    <Content Include="Scripts\MDB\plugins\jquery-jvectormap.min.js" />
+    <Content Include="Scripts\MDB\plugins\jquery.dataTables.min.js" />
+    <Content Include="Scripts\MDB\plugins\moment.js" />
+    <Content Include="Scripts\MDB\plugins\perfect-scrollbar.min.js" />
+    <Content Include="Scripts\MDB\plugins\popper.min.js" />
+    <Content Include="Scripts\MDB\plugins\responsive.bootstrap4.min.js" />
+    <Content Include="Scripts\MDB\plugins\screenfull.js" />
+    <Content Include="Scripts\MDB\plugins\tables.js" />
+    <Content Include="Scripts\MDB\plugins\tempusdominus-bootstrap-4.min.js" />
+    <Content Include="Scripts\MDB\plugins\theme.js" />
+    <Content Include="Scripts\MDB\plugins\theme.min.js" />
+    <Content Include="Scripts\MDB\plugins\widgets.js" />
     <Content Include="Scripts\MDB\popper.js" />
     <Content Include="Scripts\MDB\popper.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -2144,9 +2228,9 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Shared\ResetPwdSupEmailTemplate.html" />
     <Content Include="Views\Shared\ResetPwdEmailTemplate.html" />
     <Content Include="Views\ShipNotices\ShipNoticeDisplay.cshtml" />
-    <Content Include="Views\ShipNotices\purchaseOrderSended.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2253,11 +2337,6 @@
     <Content Include="Views\SourceLists\Index.cshtml" />
     <Content Include="Views\SourceLists\IndexDtl.cshtml" />
     <Content Include="Views\SupplierStocks\Index.cshtml" />
-    <Content Include="Views\UsersAdmin\Create.cshtml" />
-    <Content Include="Views\UsersAdmin\Delete.cshtml" />
-    <Content Include="Views\UsersAdmin\Details.cshtml" />
-    <Content Include="Views\UsersAdmin\DisplayEmail.cshtml" />
-    <Content Include="Views\UsersAdmin\Edit.cshtml" />
     <Content Include="Views\UsersAdmin\Index.cshtml" />
     <Content Include="Views\WarehouseInfoes\Index.cshtml" />
     <Content Include="Views\Shared\Deny.cshtml" />
@@ -2270,6 +2349,9 @@
     <Content Include="Views\PurchaseRequisitions\_CreatePRItemPartial.cshtml" />
     <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
     <Content Include="Views\Account\ConfirmEmailError.cshtml" />
+    <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Views\BuyerSupAccount\Index.cshtml" />
+    <Content Include="Views\BuyerSupAccount\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2280,6 +2362,7 @@
     <Folder Include="Utilities\ShiYuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

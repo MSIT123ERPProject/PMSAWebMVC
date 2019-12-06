@@ -17,14 +17,15 @@ namespace PMSAWebMVC
             // 使用開發版本的 Modernizr 進行開發並學習。然後，當您
             // 準備好可進行生產時，請使用 https://modernizr.com 的建置工具，只挑選您需要的測試。
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                "~/Scripts/modernizr-*"));
+                  "~/Scripts/modernizr-*"
+                ));
 
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
-                 //Bootstrap
-                 //"~/Content/bootstrap.css",
-                 "~/Content/MDB/css/bootstrap.css",                
+                //Bootstrap
+                //"~/Content/bootstrap.css",
+                "~/Content/MDB/css/bootstrap.css",                
                 //MDB
                 "~/Content/MDB/css/mdb.css",
                 "~/Content/MDB/css/addons/datatables.min.css",
@@ -37,8 +38,8 @@ namespace PMSAWebMVC
                 //SB Admin
                 //"~/Content/sbTemplate/sb-admin.css",
                 //Site
-                "~/Content/Site.css"));
-
+                "~/Content/Site.css"
+                ));
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
@@ -51,21 +52,20 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/addons/directives.min.js",
                 "~/Scripts/MDB/addons/flag.min.js",
                 "~/Scripts/MDB/addons/imagesloaded.pkgd.min.js",
-                "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
-                "~/Scripts/MDB/addons/masonry.pkgd.min.js",
-                "~/Scripts/MDB/addons/rating.min.js",
+                 "~/Scripts/MDB/addons/jquery.zmd.hierarchical-display.min.js",
+                  "~/Scripts/MDB/addons/masonry.pkgd.min.js",
+                 "~/Scripts/MDB/addons/rating.min.js",
                 "~/Scripts/MDB/modules/animations-extended.min.js",
-                "~/Scripts/MDB/modules/forms-free.min.js",
-                "~/Scripts/MDB/modules/scrolling-navbar.min.js",
-                "~/Scripts/MDB/modules/treeview.min.js",
-                "~/Scripts/MDB/modules/wow.min.js",
+                   "~/Scripts/MDB/modules/forms-free.min.js",
+                   "~/Scripts/MDB/modules/scrolling-navbar.min.js",
+                   "~/Scripts/MDB/modules/treeview.min.js",
+                   "~/Scripts/MDB/modules/wow.min.js",
                 //SB Admin
                 "~/Scripts/jquery.easing.js",
                 "~/Scripts/sbTemplate/sb-admin.js",
                 //Site
                 "~/Scripts/Site.js"
                 ));
-
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
                 //DatetimePicker
@@ -118,7 +118,6 @@ namespace PMSAWebMVC
             bundles.Add(new ScriptBundle("~/bundles/toastrjs").Include(
                 "~/Scripts/toastr.min.js"
                 ));
-            
         }
     }
 }

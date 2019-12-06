@@ -32,6 +32,10 @@
             }
         }
 
+        table.dataTable tbody th, table.dataTable tbody td {
+            vertical-align: middle;
+        }
+
         body {
             /*animation: 0.3s fadeinShowBody 0.3s both;*/
         }
@@ -156,7 +160,7 @@
         }
         /*btn ==============================*/
         td.action-btn {
-            padding: 5px 0 0 5px !important;
+            /*padding: 5px 0 0 5px !important;*/
         }
 
         .action-btn > button i:before {
@@ -171,7 +175,7 @@
             width: 40px;
             height: 40px;
             text-align: center;
-            margin: 5px;
+            /*margin: 5px;*/
             transition: 0.5s;
             border-radius: 20px;
             padding: 5px 10px 10px 9px;
@@ -265,7 +269,7 @@
             width: auto;
             height: auto;
             text-align: center;
-            margin: 5px;
+            /*margin: 5px;*/
             transition: 0.5s;
             font-size: 15px;
             letter-spacing: 1px;
@@ -898,6 +902,9 @@
                     data: { EmpId: $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() },
                     success: function (result) {
                         alert("send");
+
+                        //更新datatable
+                        oTable.ajax.reload();
                     },
                     error: function (result) {
                         alert("send失敗nooooooooooooooooo");

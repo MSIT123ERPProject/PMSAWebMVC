@@ -693,7 +693,7 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
-        //修改
+        //修改請購單
         [HttpPost]
         [AuthorizeDeny(Roles = "Manager")]
         public ActionResult Edit(PurchaseRequisition purchaseRequisition)
@@ -752,10 +752,49 @@ namespace PMSAWebMVC.Controllers
                             Qty = p.Qty,
                             SuggestSupplierCode=p.SuggestSupplierCode,
                             DateRequired = p.DateRequired.ToString("yyyy/MM/dd"),
-                          
+
                         };
             var da = datas.ToList();
             return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+
+        //下拉選單
+        public ActionResult getsuggestSupplierCode()
+        {
+            //var supplierInfo = db.SourceList.Where(s=>s.PartNumber== partNumber).Select(c => new
+            //{
+            //    c.SupplierInfo.SupplierCode,
+            //    c.SupplierInfo.SupplierName
+            //});
+            var supplierInfo = db.SourceList.Select(c => new
+            {
+                c.SupplierInfo.SupplierCode,
+                c.SupplierInfo.SupplierName
+            });
+            var sup = supplierInfo.ToList();
+            return Json(supplierInfo, JsonRequestBehavior.AllowGet);
+        }
+
+        //修改請購單明細
+        [HttpPost]
+        [AuthorizeDeny(Roles = "Manager")]
+        public ActionResult EditDtl(PurchaseRequisitionDtl purchaseRequisitionDtl)
+        {
+            string message = "修改成功!!";
+            bool status = true;
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(purchaseRequisitionDtl).State = EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { status = status, message = message, id = db.PurchaseRequisitionDtl.Max(x => x.PurchaseRequisitionDtlCode) }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                message = "修改失敗!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
 

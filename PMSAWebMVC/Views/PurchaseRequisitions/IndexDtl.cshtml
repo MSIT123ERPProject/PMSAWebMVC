@@ -9,9 +9,8 @@
 
 <div class="card mb-3">
     <div class="card-header">
-        <i class="fas fa-table">@Html.ActionLink("返回請購單", "Index", null, new { @class = "btn btn-success" })</i>
-        @*@Html.ActionLink("新增請購單明細", "CreateDtl", null, new { @class = "btn btn-info" })*@
-
+        <i class="fas fa-table"></i>
+        @Html.ActionLink("返回請購單", "Index", null, new { @class = "btn btn-success" })
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -74,13 +73,13 @@
                         @*<td>
                                 @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlOID)
                             </td>*@
-                        <th>
-                            @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlCode)
-                        </th>
                         <td>
+                            @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlCode)
+                        </td>
+                        <td id="qt">
                             @Html.DisplayFor(modelItem => item.Qty)
                         </td>
-                        <td>
+                        <td id="dr">
                             @Html.DisplayFor(modelItem => item.DateRequired)
                         </td>
                         <td>
@@ -89,10 +88,10 @@
                         @*<td>
                                 @Html.DisplayFor(modelItem => item.PurchaseRequisition.ProductNumber)
                             </td>*@
-                        <td>
+                        <td >
                             @Html.DisplayFor(modelItem => item.PurchaseRequisition.Product.ProductName)
                         </td>
-                        <td>
+                        <td id="sn">
                             @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
                         </td>
                         <td>
@@ -188,9 +187,11 @@
             if(id1 == undefined){
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
-            $.getJSON("@Url.Action("DetailDtl", "PurchaseRequisitions")/" + id1, function (datas) {
+                $.getJSON("@Url.Action("DetailDtl", "PurchaseRequisitions")/" + id1, function (datas) {
+                    //loadSuggestSupplierCode(val(datas[0].PartNumber));
                 $('#ModalTitle').text('檢視請購單明細資訊');
                 $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', false);
                 //$('#btnUpdate').hide();
                 $("#PurchaseRequisitionDtlCode").val(datas[0].PurchaseRequisitionDtlCode);
                 $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
@@ -202,6 +203,74 @@
                 });
             })
         });
+
+        //局部更新時取得欄位 位置
+        var sell; var sell2; var sell3;
+        $(document).on('click', "td", function () {
+
+            var table = $('#dataTable').DataTable();
+            var rowss = $(this).closest("tr");  //抓取列
+            var celss = $(this).siblings("#qt"); //抓取欄
+            var celss2 = $(this).siblings("#sn"); //抓取欄
+            var celss3 = $(this).siblings("#dr");
+            sell = table.row(rowss).cell(celss);
+            sell2 = table.row(rowss).cell(celss2);
+            sell3 = table.row(rowss).cell(celss3);
+            
+            console.log(rowss);
+            console.log(celss);
+            console.log(celss2);
+            console.log(celss3);
+        })
+
+        //修改更新
+        $('#btnUpdate').click(function () {
+            var table = $('#dataTable').DataTable();
+            if ($("#Qty").val() == '') {
+                toastr.error("'*' 為必填欄位", "警告");
+            } else {
+                var PurchaseRequisitionDtlObj = {
+                    PurchaseRequisitionDtlCode: $("#PurchaseRequisitionDtlCode").val(),
+                    PurchaseRequisitionID: $("#PurchaseRequisitionID").val(),
+                    PartNumber: $("#PartNumber").val(),
+                    Qty: $("#Qty").val(),
+                    SuggestSupplierCode: $("#SuggestSupplierCode").val(),
+                    DateRequired: $("#DateRequired").val(),
+                }
+                $.ajax({
+                    url: '@Url.Action("EditDtl", "PurchaseRequisitions")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(PurchaseRequisitionDtlObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        sell.data($("#Qty").val()).draw();
+                        sell2.data($("#SuggestSupplierCode").find('option:selected').html()).draw();
+                        //sell.data($("#ProcessStatus").find('option:selected').html()).draw();
+                        sell3.data($("#DateRequired").val()).draw();
+                    }
+                }).fail(function (response) {
+                    toastr.error(response.message, "警告");
+                })
+                $('#purchaserequisitionModal').modal('hide');
+            }
+        });
+
+         //下拉選單
+        loadSuggestSupplierCode();
+        async function loadSuggestSupplierCode() {
+            var response = await fetch('@Url.Action("getsuggestSupplierCode", "PurchaseRequisitions")');
+            var datas = await response.json();
+            for (var i = 0, max = datas.length; i < max; i++) {
+                var SupplierCode = datas[i].SupplierCode
+                var SupplierName = datas[i].SupplierName
+                //var opt = new Option(SupplierCode + " " + SupplierName, SupplierCode);
+                var opt = new Option(SupplierName, SupplierCode);
+                $('#SuggestSupplierCode').append(opt)
+            }
+        }
 
     </script>
 
@@ -231,14 +300,19 @@
                         <label class="required" for="Qty">@Html.DisplayNameFor(model => model.Qty)</label>
                         <input type="text" class="form-control" id="Qty" name="dta">
                     </div>
+                    @*<div class="form-group">
+            <label class="required" for="SuggestSupplierCode">@Html.DisplayNameFor(model => model.SuggestSupplierCode)</label>
+            <input type="text" class="form-control" id="SuggestSupplierCode" name="dta">
+        </div>*@
                     <div class="form-group">
-                        <label class="required" for="SuggestSupplierCode">@Html.DisplayNameFor(model => model.SuggestSupplierCode)</label>
-                        <input type="text" class="form-control" id="SuggestSupplierCode" name="dta">
+                        <label for="SuggestSupplierCode">建議供應商</label>
+                        <br />
+                        <select class="form-control" id="SuggestSupplierCode" name="dta"></select>
                     </div>
                     <div class="form-group">
                         <label for="PRBeginDate">@Html.DisplayNameFor(model => model.DateRequired)</label>
                         <div class="input-group date" data-target-input="nearest">
-                            <input type="text" id="DateRequired" class="form-control datetimepicker-input" data-target="#DateRequired" data-toggle="datetimepicker" name="dta" />
+                            <input type="text" id="DateRequired" class="form-control datetimepicker-input" @*data-target="#DateRequired"*@ data-toggle="datetimepicker" name="dta" />
                             <div class="input-group-append" data-target="#DateRequired" data-toggle="datetimepicker">
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar"></i>

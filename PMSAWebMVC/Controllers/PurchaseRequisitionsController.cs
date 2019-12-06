@@ -17,176 +17,135 @@ namespace PMSAWebMVC.Controllers
     {
         private PMSAEntities db = new PMSAEntities();
 
-        // GET: PurchaseRequisitions
-        public ActionResult Index()
-        {
-            var purchaseRequisition = db.PurchaseRequisition.Include(p => p.Employee).Include(p => p.Product).Include(p => p.SignFlow);
-            foreach (var data in purchaseRequisition)
-            {
-                data.ProcessStatus = GetProcessStatus(data.ProcessStatus);
-                data.SignStatus = GetSignStatus(data.SignStatus);
-            }
-            return View(purchaseRequisition.ToList());
-        }
-
-        //// GET: PurchaseRequisitions/Details/5
-        //public ActionResult Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
-        //    if (purchaseRequisition == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(purchaseRequisition);
-        //}
+     
 
      
 
-        // GET: PurchaseRequisitions/Create
-        public ActionResult Create()
-        {
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name");
-            ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName");
-            ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID");
-            return View();
-        }
+        //// GET: PurchaseRequisitions/Create
+        //public ActionResult Create()
+        //{
+        //    ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name");
+        //    ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName");
+        //    ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID");
+        //    return View();
+        //}
 
-        // POST: PurchaseRequisitions/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PurchaseRequisitionOID,PurchaseRequisitionID,ProductNumber,EmployeeID,PRBeginDate,ProcessStatus,SignStatus,SignFlowOID")] PurchaseRequisition purchaseRequisition)
-        {
-            int z = 1;
-            string x = "", year, month, day;
-            year = DateTime.Now.Year.ToString();
-            month = DateTime.Now.Month.ToString();
-            day = DateTime.Now.Day.ToString();
-            x = year + month + day;
-            string y = "PR-" + x + "-00" + z.ToString();
+        //// POST: PurchaseRequisitions/Create
+        //// 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        //// 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "PurchaseRequisitionOID,PurchaseRequisitionID,ProductNumber,EmployeeID,PRBeginDate,ProcessStatus,SignStatus,SignFlowOID")] PurchaseRequisition purchaseRequisition)
+        //{
+        //    int z = 1;
+        //    string x = "", year, month, day;
+        //    year = DateTime.Now.Year.ToString();
+        //    month = DateTime.Now.Month.ToString();
+        //    day = DateTime.Now.Day.ToString();
+        //    x = year + month + day;
+        //    string y = "PR-" + x + "-00" + z.ToString();
 
-            for (int i = 0; i < db.PurchaseRequisition.Count(); i++)
-            {
-                PurchaseRequisition test = db.PurchaseRequisition.Find(y);
-                if (z < 9)
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = "PR-" + x + "-00" + z.ToString();
-                        test = db.PurchaseRequisition.Find(y);
-                    }
-                }
-                else if (z < 99)
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = "PR-" + x + "-0" + z.ToString();
-                        test = db.PurchaseRequisition.Find(y);
-                    }
-                }
-                else
-                {
-                    if (test != null)
-                    {
-                        z += 1;
-                        y = "PR-" + x + "-" + z.ToString();
-                        test = db.PurchaseRequisition.Find(y);
-                    }
-                }
+        //    for (int i = 0; i < db.PurchaseRequisition.Count(); i++)
+        //    {
+        //        PurchaseRequisition test = db.PurchaseRequisition.Find(y);
+        //        if (z < 9)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = "PR-" + x + "-00" + z.ToString();
+        //                test = db.PurchaseRequisition.Find(y);
+        //            }
+        //        }
+        //        else if (z < 99)
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = "PR-" + x + "-0" + z.ToString();
+        //                test = db.PurchaseRequisition.Find(y);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (test != null)
+        //            {
+        //                z += 1;
+        //                y = "PR-" + x + "-" + z.ToString();
+        //                test = db.PurchaseRequisition.Find(y);
+        //            }
+        //        }
 
 
-            }
-            purchaseRequisition.EmployeeID = "CE00002";
-            purchaseRequisition.ProcessStatus = "N";
-            purchaseRequisition.SignStatus = "S";
-            purchaseRequisition.PurchaseRequisitionID = y;
-            //PurchaseRequisitionID請購單編號=PR-yyyyMMdd-3碼流水號(PR-20191023-001)
-            if (ModelState.IsValid)
-            {
-                purchaseRequisition.PRBeginDate = DateTime.Now;
-                db.PurchaseRequisition.Add(purchaseRequisition);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        //    }
+        //    purchaseRequisition.EmployeeID = "CE00002";
+        //    purchaseRequisition.ProcessStatus = "N";
+        //    purchaseRequisition.SignStatus = "S";
+        //    purchaseRequisition.PurchaseRequisitionID = y;
+        //    //PurchaseRequisitionID請購單編號=PR-yyyyMMdd-3碼流水號(PR-20191023-001)
+        //    if (ModelState.IsValid)
+        //    {
+        //        purchaseRequisition.PRBeginDate = DateTime.Now;
+        //        db.PurchaseRequisition.Add(purchaseRequisition);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
 
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseRequisition.EmployeeID);
-            ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName", purchaseRequisition.ProductNumber);
-            ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
-            return View(purchaseRequisition);
-        }
+        //    ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseRequisition.EmployeeID);
+        //    ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName", purchaseRequisition.ProductNumber);
+        //    ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
+        //    return View(purchaseRequisition);
+        //}
 
         
 
 
-        // GET: PurchaseRequisitions/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
-            if (purchaseRequisition == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseRequisition.EmployeeID);
-            ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName", purchaseRequisition.ProductNumber);
-            ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
-            return View(purchaseRequisition);
-        }
+        
 
         // POST: PurchaseRequisitions/Edit/5
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PurchaseRequisitionOID,PurchaseRequisitionID,ProductNumber,EmployeeID,PRBeginDate,ProcessStatus,SignStatus,SignFlowOID")] PurchaseRequisition purchaseRequisition)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(purchaseRequisition).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseRequisition.EmployeeID);
-            ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName", purchaseRequisition.ProductNumber);
-            ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
-            return View(purchaseRequisition);
-        }
-        [HttpPost]
-        public ActionResult Delete(string id) //請購單刪除
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
-                if (purchaseRequisition == null)
-                {
-                    return HttpNotFound();
-                }
-                db.PurchaseRequisition.Remove(purchaseRequisition);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                //return RedirectToAction("Index");
-                return Content("<script> alert('刪除失敗');window.location.href='../Index'</script>");
-                //return Content("")
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "PurchaseRequisitionOID,PurchaseRequisitionID,ProductNumber,EmployeeID,PRBeginDate,ProcessStatus,SignStatus,SignFlowOID")] PurchaseRequisition purchaseRequisition)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(purchaseRequisition).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseRequisition.EmployeeID);
+        //    ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName", purchaseRequisition.ProductNumber);
+        //    ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
+        //    return View(purchaseRequisition);
+        //}
+        //[HttpPost]
+        //public ActionResult Delete(string id) //請購單刪除
+        //{
+        //    try
+        //    {
+        //        if (id == null)
+        //        {
+        //            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //        }
+        //        PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
+        //        if (purchaseRequisition == null)
+        //        {
+        //            return HttpNotFound();
+        //        }
+        //        db.PurchaseRequisition.Remove(purchaseRequisition);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        //return RedirectToAction("Index");
+        //        return Content("<script> alert('刪除失敗');window.location.href='../Index'</script>");
+        //        //return Content("")
+        //    }
 
-        }
+        //}
 
 
         protected override void Dispose(bool disposing)
@@ -213,7 +172,7 @@ namespace PMSAWebMVC.Controllers
                 case "C":
                     return "結案";
                 case "O":
-                    return "採購中";
+                    return "請購中";
                 default:
                     return "";
             }
@@ -232,6 +191,37 @@ namespace PMSAWebMVC.Controllers
                 default:
                     return "";
             }
+        }
+
+        // GET: PurchaseRequisitions請購頁面
+        public ActionResult Index()
+        {
+            var user = User.Identity.GetEmployee();
+            var purchaseRequisition = db.PurchaseRequisition.Include(p => p.Employee).Include(p => p.Product).Include(p => p.SignFlow).Where(p => p.EmployeeID == user.EmployeeID);
+            foreach (var data in purchaseRequisition)
+            {
+                data.ProcessStatus = GetProcessStatus(data.ProcessStatus);
+                data.SignStatus = GetSignStatus(data.SignStatus);
+            }
+            return View(purchaseRequisition.ToList());
+        }
+
+        // GET: PurchaseRequisitions/Edit/5 修改
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(id);
+            if (purchaseRequisition == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseRequisition.EmployeeID);
+            ViewBag.ProductNumber = new SelectList(db.Product, "ProductNumber", "ProductName", purchaseRequisition.ProductNumber);
+            ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseRequisition.SignFlowOID);
+            return View(purchaseRequisition);
         }
 
         //檢視
@@ -254,7 +244,7 @@ namespace PMSAWebMVC.Controllers
             //        p.ProcessStatus,p.SignStatus
             //    });
             var datas = from p in db.PurchaseRequisition.AsEnumerable()
-                        where p.EmployeeID == user.EmployeeID
+                        where p.EmployeeID == user.EmployeeID && p.PurchaseRequisitionID==id
                         select new /*PurchaseRequisitionIndexViewModel*/
                         {
                             PurchaseRequisitionID=p.PurchaseRequisitionID,
@@ -266,7 +256,7 @@ namespace PMSAWebMVC.Controllers
                             ProcessStatus = p.ProcessStatus,
                             SignStatus = p.SignStatus
                         };
-            //var da=datas.ToList();
+            var da=datas.ToList();
             return Json(datas, JsonRequestBehavior.AllowGet);
         }
 
@@ -513,7 +503,7 @@ namespace PMSAWebMVC.Controllers
 
             return PartialView("_CreatePRItemPartial",vm);//注意
         }
-        [HttpGet] //資料寫入請購單
+        [HttpGet] //站存表資料寫入請購單
         public ActionResult CreatePR()
         {
             
@@ -703,6 +693,29 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
+        //修改
+        [HttpPost]
+        [AuthorizeDeny(Roles = "Manager")]
+        public ActionResult Edit(PurchaseRequisition purchaseRequisition)
+        {
+            string message = "修改成功!!";
+            bool status = true;
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(purchaseRequisition).State = EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { status = status, message = message, id = db.PurchaseRequisition.Max(x => x.PurchaseRequisitionID) }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                message = "修改失敗!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         public ActionResult Createtest()
         {
             PurchaseRequisitionCreateViewModel model = new PurchaseRequisitionCreateViewModel();
@@ -710,6 +723,7 @@ namespace PMSAWebMVC.Controllers
             ConfigureViewModel(model);
             return View(model);
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // GET: PurchaseRequisitionDtls

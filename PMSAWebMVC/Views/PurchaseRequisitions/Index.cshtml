@@ -58,7 +58,7 @@
                         <th>
                             @Html.DisplayNameFor(model => model.PRBeginDate)
                         </th>
-                        <th>
+                        <th >
                             @Html.DisplayNameFor(model => model.ProcessStatus)
                         </th>
                         <th>
@@ -79,19 +79,19 @@
                         @*<td>
                                 @Html.DisplayFor(modelItem => item.PurchaseRequisitionOID)
                             </td>*@
-                        <th>
+                        <td>
                             @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
-                        </th>
+                        </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Product.ProductName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.PRBeginDate)
                         </td>
-                        <td>
+                        <td id="ps1">
                             @Html.DisplayFor(modelItem => item.ProcessStatus)
                         </td>
-                        <td>
+                        <td id="ss1">
                             @Html.DisplayFor(modelItem => item.SignStatus)
                         </td>
                         @*<td>
@@ -106,14 +106,19 @@
                             @*@Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
                             @*@Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
                             @*<button name="click1" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                                    <i class="far fa-edit"></i>
-                                </button>*@
-                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" data-dc="@item.PurchaseRequisitionID">
+            <i class="far fa-edit"></i>
+        </button>*@
+                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
                                 <i class="far fa-eye"></i>
                             </button>
-                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" data-dc="@item.PurchaseRequisitionID">
+                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
                                 <i class="far fa-edit"></i>
                             </button>
+                            <button name="click3" type="button"  class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.PurchaseRequisitionID">
+                                <i class="far fa-file-alt"></i>
+                            </button>
+                            
+
                         </td>
                     </tr>
                 }
@@ -130,6 +135,9 @@
         $(document).ready(function () {
             $('#dataTable').DataTable();
 
+        });
+
+        
 
 
             //檢視
@@ -149,18 +157,26 @@
                 $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
                 $("#ProductNumber").val(datas[0].ProductNumber);
                 $("#EmployeeID").val(datas[0].EmployeeID);
-                //$("#PRBeginDate").val(datas[0].PRBeginDate);
-                //$(if (datas[0].ProcessStatus == "N") { document.getElementById("ProcessStatus").selectedIndex=0 });
+                //$("#ProcessStatus").val(JSON.stringify(datas[0].ProcessStatus));//轉字串
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
-                //$("#opt1").val(datas[0].ProcessStatus);
-                //$("#opt1").text(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
                 $('#PRBeginDate').datetimepicker({
                     defaultDate: datas[0].PRBeginDate
                 });
             })
-            });
-            //修改
+        });
+
+        ////檢視明細
+        //    $(document).on('click', "button[name = 'click3']", function () {
+        //    let id1 = this.dataset.dc;
+        //    if(id1 == undefined){
+        //        id1 = $(this).parents('tr').find('td:first-child').text();
+        //        }
+                
+           
+        //});
+
+            //修改檢視
             $(document).on('click', "button[name = 'click2']", function () {
                 document.getElementById("btnClose").innerHTML = "取消";
             let id1 = this.dataset.dc;
@@ -181,7 +197,6 @@
                 $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
                 $("#ProductNumber").val(datas[0].ProductNumber);
                 $("#EmployeeID").val(datas[0].EmployeeID);
-                //$("#PRBeginDate").val(datas[0].PRBeginDate);
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
                 $('#PRBeginDate').datetimepicker({
@@ -190,99 +205,70 @@
             })
             });
 
-            $(document).on('click', "button[id = 'btnClose']", function () {
-                document.getElementById("SS").innerHTML = "";
-                document.getElementById("PS").innerHTML = "";
 
-            });
+            
 
+            //局部更新時取得欄位 位置
+            var sell; var  sell2;
+            $(document).on('click', "td", function () {
+
+                var table = $('#dataTable').DataTable();
+                var rowss = $(this).closest("tr");  //抓取列
+                var celss = $(this).siblings("#ps1"); //抓取欄
+                var celss2 = $(this).siblings("#ss1"); //抓取欄
+                sell = table.row(rowss).cell(celss);
+                sell2 = table.row(rowss).cell(celss2);
+                console.log(sell);
+                console.log(rowss);
+                console.log(celss);
+                console.log(celss2);
+            })
+
+
+        //修改更新
             $('#btnUpdate').click(function () {
             var table = $('#dataTable').DataTable();
-            if($("#Address").val() == ''){
+                if ($("#ProcessStatus").val() == ''){
                 toastr.error("'*' 為必填欄位","警告");
-            }else{
-                var warehouseinfoObj = {
-                    WarehouseCode:$("#WarehouseCode").val(),
-                    WarehouseName:$("#WarehouseName").val(),
-                    Address:$("#Address").val(),
-                    EmployeeID:$("#EmployeeID").val(),
-                    Tel:$("#Tel").val(),
-                    Remark:$("#Remark").val()
+                }else{
+                 var PurchaseRequisitionObj = {
+                    PurchaseRequisitionID: $("#PurchaseRequisitionID").val(),
+                    ProductNumber: $("#ProductNumber").val(),
+                    EmployeeID: $("#EmployeeID").val(),
+                    PRBeginDate: $("#PRBeginDate").val(),
+                    ProcessStatus: $("#ProcessStatus").val(),
+                    SignStatus: $("#SignStatus").val()
                 }
                 $.ajax({
-                    url: '@Url.Action("Edit", "WarehouseInfoes")',
+                    url: '@Url.Action("Edit", "PurchaseRequisitions")',
                     dataType: 'json',
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(warehouseinfoObj)
+                    data: JSON.stringify(PurchaseRequisitionObj)
                 }).done(function (response) {
                     if (response.status) {
                         toastr.success(response.message, "通知");
-                        sell.data($("#Address").val()).draw();
+                        //sell.data($("#ProcessStatus").find('option:selected').val()).draw();//取得選取的值
+                        sell.data($("#ProcessStatus").find('option:selected').html()).draw();
+                        sell2.data($("#SignStatus").find('option:selected').html()).draw();
                     }
                 }).fail(function(response){
                     toastr.error(response.message, "警告");
                 })
-                $('#warehouseModal').modal('hide');
+                    $('#purchaserequisitionModal').modal('hide');
             }
-        })
-        });
+            })
 
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();
         });
-        function A() {
-            window.location.reload();
-        }
 
-        function ps() {
-            let thepwd = document.getElementById("ProcessStatus").value.trim();
-            let str1 = "";
-
-            if (thepwd.length <= 0) {
-                str1 = '<i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;不可為空值';
-            }
-
-            document.getElementById("PS").innerHTML = str1;
-        }
-        function ss() {
-            let thepwd = document.getElementById("SignStatus").value.trim();
-            let str1 = "";
-
-            if (thepwd.length <= 0) {
-                str1 = '<i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;不可為空值';
-            }
-
-            document.getElementById("SS").innerHTML = str1;
-        }
-        loadProcessStatus();
-        async function loadProcessStatus() {
-            var response = await fetch('@Url.Action("getProcessStatus", "PurchaseRequisitions")');
-            var datas = await response.json();
-            var x = "新增"; var y = "請購中"; var z = "結案"
-            for (var i = 0, max = datas.length; i < max; i++) {
-                //if (datas[i].ProcessStatus == "N") { var opt = new Option(x); }
-                //else if (datas[i].ProcessStatus == "O") { var opt = new Option(y); }
-                //else { var opt = new Option(z); }
-                var opt = new Option(datas[i].ProcessStatus);
-                $('#ProcessStatus').append(opt)
-            }
-        }
-        loadSignStatus();
-        async function loadSignStatus() {
-            var response = await fetch('@Url.Action("getSignStatus", "PurchaseRequisitions")');
-            var datas = await response.json();
-            for (var i = 0, max = datas.length; i < max; i++) {
-                var opt1 = new Option(datas[i].SignStatus);
-                $('#SignStatus').append(opt1)
-            }
-        }
 
 
     </script>
 
 }<!--Model-->
-<div class="modal fade bd-example-modal-lg" id="warehouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="purchaserequisitionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -302,29 +288,34 @@
                         <label class="required" for="EmployeeID">@Html.DisplayNameFor(model => model.EmployeeID)</label>
                         <input type="text" class="form-control" id="EmployeeID" name="da">
                     </div>
-                    @*<div class="form-group">
-            <label for="ProcessStatus">@Html.DisplayNameFor(model => model.ProcessStatus)</label>
-            <input type="text" class="form-control" id="ProcessStatus" name="dta" onblur="ps()">
-            <span id="PS" style="color:red"></span>
-        </div>*@
+
+                    <div class="form-group">
+                        <label for="PRBeginDate">@Html.DisplayNameFor(model => model.PRBeginDate)</label>
+                        <div class="input-group date"  data-target-input="nearest">
+                            <input type="text"id="PRBeginDate" class="form-control datetimepicker-input" data-target="#PRBeginDate" data-toggle="datetimepicker" name="da"/>
+                            <div class="input-group-append" data-target="#PRBeginDate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>  
+
                     <div class="form-group">
                         <label for="ProcessStatus">處理狀態代碼</label>
                         <br />
                         <select class="form-control" id="ProcessStatus" name="dta">
-                            @*<option id="opt1" value="新增">新增</option>
-                <option id="opt2" value="請購中">請購中</option>
-                <option id="opt3" value="結案">結案</option>*@
+                            <option selected="selected" id="opt1" value="N">新增</option>
+                            <option id="opt2" value="O">請購中</option>
+                            <option id="opt3" value="C">結案</option>
                         </select>
                     </div>
-                    @*<div class="form-group">
-            <label for="SignStatus">@Html.DisplayNameFor(model => model.SignStatus)</label>
-            <input type="text" class="form-control" id="SignStatus" name="dta" onblur="ss()">
-            <span id="SS" style="color:red"></span>
-        </div>*@
+
                     <div class="form-group">
                         <label for="SignStatus">簽核狀態代碼</label>
                         <br />
                         <select class="form-control" id="SignStatus" name="dta">
+                            <option selected="selected" id="opt4" value="S">簽核中</option>
+                            <option id="opt5" value="Y">同意</option>
+                            <option id="opt6" value="N">拒絕</option>
                         </select>
                     </div>
                 </form>
@@ -333,10 +324,7 @@
                 <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
                 <button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>
                 <button id="btnSave" type="button" class="btn btn-primary" data-dismiss="modal">新增</button>
-                @*<button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>*@
-                @*<button id="btnSave" type="button" class="btn btn-success" data-dismiss="modal">新增</button>*@
-                @*<button id="btnSave" name="btnSave" type="button" class="btn btn-primary">新增</button>*@
-                @*<button id="btnUpdate" name="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>*@
+                
             </div>
         </div>
     </div>

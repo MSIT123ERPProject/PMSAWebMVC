@@ -44,8 +44,8 @@
         <a href="https://asp.net" class="btn btn-primary btn-lg"><h6 class="m-0">最新消息 &raquo;</h6></a>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <h2><i class="fas fa-money-check-alt"></i>出貨金額比例</h2>
+        <div class="col-md-4" >
+            @*<h2><i class="fas fa-money-check-alt"></i>出貨金額比例</h2>*@
             @*DateTimePickerStart*@
             <div class="input-group date" id="datetimepickerIdStart" data-target-input="nearest">
                 <div class="input-group-text">開始</div>
@@ -64,12 +64,12 @@
             </div>
             <div id="container"></div>
         </div>
-        <div class="col-md-4">
-            <h2><i class="fas fa-chart-bar"></i>料件庫存數量</h2>
+        <div class="col-md-4" >
+            @*<h2><i class="fas fa-chart-bar"></i>料件庫存數量</h2>*@
             <div id="container2"></div>
         </div>
-        <div class="col-md-4">
-            <h2><i class="fas fa-boxes"></i>料件出貨數量</h2>
+        <div class="col-md-4" >
+            @*<h2><i class="fas fa-boxes"></i>料件出貨數量</h2>*@
             <div id="container3"></div>
         </div>
     </div>
@@ -130,9 +130,10 @@
                     style: {
                         fontWeight: 'bold',
                         fontFamily: "微軟正黑體",
-                        fontsize: "30px"
+                        fontsize: "30px",   
                     },
-                    width: 500,
+                    backgroundColor: '#A5DEE4',
+                    width: 510,
                 },
                 title: {
                     useHTML: true,
@@ -217,6 +218,7 @@
                     chart: {
                         renderTo: 'container2',
                         type: 'column',
+                        height:510,
                     },
                     tooltip: {
                         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -307,7 +309,8 @@
                             plotBackgroundColor: null,
                             plotBorderWidth: null,
                             plotShadow: false,
-                            type: 'pie'
+                            type: 'pie',
+                            height:434,
                         },
                         title: {
                             text: '各料件已出貨金額百分比',

@@ -24,10 +24,24 @@ namespace PMSAWebMVC.Controllers
             
             return View(sourceList);
         }
-    
 
-        // GET: SourceLists/Details/5貨源清單檢視畫面
-        public ActionResult Details(string id)
+
+        //// GET: SourceLists/Details/5貨源清單檢視畫面
+        //public ActionResult Details(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    SourceList sourceList = db.SourceList.Find(id);
+        //    if (sourceList == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(sourceList);
+        //}
+
+        public ActionResult Detail(string id)
         {
             if (id == null)
             {
@@ -38,7 +52,25 @@ namespace PMSAWebMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(sourceList);
+            var datas = from s in db.SourceList.AsEnumerable()
+                        where  s.SourceListID==id
+                        select new 
+                        {
+                            SourceListID = s.SourceListID,
+                            PartNumber = s.PartNumber,
+                            QtyPerUnit = s.QtyPerUnit,
+                            MOQ = s.MOQ,
+                            UnitPrice = s.UnitPrice,
+                            SupplierCode = s.SupplierCode,
+                            SupplierName = s.SupplierInfo.SupplierName,
+                            UnitsInStock = s.UnitsInStock,
+                            UnitsOnOrder = s.UnitsOnOrder,
+                            SafetyQty = s.SafetyQty,
+                            EXP = s.EXP
+
+                        };
+            var da = datas.ToList();
+            return Json(datas, JsonRequestBehavior.AllowGet);
         }
 
         // GET: SourceLists/Create貨源清單新增畫面
@@ -76,55 +108,27 @@ namespace PMSAWebMVC.Controllers
 
 
 
-        // GET: SourceLists/Edit/5 貨源清單編輯畫面
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SourceList sourceList = db.SourceList.Find(id);
-            if (sourceList == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", sourceList.PartNumber);
-            ViewBag.SupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", sourceList.SupplierCode);
-            return View(sourceList);
-        }
-
-        // POST: SourceLists/Edit/5 貨源清單編輯
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //修改貨源清單
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SourceListOID,SourceListID,PartNumber,QtyPerUnit,MOQ,UnitPrice,SupplierCode,UnitsInStock,UnitsOnOrder,SafetyQty,EXP")] SourceList sourceList)
+        [AuthorizeDeny(Roles = "Manager")]
+        public ActionResult Edit(SourceList sourceList)
         {
+            string message = "修改成功!!";
+            bool status = true;
+
             if (ModelState.IsValid)
             {
                 db.Entry(sourceList).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(new { status = status, message = message, id = db.SourceList.Max(x => x.SourceListID) }, JsonRequestBehavior.AllowGet);
             }
-            ViewBag.PartNumber = new SelectList(db.Part, "PartNumber", "PartName", sourceList.PartNumber);
-            ViewBag.SupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", sourceList.SupplierCode);
-            return View(sourceList);
+            else
+            {
+                message = "修改失敗!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+            }
         }
-
-        // GET: SourceLists/Delete/5
-        //public ActionResult Delete(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    SourceList sourceList = db.SourceList.Find(id);
-        //    if (sourceList == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(sourceList);
-        //}
 
         //貨源清單刪除
         [HttpPost]

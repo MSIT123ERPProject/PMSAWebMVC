@@ -14,9 +14,9 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary text-white text-left">
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
@@ -50,7 +50,7 @@
                         <th>動作</th>
                     </tr>
                 </thead>
-                <tfoot>
+                @*<tfoot>
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
@@ -84,48 +84,54 @@
                         </th>
                         <th>動作</th>
                     </tr>
-                </tfoot>
+                </tfoot>*@
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SourceListID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Part.PartName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.QtyPerUnit)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MOQ)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UnitPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UnitsInStock)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UnitsOnOrder)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SafetyQty)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EXP)
-                    </td>
-                    <td>
-                        @*@Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" })*@
-                        @Html.ActionLink("新增明細", "CreateDtl2", new { id = item.SourceListID }, new { @class = "btn btn-info" })
-                        @Html.ActionLink("編輯", "Edit", new { id = item.SourceListID }, new { @class = "btn btn-info" })
-                        @Html.ActionLink("檢視", "Details", new { id = item.SourceListID }, new { @class = "btn btn-info" })
-                        <a name="click01" class="btn btn-danger" data-wc="@item.SourceListID"><i class="fa fa-close"></i> 刪除</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SourceListID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Part.PartName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
+                        </td>
+                        <td id="qpu">
+                            @Html.DisplayFor(modelItem => item.QtyPerUnit)
+                        </td>
+                        <td id="moq">
+                            @Html.DisplayFor(modelItem => item.MOQ)
+                        </td>
+                        <td id="up">
+                            @Html.DisplayFor(modelItem => item.UnitPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitsInStock)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitsOnOrder)
+                        </td>
+                        <td id="sq">
+                            @Html.DisplayFor(modelItem => item.SafetyQty)
+                        </td>
+                        <td id="exp">
+                            @Html.DisplayFor(modelItem => item.EXP)
+                        </td>
+                        <td>
+                            @*@Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" })*@
+                            @Html.ActionLink("新增明細", "CreateDtl2", new { id = item.SourceListID }, new { @class = "btn btn-info" })
+                            @*@Html.ActionLink("編輯", "Edit", new { id = item.SourceListID }, new { @class = "btn btn-info" })
+                                @Html.ActionLink("檢視", "Details", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
+                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.SourceListID">
+                                <i class="far fa-eye"></i>
+                            </button>
+                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.SourceListID">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <a name="click01" class="btn btn-outline-secondary btn-icon" data-wc="@item.SourceListID"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
                 }
             </table>
         </div>
@@ -178,6 +184,189 @@
                     }
                 })
         });
+
+        //貨源清單檢視
+            $(document).on('click', "button[name = 'click1']", function () {
+                document.getElementById("btnClose").innerHTML = "關閉";
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Detail", "SourceLists")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視請購單資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                //$('*[id="btnUpdate"]').attr('display', false);
+                $('#btnUpdate').hide();
+                $("#SourceListID").val(datas[0].SourceListID);
+                $("#PartNumber").val(datas[0].PartNumber);
+                $("#QtyPerUnit").val(datas[0].QtyPerUnit);
+                $("#MOQ").val(datas[0].MOQ);
+                $("#UnitPrice").val(datas[0].UnitPrice);
+                $("#SupplierCode").val(datas[0].SupplierName);
+                $("#UnitsInStock").val(datas[0].UnitsInStock);
+                $("#UnitsOnOrder").val(datas[0].UnitsOnOrder);
+                $("#SafetyQty").val(datas[0].SafetyQty);
+                $("#EXP").val(datas[0].EXP);
+            })
+        });
+
+         //貨源清單修改檢視
+            $(document).on('click', "button[name = 'click2']", function () {
+                document.getElementById("btnClose").innerHTML = "關閉";
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Detail", "SourceLists")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視請購單資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', false);
+                //$('*[id="btnUpdate"]').attr('display', false);
+                $('#btnUpdate').show();
+                $("#SourceListID").val(datas[0].SourceListID);
+                $("#PartNumber").val(datas[0].PartNumber);
+                $("#QtyPerUnit").val(datas[0].QtyPerUnit);
+                $("#MOQ").val(datas[0].MOQ);
+                $("#UnitPrice").val(datas[0].UnitPrice);
+                $("#SupplierCode").val(datas[0].SupplierName);
+                $("#supdisp").val(datas[0].SupplierCode);
+                $("#UnitsInStock").val(datas[0].UnitsInStock);
+                $("#UnitsOnOrder").val(datas[0].UnitsOnOrder);
+                $("#SafetyQty").val(datas[0].SafetyQty);
+                $("#EXP").val(datas[0].EXP);
+            })
+        });
+
+        //局部更新時取得欄位 位置
+        var sell; var sell2; var sell3; var sell4; var sell5;
+        $(document).on('click', "td", function () {
+
+            var table = $('#dataTable').DataTable();
+            var rowss = $(this).closest("tr");  //抓取列
+            var celss = $(this).siblings("#qpu"); //抓取欄
+            var celss2 = $(this).siblings("#moq"); //抓取欄
+            var celss3 = $(this).siblings("#up"); //抓取欄
+            var celss4 = $(this).siblings("#sq"); //抓取欄
+            var celss5 = $(this).siblings("#exp"); //抓取欄
+            sell = table.row(rowss).cell(celss);
+            sell2 = table.row(rowss).cell(celss2);
+            sell3 = table.row(rowss).cell(celss3);
+            sell4 = table.row(rowss).cell(celss4);
+            sell5 = table.row(rowss).cell(celss5);
+
+        })
+
+        //修改更新
+        $('#btnUpdate').click(function () {
+            var table = $('#dataTable').DataTable();
+            if ($("#QtyPerUnit").val() == '') {
+                toastr.error("'*' 為必填欄位", "警告");
+            } else {
+                var SourceListObj = {
+                    SourceListID: $("#SourceListID").val(),
+                    PartNumber: $("#PartNumber").val(),
+                    QtyPerUnit: $("#QtyPerUnit").val(),
+                    MOQ: $("#MOQ").val(),
+                    UnitPrice: $("#UnitPrice").val(),
+                    SupplierCode: $("#supdisp").val(),
+                    UnitsInStock: $("#UnitsInStock").val(),
+                    UnitsOnOrder: $("#UnitsOnOrder").val(),
+                    SafetyQty: $("#SafetyQty").val(),
+                    EXP: $("#EXP").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Edit", "SourceLists")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(SourceListObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        //sell.data($("#ProcessStatus").find('option:selected').val()).draw();//取得選取的值
+                        sell.data($("#QtyPerUnit").val()).draw();
+                        sell2.data($("#MOQ").val()).draw();
+                        sell3.data($("#UnitPrice").val()).draw();
+                        sell4.data($("#SafetyQty").val()).draw();
+                        sell5.data($("#EXP").val()).draw();
+                    }
+                }).fail(function (response) {
+                    toastr.error(response.message, "警告");
+                })
+                $('#purchaserequisitionModal').modal('hide');
+            }
+        });
+
     </script>
 
 }
+<!--Model-->
+<div class="modal fade bd-example-modal-lg" id="purchaserequisitionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label class="required" for="SourceListID">@Html.DisplayNameFor(model => model.SourceListID)</label>
+                        <input type="text" class="form-control" id="SourceListID" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="PartNumber">@Html.DisplayNameFor(model => model.PartNumber)</label>
+                        <input type="text" class="form-control" id="PartNumber" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="QtyPerUnit">@Html.DisplayNameFor(model => model.QtyPerUnit)</label>
+                        <input type="text" class="form-control" id="QtyPerUnit" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="MOQ">@Html.DisplayNameFor(model => model.MOQ)</label>
+                        <input type="text" class="form-control" id="MOQ" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="UnitPrice">@Html.DisplayNameFor(model => model.UnitPrice)</label>
+                        <input type="text" class="form-control" id="UnitPrice" name="dta">
+                    </div>
+                    @*@{string x = ""; }*@
+                    <div for="SupplierCode" id="supdisp"></div>
+                    <div class="form-group">
+                        <label class="required" for="SupplierCode">@Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)</label>
+                        <input type="text" class="form-control" id="SupplierCode" name="da">
+                        @*@Html.EditorFor(model => @y, new { htmlAttributes = new { @class = "form-control" } })*@
+                    </div>
+
+                    @*<div class="form-group" id="SupplierCodedis">
+            <label class="required" for="SupplierCode">@Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)</label>
+            <input type="text" class="form-control" id="SupplierCodediss" name="da">
+        </div>*@
+                    <div class="form-group" disabled="true">
+                        <label class="required" for="UnitsInStock">@Html.DisplayNameFor(model => model.UnitsInStock)</label>
+                        <input type="text" class="form-control" id="UnitsInStock" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="UnitsOnOrder">@Html.DisplayNameFor(model => model.UnitsOnOrder)</label>
+                        <input type="text" class="form-control" id="UnitsOnOrder" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="SafetyQty">@Html.DisplayNameFor(model => model.SafetyQty)</label>
+                        <input type="text" class="form-control" id="SafetyQty" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="EXP">@Html.DisplayNameFor(model => model.EXP)</label>
+                        <input type="text" class="form-control" id="EXP" name="dta">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
+                <button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>
+                @*<button id="btnSave" type="button" class="btn btn-primary" data-dismiss="modal">新增</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -2312,13 +2312,6 @@
     <Content Include="Views\PurchaseOrders\Create.cshtml" />
     <Content Include="Views\PurchaseOrders\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePODItemPartial.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\Create.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\CreateDtl.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\CreateDtl2.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\Details.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\DetailsDtl.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\Edit.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\EditDtl.cshtml" />
     <Content Include="Views\PurchaseRequisitions\Index.cshtml" />
     <Content Include="Views\PurchaseRequisitions\IndexDtl.cshtml" />
     <Content Include="Views\RolesAdmin\Create.cshtml" />

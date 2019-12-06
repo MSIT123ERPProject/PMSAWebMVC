@@ -14,9 +14,9 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary text-white text-left">
                         @*<th>
                                 @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlOID)
                             </th>*@
@@ -41,11 +41,8 @@
                         <th>動作</th>
                     </tr>
                 </thead>
-                <tfoot>
+                @*<tfoot>
                     <tr>
-                        @*<th>
-                                @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlOID)
-                            </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlCode)
                         </th>
@@ -66,7 +63,7 @@
                         </th>
                         <th>動作</th>
                     </tr>
-                </tfoot>
+                </tfoot>*@
                 @foreach (var item in Model)
                 {
                     <tr>

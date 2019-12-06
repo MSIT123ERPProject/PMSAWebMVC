@@ -159,7 +159,8 @@
             $(document).on('click', "button[name='UpdateStock']", async function () {
                 let td = $(this).parent('td');
                 let tr = td.parent('tr');
-                let stock = tr.children('td:nth-child(6)').text();
+                let stock = tr.children('td:nth-child(8)').text();
+                console.log(stock);
                 let id = $(this).prop('id');
                 const { value: formValues } = await Swal.fire({
                     title: '庫存數量修改',
@@ -202,7 +203,7 @@
                         alert("ajax fail  " + err.responseJSON);
                     });
                 }
-                else if (parseInt(formValues[0]) < 0) {
+                else if (formValues &&parseInt(formValues[0]) < 0) {
                     toastr.error("庫存不得小於零", "警告");
                 }
                 else {

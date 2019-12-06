@@ -54,51 +54,50 @@ namespace PMSAWebMVC.Controllers.SupplierController
             return Json(s, JsonRequestBehavior.AllowGet);
         }
         //pieChart
-        public ActionResult GetPartTotalPricePercentage()
-        {
-            //這裡LINQ語法需要更改一下，同一個料件要加總起來，並必須顯示出所有的料件
-            var q = from pod in db.PurchaseOrderDtl
-                    join po in db.PurchaseOrder
-                    on pod.PurchaseOrderID equals po.PurchaseOrderID
-                    where po.SupplierCode == supplierCode
-                    select new
-                    {
-                        pod.PartName,
-                        pod.PartNumber,
-                        pod.QtyPerUnit,
-                        pod.Qty,
-                        pod.PurchaseUnitPrice,
-                        pod.Discount
-                    };
-            //計算百分比
-            List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
-            foreach (var data in q)
-            {
-                partTotalPriceViewModel temp = new partTotalPriceViewModel();
-                temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
-                temp.PartNumber = data.PartNumber;
-                temp.PartName = data.PartName;
-                list.Add(temp);
+        public ActionResult GetPartTotalPricePercentage(string dateStart, string dateEnd)
+        { 
+            DateTime dateStartD = Convert.ToDateTime(dateStart);
+            DateTime dateEndD = Convert.ToDateTime(dateEnd);
+            if (dateStart == null || dateEnd ==null  ) {
+                dateStartD = DateTime.Now.AddMonths(-3);
+                dateEndD = DateTime.Now;
             }
-            return Json(list, JsonRequestBehavior.AllowGet);
-            decimal total = 0;
-            for (int i = 0; i < list.Count(); i++)
-            {
-                total += list[i].ToalPrice;
-            }
-            for (int i = 0; i < list.Count(); i++)
-            {
-                decimal p = list[i].ToalPrice / total * 100;
-                p = Math.Round(p, 1);
-                list[i].Percentage = Convert.ToDouble(p);
-            }
-            return Json(list, JsonRequestBehavior.AllowGet);
+            //計算計算選取區間已出貨的商品金額，如無選取預設為今日以前三個月
+            var qpo = from po in db.PurchaseOrder
+                          join pod in db.PurchaseOrderDtl
+                          on po.PurchaseOrderID equals pod.PurchaseOrderID
+                          where po.CreateDate > dateStartD && po.CreateDate < dateEndD
+                                       //&& po.PurchaseOrderStatus == "E" || po.PurchaseOrderStatus == "S"
+                                            && po.SupplierCode == supplierCode
+                      select new
+                          {
+                              pod.PartName,
+                              pod.PartNumber,
+                              pod.QtyPerUnit,
+                              pod.Qty,
+                              pod.PurchaseUnitPrice,
+                              pod.Discount,
+                              pod.SourceListID
+                          };
+                //計算百分比//搞錯了highChart會自動幫你計算百分比
+                List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
+                foreach (var data in qpo)
+                {
+                    partTotalPriceViewModel temp = new partTotalPriceViewModel();
+                    temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
+                    temp.PartNumber = data.PartNumber;
+                    temp.PartName = data.PartName;
+                    temp.SourceListID = data.SourceListID;
+                    list.Add(temp);
+                }
+                return Json(list, JsonRequestBehavior.AllowGet);
         }
         //pieChart使用的ViewModel
         public class partTotalPriceViewModel
         {
             public string PartName { get; set; }
             public string PartNumber { get; set; }
+            public string SourceListID { get; set; }
             public decimal ToalPrice { get; set; }
             public double Percentage { get; set; }
         }

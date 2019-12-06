@@ -5,14 +5,15 @@
 }
 
 <style>
+    /*內容分隔線*/
     .border-top-dashed {
         border-top: 1px dashed #3C4055;
     }
-
+    /*連結無底線*/
     .nounderline {
         text-decoration: none !important
     }
-
+    /*收合內容*/
     .card-header .fa {
         transition: .3s transform ease-in-out;
     }
@@ -20,12 +21,19 @@
     .card-header .collapsed .fa-chevron-down {
         transform: rotate(90deg);
     }
+    /*表格欄位內容對齊*/
+    .td2c tbody tr td:nth-child(1), tbody tr td:nth-child(2) {
+        text-align: center;
+    }
+
+    #dataTablesPR tbody tr td:nth-child(6) {
+        text-align: right;
+    }
 </style>
 
+<h2 class="text-dark">@ViewBag.Title</h2>
 
-<h2>@ViewBag.Title</h2>
-
-
+@*請購單資訊*@
 <div class="card mb-3">
     <div class="card-header">
         <a data-toggle="collapse" href="#collapse-rpinfo" aria-expanded="true" aria-controls="collapse-rpinfo" id="heading-rpinfo" class="d-block nounderline">
@@ -75,12 +83,11 @@
             </div>
         </div>
 
-
     </div>
-
 
 </div>
 
+@*供應商資訊*@
 <div class="card mb-3">
     <div class="card-header">
         <a data-toggle="collapse" href="#collapse-supplierinfo" aria-expanded="true" aria-controls="collapse-supplierinfo" id="heading-supplierinfo" class="d-block nounderline">
@@ -93,15 +100,15 @@
             <div class="form-horizontal">
                 <div class="row mb-0 mt-0 align-items-center">
 
-                    @Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
+                    @*@Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
                     <div class="col-md-5">
                         @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="w-100"></div>
+                    <div class="w-100"></div>*@
 
-                    <div class="card-body">
+                    <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-md-3 col-6">
                                 <strong>供應商名稱</strong>
@@ -132,24 +139,88 @@
         </div>
     </div>
 
-
 </div>
 
+@*明細分頁*@
 <div id="tab" class="btn-group btn-group-toggle btn-block mb-3" data-toggle="buttons">
 
-    <a href="#features" class="btn btn-outline-primary active" data-toggle="tab">
-        <input type="radio" name="options" id="option1" autocomplete="off" checked>
+    <a href="#prdtl" class="btn btn-outline-primary active" data-toggle="tab">
+        <input type="radio" name="options" id="optprdtl" autocomplete="off" checked>
         請購明細 <span class="badge badge-pill badge-danger">10</span>
     </a>
-    <a href="#contact" class="btn btn-outline-primary" data-toggle="tab">
-        <input type="radio" name="options" id="option3" autocomplete="off">
+    <a href="#podtl" class="btn btn-outline-primary" data-toggle="tab">
+        <input type="radio" name="options" id="optpodtl" autocomplete="off">
         採購明細 <span class="badge badge-pill badge-danger">5</span>
     </a>
 
 </div>
 
 <div class="tab-content">
-    <div class="tab-pane active" id="features">
+    @*請購明細內容*@
+    <div class="tab-pane active" id="prdtl">
+
+        <table id="dataTablesPR" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
+            <thead>
+                <tr class="bg-primary text-white text-center">
+                    <th>&nbsp;</th>
+                    <th>請購單編號</th>
+                    <th>請購單明細編號</th>
+                    <th>料件編號</th>
+                    <th data-priority="1">料件品名</th>
+                    <th>請購數量</th>
+                    <th>建議供應商</th>
+                    <th>需求日期</th>
+                    <th data-priority="1">功能</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>Tiger</td>
+                    <td>Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
+                                <i class="far fa-file"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tiger</td>
+                    <td>Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <div class="table-data-feature">
+                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
+                                    <i class="far fa-file"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <button id="btnSubmit2" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
+        </div>
+
+    </div>
+    @*採購明細內容*@
+    <div class="tab-pane" id="podtl">
+
         @using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
@@ -173,117 +244,8 @@
                 <button id="btnSubmit" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
             </div>
 
-            <table id="dataTablesId" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
-                <thead>
-                    <tr class="bg-primary text-white text-center">
-                        <th>&nbsp;</th>
-                        <th data-priority="1">
-                            <input type="checkbox" class="mgc" />
-                        </th>
-                        <th data-priority="1">First name</th>
-                        <th>Last name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                        <th>Extn.</th>
-                        <th>E-mail</th>
-                        <th data-priority="1">功能</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td><input type="checkbox" class="mgc"></td>
-                        <td>Tiger</td>
-                        <td>Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
-                        <td>5421</td>
-                        <td>t.nixon@datatables.net</td>
-                        <td>
-                            <div class="table-data-feature">
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視">
-                                    <i class="far fa-eye"></i>
-                                </button>
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                                    <i class="far fa-edit"></i>
-                                </button>
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
-                                    <i class='far fa-trash-alt'></i>
-                                </button>
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="明細">
-                                    <i class="far fa-file-alt"></i>
-                                </button>
-                                <div class="dropdown" data-toggle="popover-dropdown">
-                                    <button class="btn btn-outline-secondary btn-icon">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">新增</a>
-                                        <a class="dropdown-item" href="#">表單</a>
-                                        <a class="dropdown-item" href="#">簽核</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><input type="checkbox" class="mgc"></td>
-                        <td>Tiger</td>
-                        <td>Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
-                        <td>5421</td>
-                        <td>t.nixon@datatables.net</td>
-                        <td>
-                            <div class="table-data-feature">
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視">
-                                    <i class="far fa-eye"></i>
-                                </button>
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                                    <i class="far fa-edit"></i>
-                                </button>
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
-                                    <i class='far fa-trash-alt'></i>
-                                </button>
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="明細">
-                                    <i class="far fa-file-alt"></i>
-                                </button>
-                                <div class="dropdown" data-toggle="popover-dropdown">
-                                    <button class="btn btn-outline-secondary btn-icon">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">新增</a>
-                                        <a class="dropdown-item" href="#">表單</a>
-                                        <a class="dropdown-item" href="#">簽核</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
 
         }
-
-    </div>
-    <div class="tab-pane" id="contact">
-
-
-
-        <div class="form-group">
-            <button id="btnSubmit2" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
-        </div>
 
     </div>
 </div>
@@ -300,7 +262,7 @@
             });
 
             //採購明細
-            let dataTablesId = $('#dataTablesId').DataTable({
+            let dtPR = $('#dataTablesPR').DataTable({
                 ordering: false,
                 fixedHeader: false,
                 //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
@@ -321,9 +283,9 @@
                 ],
             });
 
-            dataTablesId.on('responsive-resize', function (e, datatable, columns) {
+            dtPR.on('responsive-resize', function (e, datatable, columns) {
                 //修正縮放大小不正確的問題
-                dataTablesId.columns.adjust().responsive.recalc();
+                this.columns.adjust().responsive.recalc();
             });
 
 

@@ -6,29 +6,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using PMSAWebMVC.Controllers;
 
 namespace PMSAWebMVC.Utilities.TingHuan
 {
     public class ShipNoticesUtilities
     {
-        public ShipNoticesUtilities(ApplicationUserManager userManager)
-        {
-            UserManager = userManager;
-        }
-        private ApplicationUserManager _userManager;
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
         private PMSAEntities db = new PMSAEntities();
+        /// <summary>
+        /// 寄信功能想寫在這失敗了
+        /// </summary>
+        /// <param name="requesterRole"></param>
+        /// <param name="purchaseOrderID"></param>
+        /// <returns></returns>
+        //public ShipNoticesUtilities(ApplicationUserManager userManager)
+        //{
+        //    UserManager = userManager;
+        //}
+        //private ApplicationUserManager _userManager;
+        //public ApplicationUserManager UserManager
+        //{
+        //    get
+        //    {
+        //            return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        //    }
+        //    private set
+        //    {
+        //        _userManager = value;
+        //    }
+        //}  
+        ////////////////////////////////////////////////////////
         //找出該purchaseOrderID最新一筆異動資料
         public int FindPOChangedOID(string requesterRole, string purchaseOrderID)
         {

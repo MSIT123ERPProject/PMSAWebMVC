@@ -30,7 +30,7 @@ namespace PMSAWebMVC.Controllers
             //   SupplierAccount supplier = User.Identity.GetSupplierAccount();
             db = new PMSAEntities();
             supplierCode = "S00001";
-            // supplierAccount = supplier.SupplierAccountID;
+            //supplierAccount = supplier.SupplierAccountID;
             supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
             RequesterRoleSupplier = "S";

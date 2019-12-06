@@ -46,6 +46,22 @@
     <div class="row">
         <div class="col-md-4">
             <h2><i class="fas fa-money-check-alt"></i>出貨金額比例</h2>
+            @*DateTimePickerStart*@
+            <div class="input-group date" id="datetimepickerIdStart" data-target-input="nearest">
+                <div class="input-group-text">開始</div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerIdStart" data-toggle="datetimepicker" />
+                <div class="input-group-append" data-target="#datetimepickerIdStart" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+            @*DateTimePickerEnd*@
+            <div class="input-group date" id="datetimepickerIdEnd" data-target-input="nearest">
+                <div class="input-group-text">結束</div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerIdEnd" data-toggle="datetimepicker" />
+                <div class="input-group-append" data-target="#datetimepickerIdEnd" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
             <div id="container"></div>
         </div>
         <div class="col-md-4">
@@ -74,6 +90,39 @@
                 unitsInStockChart();
                 partTotalPrice();
                 SplitBubbleChart();
+            });
+            $('#datetimepickerIdStart').datetimepicker(
+                {
+                    //startDate: '-3d',
+                    defaultDate: new Date("2019/12/01"),
+                }
+            );
+            $('#datetimepickerIdEnd').datetimepicker(
+                {
+                    defaultDate: new Date(),
+                }
+            );
+            let dateTimeStart ;
+            let dateTimeEnd ;
+            $('#datetimepickerIdStart').on('change.datetimepicker', function (e) {
+                console.log(e.date);
+                console.log(e);
+                console.log(this);
+                console.log(e.target.children["0"].value);
+                dateTimeStart = $(this).find("input").val();
+                console.log(dateTimeStart);
+            });
+            $('#datetimepickerIdEnd').on('change.datetimepicker', function (e) {
+                console.log(e.date);
+                dateTimeEnd = $(this).find("input").val();
+                console.log(dateTimeEnd);
+                console.log(dateTimeStart - dateTimeEnd);
+                if (dateTimeStart > dateTimeEnd) {
+                    toastr.error("起始日期不得小於結束日期", "警告");
+                }
+                else {
+                    partTotalPrice();
+                }
             });
 
             Highcharts.setOptions({
@@ -143,14 +192,14 @@
                         fontSize: "20px"
                     }
                 },
-               
+
             });
 
         //庫存不足料件圖 column chart
         function unitsInStockChart() {
                $.getJSON(`@Url.Action("GetStockData", "SupplierHomePage")`, function (datas) {
-                let safetyQty = [];
-                let partNumber = [];
+                   let safetyQty = [];
+                   let partNumber = [];
                    let unitsInStock = [];
                    let unitsOnOrder = [];
                 for (let i = 0; i < datas.length; i++) {
@@ -233,51 +282,58 @@
             });
         }
         //三個月內各料件出貨金額 PIE CHART
-        function partTotalPrice() {
-            $.getJSON(`@Url.Action("GetPartTotalPricePercentage", "SupplierHomePage")`, function (datas) {
+            function partTotalPrice() {
+                let data = {
+                    dateStart : dateTimeStart,
+                    dateEnd: dateTimeEnd
+                };
+                console.log(data);
+                $.getJSON(`@Url.Action("GetPartTotalPricePercentage", "SupplierHomePage")`, data, function (datas) {
                 let percentage = [];
                 let partname = [];
-                let pie = [];   
+                let pie = [];
                 console.log(datas);
                 for (var i = 0; i < datas.length; i++) {
                     percentage.push(datas[i].Percentage);
                     partname.push(datas[i].PartName);
                     pie.push({ name: datas[i].SourceListID, y: datas[i].ToalPrice });
-                    //pie.push([datas[i].PartName, datas[i].Percentage]);
-                }
-                var chart = new Highcharts.chart({
-                    chart: {
-                        renderTo: 'container',
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
-                    title: {
-                        text: '各料件已出貨金額百分比',
-                    },
-                    tooltip: {
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                            },   
-                            showInLegend: true,
+                    }
+                    if (pie[0] == null) {
+                        toastr.error("查無資料", "通知");
+                    }
+                    var chart = new Highcharts.chart({
+                        chart: {
+                            renderTo: 'container',
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie'
                         },
-                   
-                    },
-                });
+                        title: {
+                            text: '各料件已出貨金額百分比',
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                },
+                                showInLegend: true,
+                            },
+
+                        },
+                    });
                     chart.addSeries({
                         type: 'pie',
                         name: '商品金額比例',
                         data: pie
-                    },false);
-                chart.redraw();
+                    }, false);
+                    chart.redraw();
             });
         }
         //BUBBLECHART

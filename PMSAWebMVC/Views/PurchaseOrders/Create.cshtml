@@ -22,11 +22,8 @@
         transform: rotate(90deg);
     }
     /*表格欄位內容對齊*/
-    .td2c tbody tr td:nth-child(1), tbody tr td:nth-child(2) {
-        text-align: center;
-    }
-
-    #dataTablesPR tbody tr td:nth-child(6) {
+    #dataTablesPR tbody tr td:nth-child(n+4):nth-child(-n+5),
+    #dataTablesPO tbody tr td:nth-child(n+4):nth-child(-n+8){
         text-align: right;
     }
 </style>
@@ -163,26 +160,22 @@
             <thead>
                 <tr class="bg-primary text-white text-center">
                     <th>&nbsp;</th>
-                    <th>請購單編號</th>
                     <th>請購單明細編號</th>
-                    <th>料件編號</th>
                     <th data-priority="1">料件品名</th>
                     <th>請購數量</th>
-                    <th>建議供應商</th>
                     <th>需求日期</th>
+                    <th>建議供應商</th>
                     <th data-priority="1">功能</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td></td>
-                    <td>Tiger</td>
                     <td>Nixon</td>
-                    <td>System Architect</td>
                     <td>Edinburgh</td>
                     <td>61</td>
                     <td>2011/04/25</td>
-                    <td>$320,800</td>
+                    <td>誌慶股份有限公司</td>
                     <td>
                         <div class="table-data-feature">
                             <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
@@ -193,13 +186,11 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td>Tiger</td>
                     <td>Nixon</td>
-                    <td>System Architect</td>
                     <td>Edinburgh</td>
                     <td>61</td>
                     <td>2011/04/25</td>
-                    <td>$320,800</td>
+                    <td>邱泉順企業有限公司</td>
                     <td>
                         <div class="table-data-feature">
                             <div class="table-data-feature">
@@ -213,15 +204,78 @@
             </tbody>
         </table>
 
-        <div class="form-group">
+        @*<div class="form-group">
             <button id="btnSubmit2" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
-        </div>
+        </div>*@
 
     </div>
-    @*採購明細內容*@
-    <div class="tab-pane" id="podtl">
 
-        @using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
+    @*採購明細內容*@    
+    <div class="tab-pane" id="podtl">
+        <table id="dataTablesPO" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
+            <thead>
+                <tr class="bg-primary text-white text-center">
+                    <th>&nbsp;</th>
+                    <th>料件編號</th>
+                    <th data-priority="1">料件品名</th>
+                    <th>單價</th>
+                    <th>採購數量</th>
+                    <th>折扣</th>
+                    <th>金額</th>
+                    <th>要求到貨日期</th>
+                    <th data-priority="1">功能</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>S12345</td>
+                    <td>Edinburgh</td>
+                    <td>$500</td>
+                    <td>61</td>
+                    <td>1%</td>
+                    <td>$320,800</td>
+                    <td>2011/04/25</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>S45678</td>
+                    <td>Edinburgh</td>
+                    <td>$450</td>
+                    <td>10</td>
+                    <td>0%</td>
+                    <td>$320,800</td>
+                    <td>2011/04/25</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <button id="btnSubmit2" type="button" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
+        </div>
+
+
+        @*@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
             <div class="card mb-3">
@@ -245,7 +299,7 @@
             </div>
 
 
-        }
+        }*@
 
     </div>
 </div>

@@ -57,6 +57,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
         public ActionResult GetPartTotalPricePercentage()
         {
             //這裡LINQ語法需要更改一下，同一個料件要加總起來，並必須顯示出所有的料件
+            //計算已出貨的商品金額
             var q = from pod in db.PurchaseOrderDtl
                     join po in db.PurchaseOrder
                     on pod.PurchaseOrderID equals po.PurchaseOrderID
@@ -68,18 +69,34 @@ namespace PMSAWebMVC.Controllers.SupplierController
                         pod.QtyPerUnit,
                         pod.Qty,
                         pod.PurchaseUnitPrice,
-                        pod.Discount
+                        pod.Discount,
+                        pod.SourceListID
                     };
-            //計算百分比
-            List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
+            //UnitsOnOrder不知道是已答交訂單還是未答交也都算在裡面//
+            //var qsl = from pt in db.Part 
+            //             join sl in db.SourceList   on pt.PartNumber equals sl.PartNumber
+            //          join sld in db.SourceListDtl on sl.SourceListID equals sld.SourceListID 
+            //          where sl.SupplierCode == supplierCode
+            //          select new {
+            //              sl.PartNumber,
+            //              pt.PartName,
+            //              sl.UnitsOnOrder,
+            //              sl.UnitPrice,
+            //              sl.QtyPerUnit,
+            //              sld.Discount,
+            //          };
+    //計算百分比//搞錯了highChart會自動幫你計算百分比
+    List < partTotalPriceViewModel > list = new List<partTotalPriceViewModel>();
             foreach (var data in q)
             {
                 partTotalPriceViewModel temp = new partTotalPriceViewModel();
                 temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
                 temp.PartNumber = data.PartNumber;
                 temp.PartName = data.PartName;
+                temp.SourceListID = data.SourceListID;
                 list.Add(temp);
             }
+            return Json(list, JsonRequestBehavior.AllowGet);
             decimal total = 0;
             for (int i = 0; i < list.Count(); i++)
             {
@@ -98,6 +115,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
         {
             public string PartName { get; set; }
             public string PartNumber { get; set; }
+            public string SourceListID { get; set; }
             public decimal ToalPrice { get; set; }
             public double Percentage { get; set; }
         }

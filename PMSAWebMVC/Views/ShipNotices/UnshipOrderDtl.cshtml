@@ -1,16 +1,13 @@
 ﻿@model  PMSAWebMVC.ViewModels.ShipNotices.shipOrderViewModel
-
 @{
     ViewBag.Title = "UnshipOrderDtl";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>出貨明細</h2>
 @if (TempData["message"] != null)
 {
     @Html.Raw(TempData["message"])
 }
-
 @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
 {
     <div class="card mb-3">
@@ -26,16 +23,12 @@
     if (Model.PurchaseOrderStatus != "S")
     {
         <div>
-            <div>
-                <input type="button" id="shipQty" class="btn btn-primary btn-block" value="調整出貨數量"  width:1024px /><br />
-            </div>
-            <div  margin:  3px>
-                <input type="submit" id="idbutton" class="btn btn-success btn-block" value="出貨"  width : 1024px />
+            <div margin: 3px>
+                <input type="submit" id="idbutton" class="btn btn-success btn-block" value="出貨"  />
             </div>
         </div>
     }
 }
-
 @section scripts{
     <script>
         $(document).ready(function () {
@@ -44,6 +37,7 @@
             //改用partialView
             purchaseOrderDtlForPartialView();
             QtyText();
+            dataTableUOD();
         });
         //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面 partialView方法
         function purchaseOrderDtlForPartialView() {
@@ -206,22 +200,39 @@
                 ///////////////////////////////////////////////////
             });
         }*@
-        ////////////////////////////////
+        ///////////////////////////////////////////////////////
         //改寫SUBMIT按鈕執行動作
-        function QtyText() {
-            $("input[name='Qty']").on('change',function () {
-                let content = $(this).val();
-                $("#Qty").attr("value", content);
-                //console.log($('#Qty').val());
-                //console.log($("#Qty").attr("value"));
+        function QtyText(e) {
+            console.log(e);
+            let content = $(e).val();
+            $(e).attr("value", content);
+            //這裡想寫檢查出貨數量不得大於採購數量的功能，先放著
+            //let purchaseQty = e.closest('td').prev('td').val();
+            //let shipQty = $(e).val();
+            //if (purchaseQty < shipQty) {
+            //    toastr.warning( "出貨數量不得大於採購數量","通知" );
+            //}
+        }
+        //dataTable
+        function dataTableUOD() {
+            $('#dataTableUOD').DataTable({
+                ordering: false,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [[2, 'desc']],
+                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                columnDefs: [{
+                    targets: 0,
+                    className: 'control'
+                },
+                { orderable: false, targets: [0, 1, -1] },
+                ],
             });
         }
-        $("#shipQty").click(function () {
-            let content = $('#Qty').val();
-            $("input[name*='Qty']").attr("value", content);
-            toastr.success("調整完成", "通知");
-            //console.log($('#Qty').val());
-            //console.log($("#Qty").attr("value"));
-        })
     </script>
 }

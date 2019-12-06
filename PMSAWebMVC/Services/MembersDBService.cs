@@ -42,5 +42,14 @@ namespace PMSAWebMVC.Services
             tempStr = tempStr.Replace("{pwd}", pwd);
             return tempStr;
         }
+
+        public static string getMailBody(string tempStr, string imgUrl, string callbackUrl, string pwd, string SupAccId)
+        {
+            tempStr = tempStr.Replace("{SupAccId}", SupAccId);
+            tempStr = tempStr.Replace("{imgUrl}", imgUrl);
+            tempStr = tempStr.Replace("{callbackUrl}", callbackUrl);
+            tempStr = tempStr.Replace("{pwd}", pwd);
+            return tempStr;
+        }
     }
 }

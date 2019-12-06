@@ -8,7 +8,7 @@
 }
 @Html.Raw(ViewBag.failMessage)
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <h2>@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</h2>
+    <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>
 
     <div class="col-sm-auto">
         @Html.DropDownList("selectlist", new SelectList(new[]
@@ -31,16 +31,16 @@
 @*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
 @*/////////////////////////////////////////////////////////////////////////////////////////////*@
 <!-- DataTables Example -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
+<div class="card mb-3">
+    <div class="card-header">
         <i class="fas fa-table"></i>
         <h6 class="m-0 font-weight-bold text-primary">  採購單</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable" cellspacing="0" >
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary text-white text-center">
                         <th data-priority="1"></th>
                         <th>採購單狀態</th>
                         @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
@@ -55,7 +55,7 @@
                         <th>收貨人地址</th>
                         @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
                         <th data-priority="1">出貨明細</th>
-                     
+
                     </tr>
                 </thead>
                 <tfoot>
@@ -74,7 +74,7 @@
                         <th>收貨人地址</th>
                         @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
                         <th>出貨明細</th>
-                       
+
                     </tr>
                 </tfoot>
             </table>

@@ -442,15 +442,16 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
         //SupInfoNoContactOnlySupInfo
         public JsonResult getAllSupInfoNoContactOnlySupInfoToIndexAjax()
         {
-            var supInfos = db.SupplierInfo.Select(x => x.SupplierCode).ToList();
-            var supAccs = db.SupplierAccount.Select(x => x.SupplierCode).ToList();
+            var supInfos = db.SupplierInfo.Select(x => x.SupplierCode);
+            var supAccs = db.SupplierAccount.Select(x => x.SupplierCode);
             var onlySupInfos = supInfos.Except(supAccs);
 
             List<SupplierInfo> NoContactOnlySupInfo = new List<SupplierInfo>();
 
             foreach (var os in onlySupInfos)
             {
-                NoContactOnlySupInfo = db.SupplierInfo.Where(x => x.SupplierCode == os).ToList();
+                var s = db.SupplierInfo.Where(x => x.SupplierCode == os).FirstOrDefault();
+                NoContactOnlySupInfo.Add(s);
             }
             //加jsonignore加到快崩潰..用匿名物件避開TMD的導覽屬性
             List<object> list = new List<object>();

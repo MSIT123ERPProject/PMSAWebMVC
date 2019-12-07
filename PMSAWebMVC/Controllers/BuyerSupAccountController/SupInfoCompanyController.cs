@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.ViewModels.BuyerSupAccount;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -58,9 +59,35 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
             return View();
         }
 
-        public ActionResult Create()
+        public ActionResult Create(SupInfoViewModel m)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var maxThanOID = db.SupplierInfo.Select(x => x.SupplierInfoOID).Max() + 1;
+                string SupCodestr = String.Format("S{0:00000}", Convert.ToDouble(maxThanOID));
+                var supInfo = db.SupplierInfo;
+                SupplierInfo s = new SupplierInfo();
+                s.SupplierCode = SupCodestr;
+                s.SupplierName = m.SupplierName;
+                s.TaxID = m.TaxID;
+                s.Address = m.Address;
+                s.Email = m.Email;
+                s.Tel = m.Tel;
+                s.SupplierRatingOID = m.SupplierRatingOID;
+
+                supInfo.Add(s);
+                var result = db.SaveChanges();
+
+                if (result > 0)
+                {
+                    return View("Index");
+                }
+                else
+                {
+                    return View(m);
+                }
+            }
+            return View(m);
         }
 
         //==========================================================================
@@ -135,15 +162,16 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
         public JsonResult getAllSupInfoNoContactOnlySupInfoToIndexAjax()
         {
-            var supInfos = db.SupplierInfo.Select(x => x.SupplierCode).ToList();
-            var supAccs = db.SupplierAccount.Select(x => x.SupplierCode).ToList();
+            var supInfos = db.SupplierInfo.Select(x => x.SupplierCode);
+            var supAccs = db.SupplierAccount.Select(x => x.SupplierCode);
             var onlySupInfos = supInfos.Except(supAccs);
 
             List<SupplierInfo> NoContactOnlySupInfo = new List<SupplierInfo>();
 
             foreach (var os in onlySupInfos)
             {
-                NoContactOnlySupInfo = db.SupplierInfo.Where(x => x.SupplierCode == os).ToList();
+                var s = db.SupplierInfo.Where(x => x.SupplierCode == os).FirstOrDefault();
+                NoContactOnlySupInfo.Add(s);
             }
             //加jsonignore加到快崩潰..用匿名物件避開TMD的導覽屬性
             List<object> list = new List<object>();

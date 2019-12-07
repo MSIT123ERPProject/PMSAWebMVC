@@ -34,7 +34,6 @@ namespace PMSAWebMVC.ViewModels.BuyerSupAccount
         public string Address { get; set; }
 
         [DisplayName("供應商等級")]
-        [Required(ErrorMessage = "{0}為必填欄位")]
-        public List<SelectListItem> SupplierRatingOID { get; set; }
+        public int? SupplierRatingOID { get; set; }
     }
 }

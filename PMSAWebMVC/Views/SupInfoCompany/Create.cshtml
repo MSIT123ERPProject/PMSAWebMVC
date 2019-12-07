@@ -117,106 +117,65 @@
                     margin-right: 3px;
                     transform: translateY(-2px)
                 }
+
         .card-header h5 {
             font-size: 18px;
             margin: 0;
         }
     </style>
 }
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index")"><i class="fas fa-building"></i> 供應商公司總覽</a></li>
-            <li class="breadcrumb-item active" aria-current="page">新增供應商公司</li>
-        </ol>
-    </nav>
-    <div class="wrapall">
-        <h2>新增供應商公司</h2>
-        <h6>新增公司以新增供應商帳號</h6>
-        <div class="card">
-            <div class="card-body">
-                <div class="row" style="margin: 12px;">
-                    <div class="col-lg-5 col-md-11 col-sm-11">
-                        <h4>填寫供應商公司資料</h4>
-                        <div class="left" style="margin:0">
-                            <form class="supCompanyInfoDiv">
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.SupplierCode)
-                                    @Html.TextBoxFor(model => model.SupplierCode, new { @class = "form-control col-lg-12" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.SupplierName)
-                                    @Html.TextBoxFor(model => model.SupplierName, new { @class = "form-control col-lg-12" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.TaxID)
-                                    @Html.TextBoxFor(model => model.TaxID, new { @class = "form-control col-lg-12" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Address)
-                                    @Html.TextBoxFor(model => model.Address, new { @class = "form-control col-lg-12" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Email)
-                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control col-lg-12" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Tel)
-                                    @Html.TextBoxFor(model => model.Tel, new { @class = "form-control col-lg-12" })
-                                </div>
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.SupplierRatingOID)
-                                    @Html.DropDownListFor(m => m.SupplierRatingOID, new List<SelectListItem> { new SelectListItem { Text = "1", Value = "1" }, new SelectListItem { Text = "2", Value = "2" } }, new { @class = "form-control" })
-                                </div>
-                                <button id="btnNoCompany" type="submit" class="btn btn-primary">確認新增公司</button>
-                            </form>
-                        </div>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index")"><i class="fas fa-building"></i> 供應商公司總覽</a></li>
+        <li class="breadcrumb-item active" aria-current="page">新增供應商公司</li>
+    </ol>
+</nav>
+<div class="wrapall">
+    <h2>新增供應商公司</h2>
+    <h6>新增公司以新增供應商帳號</h6>
+    <div class="card">
+        <div class="card-body">
+            <div class="row" style="margin: 12px;">
+                <div class="col-lg-5 col-md-11 col-sm-11">
+                    <h4>填寫供應商公司資料</h4>
+                    <div class="left" style="margin:0">
+                        <form class="supCompanyInfoDiv" action="@Url.Action("Create","SupInfoCompany")" method="post">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupplierName)
+                                @Html.TextBoxFor(model => model.SupplierName, new { @class = "form-control col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TaxID)
+                                @Html.TextBoxFor(model => model.TaxID, new { @class = "form-control col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Address)
+                                @Html.TextBoxFor(model => model.Address, new { @class = "form-control col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email)
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tel)
+                                @Html.TextBoxFor(model => model.Tel, new { @class = "form-control col-lg-12" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SupplierRatingOID)
+                                @Html.DropDownListFor(m => m.SupplierRatingOID, new List<SelectListItem> { new SelectListItem { Text = "1", Value = "1" }, new SelectListItem { Text = "2", Value = "2" }, new SelectListItem { Text = "3", Value = "3" } }, new { @class = "form-control" })
+                            </div>
+                            <button id="btnNoCompany" type="submit" class="btn btn-primary">確認新增公司</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 @section scripts
 {
     <script>
-        $("#SupNameCode").change(function () {
-            console.log($("#SupNameCode").val())
-        $.getJSON(
-            '@Url.Action("getSupInfoBySupCodeToIndexAjax")',
-            { id: $("#SupNameCode").val()},
-            function (data) {
-                console.log(data)
-                data.forEach(x => {
-                    $("#SupInfoModel_SupplierCode").val(x.SupplierCode);
-                    $("#SupInfoModel_SupplierName").val(x.SupplierName);
-                    $("#SupInfoModel_TaxID").val(x.TaxID);
-                    $("#SupInfoModel_Address").val(x.Address);
-                    $("#SupInfoModel_Email").val(x.Email);
-                    $("#SupInfoModel_Tel").val(x.Tel);
-                    $("#SupInfoModel_SupplierRatingOID").val(x.SupplierRatingOID);
-                    //BuyerSupAccount_CreateViewModel_SupplierCode
-                    $("#BuyerSupAccount_CreateViewModel_SupplierCode").val(x.SupplierCode);
-                    $("#BuyerSupAccount_CreateViewModel_SupplierName").val(x.SupplierName);
-                })
-                $(".supCompanyInfoDiv").addClass("show");
-                $("#BuyerSupAccount_CreateViewModel_ContactName").focus();
-            }
-        )
-        });
+ 
 
-        $(document).ready(function () {
-            if ($('#AccountStatusSwitch').prop('checked') == true) {
-                $('#lert').addClass('show');
-            } else {
-                $('#lert').removeClass('show');
-            }
-            $('#AccountStatusSwitch').change(() => {
-                console.log("sssss")
-                if ($('#AccountStatusSwitch').prop('checked') == true) {
-                    $('#lert').addClass('show');
-                } else {
-                    $('#lert').removeClass('show');
-                }
-            })
-        })
     </script>
 }

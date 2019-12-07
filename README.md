@@ -14,8 +14,8 @@
 >>- products：產品圖片
 ## 存取帳號方法
 >- 在Controller中的Action
-var emp = User.Identity.GetEmployee();
-var sup = User.Identity.GetSupplierAccount();
+>>- User.Identity.GetEmployee();
+>>- User.Identity.GetSupplierAccount();
 ----
 1. 取得登入者姓名
 ```

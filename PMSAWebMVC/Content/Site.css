@@ -127,8 +127,8 @@
     position: absolute !important;
     top: 0;
     display: none;
-    background-color: #3a3f48 !important;
-    font-size: 8px !important;
+    background-color: #212529 !important;
+    /*font-size: 8px !important;*/
 }
 
 @media (max-width: 580px) {
@@ -136,10 +136,10 @@
         width: 225px !important;
     }
 
-        .sidebar.toggled {
-            overflow: hidden;
-            display: none;
-        }
+    .sidebar.toggled {
+        overflow: hidden;
+        display: none;
+    }
 
     #wrapper #content-wrapper {
         width: 100%;

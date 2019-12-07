@@ -660,6 +660,10 @@
     <Content Include="Content\regular.min.css" />
     <Content Include="Content\sbTemplate\mdb.min.css" />
     <Content Include="Content\sbTemplate\sb-admin.css" />
+    <Content Include="Content\slick\ajax-loader.gif" />
+    <Content Include="Content\slick\fonts\slick.svg" />
+    <Content Include="Content\slick\slick-theme.css" />
+    <Content Include="Content\slick\slick.css" />
     <Content Include="Content\solid.css" />
     <Content Include="Content\solid.min.css" />
     <Content Include="Content\svg-with-js.css" />
@@ -2080,6 +2084,10 @@
     <Content Include="Content\MDB\css\webfonts\fa-solid-900.ttf" />
     <Content Include="Content\MDB\css\webfonts\fa-solid-900.woff" />
     <Content Include="Content\MDB\css\webfonts\fa-solid-900.woff2" />
+    <Content Include="Content\slick\fonts\slick.eot" />
+    <Content Include="Content\slick\fonts\slick.ttf" />
+    <Content Include="Content\slick\fonts\slick.woff" />
+    <Content Include="Content\slick\slick-theme.site.css" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2088,6 +2096,8 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-migrate\jquery-migrate-3.1.0.js" />
+    <Content Include="Scripts\jquery-migrate\jquery-migrate-3.1.0.min.js" />
     <Content Include="Scripts\jquery.easing.compatibility.js" />
     <Content Include="Scripts\jquery.easing.js" />
     <Content Include="Scripts\jquery.easing.min.js" />
@@ -2206,6 +2216,8 @@
     <Content Include="Scripts\sbTemplate\sb-admin.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.min.js" />
     <Content Include="Scripts\Site.js" />
+    <Content Include="Scripts\slick\slick.js" />
+    <Content Include="Scripts\slick\slick.min.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.all.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.all.min.js" />
     <Content Include="Scripts\sweetAlert\sweetalert2.js" />

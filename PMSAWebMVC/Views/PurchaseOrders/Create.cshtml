@@ -4,29 +4,41 @@
     ViewBag.Title = "新增採購單";
 }
 
-<style>
-    /*內容分隔線*/
-    .border-top-dashed {
-        border-top: 1px dashed #3C4055;
-    }
-    /*連結無底線*/
-    .nounderline {
-        text-decoration: none !important
-    }
-    /*收合內容*/
-    .card-header .fa {
-        transition: .3s transform ease-in-out;
-    }
+@section styles{
 
-    .card-header .collapsed .fa-chevron-down {
-        transform: rotate(90deg);
-    }
-    /*表格欄位內容對齊*/
-    #dataTablesPR tbody tr td:nth-child(n+4):nth-child(-n+5),
-    #dataTablesPO tbody tr td:nth-child(n+4):nth-child(-n+8) {
-        text-align: right;
-    }
-</style>
+    <link href="~/Content/slick/slick.css" rel="stylesheet" />
+    <link href="~/Content/slick/slick-theme.css" rel="stylesheet" />
+    <link href="~/Content/slick/slick-theme.site.css" rel="stylesheet" />
+
+    <style>
+        /*內容分隔線*/
+        .border-top-dashed {
+            border-top: 1px dashed #3C4055;
+        }
+        /*連結無底線*/
+        .nounderline {
+            text-decoration: none !important
+        }
+        /*收合內容*/
+        .card-header .fa {
+            transition: .3s transform ease-in-out;
+        }
+
+        .card-header .collapsed .fa-chevron-down {
+            transform: rotate(90deg);
+        }
+        /*表格欄位內容對齊*/
+        #dataTablesPR tbody tr td:nth-child(n+4):nth-child(-n+5),
+        #dataTablesPO tbody tr td:nth-child(n+4):nth-child(-n+8) {
+            text-align: right;
+        }
+
+        .modal {
+            z-index: 99999;
+        }
+    </style>
+
+}
 
 <h2 class="text-dark">@ViewBag.Title</h2>
 
@@ -54,22 +66,22 @@
                     <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
                         <div class="row">
                             <div class="col-md-3 col-6">
-                                <strong>請購人員</strong>
+                                <small><strong>請購人員</strong></small>
                                 <br>
                                 <p class="text-muted">邱利雯</p>
                             </div>
                             <div class="col-md-3 col-6">
-                                <strong>請購日期</strong>
+                                <small><strong>請購日期</strong></small>
                                 <br>
                                 <p class="text-muted">2019/11/20</p>
                             </div>
                             <div class="col-md-3 col-6">
-                                <strong>電子信箱</strong>
+                                <small><strong>電子信箱</strong></small>
                                 <br>
                                 <p class="text-muted">as123471@yahoo.com</p>
                             </div>
                             <div class="col-md-3 col-6">
-                                <strong>聯絡電話</strong>
+                                <small><strong>聯絡電話</strong></small>
                                 <br>
                                 <p class="text-muted">02-5656788#13</p>
                             </div>
@@ -108,22 +120,22 @@
                     <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-md-3 col-6">
-                                <strong>供應商名稱</strong>
+                                <small><strong>供應商名稱</strong></small>
                                 <br>
                                 <p class="text-muted">誌慶股份有限公司</p>
                             </div>
                             <div class="col-md-3 col-6">
-                                <strong>聯絡人</strong>
+                                <small><strong>聯絡人</strong></small>
                                 <br>
                                 <p class="text-muted">林政苓</p>
                             </div>
                             <div class="col-md-3 col-6">
-                                <strong>電子信箱</strong>
+                                <small><strong>電子信箱</strong></small>
                                 <br>
                                 <p class="text-muted">h1051235@gmail.com</p>
                             </div>
                             <div class="col-md-3 col-6">
-                                <strong>聯絡電話</strong>
+                                <small><strong>聯絡電話</strong></small>
                                 <br>
                                 <p class="text-muted">02-4076125</p>
                             </div>
@@ -178,9 +190,11 @@
                     <td>誌慶股份有限公司</td>
                     <td>
                         <div class="table-data-feature">
-                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
-                                <i class="far fa-file"></i>
-                            </button>
+                            <span data-toggle="modal" data-target="#detailModal">
+                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
+                                    <i class="far fa-file"></i>
+                                </button>
+                            </span>
                         </div>
                     </td>
                 </tr>
@@ -194,9 +208,11 @@
                     <td>
                         <div class="table-data-feature">
                             <div class="table-data-feature">
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
-                                    <i class="far fa-file"></i>
-                                </button>
+                                <span data-toggle="modal" data-target="#detailModal">
+                                    <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
+                                        <i class="far fa-file"></i>
+                                    </button>
+                                </span>
                             </div>
                         </div>
                     </td>
@@ -304,13 +320,251 @@
     </div>
 </div>
 
+@*加入採購單、編輯Modal*@
+<!-- Central Modal Fluid Success-->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-fluid modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead" id="detailModalTitle">新增採購項目</p>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+
+            <!--Body-->
+            <div class="modal-body">
+
+                <button id="button-demo">簡易DEMO</button>
+
+                <button id="button-demo2">DEMO2</button>
+
+
+                <div class="row justify-content-md-center">
+                    <div class="multiple-items col-md-10 u-slick--gutters-1"
+                         data-arrows-classes="d-none d-lg-inline-block u-slick__arrow-classic u-slick__arrow-centered--y rounded-circle"
+                         data-arrow-left-classes="fas fa-arrow-left u-slick__arrow-classic-inner u-slick__arrow-classic-inner--left ml-lg-2 ml-xl-4"
+                         data-arrow-right-classes="fas fa-arrow-right u-slick__arrow-classic-inner u-slick__arrow-classic-inner--right mr-lg-2 mr-xl-4">
+                        <div class="card shadow-none" style="width: 18rem;">
+                            <div class="card-header">
+                                Featured1
+                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Cras justo odio</li>
+                                <li class="list-group-item">Dapibus ac facilisis in</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                            </ul>
+                        </div>
+                        <div class="card shadow-none" style="width: 18rem;">
+                            <div class="card-header">
+                                Featured2
+                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Cras justo odio</li>
+                                <li class="list-group-item">Dapibus ac facilisis in</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                            </ul>
+                        </div>
+                        <div class="card shadow-none" style="width: 18rem;">
+                            <div class="card-header">
+                                Featured3
+                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Cras justo odio</li>
+                                <li class="list-group-item">Dapibus ac facilisis in</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                            </ul>
+                        </div>
+                        <div class="card shadow-none" style="width: 18rem;">
+                            <div class="card-header">
+                                Featured4
+                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Cras justo odio</li>
+                                <li class="list-group-item">Dapibus ac facilisis in Dapibus ac facilisis in Dapibus ac facilisis in</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                            </ul>
+                        </div>
+                        <div class="card shadow-none" style="width: 18rem;">
+                            <div class="card-header">
+                                Featured5
+                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Cras justo odio</li>
+                                <li class="list-group-item">Dapibus ac facilisis in</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                            </ul>
+                        </div>
+                        <div class="card shadow-none" style="width: 18rem;">
+                            <div class="card-header">
+                                Featured6
+                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Cras justo odio</li>
+                                <li class="list-group-item">Dapibus ac facilisis in</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                            </ul>
+                        </div>
+                        <div class="card shadow-none" style="width: 18rem;">
+                            <div class="card-header">
+                                Featured7
+                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Cras justo odio</li>
+                                <li class="list-group-item">Dapibus ac facilisis in</li>
+                                <li class="list-group-item">Vestibulum at eros</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit
+                        iusto nulla
+                        aperiam blanditiis ad consequatur in dolores culpa, dignissimos,
+                        eius
+                        non possimus fugiat. Esse ratione fuga, enim, ab officiis totam.
+                    </p>
+                </div>
+                <ul class="list-group z-depth-0">
+                    <li class="list-group-item justify-content-between">
+                        Cras justo odio
+                        <span class="badge badge-primary badge-pill">14</span>
+                    </li>
+                    <li class="list-group-item justify-content-between">
+                        Dapibus ac facilisis in
+                        <span class="badge badge-primary badge-pill">2</span>
+                    </li>
+                    <li class="list-group-item justify-content-between">
+                        Morbi leo risus
+                        <span class="badge badge-primary badge-pill">1</span>
+                    </li>
+                    <li class="list-group-item justify-content-between">
+                        Cras justo odio
+                        <span class="badge badge-primary badge-pill">14</span>
+                    </li>
+                    <li class="list-group-item justify-content-between">
+                        Dapibus ac facilisis in
+                        <span class="badge badge-primary badge-pill">2</span>
+                    </li>
+                    <li class="list-group-item justify-content-between">
+                        Morbi leo risus
+                        <span class="badge badge-primary badge-pill">1</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!--Footer-->
+            <div class="modal-footer bg-light">
+                <button class="btn btn-primary" type="submit"><i class="far fa-file"></i> 加入採購單</button>
+                <button class="btn btn-primary" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
+                <input type="submit" class="btn btn-primary" name="name" value="送出" />
+                <a href="#" class="btn btn-primary" role="button">content</a>
+                <a href="#" class="btn btn-primary" role="button">content</a>
+                <input type="radio" name="name" class="btn btn-primary" />Radio測試
+                <button class="btn btn-outline-primary" data-dismiss="modal">
+                    取消
+                </button>
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!-- Central Modal Fluid Success-->
+
 @section scripts
 {
-
+    <script src="~/Scripts/slick/slick.js"></script>
     <script>
         $(document).ready(function () {
 
-            //分頁樣式
+            toastr.options = {
+                               "progressBar": true,
+            }
+
+            $('#button-demo').click(function () {
+                toastr.success("鐵人賽~大~~平~~台！");
+            });
+
+            $('#button-demo2').click(function () {
+                toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
+            });
+
+
+            $('#detailModal').on('shown.bs.modal', function (event) {
+                //var button = $(event.relatedTarget) // Button that triggered the modal
+                //var recipient = button.data('whatever') // Extract info from data-* attributes
+                //// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                //// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                //var modal = $(this)
+                //modal.find('.modal-title').text('New message to ' + recipient)
+                //modal.find('.modal-body input').val(recipient)
+                $('.multiple-items').not('.slick-initialized').slick(slickOptions);
+            })
+
+            $('#detailModal').on('hidden.bs.modal', function (event) {
+                $('.multiple-items').slick('unslick');
+            })
+
+            var slickOptions = {
+                infinite: true,
+                arrows: true,
+                dots: true,
+                fade: false,
+                centerMode: false,
+                centerPadding: '50px',
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                focusOnSelect: false,
+                easing: "linear",
+                lazyLoad: 'progressive',
+                swipeToSlide: true,
+                responsive: [
+                    {
+                        breakpoint: 554, settings: {
+                            slidesToShow: 1,
+                        }
+                    },
+                    {
+                        breakpoint: 768, settings: {
+                            slidesToShow: 1,
+                        }
+                    },
+                    {
+                        breakpoint: 992, settings: {
+                            slidesToShow: 2,
+                        }
+                    },
+                ],
+            };
+
+            $(window).on('resize', function () {
+                //$('.multiple-items .slider-session').slick('resize');
+                //$('.multiple-items').slick('unslick');
+                //$('.multiple-items').slick(slickOptions);
+                //$('.multiple-items').not('.slick-initialized').slick(slickOptions);
+                //$('.multiple-items').slick('resize');
+            });
+
+                    //分頁樣式
             $(".btn-group-toggle a[data-toggle='tab']").click(function () {
                 $(this).tab('show');
                 $(this).addClass("active").siblings().removeClass("active");

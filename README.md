@@ -14,11 +14,111 @@
 >>- products：產品圖片
 ## 存取帳號方法
 >- 在Controller中的Action
->>- User.Identity.GetEmployee();
->>- User.Identity.GetSupplierAccount();
+var emp = User.Identity.GetEmployee();
+var sup = User.Identity.GetSupplierAccount();
+----
+1. 取得登入者姓名
+```
+User.Identity.GetRealName();
+```
+2. 取得登入者(採購方)的資料
+```
+//取得存有登入者資料的物件
+var emp = User.Identity.GetEmployee();
+//用.的方式取得 Email 等資料
+var empEmail = emp.Email;
+var empId = emp.EmployeeID;
+```
+3. 取得登入者(供應商)的資料
+```
+var sup = User.Identity.GetSupplierAccount();
+var supEmail = sup.Email;
+var supId = sup.EmployeeID;
+```
+4. 取得登入者的 員工帳號(ex.CE00001)/供應商帳號(ex.SE00001)
+```
+//取得帳號
+string LoginAccId = User.Identity.GetUserName();
+```
+5. 取得登入者 GUID (Id)
+```
+string LognId = User.Identity.GetUserId();
+```
 >> 注意事項：建構子中User資料尚未建立，所以無法存取
 >- 在Razor文件
+```
+//如果是Buyer、Warehouse、Admin、Manager、ProductionControl
+@if (User.IsInRole("Buyer")|| User.IsInRole("Warehouse")|| User.IsInRole("Admin")|| User.IsInRole("Manager") || User.IsInRole("ProductionControl"))
+{
+    //就顯示... html 標籤
+}
+//如果是 Supplier
+@if (User.IsInRole("Supplier"))
+{
+    //就顯示... html 標籤
+}
+```
 >>- 同Action方式
+```
+//判斷登入者是誰顯示專屬廠商
+string LoginAccId = User.Identity.GetUserName();
+string LognId = User.Identity.GetUserId();
+//如果 LognId 這人是 Manager
+if (UserManager.IsInRole(LognId, "Manager"))
+{
+  //就回傳 Manager 才看的到的 Json
+}
+//如果 LognId 這人是 Buyer
+else if (UserManager.IsInRole(LognId, "Buyer"))
+{
+  //就回傳 Manager 才看的到的 Json
+}
+```
 ## 啟動專案問題
 > Q：[DirectoryNotFoundException: 找不到路徑 bin\roslyn\csc.exe' 的一部分
 > A：[重建專案]即可正常執行
+## 寄信
+1. 在 你的Controller 上增加 UserManager 屬性 (紅蚯蚓就加 using)
+```
+public class 你的Controller : BaseController
+{
+        //你原本的建構子不要刪掉
+        public 你的Controller()
+        {
+        }
+
+        //建構子多載
+        public 你的Controller(ApplicationUserManager userManager)
+        {
+                UserManager = userManager;
+        } 
+
+        // 屬性
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+                get
+                {
+                    return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                }
+                private set
+                {
+                    _userManager = value;
+                }
+        }
+}
+```
+2. 在 Action 裡寫信
+```
+//先找到你要寄信的人，並儲存 user.Id
+var user = await UserManager.Users.Where(x => x.UserName.Contains("S") && x.UserName == Id).SingleOrDefaultAsync();            
+var userId = user.Id;
+
+//信裡要用的變數
+var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+string SupAccID = user.UserName;
+string pwd = generateFirstPwd();
+
+//寄信
+UserManager.SendEmail(userId, "請重設您的密碼", $"<p>您好,您的帳號是: {SupAccIDstr}</p> 密碼: {pwd} <a href="{callbackUrl}">點此確認您的信箱</a>");
+```

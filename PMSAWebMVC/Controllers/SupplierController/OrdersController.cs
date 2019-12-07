@@ -16,7 +16,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
         string supplierCode;
         string POChangedCategoryCodeShipped;
         string RequesterRoleSupplier;
-        ShipNoticesUtilities utilities = new ShipNoticesUtilities();
+        ShipNoticesUtilities utilities;
         public OrdersController()
         {
             //   SupplierAccount supplier = User.Identity.GetSupplierAccount();

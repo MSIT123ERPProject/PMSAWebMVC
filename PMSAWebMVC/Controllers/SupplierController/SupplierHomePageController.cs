@@ -15,7 +15,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
         string supplierCode;
         string POChangedCategoryCodeShipped;
         string RequesterRoleSupplier;
-        ShipNoticesUtilities utilities = new ShipNoticesUtilities();
+        ShipNoticesUtilities utilities;
         public SupplierHomePageController()
         {
             db = new PMSAEntities();

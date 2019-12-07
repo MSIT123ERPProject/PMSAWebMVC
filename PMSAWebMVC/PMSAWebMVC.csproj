@@ -210,12 +210,15 @@
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
     <Compile Include="Controllers\AdminController\RolesAdminController.cs" />
+    <Compile Include="Controllers\ReportsController\MGReportsController.cs" />
+    <Compile Include="Controllers\ReportsController\PSReportsController.cs" />
+    <Compile Include="Controllers\ReportsController\WSReportsController.cs" />
+    <Compile Include="Controllers\SourceListsController.cs" />
+    <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
     <Compile Include="Controllers\SupplierController\OrdersController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
-    <Compile Include="Controllers\SourceListsController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierStocksController.cs" />
-    <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -2357,7 +2360,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="assets\parts\" />
     <Folder Include="assets\products\" />
-    <Folder Include="Controllers\ReportsController\" />
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />
     <Folder Include="Utilities\ShiYuan\" />

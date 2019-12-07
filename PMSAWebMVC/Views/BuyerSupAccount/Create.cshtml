@@ -275,7 +275,7 @@
             '@Url.Action("getSupInfoBySupCodeToIndexAjax")',
             { id: $("#SupNameCode").val()},
             function (data) {
-                console.log(data)
+                //console.log(data)
                 data.forEach(x => {
                     $("#SupInfoModel_SupplierCode").val(x.SupplierCode);
                     $("#SupInfoModel_SupplierName").val(x.SupplierName);
@@ -294,12 +294,10 @@
         )
         });
         $(".left form button[type='submit']").submit(function () {
-            console.log("hi")
             console.log($(".right form").serializeArray())
         })
 
         $(".right form button[type='submit']").submit(function () {
-            console.log("hi")
             console.log($(".right form").serializeArray())
         })
 
@@ -310,7 +308,6 @@
                 $('#lert').removeClass('show');
             }
             $('#AccountStatusSwitch').change(() => {
-                console.log("sssss")
                 if ($('#AccountStatusSwitch').prop('checked') == true) {
                     $('#lert').addClass('show');
                 } else {

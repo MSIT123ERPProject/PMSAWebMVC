@@ -141,7 +141,7 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
         // POST: BuyerSupAccount/Create
         [HttpPost]
-        public ActionResult Create(BuyerSupAcc_Parent m)
+        public async Task<ActionResult> Create(BuyerSupAcc_Parent m, string AccStatus)
         {
             try
             {
@@ -187,14 +187,17 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                 user.RealName = m.BuyerSupAccount_CreateViewModel.ContactName;
                 user.LastPasswordChangedDate = null;
 
-                //TODO 判斷是否要寄信 補寄信...
-
                 var r1 = UserManager.Create(user);
+                db.SupplierAccount.Add(sa);
+                var r2 = db.SaveChanges();
                 //var r2 = UserManager.Update(user);
-                if (r1.Succeeded)
+                if (r1.Succeeded && r2 > 0)
                 {
-                    db.SupplierAccount.Add(sa);
-                    db.SaveChanges();
+                    //TODO 判斷是否要寄信 補寄信...
+                    if (AccStatus == "on")
+                    {
+                        await sendMailatIndex(user, user.UserName);
+                    }
                     return View("Index");
                 }
                 else

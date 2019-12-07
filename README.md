@@ -110,8 +110,8 @@ public class 你的Controller : BaseController
 ```
 2. 在 Action 裡寫信
 ```
-//先找到你要寄信的人，並儲存 user.Id
-var user = UserManager.Users.Where(x => x.UserName.Contains("S") && x.UserName == Id).SingleOrDefault();            
+//先找到你要寄信的人(這邊用供應商帳號找)，並儲存 user.Id
+var user = UserManager.Users.Where(x.UserName == "SE00001").SingleOrDefault();            
 var userId = user.Id;
 
 //信裡要用的變數

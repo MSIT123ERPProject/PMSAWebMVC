@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using PMSAWebMVC.Controllers;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace PMSAWebMVC.Utilities.TingHuan
 {
-    public class ShipNoticesUtilities
+    public class ShipNoticesUtilities : BaseController/*, IIdentityMessageService*/
     {
         private PMSAEntities db = new PMSAEntities();
         /// <summary>
@@ -20,6 +21,10 @@ namespace PMSAWebMVC.Utilities.TingHuan
         /// <param name="requesterRole"></param>
         /// <param name="purchaseOrderID"></param>
         /// <returns></returns>
+        //public Task SendAsync(IdentityMessage message)
+        //{
+        //    throw new NotImplementedException();
+        //}
         //public ShipNoticesUtilities(ApplicationUserManager userManager)
         //{
         //    UserManager = userManager;
@@ -29,13 +34,13 @@ namespace PMSAWebMVC.Utilities.TingHuan
         //{
         //    get
         //    {
-        //            return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        //        return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
         //    }
         //    private set
         //    {
         //        _userManager = value;
         //    }
-        //}  
+        //}
         ////////////////////////////////////////////////////////
         //找出該purchaseOrderID最新一筆異動資料
         public int FindPOChangedOID(string requesterRole, string purchaseOrderID)
@@ -143,5 +148,7 @@ namespace PMSAWebMVC.Utilities.TingHuan
             }
 
         }
+
+       
     }
 }

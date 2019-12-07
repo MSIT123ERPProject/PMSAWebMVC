@@ -111,7 +111,7 @@ public class 你的Controller : BaseController
 2. 在 Action 裡寫信
 ```
 //先找到你要寄信的人，並儲存 user.Id
-var user = await UserManager.Users.Where(x => x.UserName.Contains("S") && x.UserName == Id).SingleOrDefaultAsync();            
+var user = UserManager.Users.Where(x => x.UserName.Contains("S") && x.UserName == Id).SingleOrDefault();            
 var userId = user.Id;
 
 //信裡要用的變數

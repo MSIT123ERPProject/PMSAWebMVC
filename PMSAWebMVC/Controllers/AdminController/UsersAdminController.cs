@@ -321,7 +321,7 @@ namespace PMSAWebMVC.Controllers
             // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
             string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
             string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
-
+            
             //寄信
             await UserManager.SendEmailAsync(user.Id, "重設您的密碼", MailBody);
 

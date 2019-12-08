@@ -95,4 +95,18 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         [Display(Name = "出貨數量")]
         public int Qty { get; set; }
     }
+    //寄信用的MODEL
+    public class OrderDtlForMail {
+        public string supplierCode { get; set; }
+        public int ShipNoticeOID { get; set; }
+        public string ShipNoticeID { get; set; }
+        [Display(Name = "料件名稱")]
+        public string PartName { get; set; }
+        [Display(Name = "料件編號")]
+        public string PartNumber { get; set; }
+        [Display(Name = "已出貨數量")]
+        public int ShipQty { get; set; }
+        [Display(Name = "實際出貨日期")]
+        public DateTime? ShipDate { get; set; }
+    }
 }

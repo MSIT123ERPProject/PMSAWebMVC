@@ -68,7 +68,16 @@ namespace PMSAWebMVC.Controllers
         public ActionResult Index()
         {
             var user = User.Identity.GetEmployee();
-            var purchaseRequisition = db.PurchaseRequisition.Include(p => p.Employee).Include(p => p.Product).Include(p => p.SignFlow).Where(p => p.EmployeeID == user.EmployeeID);
+            IEnumerable < PurchaseRequisition > purchaseRequisition = null;
+            if (user.EmployeeID == "CE00005")
+            {
+                 purchaseRequisition = db.PurchaseRequisition.Include(p => p.Employee).Include(p => p.Product).Include(p => p.SignFlow);
+            }
+            else
+            {
+                purchaseRequisition = db.PurchaseRequisition.Include(p => p.Employee).Include(p => p.Product).Include(p => p.SignFlow).Where(p => p.EmployeeID == user.EmployeeID);
+            }
+            
             foreach (var data in purchaseRequisition)
             {
                 data.ProcessStatus = GetProcessStatus(data.ProcessStatus);
@@ -79,7 +88,7 @@ namespace PMSAWebMVC.Controllers
 
 
         //檢視
-        public ActionResult Detail(string id) 
+        public ActionResult Detail(string id ) 
         {
             var user = User.Identity.GetEmployee();
             if (id == null)
@@ -160,6 +169,7 @@ namespace PMSAWebMVC.Controllers
         public JsonResult GetSupplierList(string id)
         {//data的值=供應商編號 文字=供應商名稱
             var data = Repository.GetSupplierList(id).Select(s => new { Value = s.SupplierCode, Text = s.SupplierName });
+            var d = data.ToList();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
@@ -483,7 +493,7 @@ namespace PMSAWebMVC.Controllers
             return View(purchaseRequisitionDtl.ToList());
         }
         //請購明細檢視
-        public ActionResult DetailDtl(string id)
+        public ActionResult DetailDtl(string id/*, string partNumber*/)
         {
             var user = User.Identity.GetEmployee();
             if (id == null)
@@ -504,6 +514,7 @@ namespace PMSAWebMVC.Controllers
                             PartNumber = p.PartNumber,
                             Qty = p.Qty,
                             SuggestSupplierCode=p.SuggestSupplierCode,
+                            SuggestSupplierName=p.SupplierInfo.SupplierName,
                             DateRequired = p.DateRequired.ToString("yyyy/MM/dd"),
 
                         };
@@ -512,14 +523,14 @@ namespace PMSAWebMVC.Controllers
         }
 
         //下拉選單
-        public ActionResult getsuggestSupplierCode()
+        public ActionResult getsuggestSupplierCode(string partNumber)
         {
             //var supplierInfo = db.SourceList.Where(s=>s.PartNumber== partNumber).Select(c => new
             //{
             //    c.SupplierInfo.SupplierCode,
             //    c.SupplierInfo.SupplierName
             //});
-            var supplierInfo = db.SourceList.Select(c => new
+            var supplierInfo = db.SourceList.Where(p=>p.PartNumber==partNumber).Select(c => new
             {
                 c.SupplierInfo.SupplierCode,
                 c.SupplierInfo.SupplierName

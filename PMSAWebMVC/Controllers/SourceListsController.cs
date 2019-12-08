@@ -26,21 +26,6 @@ namespace PMSAWebMVC.Controllers
         }
 
 
-        //// GET: SourceLists/Details/5貨源清單檢視畫面
-        //public ActionResult Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    SourceList sourceList = db.SourceList.Find(id);
-        //    if (sourceList == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(sourceList);
-        //}
-
         public ActionResult Detail(string id)
         {
             if (id == null)
@@ -201,22 +186,52 @@ namespace PMSAWebMVC.Controllers
 
             return View(sourceListDtl);
         }
-        
-        // GET: SourceListDtls/Details/5 貨源清單明細檢視畫面
-        public ActionResult DetailsDtl(int? id)
+
+        //// GET: SourceListDtls/Details/5 貨源清單明細檢視畫面
+        //public ActionResult DetailsDtl(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    SourceListDtl sourceListDtl = db.SourceListDtl.Find(id);
+        //    if (sourceListDtl == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(sourceListDtl);
+        //}
+
+
+        public ActionResult DetailDtl(string id)
         {
+            int idd = int.Parse(id);
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SourceListDtl sourceListDtl = db.SourceListDtl.Find(id);
+            SourceListDtl sourceListDtl = db.SourceListDtl.Find(idd);
             if (sourceListDtl == null)
             {
                 return HttpNotFound();
             }
-            return View(sourceListDtl);
-        }
+            var datas = from s in db.SourceListDtl.AsEnumerable()
+                        where s.SourceListDtlOID == idd
+                        select new
+                        {
+                            SourceListDtlOID = s.SourceListDtlOID,
+                            SourceListID = s.SourceListID,
+                            QtyDemanded = s.QtyDemanded,
+                            Discount = s.Discount, //終極無敵霹靂轉換
+                            //DiscountBeginDate = s.DiscountBeginDate,
+                            DiscountBeginDate = Convert.ToDateTime(s.DiscountBeginDate.ToString()).ToString("yyyy/MM/dd"),
+                            DiscountEndDate = Convert.ToDateTime(s.DiscountEndDate.ToString()).ToString("yyyy/MM/dd"),
+                            CreateDate = s.CreateDate.ToString("yyyy/MM/dd")
 
+                        };
+            var da = datas.ToList();
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
 
         // GET: SourceListDtls/Create貨源清單明細新增畫面
         public ActionResult CreateDtl()
@@ -288,40 +303,61 @@ namespace PMSAWebMVC.Controllers
             return View(sourceListDtl);
         }
 
-
-        // GET: SourceListDtls/Edit/5 貨源清單明細編輯畫面
-        public ActionResult EditDtl(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SourceListDtl sourceListDtl = db.SourceListDtl.Find(id);
-            if (sourceListDtl == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.SourceListID = new SelectList(db.SourceList, "SourceListID", "PartNumber", sourceListDtl.SourceListID);
-            return View(sourceListDtl);
-        }
-
-        // POST: SourceListDtls/Edit/5  貨源清單明細編輯
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //修改貨源清單
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditDtl([Bind(Include = "SourceListDtlOID,SourceListID,QtyDemanded,Discount,DiscountBeginDate,DiscountEndDate,CreateDate")] SourceListDtl sourceListDtl)
+        [AuthorizeDeny(Roles = "Manager")]
+        public ActionResult EditDtl(SourceListDtl sourceListDtl)
         {
+            string message = "修改成功!!";
+            bool status = true;
+
             if (ModelState.IsValid)
             {
-                sourceListDtl.Discount = (((-sourceListDtl.Discount) + 100) / 100);
                 db.Entry(sourceListDtl).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("IndexDtl");
+                return Json(new { status = status, message = message, id = db.SourceListDtl.Max(x => x.SourceListDtlOID) }, JsonRequestBehavior.AllowGet);
             }
-            ViewBag.SourceListID = new SelectList(db.SourceList, "SourceListID", "PartNumber", sourceListDtl.SourceListID);
-            return View(sourceListDtl);
+            else
+            {
+                message = "修改失敗!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+            }
         }
+
+        //// GET: SourceListDtls/Edit/5 貨源清單明細編輯畫面
+        //public ActionResult EditDtl(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    SourceListDtl sourceListDtl = db.SourceListDtl.Find(id);
+        //    if (sourceListDtl == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    ViewBag.SourceListID = new SelectList(db.SourceList, "SourceListID", "PartNumber", sourceListDtl.SourceListID);
+        //    return View(sourceListDtl);
+        //}
+
+        //// POST: SourceListDtls/Edit/5  貨源清單明細編輯
+        //// 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        //// 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EditDtl([Bind(Include = "SourceListDtlOID,SourceListID,QtyDemanded,Discount,DiscountBeginDate,DiscountEndDate,CreateDate")] SourceListDtl sourceListDtl)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        sourceListDtl.Discount = (((-sourceListDtl.Discount) + 100) / 100);
+        //        db.Entry(sourceListDtl).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("IndexDtl");
+        //    }
+        //    ViewBag.SourceListID = new SelectList(db.SourceList, "SourceListID", "PartNumber", sourceListDtl.SourceListID);
+        //    return View(sourceListDtl);
+        //}
         // GET: SourceListDtls/Delete/5 貨源清單明細不換頁刪除
         [HttpPost]
         public ActionResult DeleteDtl(int? id)

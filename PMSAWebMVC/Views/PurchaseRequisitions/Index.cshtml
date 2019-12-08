@@ -136,7 +136,7 @@
                 document.getElementById("btnClose").innerHTML = "關閉";
             let id1 = this.dataset.dc;
             if(id1 == undefined){
-                id1 = $(this).parents('tr').find('td:first-child').text();
+                id1 = $(this).parents('tr').find('#pn').text();
             }
             $.getJSON("@Url.Action("Detail", "PurchaseRequisitions")/" + id1, function (datas) {
                 $('#ModalTitle').text('檢視請購單資訊');
@@ -151,9 +151,10 @@
                 //$("#ProcessStatus").val(JSON.stringify(datas[0].ProcessStatus));//轉字串
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
-                $('#PRBeginDate').datetimepicker({
-                    defaultDate: datas[0].PRBeginDate
-                });
+                //$('#PRBeginDate').datetimepicker({
+                //    defaultDate: datas[0].PRBeginDate
+                //});
+                $('#PRBeginDate').children("input").val(datas[0].PRBeginDate);
             })
         });
 
@@ -170,10 +171,10 @@
             //修改檢視
             $(document).on('click', "button[name = 'click2']", function () {
                 document.getElementById("btnClose").innerHTML = "取消";
-            let id1 = this.dataset.dc;
-            if(id1 == undefined){
+                let id1 = this.dataset.dc;
+                if (id1 == undefined) {
                 id1 = $(this).parents('tr').find('td:first-child').text();
-            }
+                }
             $.getJSON("@Url.Action("Detail", "PurchaseRequisitions")/" + id1, function (datas) {
                 //document.getElementById("code2").innerHTML = '';
                 //document.getElementById("name2").innerHTML = '';
@@ -182,6 +183,7 @@
                 $('#ModalTitle').text('檢視請購單資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', false);
+                if (datas[0].EmployeeID != "CE00005") { $('#SignStatus').attr('disabled', true); }
                 //$('*[id="btnUpdate"]').attr('display', true);
                 $('#btnSave').hide();
                 $('#btnUpdate').show();
@@ -190,9 +192,7 @@
                 $("#EmployeeID").val(datas[0].EmployeeID);
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
-                $('#PRBeginDate').datetimepicker({
-                    defaultDate: datas[0].PRBeginDate
-                });
+                $('#PRBeginDate').children("input").val(datas[0].PRBeginDate);
             })
             });
 
@@ -223,7 +223,7 @@
                     PurchaseRequisitionID: $("#PurchaseRequisitionID").val(),
                     ProductNumber: $("#ProductNumber").val(),
                     EmployeeID: $("#EmployeeID").val(),
-                    PRBeginDate: $("#PRBeginDate").val(),
+                    PRBeginDate: $("#PRBeginDate2").val(),
                     ProcessStatus: $("#ProcessStatus").val(),
                     SignStatus: $("#SignStatus").val()
                 }
@@ -277,15 +277,17 @@
                         <input type="text" class="form-control" id="EmployeeID" name="da">
                     </div>
 
+                   
+
                     <div class="form-group">
                         <label for="PRBeginDate">@Html.DisplayNameFor(model => model.PRBeginDate)</label>
-                        <div class="input-group date"  data-target-input="nearest">
-                            <input type="text"id="PRBeginDate" class="form-control datetimepicker-input" @*data-target="#PRBeginDate"*@ data-toggle="datetimepicker" name="da"/>
+                        <div class="input-group date" id="PRBeginDate" data-target-input="nearest">
+                            <input type="text" id="PRBeginDate2" class="form-control datetimepicker-input" data-target="#PRBeginDate" data-toggle="datetimepicker" name="da"/>
                             <div class="input-group-append" data-target="#PRBeginDate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
-                    </div>  
+                    </div>
 
                     <div class="form-group">
                         <label for="ProcessStatus">處理狀態代碼</label>

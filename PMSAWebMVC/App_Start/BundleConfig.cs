@@ -43,6 +43,7 @@ namespace PMSAWebMVC
                 //Site
                 "~/Content/Site.css"
                 ));
+
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
@@ -69,6 +70,7 @@ namespace PMSAWebMVC
                 //Site
                 "~/Scripts/Site.js"
                 ));
+
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
                 //DatetimePicker
@@ -81,8 +83,11 @@ namespace PMSAWebMVC
                 "~/Content/sweetAlert/sweetalert2.css",
                 //MagicInput
                 "~/Content/MagicInput/magic-input.css",
-                "~/Content/MagicInput/magic-input.site.css"
+                "~/Content/MagicInput/magic-input.site.css",
+                //toastr
+                "~/Content/toastr.css"
                 ));
+
             bundles.Add(new ScriptBundle("~/bundles/form").Include(
                 //DataTables、DatetimePicker
                 "~/Scripts/moment-with-locales.js",
@@ -95,7 +100,9 @@ namespace PMSAWebMVC
                 "~/Scripts/pickadate/picker.time.js",
                 "~/Scripts/pickadate/translations/zh_TW.js",
                 //SweetAlert
-                "~/Scripts/sweetAlert/sweetalert2.all.js"
+                "~/Scripts/sweetAlert/sweetalert2.all.js",
+                //toastr
+                "~/Scripts/toastr.js"
                 ));
 
             //DataTables
@@ -114,13 +121,6 @@ namespace PMSAWebMVC
                 "~/Scripts/highcharts/highcharts.js"
                 ));
 
-            //toastr
-            bundles.Add(new ScriptBundle("~/bundles/toastrcss").Include(
-                "~/Content/toastr.min.css"
-                ));
-            bundles.Add(new ScriptBundle("~/bundles/toastrjs").Include(
-                "~/Scripts/toastr.min.js"
-                ));
         }
     }
 }

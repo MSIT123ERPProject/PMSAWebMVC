@@ -11,7 +11,7 @@
         $("#userwrap").toggleClass("d-block");
         $("#navbrand").toggleClass("d-none");
         $("#navbrand").toggleClass("d-block");
-        if ($(".sidebar").width() < 150) {
+        if ($(".sidebar").width() < 140) {
             $(".userwrap").addClass("d-none");
             $(".userwrap").removeClass("d-block");
             $("#navbrand").addClass("d-none");
@@ -38,6 +38,9 @@
             $(".sidebar").toggleClass("toggled");
             $(".userwrap").removeClass("d-none");
             $(".userwrap").addClass("d-block");
+            $("#navbrand").addClass("d-block");
+            $("#navbrand").removeClass("d-none");
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
         });
     } else {
         $(".userwrap").removeClass("d-none");
@@ -48,14 +51,14 @@
         $("#sidebarToggle").removeClass("d-none");
         if ($(window).width() <= 580) {
             $(".sidebar").removeClass("toggled");
-            $(".sidebar").addClass("toggled");            
+            $(".sidebar").addClass("toggled");
         }
-        if ($(window).width() > 580 && $(".sidebar").width() < 150) {
+        if (($(window).width() > 580 && $(".sidebar").width() < 140) || ($(window).width() <= 580)) {
             $(".userwrap").addClass("d-none");
             $(".userwrap").removeClass("d-block");
             $("#navbrand").addClass("d-none");
             $("#navbrand").removeClass("d-block");
-        } else  {
+        } else {
             $(".userwrap").addClass("d-block");
             $(".userwrap").removeClass("d-none");
             $("#navbrand").addClass("d-block");

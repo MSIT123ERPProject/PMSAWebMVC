@@ -496,8 +496,16 @@
     <script>
         $(document).ready(function () {
 
+            $(window).on('resize', function () {
+                console.log($(window).width());
+                console.log($(".sidebar").width());
+            });
+
+
+            //toastr測試
             toastr.options = {
-                               "progressBar": true,
+                "closeButton": true,
+                "progressBar": true,
             }
 
             $('#button-demo').click(function () {
@@ -508,7 +516,7 @@
                 toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
             });
 
-
+            //slick測試
             $('#detailModal').on('shown.bs.modal', function (event) {
                 //var button = $(event.relatedTarget) // Button that triggered the modal
                 //var recipient = button.data('whatever') // Extract info from data-* attributes
@@ -556,20 +564,12 @@
                 ],
             };
 
-            $(window).on('resize', function () {
-                //$('.multiple-items .slider-session').slick('resize');
-                //$('.multiple-items').slick('unslick');
-                //$('.multiple-items').slick(slickOptions);
-                //$('.multiple-items').not('.slick-initialized').slick(slickOptions);
-                //$('.multiple-items').slick('resize');
-            });
-
-                    //分頁樣式
+            //分頁樣式測試
             $(".btn-group-toggle a[data-toggle='tab']").click(function () {
                 $(this).tab('show');
                 $(this).addClass("active").siblings().removeClass("active");
                 //切換分頁會造成RWD不作用
-                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc();
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
             });
 
             //請購明細

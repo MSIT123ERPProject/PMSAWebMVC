@@ -388,9 +388,11 @@
                 font-size: 18px;
                 margin: 0;
             }
-        .card-body{
+
+        .card-body {
             padding-top: 0px;
         }
+
         #All.tag,
         #Non.tag {
             box-shadow: none;
@@ -411,88 +413,88 @@
             }
     </style>
 }
-    <div class="wrapall">
-        <h2>管理供應商帳號</h2>
-        <h6>查詢、啟用供應商帳號、重寄密碼</h6>
+<div class="wrapall">
+    <h2>管理供應商帳號</h2>
+    <h6>查詢、啟用供應商帳號、重寄密碼</h6>
 
-        <a class="btn btn-warning mb-3" href="@Url.Action("Create","BuyerSupAccount")"><i class="fas fa-user-plus"></i> 新增帳號</a>
+    <a class="btn btn-warning mb-3" href="@Url.Action("Create","BuyerSupAccount")"><i class="fas fa-user-plus"></i> 新增帳號</a>
 
-        <div class="card">
-            <div class="card-header">
-                @if (User.IsInRole("Manager"))
-                {
-                    <button type="button" id="All" style="height: 50px; width:100%; justify-content: center; border-right: 1px solid #E4E7ED; border-radius: 0;" class="btn col-md-6 tag">
-                        <i class="fas fa-user-friends"></i>
-                        供應商帳號總覽
-                    </button>
-                    <button type="button" id="Non" style="height: 50px; width:100%; justify-content: center; border-radius: 0;" class="btn col-md-6">
-                        <i class="fas fa-user-tag"></i>
-                        專屬供應商帳號總覽
-                    </button>
-                }
-                else
-                {
-                    <h5 style="font-size: 16px; margin: 15px; padding-left: 10px;">
-                        <i class="fas fa-user-tag"></i>
-                        專屬供應商帳號總覽
-                    </h5>
-                }
-            </div>
-            <div class="card-body">
-                <div class="table-responsive" style="width:98%; padding: 10px">
-                    <table class="table table-striped table-border nowrap hover" id="Table" style="width:100%;">
-                        <thead>
-                            <tr role="row">
-                                <th data-priority="1"></th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.SupplierCode)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.SupplierName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.SupplierAccountID)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ContactName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Email)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.AccountStatus)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.CreatorEmployeeID)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Mobile)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Tel)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.ModifiedDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.CreateDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.SendLetterDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
-                                </th>
-                                <th data-priority="1">動作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tb"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card-footer small text-muted"></div>
+    <div class="card">
+        <div class="card-header">
+            @if (User.IsInRole("Manager"))
+            {
+                <button type="button" id="All" style="height: 50px; width:100%; justify-content: center; border-right: 1px solid #E4E7ED; border-radius: 0;" class="btn col-md-6 tag">
+                    <i class="fas fa-user-friends"></i>
+                    供應商帳號總覽
+                </button>
+                <button type="button" id="Non" style="height: 50px; width:100%; justify-content: center; border-radius: 0;" class="btn col-md-6">
+                    <i class="fas fa-user-tag"></i>
+                    專屬供應商帳號總覽
+                </button>
+            }
+            else
+            {
+                <h5 style="font-size: 16px; margin: 15px; padding-left: 10px;">
+                    <i class="fas fa-user-tag"></i>
+                    專屬供應商帳號總覽
+                </h5>
+            }
         </div>
+        <div class="card-body">
+            <div class="table-responsive" style="width:98%; padding: 10px">
+                <table class="table table-striped table-border nowrap hover" id="Table" style="width:100%;">
+                    <thead>
+                        <tr role="row">
+                            <th data-priority="1"></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierAccountID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ContactName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AccountStatus)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatorEmployeeID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Mobile)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tel)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ModifiedDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreateDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SendLetterDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
+                            </th>
+                            <th data-priority="1">動作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted"></div>
     </div>
+</div>
 <!-- 修改 Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -654,6 +656,129 @@
     <script type="text/javascript">
         var url = '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")';
         $("#Table").ready(() => {
+            var columns = [];
+            columns = [
+                {
+                    "data": null,
+                    "defaultContent": ""
+                },
+                { "data": "SupplierCode" },
+                { "data": "SupplierName" },
+                { "data": "SupplierAccountID" },
+                { "data": "ContactName" },
+                {
+                    "data": "Email",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "AccountStatus",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else if (d == "D") {
+                            return `<h5><span class="badge badge-danger">停用</span></h5>`
+                        } else if (d == "E") {
+                            return `<h5><span class="badge badge-primary">啟用</span></h5>`
+                        } else if (d == "R") {
+                            return `<h5><span class="badge badge-warning">重設</span></h5>`
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "CreatorEmployeeID",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "Mobile",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "Tel",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "ModifiedDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "CreateDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "SendLetterDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "LastPasswordChangedDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    },
+                    "defaultContent": "-"
+                },
+                {
+                    "data": "actionbtn",
+                    "orderable": false,
+                    "render": function () {
+                        var frag = $(document.createDocumentFragment());
+                        var str = `
+                                <button class="btn editBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="啟用停用"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="重設密碼"><i class="far fa-envelope"></i></button>`
+                        frag.append(str);
+                        $("td.action-btn").html(frag);
+                    }
+                }
+            ];
             var oTable = $('#Table').DataTable({
                 ordering: true,
                 //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
@@ -683,136 +808,18 @@
                     "type": "GET",
                     "dataSrc": ""
                 },
-                "columns": [
-                    {
-                        "data": null,
-                        "defaultContent": ""
-                    },
-                    { "data": "SupplierCode" },
-                    { "data": "SupplierName" },
-                    { "data": "SupplierAccountID" },
-                    { "data": "ContactName" },
-                    {
-                        "data": "Email",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "AccountStatus",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            } else if (d == "D") {
-                                return `<h5><span class="badge badge-danger">停用</span></h5>`
-                            } else if (d == "E") {
-                                return `<h5><span class="badge badge-primary">啟用</span></h5>`
-                            } else if (d == "R") {
-                                return `<h5><span class="badge badge-warning">重設</span></h5>`
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "CreatorEmployeeID",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "Mobile",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "Tel",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "ModifiedDate",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            } else {
-                                var str = d.slice(1, 20);
-                                d = str.split("T").join(" ");
-                            }
-                            return d;
-                        }
-                    },
-                    {
-                        "data": "CreateDate",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            } else {
-                                var str = d.slice(1, 20);
-                                d = str.split("T").join(" ");
-                            }
-                            return d;
-                        }
-                     },
-                    {
-                        "data": "SendLetterDate",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            } else {
-                                var str = d.slice(1, 20);
-                                d = str.split("T").join(" ");
-                            }
-                            return d;
-                        }
-                     },
-                    {
-                        "data": "LastPasswordChangedDate",
-                        "render": function (d) {
-                            if (d == null) {
-                                return "-";
-                            } else {
-                                var str = d.slice(1, 20);
-                                d = str.split("T").join(" ");
-                            }
-                            return d;
-                        },
-                        "defaultContent": "-"
-                    },
-                    {
-                        "data": "actionbtn",
-                        "orderable": false,
-                        "render": function () {
-                            var frag = $(document.createDocumentFragment());
-                            var str = `
-                                <button class="btn editBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="啟用停用"><i class="far fa-edit"></i></button>
-                                <button class="btn deleteBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="重設密碼"><i class="far fa-envelope"></i></button>`
-                            frag.append(str);
-                            $("td.action-btn").html(frag);
-                        }
-                    }
-                ]
+                "columns": columns
                 },
             )
+            oTable.column(-1).visible(false);
 
             $("#Non").click(() => {
-                oTable.ajax.url('@Url.Action("getManagerAllSupAccToIndexAjax", "BuyerSupAccount")').load();
+                oTable.column(-1).visible(true);
+                oTable.ajax.url('@Url.Action("getManagerAllSupAccToIndexAjax", "BuyerSupAccount")').load();     
             })
             $("#All").click(() => {
                 oTable.ajax.url(url).load();
+                oTable.column(-1).visible(false);
             })
             //抓 table 裡按鈕請 如此 $("tbody").on()
             $("tbody").on('click', '.editBtn', function (e) {
@@ -848,8 +855,6 @@
                             }
                         }
                         $("#AccountStatus").html(getAccountStatus());
-                    }).done(function () {
-                        console.log("second success");
                     })
 
                 $('#editModal').modal('show');

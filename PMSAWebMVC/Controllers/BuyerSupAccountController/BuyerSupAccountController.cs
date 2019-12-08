@@ -193,7 +193,7 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                 //var r2 = UserManager.Update(user);
                 if (r1.Succeeded && r2 > 0)
                 {
-                    //TODO 判斷是否要寄信 補寄信...
+                    //判斷是否要寄信 補寄信
                     if (AccStatus == "on")
                     {
                         await sendMailatIndex(user, user.UserName);
@@ -235,7 +235,6 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
         //TODO 有SupId的地方要再比對一次是不是該登入者負責的
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeDeny(Roles = "Manager")]
         public async Task<ActionResult> updateSupAccUsersAtIndex(string SupId, bool AccStatus, bool sendResetMail)
         {
             var user = await UserManager.Users.Where(x => x.UserName.Contains("S") && x.UserName == SupId).SingleOrDefaultAsync();
@@ -558,7 +557,6 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
         // 帳戶確認及密碼重設
         //用 SupplierAccountID 寄信
-        [AuthorizeDeny(Roles = "Manager")]
         private async Task sendMailatIndex(ApplicationUser user, string Id)
         {
             //sa table user table

@@ -14,7 +14,6 @@ namespace PMSAWebMVC.Utilities.TingHuan
 {
     public class ShipNoticesUtilities : BaseController/*, IIdentityMessageService*/
     {
-<<<<<<< HEAD
         public ShipNoticesUtilities(ApplicationUserManager userManager)
         {
             UserManager = userManager;
@@ -31,8 +30,6 @@ namespace PMSAWebMVC.Utilities.TingHuan
                 _userManager = value;
             }
         }
-=======
->>>>>>> cde8e0ff621415942f8c198abc301ad8e3201271
         private PMSAEntities db = new PMSAEntities();
         /// <summary>
         /// 寄信功能想寫在這失敗了

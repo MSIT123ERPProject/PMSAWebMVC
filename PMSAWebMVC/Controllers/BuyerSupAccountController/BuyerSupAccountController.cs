@@ -20,7 +20,7 @@ using System.Web.Mvc;
 namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 {
     [Authorize(Roles = "Buyer, Manager")]
-    public class BuyerSupAccountController : Controller
+    public class BuyerSupAccountController : BaseController
     {
         public BuyerSupAccountController()
         {

@@ -413,6 +413,12 @@
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
+    <Compile Include="ViewModels\Setting\BuyerCompInfoViewModel.cs" />
+    <Compile Include="ViewModels\Setting\BuyerSettingViewModel.cs" />
+    <Compile Include="ViewModels\Setting\Buyer_parent.cs" />
+    <Compile Include="ViewModels\Setting\SupInfoViewModel.cs" />
+    <Compile Include="ViewModels\Setting\SupSettingViewModel.cs" />
+    <Compile Include="ViewModels\Setting\Sup_parent.cs" />
     <Compile Include="ViewModels\ShipNotices\ShipNoticeViewModel.cs" />
     <Compile Include="ViewModels\UsersAdmin\UsersAdminViewModel.cs" />
   </ItemGroup>
@@ -2353,8 +2359,8 @@
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
     <Content Include="Views\SupInfoCompany\Index.cshtml" />
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
-    <Content Include="Views\BuyerSetting\Index.cshtml" />
     <Content Include="Views\SupSetting\Index.cshtml" />
+    <Content Include="Views\BuyerSetting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

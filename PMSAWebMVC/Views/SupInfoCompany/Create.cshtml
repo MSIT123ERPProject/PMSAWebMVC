@@ -140,25 +140,31 @@
                     <h4>填寫供應商公司資料</h4>
                     <div class="left" style="margin:0">
                         <form class="supCompanyInfoDiv" action="@Url.Action("Create","SupInfoCompany")" method="post">
+                            @Html.AntiForgeryToken()
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupplierName)
                                 @Html.TextBoxFor(model => model.SupplierName, new { @class = "form-control col-lg-12" })
+                                @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TaxID)
                                 @Html.TextBoxFor(model => model.TaxID, new { @class = "form-control col-lg-12" })
+                                @Html.ValidationMessageFor(model => model.TaxID, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Address)
                                 @Html.TextBoxFor(model => model.Address, new { @class = "form-control col-lg-12" })
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Email)
                                 @Html.TextBoxFor(model => model.Email, new { @class = "form-control col-lg-12" })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Tel)
                                 @Html.TextBoxFor(model => model.Tel, new { @class = "form-control col-lg-12" })
+                                @Html.ValidationMessageFor(model => model.Tel, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupplierRatingOID)

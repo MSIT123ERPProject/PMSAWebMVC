@@ -13,7 +13,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 {
-    public class SupInfoCompanyController : Controller
+    public class SupInfoCompanyController : BaseController
     {
         private PMSAEntities db = new PMSAEntities();
         private ApplicationUserManager _userManager;
@@ -59,6 +59,13 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
             return View();
         }
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(SupInfoViewModel m)
         {
             if (ModelState.IsValid)

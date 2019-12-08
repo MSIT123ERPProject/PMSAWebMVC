@@ -121,12 +121,14 @@
             padding-top: 0.8rem;
             padding-bottom: 0.7rem;
         }
+
         table.dataTable tbody th, table.dataTable tbody td {
             /* padding: 8px 10px; */
             padding: 12px;
         }
+
         table.dataTable.dtr-column > tbody > tr > td.control:before {
-            top:calc( 60% - 1px);
+            top: calc( 60% - 1px);
         }
 
         table.dataTable {
@@ -398,6 +400,7 @@
                 padding: 5px;
                 width: 50px !important;
             }
+
         #All.tag,
         #Non.tag {
             box-shadow: none;
@@ -405,6 +408,7 @@
             border-bottom: 2px solid #4385F4;
             background-color: #E4E7ED;
         }
+
             #All.tag::before,
             #Non.tag::before {
                 content: '';
@@ -415,71 +419,69 @@
                 background-color: #67C23A;
                 margin-right: 10px;
             }
-            .card-body{
-                padding-top: 0;
-            }
+
+        .card-body {
+            padding-top: 0;
+        }
     </style>
 }
-    <div class="wrapall">
-        <h2>管理供應商公司</h2>
-        <h6>查詢、修改等級</h6>
+<div class="wrapall">
+    <h2>管理供應商公司</h2>
+    <h6>查詢、修改等級</h6>
 
-        <a class="btn btn-warning mb-3" href="@Url.Action("Create","SupInfoCompany")"><span>✚</span><i class="fas fa-building mr-1"></i> 新增公司</a>
+    <a class="btn btn-warning mb-3" href="@Url.Action("Create","SupInfoCompany")"><span>✚</span><i class="fas fa-building mr-1"></i> 新增公司</a>
 
-        <div class="card">
-            <div class="card-body">
-                <div class="card row m-1 mt-3">
-                    <div class="card-header">
-                        <button type="button" id="All" style="height: 50px; width:100%; justify-content: center; border-right: 1px solid #E4E7ED;border-radius: 0;" class="btn col-md-6 tag">
-                            <i class="fas fa-city"></i>
-                            供應商公司總覽
-                        </button>
+    <div class="card">
+        <div class="card-header">
+            <button type="button" id="All" style="height: 50px; width:100%; justify-content: center; border-right: 1px solid #E4E7ED;border-radius: 0;" class="btn col-md-6 tag">
+                <i class="fas fa-city"></i>
+                供應商公司總覽
+            </button>
 
-                        <button type="button" id="Non" style="height: 50px; width:100%; justify-content: center; border-radius: 0;" class="btn col-md-6">
-                            <i class="fas fa-phone-slash"></i>
-                            尚無帳號之供應商公司
-                            <a href="@Url.Action("Create","BuyerSupAccount")" title="前往新增帳號">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive" style="width:98%; padding: 10px">
-                            <table class="table table-striped table-border nowrap hover order-column" id="Table" style="width:100%;">
-                                <thead>
-                                    <tr role="row" class="bg-primary text-white">
-                                        <th></th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.SupplierCode)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.SupplierName)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.TaxID)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.Email)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.Tel)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.Address)
-                                        </th>
-                                        <th>
-                                            @Html.DisplayNameFor(model => model.SupplierRatingOID)
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tb"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+            <button type="button" id="Non" style="height: 50px; width:100%; justify-content: center; border-radius: 0;" class="btn col-md-6">
+                <i class="fas fa-phone-slash"></i>
+                尚無帳號之供應商公司
+                <a href="@Url.Action("Create","BuyerSupAccount")" title="前往新增帳號">
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" style="width:98%; padding: 10px">
+                <table class="table table-striped table-border nowrap hover order-column" id="Table" style="width:100%;">
+                    <thead>
+                        <tr role="row" class="bg-primary text-white">
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TaxID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tel)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierRatingOID)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb"></tbody>
+                </table>
             </div>
         </div>
+        <div class="card-footer small text-muted"></div>
     </div>
+</div>
 
 @section scripts{
     @*https://datatables.net/forums/discussion/56914*@

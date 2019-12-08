@@ -1,4 +1,5 @@
-﻿using PMSAWebMVC.Controllers;
+﻿using Microsoft.AspNet.Identity.Owin;
+using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
 using PMSAWebMVC.Utilities.TingHuan;
 using PMSAWebMVC.ViewModels.ShipNotices;
@@ -8,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -27,17 +29,39 @@ namespace PMSAWebMVC.Controllers
         ShipNoticesUtilities utilities = new ShipNoticesUtilities();
         public ShipNoticesController()
         {
-            //   SupplierAccount supplier = User.Identity.GetSupplierAccount();
             db = new PMSAEntities();
-            supplierCode = "S00001";
-            // supplierAccount = supplier.SupplierAccountID;
-            supplierAccount = "SE00001";
+            //supplierCode = "S00001";
+            //supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
             RequesterRoleSupplier = "S";
+        }
+        //建構子多載
+        public ShipNoticesController(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
+        // 屬性
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
         }
         /// 出貨管理首頁//////////////////////////////////////////////////
         public ActionResult Index()
         {
+            ////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             if (TempData["message"] != null)
             {
                 ViewBag.message = TempData["message"];
@@ -51,6 +75,12 @@ namespace PMSAWebMVC.Controllers
         //此方法為幫助INDEX的DATATABLE查訂單資料
         public JsonResult GetPurchaseOrderList(string PurchaseOrderStatus)
         {
+            ////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             string status = PurchaseOrderStatus;
             var query = from po in db.PurchaseOrder.AsEnumerable()
                         where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)
@@ -63,13 +93,18 @@ namespace PMSAWebMVC.Controllers
                             ReceiverMobile = po.ReceiverMobile,
                             ReceiptAddress = po.ReceiptAddress
                         };
-            return Json(new { data = query }, JsonRequestBehavior.AllowGet);
+            List<shipOrderViewModel> qlist = query.ToList();
+            for (int i = 0; i < qlist.Count(); i++)
+            {
+                string d = utilities.GetStatus(qlist[i].PurchaseOrderStatus);
+                qlist[i].PurchaseOrderStatusDisplay = d;
+            }
+            var s = query.ToList();
+            return Json(new { data = qlist }, JsonRequestBehavior.AllowGet);
         }
-
         //檢視未出貨訂單明細，並要可以勾選要出貨的明細，檢視該採購單所有的產品，並可以選擇出貨那些產品
-        public ActionResult UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]shipOrderViewModel purchaseOrder)
+        public async Task<ActionResult> UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]shipOrderViewModel purchaseOrder)
         {
-
             var q = from po in db.PurchaseOrder
                     where po.PurchaseOrderID == purchaseOrder.PurchaseOrderID
                     select new shipOrderViewModel
@@ -110,11 +145,18 @@ namespace PMSAWebMVC.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult shipCheckDtl(shipOrderViewModel unshipOrderDtl)
+        public async Task<ActionResult> shipCheckDtl(shipOrderViewModel unshipOrderDtl)
         {
+            ////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             string message = "";
             //此LIST要用來存放出貨明細ID 用來寄送電子郵件給公司採購員
-            List<int> shipDtlList = new List<int>();
+            List<string> shipDtlList = new List<string>();
+            List<int> shipDtlListQty = new List<int>();
             string shipNoticeID = "";
             //建立一個LIST用來接住所有的OrderDtlItemChecked
             IList<OrderDtlItemChecked> OrderDtlChecked = unshipOrderDtl.orderDtlItemCheckeds;
@@ -136,7 +178,7 @@ namespace PMSAWebMVC.Controllers
                 message = "請選擇欲出貨商品!";
                 return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
             }
-            DateTime now = DateTime.Now; 
+            DateTime now = DateTime.Now;
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
             //並新增該採購單明細實際出貨日期，新增出貨明細//
             foreach (var dtl in orderDtls)
@@ -205,8 +247,9 @@ namespace PMSAWebMVC.Controllers
                     shipNoticeDtl.ShipAmount = Convert.ToInt32(shipNoticeDtl.ShipQty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
                     //把新出貨明細資料加進資料庫
                     db.ShipNoticeDtl.Add(shipNoticeDtl);
-                    //存進出貨明細OID給寄送電子郵件用
-                    shipDtlList.Add(shipNoticeDtl.ShipNoticeDtlOID);
+                    //存進出貨明細OID給寄送電子郵件用，改成存採購單編號CODE，因為OID會有新增先後順序的問題
+                    shipDtlList.Add(dtl.PurchaseOrderDtlCode);
+                    shipDtlListQty.Add(unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty);
                 }
                 //有的話，則去修改出貨明細表的出貨數量和出貨金額
                 else
@@ -215,8 +258,9 @@ namespace PMSAWebMVC.Controllers
                     snd.ShipQty += unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty;
                     snd.ShipAmount = Convert.ToInt32(snd.ShipQty * dtl.PurchaseUnitPrice * (1 - dtl.Discount) * dtl.QtyPerUnit);
                     db.Entry(snd).State = EntityState.Modified;
-                    //存進出貨明細OID給寄送電子郵件用
-                    shipDtlList.Add(snd.ShipNoticeDtlOID);
+                    //存進出貨明細OID給寄送電子郵件用，改成存採購單編號CODE，因為OID會有新增先後順序的問題
+                    shipDtlList.Add(dtl.PurchaseOrderDtlCode);
+                    shipDtlListQty.Add(unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty);
                 }
                 //不管是採購單明細或是採購單有異動都要新增採購單異動總表
                 //新增採購單異動總表(明細)
@@ -302,6 +346,8 @@ namespace PMSAWebMVC.Controllers
             {
                 message = "出貨處理成功，庫存已扣除";
             }
+            List<OrderDtlForMail> odm = orderDtlForMails(shipDtlList, shipDtlListQty);
+            await SendMailToBuyer(odm);
             //return Json(new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message },JsonRequestBehavior.AllowGet);
             return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
         }
@@ -409,77 +455,132 @@ namespace PMSAWebMVC.Controllers
 
             return PartialView("_GetPurchaseOrderDtlPatialView", uodvm);
         }
-
+        //用來查詢已出貨商品明細(用採購單編號)，並且回傳一份清單給寄信用的方法用
+        //這裡回傳的清單應該要是出貨數量而不是已出貨數量
+        public List<OrderDtlForMail> orderDtlForMails(List<string> shipDtlList,List<int> shipDtlListQty)
+        {
+            List<OrderDtlForMail> odm = new List<OrderDtlForMail>();
+            for (int i = 0; i < shipDtlList.Count(); i++)
+            {
+                string code = shipDtlList[i];
+                var q = (from snd in db.ShipNoticeDtl
+                         join pod in db.PurchaseOrderDtl
+                         on snd.PurchaseOrderDtlCode equals pod.PurchaseOrderDtlCode
+                         where snd.PurchaseOrderDtlCode == code
+                         select new OrderDtlForMail
+                         {
+                             ShipNoticeID = snd.ShipNoticeID,
+                             supplierCode = supplierCode,
+                             PartName = pod.PartName,
+                             PartNumber = pod.PartNumber,
+                             ShipDate = pod.ShipDate,
+                             //ShipQty = snd.ShipQty,
+                             ShipNoticeOID = snd.ShipNoticeDtlOID
+                         }).SingleOrDefault();
+                q.ShipQty= shipDtlListQty[i];
+                odm.Add(q);
+            }
+            return odm;
+        }
+        //SendEmail
+        public async Task SendMailToBuyer(List<OrderDtlForMail> shipNotice)
+        {
+            string supAccID = supplierAccount;
+            string shipDtlMail = $"<h2>出貨單號:{shipNotice.FirstOrDefault().ShipNoticeID}</h2>";
+            shipDtlMail += $"<table><thead><tr><th>出貨商品明細</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
+            foreach (var snd in shipNotice)
+            {
+                DateTime shipDate = (DateTime)snd.ShipDate;
+                shipDtlMail += "<tr>";
+                shipDtlMail += $"<td>{snd.ShipNoticeOID}</td><td>{snd.PartNumber}</td><td>{snd.PartName}</td><td>{snd.ShipQty}</td><td>{shipDate.ToString("yyyy/MM/dd")}</td>";
+                shipDtlMail += "</tr>";
+            }
+            shipDtlMail += "</tbody></table>";
+            string snId = shipNotice[0].ShipNoticeID;
+            string emp = db.PurchaseOrder.Find(db.ShipNotice.Find(snId).PurchaseOrderID).EmployeeID;
+            //先找到你要寄信的人(這邊用供應商帳號找)，並儲存 user.Id
+            //這裡的值在資料庫的 dbo.AppUsers table
+            var user = UserManager.Users.Where(x => x.UserName == emp).SingleOrDefault();
+            //user.Id 等等寄信方法第一個參數會用到
+            var userId = user.Id;
+            //string shipDtlMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\ShipNotices\..."));
+            //信裡要用的變數
+            //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            //string SupAccID = user.UserName;
+            //寄信
+            await UserManager.SendEmailAsync(userId, "商品出貨通知", shipDtlMail);
+            //  bool a =    UserManager.SendEmailAsync(userId, "商品出貨通知", shipDtlMail).IsCompleted;
+        }
 
         //按下檢視後進入此方法
-        public ActionResult Edit([Bind(Include = "id")] string id)
-        {
-            PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(id);
-            if (purchaseOrder == null)
-            {
-                return HttpNotFound("purchaseOrder is null");
-            }
-            if (purchaseOrder.PurchaseOrderStatus == "E")
-            {
-                return RedirectToAction("shipCheck", "ShipNotices", new { id });
-            }
-            else if (purchaseOrder.PurchaseOrderStatus == "S")
-            {
-                return RedirectToAction("shipNoticeDisplay", "ShipNotices", new { id });
-            }
-            return HttpNotFound("Not Found");
-        }
+        //public ActionResult Edit([Bind(Include = "id")] string id)
+        //{
+        //    PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(id);
+        //    if (purchaseOrder == null)
+        //    {
+        //        return HttpNotFound("purchaseOrder is null");
+        //    }
+        //    if (purchaseOrder.PurchaseOrderStatus == "E")
+        //    {
+        //        return RedirectToAction("shipCheck", "ShipNotices", new { id });
+        //    }
+        //    else if (purchaseOrder.PurchaseOrderStatus == "S")
+        //    {
+        //        return RedirectToAction("shipNoticeDisplay", "ShipNotices", new { id });
+        //    }
+        //    return HttpNotFound("Not Found");
+        //}
         /// <summary>
         /// 此功能為亞辰負責
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         //判斷如果是未答交的訂單的方法
-        public ActionResult purchaseOrderSended(string id)
-        {
-            PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(id);
-            if (purchaseOrder == null)
-            {
-                return HttpNotFound("purchaseOrder Not Found or id is null");
-            }
-            PurchaseOrder purchaseOrderViewModel = new PurchaseOrder();
-            //purchaseOrderViewModel.failMessage = Convert.ToString(TempData["failMessage"]);
-            purchaseOrderViewModel.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
-            purchaseOrderViewModel.ReceiverName = purchaseOrder.ReceiverName;
-            purchaseOrderViewModel.ReceiverTel = purchaseOrder.ReceiverTel;
-            purchaseOrderViewModel.ReceiverMobile = purchaseOrder.ReceiverMobile;
-            purchaseOrderViewModel.ReceiptAddress = purchaseOrder.ReceiptAddress;
-            return View(purchaseOrderViewModel);
-        }
+        //public ActionResult purchaseOrderSended(string id)
+        //{
+        //    PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(id);
+        //    if (purchaseOrder == null)
+        //    {
+        //        return HttpNotFound("purchaseOrder Not Found or id is null");
+        //    }
+        //    PurchaseOrder purchaseOrderViewModel = new PurchaseOrder();
+        //    //purchaseOrderViewModel.failMessage = Convert.ToString(TempData["failMessage"]);
+        //    purchaseOrderViewModel.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
+        //    purchaseOrderViewModel.ReceiverName = purchaseOrder.ReceiverName;
+        //    purchaseOrderViewModel.ReceiverTel = purchaseOrder.ReceiverTel;
+        //    purchaseOrderViewModel.ReceiverMobile = purchaseOrder.ReceiverMobile;
+        //    purchaseOrderViewModel.ReceiptAddress = purchaseOrder.ReceiptAddress;
+        //    return View(purchaseOrderViewModel);
+        //}
         //======================================================================================
 
         //此方法須改寫
         //顯示出貨通知資訊
-        public ActionResult shipNoticeDisplay(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PurchaseOrder po = db.PurchaseOrder.Find(id);
-            if (po == null)
-            {
-                return HttpNotFound();
-            }
-            var query = from n in db.PurchaseOrderDtl where n.PurchaseOrderID == id select n;
-            int amount = 0;
-            foreach (var x in query)
-            {
-                amount = amount + (int)x.Total;
-            }
-            ViewBag.amount = amount;
-            ShipNotice sn = db.ShipNotice.Where(x => x.PurchaseOrderID == id).FirstOrDefault();
-            ViewBag.shipNoticeID = sn.ShipNoticeID;
-            ViewBag.shipDate = sn.ShipDate;
-            return View(po);
-        }
+        //public ActionResult shipNoticeDisplay(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    PurchaseOrder po = db.PurchaseOrder.Find(id);
+        //    if (po == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    var query = from n in db.PurchaseOrderDtl where n.PurchaseOrderID == id select n;
+        //    int amount = 0;
+        //    foreach (var x in query)
+        //    {
+        //        amount = amount + (int)x.Total;
+        //    }
+        //    ViewBag.amount = amount;
+        //    ShipNotice sn = db.ShipNotice.Where(x => x.PurchaseOrderID == id).FirstOrDefault();
+        //    ViewBag.shipNoticeID = sn.ShipNoticeID;
+        //    ViewBag.shipDate = sn.ShipDate;
+        //    return View(po);
+        //}
         /// <summary>
-        ///  查詢頁面的顯示紙TABLE的用法
+        ///  查詢頁面的顯示紙TABLE的用法，目前沒有用到
         /// </summary>
         /// <param name="disposing"></param>
         [HttpGet]
@@ -501,6 +602,10 @@ namespace PMSAWebMVC.Controllers
             return Json(orderDtls, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// disposing
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -19,8 +19,8 @@ namespace PMSAWebMVC.Controllers.SupplierController
         public SupplierHomePageController()
         {
             db = new PMSAEntities();
-            supplierCode = "S00001";
-            supplierAccount = "SE00001";
+            //supplierCode = "S00001";
+            //supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
             RequesterRoleSupplier = "S";
         }
@@ -37,6 +37,11 @@ namespace PMSAWebMVC.Controllers.SupplierController
         }
         public ActionResult GetStockData()
         {
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             var q = from sl in db.SourceList
                     join pt in db.Part on
                     sl.PartNumber equals pt.PartNumber
@@ -55,7 +60,12 @@ namespace PMSAWebMVC.Controllers.SupplierController
         }
         //pieChart
         public ActionResult GetPartTotalPricePercentage(string dateStart, string dateEnd)
-        { 
+        {
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             DateTime dateStartD = Convert.ToDateTime(dateStart);
             DateTime dateEndD = Convert.ToDateTime(dateEnd);
             if (dateStart == null || dateEnd ==null  ) {
@@ -106,6 +116,11 @@ namespace PMSAWebMVC.Controllers.SupplierController
         [HttpGet]
         public ActionResult GetPartQtyByShipStatus()
         {
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             //未出貨料件的出貨數量
             var qpodUnship = from pod in db.PurchaseOrderDtl.AsEnumerable()
                              join po in db.PurchaseOrder

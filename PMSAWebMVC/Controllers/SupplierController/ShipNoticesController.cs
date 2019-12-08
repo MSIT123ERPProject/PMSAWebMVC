@@ -29,16 +29,21 @@ namespace PMSAWebMVC.Controllers
         {
             //不知道為甚麼無法在建構子裡用User.Identity.GetSupplierAccount()
             //   SupplierAccount supplier = User.Identity.GetSupplierAccount();
+           //supplierAccount = supplier.SupplierAccountID;
             db = new PMSAEntities();
-            supplierCode = "S00001";
-            //supplierAccount = supplier.SupplierAccountID;
-            supplierAccount = "SE00001";
+            //supplierCode = "S00001";
+            //supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
             RequesterRoleSupplier = "S";
         }
         /// 出貨管理首頁//////////////////////////////////////////////////
         public ActionResult Index()
         {
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             if (TempData["message"] != null)
             {
                 ViewBag.message = TempData["message"];
@@ -64,7 +69,13 @@ namespace PMSAWebMVC.Controllers
                             ReceiverMobile = po.ReceiverMobile,
                             ReceiptAddress = po.ReceiptAddress
                         };
-            return Json(new { data = query }, JsonRequestBehavior.AllowGet);
+           List<shipOrderViewModel> qlist =  query.ToList();
+            for (int i =0; i< qlist.Count();i++) {
+                string d = utilities.GetStatus(qlist[i].PurchaseOrderStatus);
+                qlist[i].PurchaseOrderStatusDisplay=d;
+            }
+          var s =  query.ToList();
+            return Json(new { data = qlist }, JsonRequestBehavior.AllowGet);
         }
 
         //檢視未出貨訂單明細，並要可以勾選要出貨的明細，檢視該採購單所有的產品，並可以選擇出貨那些產品

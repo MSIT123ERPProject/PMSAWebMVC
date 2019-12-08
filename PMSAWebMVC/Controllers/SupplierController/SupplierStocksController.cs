@@ -14,20 +14,25 @@ namespace PMSAWebMVC.Controllers
     public class SupplierStocksController : BaseController
     {
         private PMSAEntities db;
-        private string SupplierCode;
-        private string SupplierAccount;
+        private string supplierCode;
+        private string supplierAccount;
         public SupplierStocksController()
         {
             db = new PMSAEntities();
-            SupplierCode = "S00001";
-            SupplierAccount = "SE00001";
+            //supplierCode = "S00001";
+            //supplierAccount = "SE00001";
         }
         //進入庫存管理頁面方法
         public ActionResult Index()
         {
-            SupplierInfo supplierInfo = db.SupplierInfo.Find(SupplierCode);
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
+            SupplierInfo supplierInfo = db.SupplierInfo.Find(supplierCode);
             ViewBag.supplierName = supplierInfo.SupplierName;
-            ViewBag.supplierCode = SupplierCode;
+            ViewBag.supplierCode = supplierCode;
             return View();
         }
         //dataTable取得顯示資料的方法

@@ -215,6 +215,8 @@
     <Compile Include="Controllers\ReportsController\WSReportsController.cs" />
     <Compile Include="Controllers\SourceListsController.cs" />
     <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
+    <Compile Include="Controllers\StockInDtlsController.cs" />
+    <Compile Include="Controllers\StockInsController.cs" />
     <Compile Include="Controllers\SupplierController\OrdersController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
@@ -2355,6 +2357,16 @@
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
+    <Content Include="Views\StockIns\Create.cshtml" />
+    <Content Include="Views\StockIns\Delete.cshtml" />
+    <Content Include="Views\StockIns\Details.cshtml" />
+    <Content Include="Views\StockIns\Edit.cshtml" />
+    <Content Include="Views\StockIns\Index.cshtml" />
+    <Content Include="Views\StockInDtls\Create.cshtml" />
+    <Content Include="Views\StockInDtls\Delete.cshtml" />
+    <Content Include="Views\StockInDtls\Details.cshtml" />
+    <Content Include="Views\StockInDtls\Edit.cshtml" />
+    <Content Include="Views\StockInDtls\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

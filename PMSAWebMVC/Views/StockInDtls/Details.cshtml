@@ -1,0 +1,66 @@
+﻿@model PMSAWebMVC.Models.StockInDtl
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>StockInDtl</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.StockInQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StockInQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EXP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EXP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InventoryDtl.WarehouseCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InventoryDtl.WarehouseCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Part.PartName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Part.PartName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StockIn.PurchaseOrderReceiveID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StockIn.PurchaseOrderReceiveID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StockInDtlOID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

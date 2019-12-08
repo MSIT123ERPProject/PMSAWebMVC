@@ -345,6 +345,7 @@
             <div id="pco"></div>
         </div>
     </div>
+    <hr />
     <div class="row">
         <div class="col-md-6">
             <h2><i class="fas fa-fw fa-chart-area"></i>已產生採購單但逾期之採購單</h2>
@@ -372,202 +373,79 @@
                 GetSSS();
             });
 
-            var textBright = '#F0F0F3';
-            Highcharts.theme = {
-                colors: [
-                    '#a6f0ff',
-                    '#70d49e',
-                    '#e898a5',
-                    '#007faa',
-                    '#f9db72',
-                    '#f45b5b',
-                    '#1e824c',
-                    '#e7934c',
-                    '#dadfe1',
-                    '#a0618b'
-                ],
+            Highcharts.setOptions({
                 chart: {
-                    backgroundColor: 'black',
-                    plotBorderColor: '#606063'
+                    style: {
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontsize: "30px"
+                    },
+                    width: 500,
                 },
                 title: {
+                    useHTML: true,
                     style: {
-                        color: textBright
-                    }
-                },
-                subtitle: {
-                    style: {
-                        color: textBright
-                    }
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "30px"
+                    },
                 },
                 xAxis: {
-                    gridLineColor: '#707073',
                     labels: {
                         style: {
-                            color: textBright
-                        }
-                    },
-                    lineColor: '#707073',
-                    minorGridLineColor: '#505053',
-                    tickColor: '#707073',
-                    title: {
-                        style: {
-                            color: textBright
-                        }
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "15px"
+                        },
                     }
                 },
                 yAxis: {
-                    gridLineColor: '#707073',
-                    labels: {
-                        style: {
-                            color: textBright
-                        }
-                    },
-                    lineColor: '#707073',
-                    minorGridLineColor: '#505053',
-                    tickColor: '#707073',
                     title: {
                         style: {
-                            color: textBright
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                    style: {
-                        color: textBright
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "18px"
+                        },
+                    },
+                    labels: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "15px"
+                        },
                     }
                 },
                 plotOptions: {
                     series: {
                         dataLabels: {
-                            color: textBright
-                        },
-                        marker: {
-                            lineColor: '#333'
+                            style: {
+                                fontWeight: 'bold',
+                                fontFamily: "微軟正黑體",
+                                fontSize: "13px"
+                            },
                         }
                     },
-                    boxplot: {
-                        fillColor: '#505053'
+                },
+                tooltip: {
+                    style: {
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "15px"
                     },
-                    candlestick: {
-                        lineColor: 'white'
-                    },
-                    errorbar: {
-                        color: 'white'
-                    },
-                    map: {
-                        nullColor: '#353535'
-                    }
                 },
                 legend: {
-                    backgroundColor: 'transparent',
-                    itemStyle: {
-                        color: textBright
-                    },
-                    itemHoverStyle: {
-                        color: '#FFF'
-                    },
-                    itemHiddenStyle: {
-                        color: '#606063'
-                    },
-                    title: {
-                        style: {
-                            color: '#D0D0D0'
-                        }
-                    }
-                },
-                credits: {
                     style: {
-                        color: textBright
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "20px"
                     }
                 },
-                labels: {
-                    style: {
-                        color: '#707073'
-                    }
-                },
-                drilldown: {
-                    activeAxisLabelStyle: {
-                        color: textBright
-                    },
-                    activeDataLabelStyle: {
-                        color: textBright
-                    }
-                },
-                navigation: {
-                    buttonOptions: {
-                        symbolStroke: '#DDDDDD',
-                        theme: {
-                            fill: '#505053'
-                        }
-                    }
-                },
-                rangeSelector: {
-                    buttonTheme: {
-                        fill: '#505053',
-                        stroke: '#000000',
-                        style: {
-                            color: '#eee'
-                        },
-                        states: {
-                            hover: {
-                                fill: '#707073',
-                                stroke: '#000000',
-                                style: {
-                                    color: textBright
-                                }
-                            },
-                            select: {
-                                fill: '#303030',
-                                stroke: '#101010',
-                                style: {
-                                    color: textBright
-                                }
-                            }
-                        }
-                    },
-                    inputBoxBorderColor: '#505053',
-                    inputStyle: {
-                        backgroundColor: '#333',
-                        color: textBright
-                    },
-                    labelStyle: {
-                        color: textBright
-                    }
-                },
-                navigator: {
-                    handles: {
-                        backgroundColor: '#666',
-                        borderColor: '#AAA'
-                    },
-                    outlineColor: '#CCC',
-                    maskFill: 'rgba(180,180,255,0.2)',
-                    series: {
-                        color: '#7798BF',
-                        lineColor: '#A6C7ED'
-                    },
-                    xAxis: {
-                        gridLineColor: '#505053'
-                    }
-                },
-                scrollbar: {
-                    barBackgroundColor: '#808083',
-                    barBorderColor: '#808083',
-                    buttonArrowColor: '#CCC',
-                    buttonBackgroundColor: '#606063',
-                    buttonBorderColor: '#606063',
-                    rifleColor: '#FFF',
-                    trackBackgroundColor: '#404043',
-                    trackBorderColor: '#404043'
-                }
-            };
-            // Apply the theme
-            Highcharts.setOptions(Highcharts.theme);
+
+            });
 
             //庫存不足料件圖 column chart
             function PSMonthSum() {
-                $.getJSON("/PSReports/GetPSMonthSum", function (data) {
+                $.getJSON('@Url.Action("GetPSMonthSum", "PSReports")', function (data) {
                     var Names = [];
                     var Uints = [];
                     for (var i = 0; i < data.length; i++) {
@@ -607,7 +485,7 @@
             }
             //
             function PCE() {
-                $.getJSON("/PSReports/GetPCE", function (data) {
+                $.getJSON('@Url.Action("GetPCE", "PSReports")', function (data) {
                     var Names = [];
                     var ps = [];
                     var cs = [];
@@ -665,7 +543,7 @@
             }
             //BUBBLECHART
             function GetO() {
-                $.getJSON("/PSReports/GetO", function (data) {
+                $.getJSON('@Url.Action("GetO", "PSReports")', function (data) {
                     var Names = [];
                     var os = [];
                     for (var i = 0; i < data.length; i++) {
@@ -713,7 +591,7 @@
             }
 
             function GetSSS() {
-                $.getJSON("/PSReports/GetSSS", function (data) {
+                $.getJSON('@Url.Action("GetSSS", "PSReports")', function (data) {
                     var Names = [];
                     var sss = [];
                     for (var i = 0; i < data.length; i++) {
@@ -798,202 +676,79 @@
                 GetSourceList();
             });
 
-            var textBright = '#F0F0F3';
-            Highcharts.theme = {
-                colors: [
-                    '#a6f0ff',
-                    '#70d49e',
-                    '#e898a5',
-                    '#007faa',
-                    '#f9db72',
-                    '#f45b5b',
-                    '#1e824c',
-                    '#e7934c',
-                    '#dadfe1',
-                    '#a0618b'
-                ],
+            Highcharts.setOptions({
                 chart: {
-                    backgroundColor: 'black',
-                    plotBorderColor: '#606063'
+                    style: {
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontsize: "30px"
+                    },
+                    width: 500,
                 },
                 title: {
+                    useHTML: true,
                     style: {
-                        color: textBright
-                    }
-                },
-                subtitle: {
-                    style: {
-                        color: textBright
-                    }
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "30px"
+                    },
                 },
                 xAxis: {
-                    gridLineColor: '#707073',
                     labels: {
                         style: {
-                            color: textBright
-                        }
-                    },
-                    lineColor: '#707073',
-                    minorGridLineColor: '#505053',
-                    tickColor: '#707073',
-                    title: {
-                        style: {
-                            color: textBright
-                        }
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "15px"
+                        },
                     }
                 },
                 yAxis: {
-                    gridLineColor: '#707073',
-                    labels: {
-                        style: {
-                            color: textBright
-                        }
-                    },
-                    lineColor: '#707073',
-                    minorGridLineColor: '#505053',
-                    tickColor: '#707073',
                     title: {
                         style: {
-                            color: textBright
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                    style: {
-                        color: textBright
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "18px"
+                        },
+                    },
+                    labels: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "15px"
+                        },
                     }
                 },
                 plotOptions: {
                     series: {
                         dataLabels: {
-                            color: textBright
-                        },
-                        marker: {
-                            lineColor: '#333'
+                            style: {
+                                fontWeight: 'bold',
+                                fontFamily: "微軟正黑體",
+                                fontSize: "13px"
+                            },
                         }
                     },
-                    boxplot: {
-                        fillColor: '#505053'
+                },
+                tooltip: {
+                    style: {
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "15px"
                     },
-                    candlestick: {
-                        lineColor: 'white'
-                    },
-                    errorbar: {
-                        color: 'white'
-                    },
-                    map: {
-                        nullColor: '#353535'
-                    }
                 },
                 legend: {
-                    backgroundColor: 'transparent',
-                    itemStyle: {
-                        color: textBright
-                    },
-                    itemHoverStyle: {
-                        color: '#FFF'
-                    },
-                    itemHiddenStyle: {
-                        color: '#606063'
-                    },
-                    title: {
-                        style: {
-                            color: '#D0D0D0'
-                        }
-                    }
-                },
-                credits: {
                     style: {
-                        color: textBright
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "20px"
                     }
                 },
-                labels: {
-                    style: {
-                        color: '#707073'
-                    }
-                },
-                drilldown: {
-                    activeAxisLabelStyle: {
-                        color: textBright
-                    },
-                    activeDataLabelStyle: {
-                        color: textBright
-                    }
-                },
-                navigation: {
-                    buttonOptions: {
-                        symbolStroke: '#DDDDDD',
-                        theme: {
-                            fill: '#505053'
-                        }
-                    }
-                },
-                rangeSelector: {
-                    buttonTheme: {
-                        fill: '#505053',
-                        stroke: '#000000',
-                        style: {
-                            color: '#eee'
-                        },
-                        states: {
-                            hover: {
-                                fill: '#707073',
-                                stroke: '#000000',
-                                style: {
-                                    color: textBright
-                                }
-                            },
-                            select: {
-                                fill: '#303030',
-                                stroke: '#101010',
-                                style: {
-                                    color: textBright
-                                }
-                            }
-                        }
-                    },
-                    inputBoxBorderColor: '#505053',
-                    inputStyle: {
-                        backgroundColor: '#333',
-                        color: textBright
-                    },
-                    labelStyle: {
-                        color: textBright
-                    }
-                },
-                navigator: {
-                    handles: {
-                        backgroundColor: '#666',
-                        borderColor: '#AAA'
-                    },
-                    outlineColor: '#CCC',
-                    maskFill: 'rgba(180,180,255,0.2)',
-                    series: {
-                        color: '#7798BF',
-                        lineColor: '#A6C7ED'
-                    },
-                    xAxis: {
-                        gridLineColor: '#505053'
-                    }
-                },
-                scrollbar: {
-                    barBackgroundColor: '#808083',
-                    barBorderColor: '#808083',
-                    buttonArrowColor: '#CCC',
-                    buttonBackgroundColor: '#606063',
-                    buttonBorderColor: '#606063',
-                    rifleColor: '#FFF',
-                    trackBackgroundColor: '#404043',
-                    trackBorderColor: '#404043'
-                }
-            };
-            // Apply the theme
-            Highcharts.setOptions(Highcharts.theme);
+
+            });
 
             //
             function GetMonthSum() {
-                $.getJSON("/MGReports/GetMonthSum", function (data) {
+                $.getJSON('@Url.Action("GetMonthSum", "MGReports")', function (data) {
                     var Names = [];
                     var Uints = [];
                     for (var i = 0; i < data.length; i++) {
@@ -1033,7 +788,7 @@
             }
             //
             function GetSourceList() {
-                $.getJSON("/MGReports/GetSourceList", function (data) {
+                $.getJSON('@Url.Action("GetSourceList", "MGReports")', function (data) {
                     var Names = [];
                     var Qtys = [];
                     var Dises = [];
@@ -1128,202 +883,79 @@
                 GetSInDtl();
             });
 
-            var textBright = '#F0F0F3';
-            Highcharts.theme = {
-                colors: [
-                    '#a6f0ff',
-                    '#70d49e',
-                    '#e898a5',
-                    '#007faa',
-                    '#f9db72',
-                    '#f45b5b',
-                    '#1e824c',
-                    '#e7934c',
-                    '#dadfe1',
-                    '#a0618b'
-                ],
+            Highcharts.setOptions({
                 chart: {
-                    backgroundColor: 'black',
-                    plotBorderColor: '#606063'
+                    style: {
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontsize: "30px"
+                    },
+                    width: 500,
                 },
                 title: {
+                    useHTML: true,
                     style: {
-                        color: textBright
-                    }
-                },
-                subtitle: {
-                    style: {
-                        color: textBright
-                    }
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "30px"
+                    },
                 },
                 xAxis: {
-                    gridLineColor: '#707073',
                     labels: {
                         style: {
-                            color: textBright
-                        }
-                    },
-                    lineColor: '#707073',
-                    minorGridLineColor: '#505053',
-                    tickColor: '#707073',
-                    title: {
-                        style: {
-                            color: textBright
-                        }
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "15px"
+                        },
                     }
                 },
                 yAxis: {
-                    gridLineColor: '#707073',
-                    labels: {
-                        style: {
-                            color: textBright
-                        }
-                    },
-                    lineColor: '#707073',
-                    minorGridLineColor: '#505053',
-                    tickColor: '#707073',
                     title: {
                         style: {
-                            color: textBright
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                    style: {
-                        color: textBright
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "18px"
+                        },
+                    },
+                    labels: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "15px"
+                        },
                     }
                 },
                 plotOptions: {
                     series: {
                         dataLabels: {
-                            color: textBright
-                        },
-                        marker: {
-                            lineColor: '#333'
+                            style: {
+                                fontWeight: 'bold',
+                                fontFamily: "微軟正黑體",
+                                fontSize: "13px"
+                            },
                         }
                     },
-                    boxplot: {
-                        fillColor: '#505053'
+                },
+                tooltip: {
+                    style: {
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "15px"
                     },
-                    candlestick: {
-                        lineColor: 'white'
-                    },
-                    errorbar: {
-                        color: 'white'
-                    },
-                    map: {
-                        nullColor: '#353535'
-                    }
                 },
                 legend: {
-                    backgroundColor: 'transparent',
-                    itemStyle: {
-                        color: textBright
-                    },
-                    itemHoverStyle: {
-                        color: '#FFF'
-                    },
-                    itemHiddenStyle: {
-                        color: '#606063'
-                    },
-                    title: {
-                        style: {
-                            color: '#D0D0D0'
-                        }
-                    }
-                },
-                credits: {
                     style: {
-                        color: textBright
+                        fontWeight: 'bold',
+                        fontFamily: "微軟正黑體",
+                        fontSize: "20px"
                     }
                 },
-                labels: {
-                    style: {
-                        color: '#707073'
-                    }
-                },
-                drilldown: {
-                    activeAxisLabelStyle: {
-                        color: textBright
-                    },
-                    activeDataLabelStyle: {
-                        color: textBright
-                    }
-                },
-                navigation: {
-                    buttonOptions: {
-                        symbolStroke: '#DDDDDD',
-                        theme: {
-                            fill: '#505053'
-                        }
-                    }
-                },
-                rangeSelector: {
-                    buttonTheme: {
-                        fill: '#505053',
-                        stroke: '#000000',
-                        style: {
-                            color: '#eee'
-                        },
-                        states: {
-                            hover: {
-                                fill: '#707073',
-                                stroke: '#000000',
-                                style: {
-                                    color: textBright
-                                }
-                            },
-                            select: {
-                                fill: '#303030',
-                                stroke: '#101010',
-                                style: {
-                                    color: textBright
-                                }
-                            }
-                        }
-                    },
-                    inputBoxBorderColor: '#505053',
-                    inputStyle: {
-                        backgroundColor: '#333',
-                        color: textBright
-                    },
-                    labelStyle: {
-                        color: textBright
-                    }
-                },
-                navigator: {
-                    handles: {
-                        backgroundColor: '#666',
-                        borderColor: '#AAA'
-                    },
-                    outlineColor: '#CCC',
-                    maskFill: 'rgba(180,180,255,0.2)',
-                    series: {
-                        color: '#7798BF',
-                        lineColor: '#A6C7ED'
-                    },
-                    xAxis: {
-                        gridLineColor: '#505053'
-                    }
-                },
-                scrollbar: {
-                    barBackgroundColor: '#808083',
-                    barBorderColor: '#808083',
-                    buttonArrowColor: '#CCC',
-                    buttonBackgroundColor: '#606063',
-                    buttonBorderColor: '#606063',
-                    rifleColor: '#FFF',
-                    trackBackgroundColor: '#404043',
-                    trackBorderColor: '#404043'
-                }
-            };
-            // Apply the theme
-            Highcharts.setOptions(Highcharts.theme);
+
+            });
 
             //
             function GetTenSk() {
-                $.getJSON("/WSReports/GetTenSk", function (data) {
+                $.getJSON('@Url.Action("GetTenSk", "WSReports")', function (data) {
                     var Names = [];
                     var os = [];
                     for (var i = 0; i < data.length; i++) {
@@ -1371,7 +1003,7 @@
             }
             //
             function GetPORD() {
-                $.getJSON("/WSReports/GetPORD", function (data) {
+                $.getJSON('@Url.Action("GetPORD", "WSReports")', function (data) {
                     var Names = [];
                     var os = [];
                     for (var i = 0; i < data.length; i++) {
@@ -1419,51 +1051,49 @@
             }
 
             function GetSInDtl() {
-                $.getJSON("/WSReports/GetSInDtl", function (data) {
-                    var Names = [];
-                    var os = [];
-                    for (var i = 0; i < data.length; i++) {
-                        Names.push(data[i].name);
-                        os.push(data[i].count);
-                    }
-
-                    Highcharts.chart('sindtl', {
-                        chart: {
-                            type: 'column'
-                        },
-                        title: {
-                            text: '即將到期品'
-                        },
-                        xAxis: {
-                            categories: Names,
-                            crosshair: true
-                        },
-                        yAxis: {
-                            min: 0,
-                            title: {
-                                text: '數量'
+                $.getJSON(`@Url.Action("GetSInDtl", "WSReports")`, function (datas) {
+                    let chart3 = new Highcharts.chart('sindtl',{
+                    chart: {
+                       type: 'packedbubble',
+                        height:'100%'
+                    },
+                    title: {
+                        text:'即將到期品'
+                    },
+                    tooltip: {
+                        useHTML: true,
+                        pointFormat: '<b>{point.name}:</b> {point.value}個<sub></sub>'
+                    },
+                    plotOptions: {
+                        packedbubble: {
+                            minSize: '30%',
+                            maxSize: '120%',
+                            zMin:0,
+                            zMax:1000,
+                            layoutAlgorithm: {
+                                splitSeries: false,
+                                gravitationalConstant:  0.02
+                            },
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}',
+                                filter: {
+                                    property: 'y',
+                                    operator: '>',
+                                    value:250
+                                },
+                                style: {
+                                    color: 'black',
+                                    textOutline: 'none',
+                                    fontWeight:'normal'
+                                }
                             }
-                        },
-                        tooltip: {
-                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                                '<td style="padding:0"><b>{point.y:.f}</b></td></tr>',
-                            footerFormat: '</table>',
-                            shared: true,
-                            useHTML: true
-                        },
-                        plotOptions: {
-                            column: {
-                                pointPadding: 0.2,
-                                borderWidth: 0
-                            }
-                        },
-                        series: [{
-                            name: '料件名稱',
-                            data: os
-                        }]
-                    });
+                        }
+                    },
+                    series: datas
                 });
+            });
+
             }
         </script>
     }

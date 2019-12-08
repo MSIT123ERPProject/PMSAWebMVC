@@ -27,6 +27,7 @@ namespace PMSAWebMVC.Controllers
         ShipNoticesUtilities utilities = new ShipNoticesUtilities();
         public ShipNoticesController()
         {
+            //不知道為甚麼無法在建構子裡用User.Identity.GetSupplierAccount()
             //   SupplierAccount supplier = User.Identity.GetSupplierAccount();
             db = new PMSAEntities();
             supplierCode = "S00001";

@@ -6,12 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using PMSAWebMVC.Controllers;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace PMSAWebMVC.Utilities.TingHuan
 {
-    public class ShipNoticesUtilities
+    public class ShipNoticesUtilities : BaseController/*, IIdentityMessageService*/
     {
+<<<<<<< HEAD
         public ShipNoticesUtilities(ApplicationUserManager userManager)
         {
             UserManager = userManager;
@@ -28,7 +31,36 @@ namespace PMSAWebMVC.Utilities.TingHuan
                 _userManager = value;
             }
         }
+=======
+>>>>>>> cde8e0ff621415942f8c198abc301ad8e3201271
         private PMSAEntities db = new PMSAEntities();
+        /// <summary>
+        /// 寄信功能想寫在這失敗了
+        /// </summary>
+        /// <param name="requesterRole"></param>
+        /// <param name="purchaseOrderID"></param>
+        /// <returns></returns>
+        //public Task SendAsync(IdentityMessage message)
+        //{
+        //    throw new NotImplementedException();
+        //}
+        //public ShipNoticesUtilities(ApplicationUserManager userManager)
+        //{
+        //    UserManager = userManager;
+        //}
+        //private ApplicationUserManager _userManager;
+        //public ApplicationUserManager UserManager
+        //{
+        //    get
+        //    {
+        //        return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        //    }
+        //    private set
+        //    {
+        //        _userManager = value;
+        //    }
+        //}
+        ////////////////////////////////////////////////////////
         //找出該purchaseOrderID最新一筆異動資料
         public int FindPOChangedOID(string requesterRole, string purchaseOrderID)
         {
@@ -135,5 +167,7 @@ namespace PMSAWebMVC.Utilities.TingHuan
             }
 
         }
+
+       
     }
 }

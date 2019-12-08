@@ -3,11 +3,14 @@
     ViewBag.Title = "UnshipOrderDtl";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>出貨明細</h2>
 @if (TempData["message"] != null)
 {
     @Html.Raw(TempData["message"])
 }
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <h2>出貨商品明細管理</h2>
+    <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
+</nav>
 @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
 {
     <div class="card mb-3">

@@ -19,8 +19,8 @@ namespace PMSAWebMVC.Controllers.SupplierController
         public SupplierHomePageController()
         {
             db = new PMSAEntities();
-            supplierCode = "S00001";
-            supplierAccount = "SE00001";
+            //supplierCode = "S00001";
+            //supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
             RequesterRoleSupplier = "S";
         }
@@ -37,6 +37,11 @@ namespace PMSAWebMVC.Controllers.SupplierController
         }
         public ActionResult GetStockData()
         {
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             var q = from sl in db.SourceList
                     join pt in db.Part on
                     sl.PartNumber equals pt.PartNumber
@@ -54,61 +59,48 @@ namespace PMSAWebMVC.Controllers.SupplierController
             return Json(s, JsonRequestBehavior.AllowGet);
         }
         //pieChart
-        public ActionResult GetPartTotalPricePercentage()
+        public ActionResult GetPartTotalPricePercentage(string dateStart, string dateEnd)
         {
-            //這裡LINQ語法需要更改一下，同一個料件要加總起來，並必須顯示出所有的料件
-            //計算已出貨的商品金額
-            var q = from pod in db.PurchaseOrderDtl
-                    join po in db.PurchaseOrder
-                    on pod.PurchaseOrderID equals po.PurchaseOrderID
-                    where po.SupplierCode == supplierCode
-                    select new
-                    {
-                        pod.PartName,
-                        pod.PartNumber,
-                        pod.QtyPerUnit,
-                        pod.Qty,
-                        pod.PurchaseUnitPrice,
-                        pod.Discount,
-                        pod.SourceListID
-                    };
-            //UnitsOnOrder不知道是已答交訂單還是未答交也都算在裡面//
-            //var qsl = from pt in db.Part 
-            //             join sl in db.SourceList   on pt.PartNumber equals sl.PartNumber
-            //          join sld in db.SourceListDtl on sl.SourceListID equals sld.SourceListID 
-            //          where sl.SupplierCode == supplierCode
-            //          select new {
-            //              sl.PartNumber,
-            //              pt.PartName,
-            //              sl.UnitsOnOrder,
-            //              sl.UnitPrice,
-            //              sl.QtyPerUnit,
-            //              sld.Discount,
-            //          };
-    //計算百分比//搞錯了highChart會自動幫你計算百分比
-    List < partTotalPriceViewModel > list = new List<partTotalPriceViewModel>();
-            foreach (var data in q)
-            {
-                partTotalPriceViewModel temp = new partTotalPriceViewModel();
-                temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
-                temp.PartNumber = data.PartNumber;
-                temp.PartName = data.PartName;
-                temp.SourceListID = data.SourceListID;
-                list.Add(temp);
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
+            DateTime dateStartD = Convert.ToDateTime(dateStart);
+            DateTime dateEndD = Convert.ToDateTime(dateEnd);
+            if (dateStart == null || dateEnd ==null  ) {
+                dateStartD = DateTime.Now.AddMonths(-3);
+                dateEndD = DateTime.Now;
             }
-            return Json(list, JsonRequestBehavior.AllowGet);
-            decimal total = 0;
-            for (int i = 0; i < list.Count(); i++)
-            {
-                total += list[i].ToalPrice;
-            }
-            for (int i = 0; i < list.Count(); i++)
-            {
-                decimal p = list[i].ToalPrice / total * 100;
-                p = Math.Round(p, 1);
-                list[i].Percentage = Convert.ToDouble(p);
-            }
-            return Json(list, JsonRequestBehavior.AllowGet);
+            //計算計算選取區間已出貨的商品金額，如無選取預設為今日以前三個月
+            var qpo = from po in db.PurchaseOrder
+                          join pod in db.PurchaseOrderDtl
+                          on po.PurchaseOrderID equals pod.PurchaseOrderID
+                          where po.CreateDate > dateStartD && po.CreateDate < dateEndD
+                                       //&& po.PurchaseOrderStatus == "E" || po.PurchaseOrderStatus == "S"
+                                            && po.SupplierCode == supplierCode
+                      select new
+                          {
+                              pod.PartName,
+                              pod.PartNumber,
+                              pod.QtyPerUnit,
+                              pod.Qty,
+                              pod.PurchaseUnitPrice,
+                              pod.Discount,
+                              pod.SourceListID
+                          };
+                //計算百分比//搞錯了highChart會自動幫你計算百分比
+                List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
+                foreach (var data in qpo)
+                {
+                    partTotalPriceViewModel temp = new partTotalPriceViewModel();
+                    temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
+                    temp.PartNumber = data.PartNumber;
+                    temp.PartName = data.PartName;
+                    temp.SourceListID = data.SourceListID;
+                    list.Add(temp);
+                }
+                return Json(list, JsonRequestBehavior.AllowGet);
         }
         //pieChart使用的ViewModel
         public class partTotalPriceViewModel
@@ -124,6 +116,11 @@ namespace PMSAWebMVC.Controllers.SupplierController
         [HttpGet]
         public ActionResult GetPartQtyByShipStatus()
         {
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             //未出貨料件的出貨數量
             var qpodUnship = from pod in db.PurchaseOrderDtl.AsEnumerable()
                              join po in db.PurchaseOrder

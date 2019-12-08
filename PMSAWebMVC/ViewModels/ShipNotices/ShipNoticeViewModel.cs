@@ -20,6 +20,8 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         }
         public string PurchaseOrderID { get; set; }
         public string PurchaseOrderStatus { get; set; }
+        //此屬性為給TABLE顯示狀態用
+        public string PurchaseOrderStatusDisplay { get; set; }
         public string ReceiverName { get; set; }
         public string ReceiverTel { get; set; }
         public string ReceiverMobile { get; set; }

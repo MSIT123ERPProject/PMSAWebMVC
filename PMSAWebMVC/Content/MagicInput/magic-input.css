@@ -9,7 +9,6 @@
   margin: -0.15px 0.6px 0 0;
   vertical-align: text-bottom;
   border-radius: 3px;
-  -webkit-transition: background-color 0.25s;
   transition: background-color 0.25s;
   background-color: #fff;
   border: 1px solid #d7d7d7;
@@ -21,8 +20,7 @@
   width: 7px;
   border: 0 solid #333;
   border-width: 0 0 2px 2px;
-  -webkit-transform: rotate(-45deg);
-          transform: rotate(-45deg);
+  transform: rotate(-45deg);
   position: absolute;
   top: 3px;
   left: 3px;
@@ -46,8 +44,8 @@
   border: 1px solid #d7d7d7;
 }
 .mgc-primary:checked {
-  background-color: #337ab7;
-  border-color: #337ab7;
+  background-color: #27a2fc;
+  border-color: #27a2fc;
 }
 .mgc-primary:checked:after {
   border-color: #fff;
@@ -57,8 +55,8 @@
   border: 1px solid #d7d7d7;
 }
 .mgc-success:checked {
-  background-color: #5cb85c;
-  border-color: #5cb85c;
+  background-color: #37bd74;
+  border-color: #37bd74;
 }
 .mgc-success:checked:after {
   border-color: #fff;
@@ -68,8 +66,8 @@
   border: 1px solid #d7d7d7;
 }
 .mgc-info:checked {
-  background-color: #5bc0de;
-  border-color: #5bc0de;
+  background-color: #7ebcfa;
+  border-color: #7ebcfa;
 }
 .mgc-info:checked:after {
   border-color: #fff;
@@ -79,8 +77,8 @@
   border: 1px solid #d7d7d7;
 }
 .mgc-warning:checked {
-  background-color: #f0ad4e;
-  border-color: #f0ad4e;
+  background-color: #ff9b37;
+  border-color: #ff9b37;
 }
 .mgc-warning:checked:after {
   border-color: #fff;
@@ -90,8 +88,8 @@
   border: 1px solid #d7d7d7;
 }
 .mgc-danger:checked {
-  background-color: #cf3b3a;
-  border-color: #cf3b3a;
+  background-color: #e8286b;
+  border-color: #e8286b;
 }
 .mgc-danger:checked:after {
   border-color: #fff;
@@ -119,7 +117,7 @@
   height: 5px;
   width: 10px;
 }
-input[type="radio"].mgr {
+.mgr {
   position: relative;
   width: 16px;
   height: 16px;
@@ -133,31 +131,30 @@ input[type="radio"].mgr {
   background-color: #fff;
   border: 1px solid #d7d7d7;
 }
-input[type="radio"].mgr:disabled {
+.mgr:disabled {
   opacity: 0.65;
 }
-input[type="radio"].mgr:before {
+.mgr:before {
   content: '';
   display: block;
   height: 0px;
   width: 0px;
-  -webkit-transition: width 0.25s, height 0.25s;
   transition: width 0.25s, height 0.25s;
 }
-input[type="radio"].mgr:checked:before {
+.mgr:checked:before {
   height: 8px;
   width: 8px;
   border-radius: 50%;
   margin: 3px 0 0 3px;
 }
-input[type="radio"].mgr:focus {
+.mgr:focus {
   outline: none;
   box-shadow: inset 0 1px 1px rgba(255,255,255,0.075), 0 0px 2px #38a7ff;
 }
-input[type="radio"].mgr:checked {
+.mgr:checked {
   border: 1px solid #555;
 }
-input[type="radio"].mgr:checked:before {
+.mgr:checked:before {
   background-color: #555;
 }
 .mgr-primary {
@@ -165,50 +162,50 @@ input[type="radio"].mgr:checked:before {
   border: 1px solid #d7d7d7;
 }
 .mgr-primary:checked {
-  border: 1px solid #337ab7;
+  border: 1px solid #27a2fc;
 }
 .mgr-primary:checked:before {
-  background-color: #337ab7;
+  background-color: #27a2fc;
 }
 .mgr-success {
   background-color: #fff;
   border: 1px solid #d7d7d7;
 }
 .mgr-success:checked {
-  border: 1px solid #5cb85c;
+  border: 1px solid #37bd74;
 }
 .mgr-success:checked:before {
-  background-color: #5cb85c;
+  background-color: #37bd74;
 }
 .mgr-info {
   background-color: #fff;
   border: 1px solid #d7d7d7;
 }
 .mgr-info:checked {
-  border: 1px solid #5bc0de;
+  border: 1px solid #7ebcfa;
 }
 .mgr-info:checked:before {
-  background-color: #5bc0de;
+  background-color: #7ebcfa;
 }
 .mgr-warning {
   background-color: #fff;
   border: 1px solid #d7d7d7;
 }
 .mgr-warning:checked {
-  border: 1px solid #f0ad4e;
+  border: 1px solid #ff9b37;
 }
 .mgr-warning:checked:before {
-  background-color: #f0ad4e;
+  background-color: #ff9b37;
 }
 .mgr-danger {
   background-color: #fff;
   border: 1px solid #d7d7d7;
 }
 .mgr-danger:checked {
-  border: 1px solid #cf3b3a;
+  border: 1px solid #e8286b;
 }
 .mgr-danger:checked:before {
-  background-color: #cf3b3a;
+  background-color: #e8286b;
 }
 .mgr-sm {
   width: 12px;
@@ -250,10 +247,7 @@ input[type="radio"].mgr:checked:before {
   top: 0;
   left: 0;
   border-radius: 15px;
-  -webkit-transition: -webkit-transform 0.3s;
-  transition: -webkit-transform 0.3s;
   transition: transform 0.3s;
-  transition: transform 0.3s, -webkit-transform 0.3s;
 }
 .mgc-switch:before {
   width: 39px;
@@ -271,12 +265,10 @@ input[type="radio"].mgr:checked:before {
   background-color: #04be02;
 }
 .mgc-switch:checked:before {
-  -webkit-transform: scale(0);
-          transform: scale(0);
+  transform: scale(0);
 }
 .mgc-switch:checked:after {
-  -webkit-transform: translateX(17px);
-          transform: translateX(17px);
+  transform: translateX(17px);
 }
 .mgc-switch:focus {
   outline: 0;
@@ -296,8 +288,7 @@ input[type="radio"].mgr:checked:before {
 .mgc-sm.mgc-switch:checked:after {
   top: 0px;
   left: 2px;
-  -webkit-transform: translateX(10px);
-          transform: translateX(10px);
+  transform: translateX(10px);
 }
 .mgc-lg.mgc-switch {
   height: 32px;
@@ -314,6 +305,5 @@ input[type="radio"].mgr:checked:before {
 .mgc-lg.mgc-switch:checked:after {
   top: 0px;
   left: 2px;
-  -webkit-transform: translateX(18px);
-          transform: translateX(18px);
+  transform: translateX(18px);
 }

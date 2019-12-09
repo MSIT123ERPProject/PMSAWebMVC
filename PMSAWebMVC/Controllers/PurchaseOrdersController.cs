@@ -66,6 +66,12 @@ namespace PMSAWebMVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetPRInfoViewModel(string id) {
+            Repository rep = new Repository(User.Identity.GetEmployee());
+            var vm = rep.GetPRInfoViewModel(id);
+            return PartialView("_CreatePRInfoPartial", vm);
+        }
+
         [HttpGet]
         public ActionResult GetPurchaseOrderDtlList(string id, string supplierCode)
         {

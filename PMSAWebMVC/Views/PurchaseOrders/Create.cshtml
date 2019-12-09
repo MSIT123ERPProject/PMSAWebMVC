@@ -53,40 +53,45 @@
     <div id="collapse-rpinfo" class="collapse show" aria-labelledby="heading-rpinfo">
         <div class="card-body pb-0">
             <div class="form-horizontal">
-                <div class="row mb-0 align-items-center">
+                <div class="row align-items-center">
 
                     @Html.LabelFor(m => m.SelectedPurchaseRequisitionID, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
-                    <div class="col-md-6">
-                        @Html.DropDownListFor(m => m.SelectedPurchaseRequisitionID, Model.PurchaseRequisitionList, "請選擇", htmlAttributes: new { @class = "form-control" })
+                    <div class="col-md-6 mb-3">
+                        <div class="input-group">
+                            @Html.DropDownListFor(m => m.SelectedPurchaseRequisitionID, Model.PurchaseRequisitionList, "請選擇", htmlAttributes: new { @class = "form-control  col-md-8" })
+                            <button class="btn btn-outline-primary input-group-append" id="importPR" type="button">匯入</button>
+                        </div>
                         @Html.ValidationMessageFor(m => m.SelectedPurchaseRequisitionID, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="w-100"></div>
 
-                    <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
-                        <div class="row">
-                            <div class="col-md-3 col-6">
-                                <small><strong>請購人員</strong></small>
-                                <br>
-                                <p class="text-muted">邱利雯</p>
+                    <div id="PRInfoContainer" class="col-md-12"></div>
+
+                    @*<div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
+                            <div class="row">
+                                <div class="col-md-3 col-6">
+                                    <small><strong>請購人員</strong></small>
+                                    <br>
+                                    <p class="text-muted">邱利雯</p>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <small><strong>請購日期</strong></small>
+                                    <br>
+                                    <p class="text-muted">2019/11/20</p>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <small><strong>電子信箱</strong></small>
+                                    <br>
+                                    <p class="text-muted">as123471@yahoo.com</p>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <small><strong>聯絡電話</strong></small>
+                                    <br>
+                                    <p class="text-muted">02-5656788#13</p>
+                                </div>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <small><strong>請購日期</strong></small>
-                                <br>
-                                <p class="text-muted">2019/11/20</p>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <small><strong>電子信箱</strong></small>
-                                <br>
-                                <p class="text-muted">as123471@yahoo.com</p>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <small><strong>聯絡電話</strong></small>
-                                <br>
-                                <p class="text-muted">02-5656788#13</p>
-                            </div>
-                        </div>
-                    </div>
+                        </div>*@
 
                 </div>
             </div>
@@ -630,7 +635,31 @@
             let supplierList = $('#SelectedSupplierName');
             $("#btnSubmit").prop("disabled", true);
 
-        $('#SelectedPurchaseRequisitionID').change(function() {
+
+            $('#SelectedPurchaseRequisitionID').change(function () {
+                if (this.selectedIndex == 0) {
+                    return;
+                }
+                $.ajax({
+                    url: "@Url.Action("GetPRInfoViewModel", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: $("#SelectedPurchaseRequisitionID").val()
+                    },
+                }).done(function (result) {
+                    $(this).parent().parent().removeClass("mb-3");
+                    $('#PRInfoContainer').fadeOut(200, function () {
+                        $(this).html(result).fadeIn(200);
+                    })
+                    $("#warning").remove();
+                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            });
+
+
+        @*$('#SelectedPurchaseRequisitionID').change(function() {
             supplierList.empty();
             $("#dataTablesContainer").html('');
             $.getJSON(supplierListUrl, { id: $(this).val() }, function (data) {
@@ -680,7 +709,7 @@
                         },
                     }
                 );
-            })
+            })*@
         });
     </script>
 }

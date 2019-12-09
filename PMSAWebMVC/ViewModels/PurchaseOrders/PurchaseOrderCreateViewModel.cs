@@ -15,6 +15,20 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string PurchaseRequisitionIdValue { get; set; }
     }
 
+    public class PRInfoViewModel
+    {
+        [Display(Name = "請購人員")]
+        public string Name { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        [Display(Name = "請購日期")]
+        public DateTime PRBeginDate { get; set; }
+        [Display(Name = "電子信箱")]
+        public string Email { get; set; }
+        [Display(Name = "聯絡電話")]
+        public string Tel { get; set; }
+    }
+
     public class SupplierItem
     {
         public string SupplierCode { get; set; }
@@ -79,6 +93,23 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public Repository(Employee emp)
         {
             this.emp = emp;
+        }
+
+        public PRInfoViewModel GetPRInfoViewModel(string PurchaseRequisitionID)
+        {
+            using (PMSAEntities db = new PMSAEntities())
+            {
+                var infoq = from pr in db.PurchaseRequisition
+                            where pr.PurchaseRequisitionID == PurchaseRequisitionID
+                            select new PRInfoViewModel
+                            {
+                                Name = pr.Employee.Name,
+                                PRBeginDate = pr.PRBeginDate,
+                                Email = pr.Employee.Email,
+                                Tel = pr.Employee.Tel
+                            };
+                return infoq.FirstOrDefault();
+            }
         }
 
         public IList<PurchaseRequisitionItem> GetPurchaseRequisitionList()

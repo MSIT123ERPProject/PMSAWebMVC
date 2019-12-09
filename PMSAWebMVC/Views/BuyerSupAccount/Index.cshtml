@@ -652,8 +652,9 @@
 </div>
 
 @section scripts{
-    @*https://datatables.net/forums/discussion/56914*@
-    <script type="text/javascript">
+    @if (User.IsInRole("Manager"))
+    {
+        <script type="text/javascript">
         var url = '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")';
         $("#Table").ready(() => {
             var columns = [];
@@ -814,8 +815,8 @@
             oTable.column(-1).visible(false);
 
             $("#Non").click(() => {
-                oTable.column(-1).visible(true);
-                oTable.ajax.url('@Url.Action("getManagerAllSupAccToIndexAjax", "BuyerSupAccount")').load();     
+                    oTable.column(-1).visible(true);
+                oTable.ajax.url('@Url.Action("getManagerAllSupAccToIndexAjax", "BuyerSupAccount")').load();
             })
             $("#All").click(() => {
                 oTable.ajax.url(url).load();
@@ -974,6 +975,328 @@
                 }
             })
         })
-    </script>
+        </script>
+    }
+    else if (User.IsInRole("Buyer"))
+    {
+        <script type="text/javascript">
+        var url = '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")';
+        $("#Table").ready(() => {
+            var columns = [];
+            columns = [
+                {
+                    "data": null,
+                    "defaultContent": ""
+                },
+                { "data": "SupplierCode" },
+                { "data": "SupplierName" },
+                { "data": "SupplierAccountID" },
+                { "data": "ContactName" },
+                {
+                    "data": "Email",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "AccountStatus",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else if (d == "D") {
+                            return `<h5><span class="badge badge-danger">停用</span></h5>`
+                        } else if (d == "E") {
+                            return `<h5><span class="badge badge-primary">啟用</span></h5>`
+                        } else if (d == "R") {
+                            return `<h5><span class="badge badge-warning">重設</span></h5>`
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "CreatorEmployeeID",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "Mobile",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "Tel",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "ModifiedDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "CreateDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "SendLetterDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    }
+                },
+                {
+                    "data": "LastPasswordChangedDate",
+                    "render": function (d) {
+                        if (d == null) {
+                            return "-";
+                        } else {
+                            var str = d.slice(1, 20);
+                            d = str.split("T").join(" ");
+                        }
+                        return d;
+                    },
+                    "defaultContent": "-"
+                },
+                {
+                    "data": "actionbtn",
+                    "orderable": false,
+                    "render": function () {
+                        var frag = $(document.createDocumentFragment());
+                        var str = `
+                                <button class="btn editBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="啟用停用"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="重設密碼"><i class="far fa-envelope"></i></button>`
+                        frag.append(str);
+                        $("td.action-btn").html(frag);
+                    }
+                }
+            ];
+            var oTable = $('#Table').DataTable({
+                ordering: true,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [],
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                "columnDefs": [{
+                        className: 'control',
+                        orderable: false,
+                        targets: 0
+                    },
+                    {
+                        defaultContent: `
+                                <button class="btn editBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="啟用停用"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="重設密碼"><i class="far fa-envelope"></i></button>`,
+                        orderable: false,
+                        className: 'action-btn',
+                        targets: -1
+                    },
+                ],
+                "ajax": {
+                    "url": url,
+                    "type": "GET",
+                    "dataSrc": ""
+                },
+                "columns": columns
+                },
+            )
 
+            $("#Non").click(() => {
+                oTable.ajax.url('@Url.Action("getManagerAllSupAccToIndexAjax", "BuyerSupAccount")').load();
+            })
+            $("#All").click(() => {
+                oTable.ajax.url(url).load();
+            })
+            //抓 table 裡按鈕請 如此 $("tbody").on()
+            $("tbody").on('click', '.editBtn', function (e) {
+
+                //SupAccID
+                console.log($(this).closest('tr').find('td:eq(1)').find('td').remove().end().text());
+                $.getJSON(
+                    '@Url.Action("getAllSupAccBySupCodeToIndexAjax")',
+                    { id: $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() },
+                    function(x){
+                        console.log(x)
+                        $("#ContactName").val(x.ContactName);
+                        $("#SupplierAccountID").val(x.SupplierAccountID);
+                        $("#Email").val(x.Email);
+                        $("#Mobile").val(x.Mobile);
+                        $("#Tel").val(x.Tel);
+                        $("#ModifiedDate").val(x.ModifiedDate == null ? '-' : () => { var str = x.ModifiedDate.slice(1, 20); x.ModifiedDate = str.split("T").join(" "); return x.ModifiedDate });
+                        $("#CreateDate").val(x.CreateDate == null ? '-' : () => { var str = x.CreateDate.slice(1, 20); x.CreateDate = str.split("T").join(" "); return x.CreateDate });
+                        $("#SendLetterDate").val(x.SendLetterDate == null ? '-' : () => { var str = x.SendLetterDate.slice(1, 20); x.SendLetterDate = str.split("T").join(" "); return x.SendLetterDate });
+                        $("#LastPasswordChangedDate").val(x.LastPasswordChangedDate == null ? '-' : () => { var str = x.LastPasswordChangedDate.slice(1, 20); x.LastPasswordChangedDate = str.split("T").join(" "); return x.LastPasswordChangedDate });
+                        function getAccountStatus() {
+                            if (x.AccountStatus == null) {
+                                return "-";
+                            } else if (x.AccountStatus == "D") {
+                                $("#AccountStatusSwitch").prop('checked', false);
+                                return `<h5><span class="badge badge-danger">停用</span></h5>`
+                            } else if (x.AccountStatus == "E") {
+                                $("#AccountStatusSwitch").prop('checked', true);
+                                return `<h5><span class="badge badge-primary">啟用</span></h5>`
+                            } else if (x.AccountStatus == "R") {
+                                $("#AccountStatusSwitch").prop('checked', true);
+                                return `<h5><span class="badge badge-warning">重設</span></h5>`
+                            }
+                        }
+                        $("#AccountStatus").html(getAccountStatus());
+                    })
+
+                $('#editModal').modal('show');
+                //post 修改 sa 資料
+                var doPost = $('#updateConfirm').click(function (e) {
+                    //防止當掉時重複按
+                    $(this).off('click', doPost);
+                    e.preventDefault();
+                    var formData = {
+                        __RequestVerificationToken: $('#editOfSupform').serializeArray()[0].value,
+                        SupId: $('#editOfSupform').serializeArray()[2].value,
+                        AccStatus: $('input[name="AccStatus"]').prop("checked"),
+                        sendResetMail: $('#sendResetMail').prop("checked")
+                    }
+                    console.log(formData)
+                    //console.log(formData) 不知為啥這裡會重複提交
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("updateSupAccUsersAtIndex", "BuyerSupAccount")',
+                        data: formData,
+                        success: function (result) {
+                            alert("更新成功");
+                            //更新datatable
+                            oTable.ajax.reload();
+                        },
+                        error: function (result) {
+                            alert("更新失敗nooooooooooooooooo");
+                            console.log(result)
+                        }
+                    })
+                })
+            })
+
+            //重設密碼寄信按鈕
+            $("tbody").on('click', '.deleteBtn', function (e) {
+                console.log(e.currentTarget);
+                console.log($(this).closest('tr').find('td:eq(3)').find('td').remove().end().text() )
+                alert("aaaa!")
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("sendMail", "BuyerSupAccount")',
+                    data: { Id: $(this).closest('tr').find('td:eq(3)').find('td').remove().end().text() },
+                    success: function (result) {
+                        alert("send");
+
+                        //更新datatable
+                        oTable.ajax.reload();
+                    },
+                    error: function (result) {
+                        alert("send失敗nooooooooooooooooo");
+                        console.log(result)
+                    }
+                })
+            })
+        });
+
+        $("#All").click(function (e) {
+            $(this).addClass("tag");
+            $("#Non").removeClass("tag");
+        })
+        $("#Non").click(function (e) {
+            $(this).addClass("tag");
+            $("#All").removeClass("tag");
+        })
+        $(document).ready(function () {
+
+            $('#AccountStatusSwitch').change(() => {
+                if ($('#AccountStatusSwitch').prop('checked') == false) {
+                    $('#lert').addClass('show');
+                    //$('#sendResetMaildiv').addClass('d-none');
+                    //$('#sendResetMaildiv').removeClass('d-inline-block');
+                    $('#sendResetMaildiv').removeClass('show');
+                } else {
+                    $('#lert').removeClass('show');
+                    //$('#sendResetMaildiv').removeClass('d-none');
+                    $('#sendResetMaildiv').addClass('show');
+                    //$('#sendResetMaildiv').addClass('d-inline-block');
+                }
+            })
+
+            //防止重複ajax......
+            var pendingRequests = {};
+            // 所有ajax請求的通用前置filter
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                var key = generatePendingRequestKey(options);
+                //請求是否已經存在
+                if (!pendingRequests[key]) {
+                    storePendingRequest(key, jqXHR);
+                } else {
+                    //如果ajax請求已經存在，下一次相同的請求則取消，防止重複請求
+                    jqXHR.abort();
+                }
+                //ajax請求完成時，從臨時物件中清除請求對應的資料
+                var complete = options.complete;
+                options.complete = function (jqXHR, textStatus) {
+                    //延時1000毫秒刪除請求資訊，表示同Key值請求不能在此時間段內重複提交
+                    setTimeout(function () {
+                        delete pendingRequests[jqXHR.pendingRequestKey];
+                    }, 1000);
+                    if ($.isFunction(complete)) {
+                        complete.apply(this, arguments);
+                    }
+                }
+                /**
+                * 將ajax請求儲存到臨時物件中，用於根據key判斷請求是否已經存在
+                */
+                function storePendingRequest(key, jqXHR) {
+                    pendingRequests[key] = jqXHR;
+                    jqXHR.pendingRequestKey = key;
+                }
+                /**
+                * 根據ajax請求引數構建一個臨時儲存key,此處簡單的使用url作為key，
+                * 不考慮為解決請求型別為get時相同路徑引起的快取問題，採用隨機碼構建URL的情況
+                */
+                function generatePendingRequestKey(options) {
+                    return options.url;
+                }
+            })
+        })
+        </script>
+    }
 }

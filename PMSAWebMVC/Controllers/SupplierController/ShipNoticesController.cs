@@ -81,6 +81,7 @@ namespace PMSAWebMVC.Controllers
             supplierAccount = supplier.SupplierAccountID;
             supplierCode = supplier.SupplierCode;
             ////////////////////////////////////////////////////
+            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string status = PurchaseOrderStatus;
             var query = from po in db.PurchaseOrder.AsEnumerable()
                         where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)

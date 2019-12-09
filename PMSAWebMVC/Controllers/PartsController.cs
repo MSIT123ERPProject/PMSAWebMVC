@@ -15,7 +15,7 @@ using Image = System.Drawing.Image;
 
 namespace PMSAWebMVC.Controllers
 {
-    public class PartsController : BaseController
+    public class PartsController : Controller
     {
         public PMSAEntities db = new PMSAEntities();
 
@@ -23,18 +23,6 @@ namespace PMSAWebMVC.Controllers
         public ActionResult Index()
         {
             var part = db.Part.Include(p => p.PartUnit);
-
-            //var x = (from f in db.PartCategoryDtl select f);
-            //var y = (from h in db.PartCategory select h);
-            //foreach (var item in x)
-            //{
-            //    var q = (from n in db.Part select n).Where(n => n.PartNumber == item.PartNumber);
-            //    foreach (var item2 in y)
-            //    {        
-            //    }
-            //} HIIII
-
-
             return View(part);
         }
 
@@ -50,13 +38,39 @@ namespace PMSAWebMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(part);
+          
+            //var datas = db.Part.Where(P => P.PartNumber == id).
+            //Select(g => new { g.PartOID, g.PartNumber, g.PartName, g.PartSpec, g.PictureAdress, g.PartUnit.PartUnitName, g.QtyPerUnit, g.CreatedDate});
+
+            var datas = from p in db.Part.AsEnumerable()
+                       join f in db.PartCategoryDtl
+                       on p.PartNumber equals f.PartNumber
+                       join g in db.PartCategory
+                       on f.PartCategoryOID equals g.PartCategoryOID
+                       where p.PartNumber == id
+                       select new
+                       {
+                           PartOID = p.PartOID,
+                           PartNumber = p.PartNumber,
+                           PartName = p.PartName,
+                           PartSpec = p.PartSpec,
+                           PictureAdress = p.PictureAdress,
+                           PartUnitName = p.PartUnit.PartUnitName,
+                           QtyPerUnit = p.QtyPerUnit,
+                           CreatedDate = p.CreatedDate.ToString("yyyy/MM/dd"),
+                           CategoryName = g.CategoryName
+                       };
+
+
+            return Json(datas, JsonRequestBehavior.AllowGet);
         }
+    
 
         // GET: Parts/Create
         public ActionResult Create()
         {
             ViewBag.PartUnitOID = new SelectList(db.PartUnit, "PartUnitOID", "PartUnitName");
+            
             return View();
         }
 
@@ -65,7 +79,7 @@ namespace PMSAWebMVC.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PartOID,PartNumber,PartName,PartSpec,PartUnitOID,CreatedDate,PictureAdress,PictureDescription")] Part part)
+        public ActionResult Create(Part part, int PartCategoryOID)
         {
 
             if (ModelState.IsValid)
@@ -80,21 +94,20 @@ namespace PMSAWebMVC.Controllers
                         oMemoryStream.Position = 0;
                         Image a = System.Drawing.Image.FromStream(oMemoryStream);
                         Bitmap oBitmap = new Bitmap(a);
-
                         string path = part.PartNumber + "-" + part.PartName + ".jpg";
-                        string pathqqq = Path.Combine(Server.MapPath("~/imgs"), path);
+                        string pathqqq = Path.Combine(Server.MapPath("~/assets/parts/"), path);
                         oBitmap.Save(pathqqq);
-
-
-
                     }
                 }
-                part.PictureAdress = "~/imgs/" + part.PartNumber + "-" + part.PartName + ".jpg";
+                part.PictureAdress = "~/assets/parts/" + part.PartNumber + "-" + part.PartName + ".jpg";
                 part.CreatedDate = DateTime.Now;
-
+                PartCategoryDtl PartCategoryDtl = new PartCategoryDtl();
+                PartCategoryDtl.PartNumber = part.PartNumber;
+                PartCategoryDtl.PartCategoryOID = PartCategoryOID;
                 db.Part.Add(part);
+                db.PartCategoryDtl.Add(PartCategoryDtl);
                 db.SaveChanges();
-                string path2 = Server.MapPath("~/imgs");
+                string path2 = Server.MapPath("~/assets/parts/");
                 return RedirectToAction("Index");
             }
 
@@ -131,7 +144,7 @@ namespace PMSAWebMVC.Controllers
 
                 if (Request.Files["File1"].ContentLength != 0)
                 {
-                    FileInfo f = new FileInfo($@"C:\CCLASS\MVC\layoutTest_1018\layoutTest\Imgs\{part.PartNumber}-{part.PartName}.jpg");
+                    FileInfo f = new FileInfo($@"~/assets/parts{part.PartNumber}-{part.PartName}.jpg");
                     if (f.Exists)
                     {
                         f.Delete();
@@ -146,15 +159,11 @@ namespace PMSAWebMVC.Controllers
                         Image a = System.Drawing.Image.FromStream(oMemoryStream);
                         Bitmap oBitmap = new Bitmap(a);
                         string path = part.PartNumber + "-" + part.PartName + ".jpg";
-                        string pathqqq = Path.Combine(Server.MapPath("~/imgs"), path);
+                        string pathqqq = Path.Combine(Server.MapPath("~/assets/parts/"), path);
                         oBitmap.Save(pathqqq);
-
-
-
-
                     }
                 }
-                part.PictureAdress = "~/imgs/" + part.PartNumber + "-" + part.PartName + ".jpg";
+                part.PictureAdress = "~/assets/parts/" + part.PartNumber + "-" + part.PartName + ".jpg";
                 db.Entry(part).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -181,12 +190,16 @@ namespace PMSAWebMVC.Controllers
             db.Part.Remove(part);
             db.SaveChanges();
 
-            FileInfo f = new FileInfo($@"C:\CCLASS\MVC\layoutTest_1018\layoutTest\Imgs\{part.PartNumber}-{part.PartName}.jpg");
-            if (f.Exists)
-            {
-                f.Delete();
+            //FileInfo f = new FileInfo($@"C:\PMSAWebMVC\PMSAWebMVC\assets\parts\{part.PartNumber}-{part.PartName}.jpg");
+            string partname = $"{ part.PartNumber }-{ part.PartName}.jpg";
+            string path = Path.Combine(Server.MapPath("~/assets/parts/"), partname);
+            FileInfo f = new FileInfo(path);
+           
+            //if (f.Exists)
+            //{
+            f.Delete();
 
-            }
+            //}
             return RedirectToAction("Index");
 
 

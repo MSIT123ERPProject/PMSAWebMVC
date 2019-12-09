@@ -8,7 +8,10 @@
 
 <p>
     @*@Html.ActionLink("Create New", "Create")*@
-    <a href='@Url.Action("Create","Parts")'>
+    @*<a href='@Url.Action("Create","Parts")'>
+            <i class="btn btn-info">新增料件資料</i>
+        </a>*@
+    <a class="CreatBtn" data-dc="" data-info="">
         <i class="btn btn-info">新增料件資料</i>
     </a>
 </p>
@@ -32,52 +35,31 @@
                         <th>
                             @Html.DisplayNameFor(model => model.PartSpec)
                         </th>
-                        @*<th>
-                            @Html.DisplayNameFor(model => model.CreatedDate)
-                        </th>*@
+
                         <th>
-                           料件圖片
-                            @*@Html.DisplayNameFor(model => model.PictureAdress)*@
+                            料件圖片
                         </th>
-                        @*<th>
-                            @Html.DisplayNameFor(model => model.PictureDescription)
-                        </th>*@
+
                         <th>
                             @Html.DisplayNameFor(model => model.PartUnit.PartUnitName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QtyPerUnit)
+                        </th>
+                        <th>
+                            料件分類
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedDate)
                         </th>
                         <th></th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PartNumber)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PartName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PartSpec)
-                        </th>
-                        @*<th>
-                            @Html.DisplayNameFor(model => model.CreatedDate)
-                        </th>*@
-                        <th>
-                            料件圖片
-                            @*@Html.DisplayNameFor(model => model.PictureAdress)*@
-                        </th>
-                        @*<th>
-                            @Html.DisplayNameFor(model => model.PictureDescription)
-                        </th>*@
-                        <th>
-                            @Html.DisplayNameFor(model => model.PartUnit.PartUnitName)
-                        </th>
-                        <th></th>
-                    </tr>
-                </tfoot>
+
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        var modalId = "modal-" + item.PartNumber;
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.PartNumber)
@@ -88,33 +70,58 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.PartSpec)
                             </td>
-                            @*<td>
-                                @Html.DisplayFor(modelItem => item.CreatedDate)
-                            </td>*@
                             <td>
                                 <img style="height:200px; width:200px;" src='@Url.Content(item.PictureAdress)' alt="" />
                             </td>
-                            @*<td>
-                                @Html.DisplayFor(modelItem => item.PictureDescription)
-                            </td>*@
+
                             <td>
                                 @Html.DisplayFor(modelItem => item.PartUnit.PartUnitName)
                             </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.QtyPerUnit)
+                            </td>
+                            <td>
+                                @foreach (var gg in item.PartCategoryDtl)
+                                {
+                                    @Html.DisplayFor(hh => gg.PartCategory.CategoryName)
+                                }
 
-                            <td >
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            </td>
+
+                            <td>
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                @*<a class="editBtn" data-infor="@item.PartNumber">
+                                        <i class="btn btn-info">修改</i>
+                                    </a>*@
 
                                 <a href='@Url.Action("Edit", new { id = item.PartNumber })'>
                                     <i class="btn btn-info">修改</i>
                                 </a>
-
-                                <a href='@Url.Action("Details", new { id = item.PartNumber })'>
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                <!-- =============================================================== -->
+                                <a class="DetailsBtn" data-dc="@item.PartNumber" data-info="@item.PartNumber">
                                     <i class="btn btn-info">檢視</i>
                                 </a>
+
+                                @*<a href='@Url.Action("Details", new { id = item.PartNumber })'>
+                                        <i class="btn btn-info">檢視</i>
+                                    </a>*@
+
 
                                 <a name="click01" data-wc="@item.PartNumber">
                                     <i class="btn btn-danger">刪除</i>
                                 </a>
-                               
+
                             </td>
                         </tr>
                     }
@@ -125,10 +132,235 @@
     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content qq">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle">Modal title</h5>
+
+            </div>
+            <div>
+                <br />
+                <hr />
+                <div class="modal-body">
+
+                    <form id="addForm">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label class="required" for="PartNumber">@Html.DisplayNameFor(model => model.PartNumber)</label>
+                            <input type="text" class="form-control" id="PartNumber" name="da" onblur="strcode()">
+                            <span id="code2" style="color:red"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required" for="PartName">@Html.DisplayNameFor(model => model.PartName)</label>
+                            <input type="text" class="form-control" id="PartName" name="da" onblur="strname()">
+                            <span id="name2" style="color:red"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required" for="PartSpec">@Html.DisplayNameFor(model => model.PartSpec)</label>
+                            <input type="text" class="form-control" id="PartSpec" name="dta" onblur="stradd()">
+                            <span id="add2" style="color:red"></span>
+                        </div>
+
+                        @*<div class="form-group">
+            <label for="PartImg">料件圖片</label>
+            <br />
+            <div>
+                <img style="height:200px; width:200px;" id="partImg" src="" alt="" />
+            </div>
+        </div>*@
+                        <div class="form-group">
+                            <h3>料件圖片上傳</h3>
+                            <img id="partImg" src="@Url.Content("~/images/NoImage.jpg")" style="width:320px;height:240px" />
+                            <input type="file" name="File1" id="File1" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="PartUnitName">@Html.DisplayNameFor(model => model.PartUnit.PartUnitName)</label>
+                            <br />
+                            <input type="text" class="form-control" id="PartUnitName" name="dta">
+                            <div class="col-sm-auto" id="PartUnitName1">
+                                @Html.DropDownList("selectlist", new SelectList(new[]
+                             {
+                                new SelectListItem { Text = "個", Value = "1",Selected=true },
+                                new SelectListItem { Text = "條",Value="2",Selected=false },
+                                new SelectListItem { Text = "對", Value = "3",Selected=false },
+                                new SelectListItem { Text = "座", Value = "4",Selected=false },
+
+                             }, "Value", "Text"),
+                             new { id = "PartUnitName2", @class = "form-control" }
+                             )
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="PartUnitName">@Html.DisplayNameFor(model => model.QtyPerUnit)</label>
+                            <br />
+                            <input type="text" class="form-control" id="QtyPerUnit" name="dta">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="PartUnitName">料件分類</label>
+                            <br />
+                            <input type="text" class="form-control" id="CategoryName" name="dta">
+                            <div class="col-sm-auto" id="CategoryName1">
+                                @Html.DropDownList("selectlist", new SelectList(new[]
+                             {
+                                new SelectListItem { Text = "輪組", Value = "1",Selected=true },
+                                new SelectListItem { Text = "傳動系統",Value="2",Selected=false },
+                                new SelectListItem { Text = "煞車系統", Value = "3",Selected=false },
+                                new SelectListItem { Text = "配件裝置", Value = "4",Selected=false },
+                                new SelectListItem { Text = "車體裝置", Value = "5",Selected=false }
+                             }, "Value", "Text"),
+                             new { id ="CategoryName2", @class = "form-control" }
+                             )
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+            <label for="PartUnitName">@Html.DisplayNameFor(model => model.CreatedDate)</label>
+            <div class="input-group-date" id="CreatedDate" data-target-input="nearest">
+                <input type="text" class="form-control date" id="CreatedDate2" name="dta">
+            </div>
+        </div>*@
+                        <div class="form-group">
+                            <label for="CreatedDate">@Html.DisplayNameFor(model => model.CreatedDate)</label>
+                            <div class="input-group date" id="CreatedDate" data-target-input="nearest">
+                                <input type="text" id="CreatedDate2" class="form-control datetimepicker-input" data-target="#CreatedDate" data-toggle="datetimepicker" name="da" />
+                                <div class="input-group-append" data-target="#CreatedDate" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                            <button id="btnSave" name="btnSave" type="button" class="btn btn-primary">新增</button>
+                            <button id="btnUpdate" name="btnUpdate" type="button" class="btn btn-success">修改</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
+    
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     <script>
+
+        //檢視
+        $("body").on("click", ".DetailsBtn", function ()
+        {
+
+            var partInfor = $(this).data("infor");
+            let id1 = this.dataset.dc;
+            if (id1 == undefined)
+            {
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Details","Parts")/" + id1, function (datas) {
+                //document.getElementById("code2").innerHTML = '';
+                //document.getElementById("name2").innerHTML = '';
+                //document.getElementById("add2").innerHTML = '';
+                //document.getElementById("tel2").innerHTML = '';
+                $('#ModalTitle').text('檢視料件資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('#btnSave').hide();
+                $('#btnUpdate').hide();
+                $('#CategoryName1').hide();
+                $("#PartNumber").val(datas[0].PartNumber);
+                $("#PartName").val(datas[0].PartName);
+                $("#PartSpec").val(datas[0].PartSpec);
+                $("#partImg").attr("src", `/assets/parts/${datas[0].PartNumber}-${datas[0].PartName}.jpg`);
+                $("#PartUnitName").val(datas[0].PartUnitName);
+                $("#QtyPerUnit").val(datas[0].QtyPerUnit);
+                $("#CategoryName").val(datas[0].CategoryName);
+                $("#CreatedDate2").val(datas[0].CreatedDate);
+            });
+         
+             $('.modal').modal('show');
+        });
+
+         //新增
+          $("body").on("click", ".CreatBtn", function ()
+          {
+              $('#ModalTitle').text('新增料件資料');
+              $('*[name="da"]').attr('disabled', false);
+              $('*[name="da"]').attr('disabled', false);
+              $('input[name="da"]').val("");
+              $('input[name="dta"]').val("");
+              $('#btnSave').show();
+              $('#btnUpdate').hide();
+              $('#CategoryName').hide();
+               $('#CategoryName1').show();
+              //document.getElementById("code2").innerHTML = '';
+              //document.getElementById("name2").innerHTML = '';
+              //document.getElementById("add2").innerHTML = '';
+              //document.getElementById("tel2").innerHTML = '';
+             $('.modal').modal('show');
+        });   
+        $("#btnSave").click(function ()
+        {
+            var PartNumber = $("#PartNumber").val();
+            var PartName = $("#PartName").val();
+            var PartSpec = $("#PartSpec").val();
+            var PartUnitName = $("#PartUnitName2").val();
+            var QtyPerUnit = $("#QtyPerUnit").val();
+            var CategoryName = $("#CategoryName2").val();
+            
+
+            var Jsondata = JSON.stringify(
+                {
+                    "PartNumber": PartNumber,
+                    "PartName": PartName,
+                    "PartSpec": PartSpec,
+                    "PartUnitName": PartUnitName,
+                    "QtyPerUnit": QtyPerUnit,
+                    "CategoryName": CategoryName
+                });
+
+              $.ajax({
+                  url: '@Url.Action("Create","Parts")',
+                  type: "POST",
+                  data: Jsondata,
+                  dataType: 'json', 
+                  contentType: 'application/json; charset=utf-8'
+              }).done(function (data) {
+                  console.log(data)
+                  alert("成功")
+                  }).fail(function (err) {
+                      alert("失敗")
+                  })
+
+        })
+
+        //圖片切換
+        function readURl(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#partImg').attr('src', e.target.result);
+
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#File1").change(function () {
+            readURl(this);
+        });
+
+
+
+
+
         $(document).ready(function () {
             $('#dataTable').DataTable();
         });
@@ -150,12 +382,12 @@
                 cancelButtonColor: '#d33',
                 cancelButtonText: '取消',
                 confirmButtonText: '刪除',
-               
+
             }).then((result) => {
                 if (result.value) {
-                   
+
                     let id1 = this.dataset.wc;
-                  
+
                     $.ajax({
                         url: `@Url.Action("Delete", "Parts")`,
                         type: 'POST',
@@ -178,7 +410,7 @@
                         });
 
 
-                    
+
                 }
             })
         });

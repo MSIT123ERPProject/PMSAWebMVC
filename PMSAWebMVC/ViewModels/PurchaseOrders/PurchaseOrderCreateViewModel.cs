@@ -116,8 +116,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         {
             using (PMSAEntities db = new PMSAEntities())
             {
+                //有可能是不同來源
                 var prq = from pr in db.PurchaseRequisition
-                          where pr.ProcessStatus == "N" && pr.EmployeeID == emp.EmployeeID
+                          where pr.ProcessStatus == "N"
+                          //where pr.ProcessStatus == "N" && pr.EmployeeID == emp.EmployeeID
                           select new PurchaseRequisitionItem
                           {
                               PurchaseRequisitionIdDisplay = pr.PurchaseRequisitionID,

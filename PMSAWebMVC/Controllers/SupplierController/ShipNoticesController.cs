@@ -96,6 +96,7 @@ namespace PMSAWebMVC.Controllers
             List<shipOrderViewModel> qlist = query.ToList();
             for (int i = 0; i < qlist.Count(); i++)
             {
+                ShipNoticesUtilities utilities = new ShipNoticesUtilities();
                 string d = utilities.GetStatus(qlist[i].PurchaseOrderStatus);
                 qlist[i].PurchaseOrderStatusDisplay = d;
             }

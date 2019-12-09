@@ -145,23 +145,23 @@
                 <hr />
                 <div class="modal-body">
 
-                    <form id="addForm">
+                    <form id="addForm" >
                         @Html.AntiForgeryToken()
                         <div class="form-group">
                             <label class="required" for="PartNumber">@Html.DisplayNameFor(model => model.PartNumber)</label>
-                            <input type="text" class="form-control" id="PartNumber" name="da" onblur="strcode()">
+                            <input type="text" class="form-control" id="PartNumber" name="da" >
                             <span id="code2" style="color:red"></span>
                         </div>
 
                         <div class="form-group">
                             <label class="required" for="PartName">@Html.DisplayNameFor(model => model.PartName)</label>
-                            <input type="text" class="form-control" id="PartName" name="da" onblur="strname()">
+                            <input type="text" class="form-control" id="PartName" name="da" >
                             <span id="name2" style="color:red"></span>
                         </div>
 
                         <div class="form-group">
                             <label class="required" for="PartSpec">@Html.DisplayNameFor(model => model.PartSpec)</label>
-                            <input type="text" class="form-control" id="PartSpec" name="dta" onblur="stradd()">
+                            <input type="text" class="form-control" id="PartSpec" name="dta">
                             <span id="add2" style="color:red"></span>
                         </div>
 
@@ -312,9 +312,9 @@
             var PartNumber = $("#PartNumber").val();
             var PartName = $("#PartName").val();
             var PartSpec = $("#PartSpec").val();
-            var PartUnitName = $("#PartUnitName2").val();
+            var PartUnitOID = $("#PartUnitName2").val();
             var QtyPerUnit = $("#QtyPerUnit").val();
-            var CategoryName = $("#CategoryName2").val();
+            var PartCategoryOID = $("#CategoryName2").val();
             
 
             var Jsondata = JSON.stringify(
@@ -322,22 +322,32 @@
                     "PartNumber": PartNumber,
                     "PartName": PartName,
                     "PartSpec": PartSpec,
-                    "PartUnitName": PartUnitName,
+                    "PartUnitOID": PartUnitOID,
                     "QtyPerUnit": QtyPerUnit,
-                    "CategoryName": CategoryName
+                    "PartCategoryOID": PartCategoryOID
                 });
-
+            var myform = document.getElementById('addForm');
+            var part = new FormData(myform);
+            //part.append("PartNumber", PartNumber);
+            //part.append("PartName", PartName);
+            //part.append("PartSpec", PartSpec);
+            //part.append("PartUnitName", PartUnitName);
+            //part.append("QtyPerUnit", QtyPerUnit);
+            //part.append("PartCategoryOID", CategoryName);
+        
               $.ajax({
-                  url: '@Url.Action("Create","Parts")',
+                  url: `@Url.Action("Create","Parts")`,
                   type: "POST",
                   data: Jsondata,
                   dataType: 'json', 
                   contentType: 'application/json; charset=utf-8'
               }).done(function (data) {
                   console.log(data)
-                  alert("成功")
+                  alert("成功");
+                  window.location.reload()
                   }).fail(function (err) {
                       alert("失敗")
+                      console.log(err);
                   })
 
         })

@@ -8,18 +8,8 @@
 }
 @Html.Raw(ViewBag.failMessage)
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>
-
-    <div class="col-sm-auto">
-        @Html.DropDownList("selectlist", new SelectList(new[]
-     {
-        new SelectListItem { Text = "未出貨", Value = "E",Selected=true },
-        new SelectListItem { Text = "未答交",Value="P",Selected=false },
-        new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
-        }, "Value", "Text"),
-     new { id = "idStatus", @class = "form-control" }
-     )
-    </div>
+    <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
     @*=================================================================*@
     @*這裡想加一個採購單編號的下拉式選單還沒成功*@
     @*<div id="idOrder" class="col-sm-auto">
@@ -33,8 +23,14 @@
 <!-- DataTables Example -->
 <div class="card mb-3">
     <div class="card-header">
-        <i class="fas fa-table"></i>
-        <h6 class="m-0 font-weight-bold text-primary">  採購單</h6>
+            @Html.DropDownList("selectlist", new SelectList(new[]
+         {
+            new SelectListItem { Text = "未出貨", Value = "E",Selected=true },
+            //new SelectListItem { Text = "未答交",Value="P",Selected=false },
+            new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
+            }, "Value", "Text"),
+         new { id = "idStatus", @class = "form-control" }
+         ) 
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -55,15 +51,14 @@
                         <th>收貨人地址</th>
                         @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
                         <th data-priority="1">出貨明細</th>
-
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th></th>
-                        <th>採購單狀態</th>
+                        <th>訂單狀態</th>
                         @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
-                        <th>採購單編號</th>
+                        <th>訂單編號</th>
                         @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>*@
                         <th>收貨人名稱</th>
                         @*<th>@Html.DisplayNameFor(model => model.ReceiverName)</th>*@
@@ -74,7 +69,6 @@
                         <th>收貨人地址</th>
                         @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
                         <th>出貨明細</th>
-
                     </tr>
                 </tfoot>
             </table>
@@ -141,11 +135,12 @@
                     targets: 0,
                     className: 'control'
                 },
-                { orderable: false, targets: [0, 1, -1] },
+                    { orderable: false, targets: [0, 1, -1] },
+                    {className:'text-center',targets:[1,2,3,4,5]}
                 ],
                 "columns": [
-                    { data: null, reder: function (data, type, row, meta) { return ""; } },
-                    { "data": "PurchaseOrderStatus" },
+                    { data: "PurchaseOrderID", render: function (data, type, row, meta) { return " "; } },
+                    { "data": "PurchaseOrderStatusDisplay" },
                     {"data" : "PurchaseOrderID" },
                     { "data": "ReceiverName" },
                     { "data": "ReceiverTel" },
@@ -155,17 +150,17 @@
                         //之後可以把修改庫存的頁面改成SWEETALERT的彈出視窗
                         "data": "PurchaseOrderID",
                         "render": function (data, type, row, meta) {
-                            if (row.PurchaseOrderStatus == "P") {
+                            @*if (row.PurchaseOrderStatus == "P") {
                                 /*未答交*/
                                 return '<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"' + 'onclick="location.href=' + "'@Url.Action( "purchaseOrderSended","ShipNotices")" + "?id=" + data + "'" + '"'+ '><i class="far fa-eye"></i></button> </div>';
-                             }
-                             else if(row.PurchaseOrderStatus == "E") {
+                             }*@
+                            if(row.PurchaseOrderStatus == "E") {
                                 /*未出貨按鈕 檢視該採購單所有的產品，並可以選擇出貨那些產品*/
-                                return '<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯"' + 'onclick="location.href=' + "'@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data +"'"+'"'+ '><i class="far fa-edit"></i></button> </div>';
+                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯" onclick="location.href='@Url.Action( "UnshipOrderDtl","ShipNotices")?PurchaseOrderID=${data}'"><i class="far fa-edit"></i></button> </div>`;
                             }
                             else {
                                 /*已出貨*/
-                                return '<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="明細"' + 'name="shipped"' + `id="${data}"` + 'onclick="location.href=' + "'@Url.Action( "UnshipOrderDtl","ShipNotices")" + "?PurchaseOrderID=" + data+"'" + '"' +'><i class="far fa-file-alt"></i></button></div>';
+                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯" name="shipped" id="${data}" onclick="location.href='@Url.Action( "UnshipOrderDtl","ShipNotices")?PurchaseOrderID=${data}'"><i class="far fa-file-alt"></i></button> </div>`;
                             }
                         }
                     }

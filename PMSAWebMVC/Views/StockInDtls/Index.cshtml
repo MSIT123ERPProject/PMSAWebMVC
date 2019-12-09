@@ -1,0 +1,63 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.StockInDtl>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.StockInQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EXP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InventoryDtl.WarehouseCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Part.PartName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StockIn.PurchaseOrderReceiveID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.StockInQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EXP)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InventoryDtl.WarehouseCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Part.PartName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StockIn.PurchaseOrderReceiveID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.StockInDtlOID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.StockInDtlOID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.StockInDtlOID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -4,7 +4,7 @@
 /*hover*/
 table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
     /*background-color: whitesmoke;*/
-    background-color: rgb(217, 236, 255);
+    background-color: #dcf0ff;
 }
 
     table.dataTable.hover tbody tr:hover.selected, table.dataTable.display tbody tr:hover.selected {
@@ -88,7 +88,7 @@ table.dataTable.display tbody tr:hover > .sorting_2, table.dataTable.order-colum
 
 table.dataTable.display tbody tr:hover > .sorting_3, table.dataTable.order-column.hover tbody tr:hover > .sorting_3 {
     /*background-color: #eeeeee;*/
-    background-color: rgb(217, 236, 255);
+    background-color: #dcf0ff;
 }
 
 table.dataTable.display tbody tr:hover.selected > .sorting_1, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_1 {
@@ -129,7 +129,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:b
     font-style: normal;
     line-height: 14px;
     content: '\f0fe';
-    color: #4285f4;
+    color: #27a2fc;
     background-color: transparent;
     /*background-color: #0275d8;*/
 }
@@ -156,7 +156,7 @@ table.dataTable.dtr-column > tbody > tr > th.control:before {
     font-style: normal;
     line-height: 14px;
     content: '\f0fe';
-    color: #4285f4;
+    color: #27a2fc;
     background-color: transparent;
     /*background-color: #0275d8;*/
 }
@@ -164,7 +164,7 @@ table.dataTable.dtr-column > tbody > tr > th.control:before {
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before,
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
     content: '\f146';
-    color: #4285f4;
+    color: #27a2fc;
     background-color: transparent;
     /*background-color: #d33333;*/
 }
@@ -172,7 +172,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before
 table.dataTable.dtr-column > tbody > tr.parent td.control:before,
 table.dataTable.dtr-column > tbody > tr.parent th.control:before {
     content: '\f146';
-    color: #4285f4;
+    color: #27a2fc;
     background-color: transparent;
     /*background-color: #d33333;*/
 }

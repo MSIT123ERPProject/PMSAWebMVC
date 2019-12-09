@@ -20,6 +20,8 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         }
         public string PurchaseOrderID { get; set; }
         public string PurchaseOrderStatus { get; set; }
+        //此屬性為給TABLE顯示狀態用
+        public string PurchaseOrderStatusDisplay { get; set; }
         public string ReceiverName { get; set; }
         public string ReceiverTel { get; set; }
         public string ReceiverMobile { get; set; }
@@ -92,5 +94,19 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         //此欄位是要供應商調整出貨數量用
         [Display(Name = "出貨數量")]
         public int Qty { get; set; }
+    }
+    //寄信用的MODEL
+    public class OrderDtlForMail {
+        public string supplierCode { get; set; }
+        public int ShipNoticeOID { get; set; }
+        public string ShipNoticeID { get; set; }
+        [Display(Name = "料件名稱")]
+        public string PartName { get; set; }
+        [Display(Name = "料件編號")]
+        public string PartNumber { get; set; }
+        [Display(Name = "已出貨數量")]
+        public int ShipQty { get; set; }
+        [Display(Name = "實際出貨日期")]
+        public DateTime? ShipDate { get; set; }
     }
 }

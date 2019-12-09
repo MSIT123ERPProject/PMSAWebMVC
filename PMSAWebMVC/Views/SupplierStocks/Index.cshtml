@@ -5,54 +5,28 @@
 }
 
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <h2>庫存管理</h2>&nbsp;
+    <h2>庫存管理</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
 </nav>
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <i class="fas fa-table"></i>
-        <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
-    </div>
+<div class="card mb-3">
+    @*<div class="card-header py-3">
+            <i class="fas fa-table"></i>
+            <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
+        </div>*@
     <div class="card-body">
-        <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
-            <thead>
-                <tr  class="bg-primary text-white text-center">
-                    <th data-priority="1"></th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.SourceListID)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PartNumber)
-                    </th>
-                    <th>
-                        料件名稱
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.QtyPerUnit)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UnitPrice)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UnitsOnOrder)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UnitsInStock)
-                    </th>
-                    <th>安全庫存量</th>
-                    <th data-priority="1">
-                        調整庫存
-                    </th>
-                </tr>
-            </thead>
-            @*<tfoot>
-                    <tr>
-                        <th></th>
+        <div class="table-responsive">
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
+                <thead>
+                    <tr class="bg-primary text-white text-center">
+                        <th data-priority="1"></th>
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            料件名稱
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.QtyPerUnit)
@@ -66,13 +40,46 @@
                         <th>
                             @Html.DisplayNameFor(model => model.UnitsInStock)
                         </th>
+                        <th>安全庫存量</th>
                         <th data-priority="1">
                             調整庫存
                         </th>
                     </tr>
-                </tfoot>*@
-        </table>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th data-priority="1"></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SourceListID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            料件名稱
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.QtyPerUnit)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitPrice)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitsOnOrder)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UnitsInStock)
+                        </th>
+                        <th>安全庫存量</th>
+                        <th data-priority="1">
+                            調整庫存
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
+    <div class="card-footer small text-muted"></div>
 </div>
 @section scripts
         {
@@ -113,22 +120,38 @@
                  className: 'control'
              },
                  { orderable: false, targets: [0, 1, -1] },
-                 { targets: [4, 5, 6, 7, 8], className: 'dt-body-right'}
+                 //{ targets: [4, 5, 6, 7, 8], className: 'dt-body-right' },
+                 { className: 'text-left', targets: [3] },
+                 { className: 'text-center', targets: [1,2,4,5,6,7,8] },
              ],
              "columns": [
                  {
                      "data": null, render: function (d) {
-                         if (d == null) { return "-"; }
-                         return "";
+                         return " ";
                      }
                  },
                  { "data": "SourceListID", orderable: true },
                  { "data": "PartNumber" },
                  { "data": "PartName" },
-                         { "data": "QtyPerUnit" },
+                        { "data": "QtyPerUnit" },
                         { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
                         { "data": "UnitsOnOrder" },
-                        { "data": "UnitsInStock" },
+                 {
+                     "data": "UnitsInStock",
+                     render: function (data, type, row, meta) {
+                         let color = 'black';
+                         let icon;
+                         if (row.UnitsInStock > row.SafetyQty) {
+                             color = 'blue';
+                             icon = `<i class="fas fa-thumbs-up"></i>`;
+                         }
+                         else {
+                             color = 'red';
+                             icon = `<i class="fas fa-radiation"></i>`;
+                         }
+                         return `<div style="color:${color}">${icon}${data}</div>`;
+                     }
+                 },
                         {
                          "data": "SafetyQty",
                           orderable: false
@@ -141,9 +164,9 @@
                             }
                         },
                     ],
-                    fixedColumns: {
-                        leftColumns: 2,
-             },
+             //       fixedColumns: {
+             //           leftColumns: 2,
+             //},
                       language: {
                         url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
                     },
@@ -159,13 +182,14 @@
             $(document).on('click', "button[name='UpdateStock']", async function () {
                 let td = $(this).parent('td');
                 let tr = td.parent('tr');
+                console.log(tr);
                 let stock = tr.children('td:nth-child(8)').text();
                 console.log(stock);
                 let id = $(this).prop('id');
                 const { value: formValues } = await Swal.fire({
                     title: '庫存數量修改',
                     html:
-                        '<Label swal-label>PartNumber</Label>' +
+                        //'<Label swal-label>請輸入數量</Label>' +
                         `<input id="stock" class="swal2-input" value="${stock}">`,
                     showCancelButton: true,
                     cancelButtonColor: '#d33',

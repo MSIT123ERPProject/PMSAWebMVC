@@ -1,0 +1,369 @@
+﻿/*------------------------------------
+          Slick
+------------------------------------*/
+.u-slick {
+	position: relative;
+}
+
+.u-slick--transform-off.slick-transform-off .slick-track {
+	-webkit-transform: none !important;
+	transform: none !important;
+}
+
+/*------------------------------------
+          Slick Equal Height
+------------------------------------*/
+.u-slick--equal-height .slick-list {
+	height: 100%;
+}
+
+.u-slick--equal-height .slick-track {
+	display: -ms-flexbox;
+	display: flex;
+	height: 100%;
+}
+
+	.u-slick--equal-height .slick-track .slick-slide {
+		display: -ms-flexbox;
+		display: flex;
+		height: auto;
+	}
+
+/*------------------------------------
+          Slick Gutters
+        ------------------------------------*/
+/* Gutters X */
+.u-slick--gutters-1 {
+	margin-left: -.25rem;
+	margin-right: -.25rem;
+}
+
+	.u-slick--gutters-1 .slick-slide {
+		margin-left: .25rem;
+		margin-right: .25rem;
+	}
+
+.u-slick--gutters-2 {
+	margin-left: -.5rem;
+	margin-right: -.5rem;
+}
+
+	.u-slick--gutters-2 .slick-slide {
+		margin-left: .5rem;
+		margin-right: .5rem;
+	}
+
+.u-slick--gutters-3 {
+	margin-left: -.9375rem;
+	margin-right: -.9375rem;
+}
+
+	.u-slick--gutters-3 .slick-slide {
+		margin-left: .9375rem;
+		margin-right: .9375rem;
+	}
+
+/*------------------------------------
+          Slick Zoom
+        ------------------------------------*/
+.u-slick-zoom .slick-slide .u-slick-zoom__slide {
+	-webkit-transform: scale(0.9);
+	transform: scale(0.9);
+	transition: all 0.5s ease-in-out;
+}
+
+.u-slick-zoom .slick-center .u-slick-zoom__slide {
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
+/*------------------------------------
+          Slick Arrows
+        ------------------------------------*/
+.u-slick__arrow {
+	z-index: 1;
+	line-height: 0;
+	display: inline-block;
+	color: #377dff;
+	background-color: rgba(55, 125, 255, 0.1);
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 0.875rem;
+	cursor: pointer;
+	transition: 0.3s ease-in-out;
+}
+
+	.u-slick__arrow:hover {
+		color: #fff;
+		background-color: #377dff;
+	}
+
+.u-slick__arrow-inner:before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.u-slick__arrow-inner--left {
+	left: 0;
+}
+
+.u-slick__arrow-inner--right {
+	right: 0;
+}
+
+/* Flat */
+.u-slick__arrow--flat {
+	color: #fff;
+	background-color: rgba(55, 125, 255, 0.8);
+}
+
+/* Offset */
+@media (min-width: 992px) {
+	.u-slick__arrow--offset.u-slick__arrow-inner--left {
+		left: -2.5rem;
+	}
+
+	.u-slick__arrow--offset.u-slick__arrow-inner--right {
+		right: -2.5rem;
+	}
+}
+
+/* Vertical Center Alignment */
+.u-slick__arrow-centered--y {
+	position: absolute;
+	top: 50%;
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+}
+
+/*------------------------------------
+          Slick Arrows Classic
+        ------------------------------------*/
+.u-slick__arrow-classic {
+	z-index: 1;
+	line-height: 0;
+	display: inline-block;
+	color: #fff;
+	background-color: rgba(255, 255, 255, 0.1);
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 0.875rem;
+	cursor: pointer;
+	transition: 0.3s ease-in-out;
+}
+
+	.u-slick__arrow-classic:hover {
+		color: #fff;
+		background-color: #377dff;
+	}
+
+.u-slick__arrow-classic-inner:before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.u-slick__arrow-classic-inner--left {
+	left: 0;
+}
+
+.u-slick__arrow-classic-inner--right {
+	right: 0;
+}
+
+/*------------------------------------
+          Slick Paging
+        ------------------------------------*/
+.u-slick__paging {
+	position: absolute;
+	bottom: 2rem;
+	right: 0;
+	padding-left: .9375rem;
+	padding-right: .9375rem;
+}
+
+	.u-slick__paging .u-paging__current {
+		color: #fff;
+		font-size: 3.875rem;
+		font-weight: 300;
+		line-height: 1;
+	}
+
+	.u-slick__paging .u-paging__divider {
+		position: relative;
+		margin-right: .5rem;
+		margin-left: .25rem;
+	}
+
+		.u-slick__paging .u-paging__divider::before {
+			position: absolute;
+			top: 0;
+			left: 0;
+			color: rgba(255, 255, 255, 0.7);
+			font-size: 0.875rem;
+			content: "\002f";
+		}
+
+	.u-slick__paging .u-paging__total {
+		font-size: 1.5rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+/*------------------------------------
+          Slick Pagination
+        ------------------------------------*/
+.u-slick__pagination {
+	padding-left: 0;
+}
+
+	.u-slick__pagination:not(.u-slick__pagination--block) {
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-pack: center;
+		justify-content: center;
+		-ms-flex-align: center;
+		align-items: center;
+		pointer-events: none;
+	}
+
+	.u-slick__pagination li {
+		display: -ms-flexbox;
+		display: flex;
+		pointer-events: all;
+		margin: 0 .25rem;
+		cursor: pointer;
+	}
+
+		.u-slick__pagination li span {
+			display: inline-block;
+			width: .9375rem;
+			height: .9375rem;
+			box-sizing: border-box;
+			background-color: #377dff;
+			border: 3px solid transparent;
+			border-radius: 50%;
+			-webkit-transform: scale(0.6);
+			transform: scale(0.6);
+			transition: 0.3s ease-in-out;
+		}
+
+		.u-slick__pagination li.slick-active span {
+			background-color: transparent;
+			border-color: #377dff;
+			-webkit-transform: scale(0.9);
+			transform: scale(0.9);
+		}
+
+/* White Version */
+.u-slick__pagination--white li span {
+	background-color: #fff;
+}
+
+.u-slick__pagination--white li.slick-active span {
+	border-color: #fff;
+}
+
+/* Block */
+.u-slick__pagination--block li {
+	display: block;
+}
+
+/* Vertical Center Alignment */
+.u-slick__pagination-centered--y {
+	position: absolute;
+	top: 50%;
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+}
+
+@media (min-width: 992px) {
+	/* Vertical Option */
+	.u-slick__pagination--vertical-lg li {
+		display: block;
+		margin: .25rem 0;
+	}
+	/* Vertical Option Positions */
+	.u-slick__pagination--vertical-pos-v1-lg {
+		position: absolute;
+		top: 50%;
+		left: -15.7%;
+		-webkit-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+}
+
+/*------------------------------------
+          Slick Pagination Modern
+        ------------------------------------*/
+.u-slick--pagination-modern {
+	width: 100%;
+	max-width: 12.5rem;
+}
+
+	.u-slick--pagination-modern .slick-slide {
+		cursor: pointer;
+		opacity: 0.7;
+		-webkit-transform: scale(0.7);
+		transform: scale(0.7);
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		transition: 0.3s ease-in-out;
+	}
+
+	.u-slick--pagination-modern .slick-current {
+		opacity: 1;
+		-webkit-transform: scale(1);
+		transform: scale(1);
+	}
+
+/*------------------------------------
+          Slick Pagination Interactive
+        ------------------------------------*/
+.u-slick--pagination-interactive__text {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.u-slick--pagination-interactive .slick-slide {
+	cursor: pointer;
+	color: #fff;
+	background: rgba(255, 255, 255, 0.1);
+	transition: 0.3s;
+}
+
+	.u-slick--pagination-interactive .slick-slide:hover {
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+		.u-slick--pagination-interactive .slick-slide:hover.slick-center {
+			background: #fff;
+		}
+
+.u-slick--pagination-interactive .slick-center {
+	background: #fff;
+}
+
+	.u-slick--pagination-interactive .slick-center .u-slick--pagination-interactive__title {
+		color: #377dff;
+	}
+
+	.u-slick--pagination-interactive .slick-center .u-slick--pagination-interactive__text {
+		color: #77838f;
+	}
+
+.slick-prev {
+	left: -5px;
+}
+
+.slick-next {
+	right: -5px;
+}
+
+	.slick-prev:before,
+	.slick-next:before {
+		color: #27A2FC;
+	}

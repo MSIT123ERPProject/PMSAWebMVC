@@ -3,11 +3,14 @@
     ViewBag.Title = "UnshipOrderDtl";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>出貨明細</h2>
 @if (TempData["message"] != null)
 {
     @Html.Raw(TempData["message"])
 }
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <h2>出貨商品明細管理</h2>
+    <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
+</nav>
 @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
 {
     <div class="card mb-3">
@@ -22,11 +25,11 @@
     </div>
     if (Model.PurchaseOrderStatus != "S")
     {
-        <div>
-            <div margin: 3px>
-                <input type="submit" id="idbutton" class="btn btn-success btn-block" value="出貨"  />
-            </div>
+    <div class="form-group">
+        <div class="d-flex justify-content-center">
+            <button type="submit" id="idbutton" class="btn btn-success btn-block" value="出貨"><i class="fas fa-shipping-fast"></i>出貨</button>
         </div>
+    </div>
     }
 }
 @section scripts{

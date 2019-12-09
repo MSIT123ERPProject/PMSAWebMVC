@@ -3,13 +3,15 @@
 
     // Toggle the side navigation
     $("#sidebarToggle").on('click', function (e) {
+        //阻止事件冒泡，修正DataTables在Sidebar縮小後跑版，另外其他內容也會在縮小後跑版
+        e.stopPropagation();
         e.preventDefault();
         $(".sidebar").toggleClass("toggled");
         $("#userwrap").toggleClass("d-none");
         $("#userwrap").toggleClass("d-block");
         $("#navbrand").toggleClass("d-none");
         $("#navbrand").toggleClass("d-block");
-        if ($(".sidebar").width() < 150) {
+        if ($(".sidebar").width() < 140) {
             $(".userwrap").addClass("d-none");
             $(".userwrap").removeClass("d-block");
             $("#navbrand").addClass("d-none");
@@ -18,6 +20,7 @@
             $(".userwrap").removeClass("d-none");
             $(".userwrap").addClass("d-block");
         }
+        $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
     });
     //mobile
     window.mobileAndTabletcheck = function () {
@@ -30,10 +33,14 @@
         $(".userwrap").removeClass("d-none");
         $(".userwrap").addClass("d-block");
         $("#sidebarToggleMobile").on('click', function (e) {
+            e.stopPropagation();
             e.preventDefault();
             $(".sidebar").toggleClass("toggled");
             $(".userwrap").removeClass("d-none");
             $(".userwrap").addClass("d-block");
+            $("#navbrand").addClass("d-block");
+            $("#navbrand").removeClass("d-none");
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
         });
     } else {
         $(".userwrap").removeClass("d-none");
@@ -42,7 +49,11 @@
     resizeNav();
     function resizeNav() {
         $("#sidebarToggle").removeClass("d-none");
-        if ($(window).width() > 580 && $(".sidebar").width() < 150) {
+        if ($(window).width() <= 580) {
+            $(".sidebar").removeClass("toggled");
+            $(".sidebar").addClass("toggled");
+        }
+        if (($(window).width() > 580 && $(".sidebar").width() < 140) || ($(window).width() <= 580)) {
             $(".userwrap").addClass("d-none");
             $(".userwrap").removeClass("d-block");
             $("#navbrand").addClass("d-none");
@@ -56,9 +67,9 @@
     }
     $(window).on('resize', function () {
         resizeNav();
-        setTimeout(function () {
-            resizeNav();
-        }, 150);
+        //setTimeout(function () {
+        //    resizeNav();
+        //}, 150);
     });
     // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
     $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function (e) {
@@ -66,6 +77,7 @@
             var e0 = e.originalEvent,
                 delta = e0.wheelDelta || -e0.detail;
             this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+            e.stopPropagation();
             e.preventDefault();
         }
     });
@@ -78,7 +90,6 @@
         } else {
             $('.scroll-to-top').fadeOut();
         }
-
         //if (scrollDistance < 60) {
         //    $('.navbar').fadeIn();
         //} else {

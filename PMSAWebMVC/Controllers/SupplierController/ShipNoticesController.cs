@@ -487,7 +487,7 @@ namespace PMSAWebMVC.Controllers
         {
             string supAccID = supplierAccount;
             string shipDtlMail = $"<h2>出貨單號:{shipNotice.FirstOrDefault().ShipNoticeID}</h2>";
-            shipDtlMail += $"<table><thead><tr><th>出貨商品明細</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
+            shipDtlMail += $"<table><thead><tr><th>出貨商品明細流水號</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
             foreach (var snd in shipNotice)
             {
                 DateTime shipDate = (DateTime)snd.ShipDate;

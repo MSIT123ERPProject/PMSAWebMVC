@@ -183,7 +183,6 @@
                         fontSize: "20px"
                     }
                 },
-
             }); 
             ////////////////////////////////////
         //庫存不足料件圖 column chart
@@ -284,16 +283,10 @@
                 let percentage = [];
                 let partname = [];
                 let pie = [];
-<<<<<<< HEAD
-                console.log(datas);
-=======
->>>>>>> cde8e0ff621415942f8c198abc301ad8e3201271
                 for (var i = 0; i < datas.length; i++) {
                     percentage.push(datas[i].Percentage);
                     partname.push(datas[i].PartName);
                     pie.push({ name: datas[i].SourceListID, y: datas[i].ToalPrice });
-<<<<<<< HEAD
-                    //pie.push([datas[i].PartName, datas[i].Percentage]);
                 }
                 var chart = new Highcharts.chart({
                     chart: {
@@ -322,8 +315,8 @@
 
                     },
                 });
-=======
-                    }
+
+                    
                     if (pie[0] == null) {
                         toastr.error("查無資料", "通知");
                     }
@@ -355,7 +348,7 @@
 
                         },
                     });
->>>>>>> cde8e0ff621415942f8c198abc301ad8e3201271
+
                     chart.addSeries({
                         type: 'pie',
                         name: '商品金額比例',

@@ -15,22 +15,22 @@ namespace PMSAWebMVC.Utilities.TingHuan
 {
     public class ShipNoticesUtilities : BaseController/*, IIdentityMessageService*/
     {
-        public ShipNoticesUtilities(ApplicationUserManager userManager)
-        {
-            UserManager = userManager;
-        }
-        private ApplicationUserManager _userManager;
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager;//?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
+        //public ShipNoticesUtilities(ApplicationUserManager userManager)
+        //{
+        //    UserManager = userManager;
+        //}
+        //private ApplicationUserManager _userManager;
+        //public ApplicationUserManager UserManager
+        //{
+        //    get
+        //    {
+        //        return _userManager;//?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        //    }
+        //    private set
+        //    {
+        //        _userManager = value;
+        //    }
+        //}
         private PMSAEntities db = new PMSAEntities();
         /// <summary>
         /// 寄信功能想寫在這失敗了

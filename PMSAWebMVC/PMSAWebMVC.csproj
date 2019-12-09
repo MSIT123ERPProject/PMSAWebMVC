@@ -2371,7 +2371,6 @@
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
-<<<<<<< HEAD
     <Content Include="Views\StockIns\Create.cshtml" />
     <Content Include="Views\StockIns\Delete.cshtml" />
     <Content Include="Views\StockIns\Details.cshtml" />
@@ -2382,10 +2381,9 @@
     <Content Include="Views\StockInDtls\Details.cshtml" />
     <Content Include="Views\StockInDtls\Edit.cshtml" />
     <Content Include="Views\StockInDtls\Index.cshtml" />
-=======
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
->>>>>>> master
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

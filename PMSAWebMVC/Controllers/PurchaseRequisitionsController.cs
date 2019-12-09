@@ -523,17 +523,17 @@ namespace PMSAWebMVC.Controllers
         }
 
         //下拉選單
-        public ActionResult getsuggestSupplierCode(string partNumber)
+        public ActionResult getsuggestSupplierCode()
         {
             //var supplierInfo = db.SourceList.Where(s=>s.PartNumber== partNumber).Select(c => new
             //{
             //    c.SupplierInfo.SupplierCode,
             //    c.SupplierInfo.SupplierName
             //});
-            var supplierInfo = db.SourceList.Where(p=>p.PartNumber==partNumber).Select(c => new
+            var supplierInfo = db.SupplierInfo.Select(c => new
             {
-                c.SupplierInfo.SupplierCode,
-                c.SupplierInfo.SupplierName
+                c.SupplierCode,
+                c.SupplierName
             });
             var sup = supplierInfo.ToList();
             return Json(supplierInfo, JsonRequestBehavior.AllowGet);

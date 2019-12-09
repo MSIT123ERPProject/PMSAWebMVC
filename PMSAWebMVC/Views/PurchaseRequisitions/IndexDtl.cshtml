@@ -209,8 +209,8 @@
                 $("#PartNumber").val(datas[0].PartNumber);
                 $("#Qty").val(datas[0].Qty);
 
-                    var opt = new Option(datas[0].SuggestSupplierName, datas[0].SuggestSupplierCode);
-                    $('#SuggestSupplierCode').append(opt)
+                    //var opt = new Option(datas[0].SuggestSupplierName, datas[0].SuggestSupplierCode);
+                    //$('#SuggestSupplierCode').append(opt)
                     $("#SuggestSupplierCode").val(datas[0].SuggestSupplierCode);
                 $('#DateRequired').children("input").val(datas[0].DateRequired);
 
@@ -254,7 +254,7 @@
             }
         });
 
-         @*//下拉選單
+         //下拉選單
         loadSuggestSupplierCode();
         async function loadSuggestSupplierCode() {
             
@@ -267,7 +267,7 @@
                 var opt = new Option(SupplierName, SupplierCode);
                 $('#SuggestSupplierCode').append(opt)
             }
-        }*@
+        }
 
     </script>
 

@@ -1,5 +1,5 @@
-﻿using PMSAWebMVC.Models;
-using PMSAWebMVC.Controllers;
+﻿using PMSAWebMVC.Controllers;
+using PMSAWebMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,93 +14,62 @@ namespace PMSAWebMVC.Controllers
     public class SupplierStocksController : BaseController
     {
         private PMSAEntities db;
-        private string SupplierCode;
-        private string SupplierAccount;
+        private string supplierCode;
+        private string supplierAccount;
         public SupplierStocksController()
         {
             db = new PMSAEntities();
-            SupplierCode = "S00001";
-            SupplierAccount = "SE00001";
+            //supplierCode = "S00001";
+            //supplierAccount = "SE00001";
         }
+        //進入庫存管理頁面方法
         public ActionResult Index()
         {
-            SupplierInfo supplierInfo = db.SupplierInfo.Find(SupplierCode);
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
+            SupplierInfo supplierInfo = db.SupplierInfo.Find(supplierCode);
             ViewBag.supplierName = supplierInfo.SupplierName;
-            ViewBag.supplierCode = SupplierCode;
+            ViewBag.supplierCode = supplierCode;
             return View();
         }
-        // GET: SupplierStocks
-        [HttpPost]
-        public ActionResult Index([Bind(Include = "PartNumber")] SourceList SourceList)
-        {
-            var qeury = from sl in db.SourceList.AsEnumerable()
-                        where sl.PartNumber == SourceList.PartNumber
-                        select sl;
-            ViewBag.supplierCode = SupplierCode;
-            return View(qeury);
-        }
+        //dataTable取得顯示資料的方法
         [HttpGet]
         public JsonResult GetSourcelistBySupplierCode(string supplierCode)
         {
             //注意  :   dataTable只接受Enumerable類別 ，所以要加上AsEnumerable()方法
             var query = from sl in db.SourceList.AsEnumerable()
+                        join pt in db.Part on sl.PartNumber equals pt.PartNumber
                         where sl.SupplierCode == supplierCode
-                        select new SourceList
+                        select new
                         {
                             SourceListID = sl.SourceListID,
                             PartNumber = sl.PartNumber,
+                            PartName = pt.PartName,
                             QtyPerUnit = sl.QtyPerUnit,
                             UnitPrice = sl.UnitPrice,
                             UnitsOnOrder = sl.UnitsOnOrder,
-                            UnitsInStock = sl.UnitsInStock
+                            UnitsInStock = sl.UnitsInStock,
+                            SafetyQty =sl.SafetyQty
                         };
-            return Json(new { data = query }, JsonRequestBehavior.AllowGet);
+            var json = new { data = query };
+            var s = query.ToList();
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
-        // GET: SupplierStocks/Details/5
-        public ActionResult Details(string id)
+        //sweetalert2 修改庫存視窗用ajax方法
+        [HttpPost]
+        public JsonResult UpdateStock([Bind(Include = "UnitsInStock,PartNumber,SourceListOID,SourceListID")] SourceList SourceList)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (SourceList.SourceListID ==null) {
+                return Json( new { status = "savefail",message="修改失敗" }, JsonRequestBehavior.AllowGet);
             }
-            SourceList supplierStock = db.SourceList.Find(id);
-            if (supplierStock == null)
-            {
-                return HttpNotFound();
-            }
-            return View(supplierStock);
-        }
-        // GET: SupplierStocks/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SourceList SourceList = db.SourceList.Find(id);
-            if (SourceList == null)
-            {
-                return HttpNotFound();
-            }
-            return View(SourceList);
-        }
-        [HttpGet]
-        //[ValidateAntiForgeryToken]
-        public ActionResult changeUnitsInStock([Bind(Include = "UnitsInStock,PartNumber,SourceListOID,SourceListID")] SourceList SourceList)
-        {
-            int? UnitsInStock = SourceList.UnitsInStock;
-            if (UnitsInStock == null || UnitsInStock <= 0)
-            {
-                return Json( "<script>Swal.fire({ title: '庫存數量不得小於零', showClass: {  popup: 'animated fadeInDown faster' }, hideClass:      {      popup: 'animated fadeOutUp faster' }    })</script>" , JsonRequestBehavior.AllowGet);
-            }
-            SourceList a = db.SourceList.Find(SourceList.SourceListID);
-            if ( a== null ) {
-                return HttpNotFound();
-            }
-            a.UnitsInStock = (int)UnitsInStock;
-            db.Entry(a).Property(ap=>ap.UnitsInStock).IsModified =true;
+            SourceList sourceList= db.SourceList.Find(SourceList.SourceListID);
+            sourceList.UnitsInStock = SourceList.UnitsInStock;
+            db.Entry(sourceList).State = EntityState.Modified;
             db.SaveChanges();
-            return Json(new { value = true }, JsonRequestBehavior.AllowGet);
+            return Json( new {status = "saved",message ="修改成功" } ,JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {

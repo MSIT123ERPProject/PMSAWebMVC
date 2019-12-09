@@ -1,0 +1,221 @@
+﻿
+@{
+    ViewBag.Title = "SupplierHomePage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>供應商首頁</h2>
+
+
+<div>
+    <div id="container"></div>
+    <figure class="highcharts-figure">
+        <div id="container2"></div>
+    </figure>
+    <div id="SplitBubbleChart"></div>
+</div>
+
+
+@section scripts{
+    @*<script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>*@
+    <script>
+        $(document).ready(function () {
+            unitsInStockChart();
+            partTotalPrice();
+        });
+        Highcharts.setOptions({
+            chart: {
+                backgroundColor: {
+                //    linearGradient: [0, 0, 500, 500],
+                    stops: [
+                        [0, 'rgb(255,255,255)'],
+                        [1, 'rgb(240,240,255)']
+                    ]
+                },
+                width: 500,
+            }
+        });
+        //庫存不足料件圖 column chart
+        function unitsInStockChart() {
+               $.getJSON(`@Url.Action("GetStockData", "SupplierHomePage")`, function (datas) {
+                let safetyQty = [];
+                let partNumber = [];
+                   let unitsInStock = [];
+                   let unitsOnOrder = [];
+                for (let i = 0; i < datas.length; i++) {
+                    partNumber.push(datas[i].PartNumber);
+                    safetyQty.push(datas[i].SafetyQty);
+                    unitsInStock.push(datas[i].UnitsInStock);
+                    unitsOnOrder.push(datas[i].UnitsOnOrder);
+                };
+                var chart2 = new Highcharts.chart({
+                    title: { text: '安全庫存量不足' },
+                    subtitle: { text: '料件' },
+                    chart: {
+                        renderTo: 'container2',
+                        type: 'column',
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} EA</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    xAxis: {
+                        categories: partNumber
+                    },
+                    yAxis: [{
+                        min: 0,
+                        title: {
+                            text: 'UnitsInStock',
+                            align:'high'
+                        },
+                        labels: {
+                            overflow:'justify'
+                        }
+                    },
+                        {
+                            title: 'safetyQty',
+                            opposite: true
+                        }
+                    ],
+                    series: [
+                        {
+                        name:'UnitsInStock',
+                        data: unitsInStock
+                    },
+                        {
+                            name: 'safetyQty',
+                            data: safetyQty
+                        },
+                        {
+                            name: 'unitsOnOrder',
+                            data: unitsOnOrder
+                        }
+                    ],
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        vertical: '',
+                        x: -40,
+                        y: 80,
+                        floating: true,
+                        borderwidth: 1,
+                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                        shadow: true
+                    },
+                    credits: {
+                        enable: false
+                    }
+                });
+            });
+        }
+        //三個月內各料件出貨金額 PIE CHART
+        function partTotalPrice() {
+            $.getJSON(`@Url.Action("GetPartTotalPricePercentage", "SupplierHomePage")`, function (datas) {
+                let percentage = [];
+                let partname = [];
+                let pie = [];
+                for (var i = 0; i < datas.length; i++) {
+                    percentage.push(datas[i].Percentage);
+                    partname.push(datas[i].PartName);
+                    pie.push([datas[i].PartName, datas[i].Percentage]);
+                }
+                var chart = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'container',
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '各料件出貨金額百分比'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                            }
+                        }
+                    },
+                });
+                    chart.addSeries({
+                        type: 'pie',
+                        name: '',
+                        data: pie
+                    },false);
+                chart.redraw();
+            });
+        }
+        //BUBBLECHART
+        @*function SplitBubbleChart() {
+            $.getJSON(`@Url.Action("GetPartQtyByShipStatus", "SupplierHomePage")`, function (datas) {
+                
+
+                let chart3 = new Highcharts.chart({
+                    chart: {
+                        renderTo: 'SplitBubbleChart',
+                        type: 'packedbubble',
+                        height:'100%'
+                    },
+                    title: {
+                        text:'出貨數量'
+                    },
+                    tooltip: {
+                        useHTML: true,
+                        pointFormat: '<b>{point.name}:</b> {point.value}m CO<sub>2</sub>'
+                    },
+                    plotOptions: {
+                        packedbubble: {
+                            minSize: '',
+                            maxSize: '',
+                            zMin:,
+                            zMax:,
+                            layoutAlgorithm: {
+                                splitSeries: false,
+                                gravitationalConstant: 0.02
+                            },
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}',
+                                filter: {
+                                    property: 'y',
+                                    operator: '>',
+                                    value:250
+                                },
+                                style: {
+                                    color: 'black',
+                                    textOutline: 'none',
+                                    fontWeight:'normal'
+                                }
+                            }
+                        }
+                    },
+                    series: [
+
+                    ]
+                });
+            });
+        }*@
+    </script>
+}

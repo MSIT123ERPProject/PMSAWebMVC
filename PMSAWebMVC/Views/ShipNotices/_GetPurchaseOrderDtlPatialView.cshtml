@@ -1,14 +1,18 @@
-﻿@model PMSAWebMVC.ViewModels.ShipNotices.UnshipOrderDtlViewModel
+﻿@model PMSAWebMVC.ViewModels.ShipNotices.shipOrderViewModel
 
 @Html.HiddenFor(model => model.PurchaseOrderID)
 
-<table class="table table-striped table-bordered" id="dataTableUOD" cellspacing="0" style="width:100%">
+<table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTableUOD" cellspacing="0" >
     <thead>
-        <tr>
-            <th><input type="checkbox" name="chkAll" />@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().Checked)</th>
+        <tr class="bg-primary text-white text-center">
+            <th></th>
+            <th data-priority="1"><input type="checkbox" name="chkAll" class="mgc" /></th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PurchaseOrderDtlCode)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PartName)</th>
-            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().Qty)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PartNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().PurchaseQty)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItemCheckeds.FirstOrDefault().Qty)</th>
+            <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().ShipQty)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().QtyPerUnit)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().CommittedArrivalDate)</th>
             <th>@Html.DisplayNameFor(model => model.orderDtlItems.FirstOrDefault().UnitsInStock)</th>
@@ -19,31 +23,35 @@
         @for (int i = 0; i < Model.orderDtlItems.Count(); i++)
         {
             <tr>
+                <td></td>
                 <td>
-                    @if (Model.orderDtlItems.ElementAt(i).Unship)
+                    @if (Model.orderDtlItems.ElementAt(i).Unship == true)
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {
 
-                            @Html.CheckBoxFor(x => x.orderDtlItemCheckeds[i].Checked)
+                            @Html.CheckBoxFor(x => x.orderDtlItemCheckeds[i].Checked ,new { @class="mgc"})
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                            @*@Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Qty)*@
                         }
                         else
-                        { 
+                        {
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
                             @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                            @*@Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Qty)*@
                         }
                     }
                     else
-                    { 
+                    {
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Checked)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlOID)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].PurchaseOrderDtlCode)
                         @Html.HiddenFor(x => x.orderDtlItemCheckeds[i].IsEnough)
+                        @*@Html.HiddenFor(x => x.orderDtlItemCheckeds[i].Qty)*@
                     }
                 </td>
                 <td>
@@ -53,7 +61,31 @@
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).PartName)
                 </td>
                 <td>
-                    @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).Qty)
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).PartNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).PurchaseQty)
+                </td>
+                <td>
+                    @*出貨數量的調整要寫在這*@
+                    @if (Model.orderDtlItems.ElementAt(i).Unship == true)
+                    {
+                        if (Model.orderDtlItemCheckeds[i].IsEnough)
+                        {
+                            @Html.TextBoxFor(x => Model.orderDtlItemCheckeds[i].Qty, new { onkeyup = "QtyText(this)", id = "Qty", name = "Qty" })
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(x => Model.orderDtlItemCheckeds[i].Qty)
+                        }
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(x => Model.orderDtlItemCheckeds[i].Qty)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(x=>Model.orderDtlItems.ElementAt(i).ShipQty)
                 </td>
                 <td>
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).QtyPerUnit)
@@ -65,20 +97,23 @@
                     @Html.DisplayFor(x => Model.orderDtlItems.ElementAt(i).UnitsInStock)
                 </td>
                 <td>
-                    @if (Model.orderDtlItems.ElementAt(i).Unship)
+                    @if (Model.orderDtlItems.ElementAt(i).Unship == true)
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {
+                            <i class="fas fa-truck" style="color:blue"></i>
                             @Html.Label("庫存足夠")
                         }
                         else
                         {
+                            <i class="fas fa-exclamation-triangle"  style="color:red"></i>
                             @Html.Label("庫存不足")
                         }
                     }
                     else
                     {
-                            @Html.Label("已出貨")
+                        <i class="fas fa-check" style="color:darkseagreen"></i>
+                        @Html.Label("已出貨")
                     }
                 </td>
             </tr>

@@ -1,6 +1,7 @@
 ﻿$.extend(true, $.fn.dataTable.defaults, {
     responsive: true,
     fixedHeader: true,
+    ordering: false,
     "errMode": 'throw',
     "language": {
         "emptyTable": "無資料",
@@ -18,7 +19,19 @@
             "first": "第一頁",
             "previous": "上一頁",
             "next": "下一頁",
-            "last": "最後一頁"
+            "last": "最後一頁",
+            "SourceListID": "貨源清單編號",
+            "PartNumber": "料件編號",
+            "QtyPerUnit": "批量",
+            "UnitPrice": "單價",
+            "UnitsOnOrder": "訂單數量",
+            "UnitsInStock": "庫存數量",
+            "PurchaseOrderStatus": "採購單狀態",
+            "PurchaseOrderID": "採購單編號",
+            "ReceiverName": "收貨人姓名",
+            "ReceiverTel": "收貨人市話",
+            "ReceiverMobile": "收貨人手機",
+            "ReceiptAddress": "收貨人地址"
         },
         "aria": {
             "sortAscending": ": 升冪排列",

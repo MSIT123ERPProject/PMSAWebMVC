@@ -3,55 +3,30 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!-- Topbar Search -->
-@*舊的搜尋功能*@
-@*@using (Html.BeginForm("Index", "SupplierStocks", FormMethod.Post, new { @class = "d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" }))
-    {
 
-        <div class="input-group">
-            <input name="PartNumber" id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder=@PMS_Inventory_huan.Resources.AppResource.PartNumber aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    }*@
-
-@*舊的搜尋功能*@
-@*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input id="idSearh" type="text" class="form-control bg-light border-0 small" placeholder="用料號搜尋庫存" aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-
-            </div>
-        </div>
-    </form>*@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <h2>庫存管理</h2>&nbsp;
-    <h2 class="align-content-xl-end" >@ViewBag.supplierName</h2>
+    <h2>庫存管理</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
 </nav>
-<nav>
-</nav>
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
-    </div>
-
+<div class="card mb-3">
+    @*<div class="card-header py-3">
+            <i class="fas fa-table"></i>
+            <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
+        </div>*@
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary text-white text-center">
+                        <th data-priority="1"></th>
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
-
                         <th>
                             @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            料件名稱
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.QtyPerUnit)
@@ -65,18 +40,23 @@
                         <th>
                             @Html.DisplayNameFor(model => model.UnitsInStock)
                         </th>
-                        <th>
-                            @PMSAWebMVC.Resources.AppResource.Edit
+                        <th>安全庫存量</th>
+                        <th data-priority="1">
+                            調整庫存
                         </th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
+                        <th data-priority="1"></th>
                         <th>
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.PartNumber)
+                        </th>
+                        <th>
+                            料件名稱
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.QtyPerUnit)
@@ -90,56 +70,172 @@
                         <th>
                             @Html.DisplayNameFor(model => model.UnitsInStock)
                         </th>
-                        <th>
-                            @PMSAWebMVC.Resources.AppResource.Edit
+                        <th>安全庫存量</th>
+                        <th data-priority="1">
+                            調整庫存
                         </th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
+    <div class="card-footer small text-muted"></div>
 </div>
 @section scripts
         {
     <script>
-        $(document).ready(function () {
-            dataTableDisplay();
+            $(document).ready(function () {
+                dataTableDisplay();
+                ClickUpdateButton()
         });
-        function dataTableDisplay() {
-            if ($.fn.DataTable.isDataTable("#dataTable")) {
-                $("#dataTable").DataTable().destroy();
-            }
-            $('#dataTable').DataTable({
-              "ajax": {
-                    "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
-                    "type": "GET",
-                    "dataType": "json",
-                  "data": { "supplierCode": "@ViewBag.supplierCode" },
-                    "contentType": "application/json;charset=utf-8",
-                    "cache": true
-                },
-                "columns": [
-                    { "data": "SourceListID" },
-                    { "data": "PartNumber" },
-                    { "data": "QtyPerUnit" },
-                    { "data": "UnitPrice" },
-                    { "data": "UnitsOnOrder" },
-                    { "data": "UnitsInStock" },
-                    {
-                        "data": "SourceListID",
-                        "render": function (data, type, row, meta) {
-                            return '<a class="btn btn-primary"'+' href="' + "@Url.Action( "Edit","SupplierStocks")" + "?id=" + data + '">調整庫存</a>';
-                        }
-                    }
-                ],
-                "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
-                "order": [[1, "desc"]],
-            });
-            //table.on('xhr', function () {
-            //    var data = table.ajax.params();
-            //    alert('Search term was:' + data.search.value );
-            //});
+        /////////////////////////////////////////////
+        let table;
+        //dataTable顯示方法
+            function dataTableDisplay() {
+              if ($.fn.DataTable.isDataTable("#dataTable")) {
+                    $("#dataTable").DataTable().destroy();
+                }
+              //  $.fn.dataTable.ext.errMode = 'throw';
+         table=$('#dataTable').DataTable({
+                  "ajax": {
+                        "url":  `@Url.Action("GetSourcelistBySupplierCode", "SupplierStocks")`,
+                        "type": "GET",
+                        "dataType": "json",
+                      "data": { "supplierCode": "@ViewBag.supplierCode" },
+                        "contentType": "application/json;charset=utf-8",
+                        "cache": true
+                    },
+             ordering: false,
+             //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+             order: [[2, 'desc']],
+             //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+             responsive: {
+                 details: {
+                     type: 'column',
+                     target: 0
+                 }
+             },
+             columnDefs: [{
+                 targets: 0,
+                 className: 'control'
+             },
+                 { orderable: false, targets: [0, 1, -1] },
+                 //{ targets: [4, 5, 6, 7, 8], className: 'dt-body-right' },
+                 { className: 'text-left', targets: [3] },
+                 { className: 'text-center', targets: [1,2,4,5,6,7,8] },
+             ],
+             "columns": [
+                 {
+                     "data": null, render: function (d) {
+                         return " ";
+                     }
+                 },
+                 { "data": "SourceListID", orderable: true },
+                 { "data": "PartNumber" },
+                 { "data": "PartName" },
+                        { "data": "QtyPerUnit" },
+                        { "data": "UnitPrice", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+                        { "data": "UnitsOnOrder" },
+                 {
+                     "data": "UnitsInStock",
+                     render: function (data, type, row, meta) {
+                         let color = 'black';
+                         let icon;
+                         if (row.UnitsInStock > row.SafetyQty) {
+                             color = 'blue';
+                             icon = `<i class="fas fa-thumbs-up"></i>`;
+                         }
+                         else {
+                             color = 'red';
+                             icon = `<i class="fas fa-radiation"></i>`;
+                         }
+                         return `<div style="color:${color}">${icon}${data}</div>`;
+                     }
+                 },
+                        {
+                         "data": "SafetyQty",
+                          orderable: false
+                        },
+                        {
+                            "data": "SourceListID",
+                            "render": function (data, type, row, meta) {
+                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" name="UpdateStock" id="${data}"><i class="far fa-edit"></i></button></div>`;
+                                //return '<button class="btn btn-primary"' + 'name="UpdateStock"' + 'id="' + data + '">調整庫存</button>';
+                            }
+                        },
+                    ],
+             //       fixedColumns: {
+             //           leftColumns: 2,
+             //},
+                      language: {
+                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                    },
+                    "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
+                    "order": [[1, "asc"]],
+                    "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
+                    "autoWidth": false
+                });
         }
+        /////////////////////////////////////////////////////
+        //調整庫存按鈕
+        function ClickUpdateButton() {
+            $(document).on('click', "button[name='UpdateStock']", async function () {
+                let td = $(this).parent('td');
+                let tr = td.parent('tr');
+                console.log(tr);
+                let stock = tr.children('td:nth-child(8)').text();
+                console.log(stock);
+                let id = $(this).prop('id');
+                const { value: formValues } = await Swal.fire({
+                    title: '庫存數量修改',
+                    html:
+                        //'<Label swal-label>請輸入數量</Label>' +
+                        `<input id="stock" class="swal2-input" value="${stock}">`,
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: '取消',
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        return [
+                            document.getElementById('stock').value,
+                        ]
+                    }
+                })
+                    //呼叫UpdateStock方法修改庫存
+                if (formValues && parseInt(formValues[0]) >= 0) {
+                    let uisChange = parseInt(formValues[0]);
+                    let jsondata = JSON.stringify({ SourceListID: id, UnitsInStock: uisChange });
+                    $.ajax({
+                        url: "@Url.Action("UpdateStock", "SupplierStocks")",
+                        type: "POST",
+                        data: jsondata,
+                        contentType: "application/json",
+                        dataType: "JSON"
+                    }).done(function (res) {
+                        console.log(res);
+                        if (res.status == "saved") {
+                            // alert("庫存已修改");
+                            dataTableDisplay();
+                            toastr.success(res.message, "通知");
+                            //  table.row(tr).cell(':eq(6)').data(uisChange).draw();
+                        }
+                        if (res.status == "savefail") {
+                            //alert("庫存修改失敗，庫存不得小於零");
+                            toastr.error(res.message, "通知");
+                        }
+                    }).fail(function (err) {
+                        alert("ajax fail  " + err.responseJSON);
+                    });
+                }
+                else if (formValues &&parseInt(formValues[0]) < 0) {
+                    toastr.error("庫存不得小於零", "警告");
+                }
+                else {
+                    toastr.error("取消", "警告");
+                }
+            }); 
+        }
+        ///////////////////////////////////////////////////
     </script>
 }
 

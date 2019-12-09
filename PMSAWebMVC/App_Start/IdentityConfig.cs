@@ -179,6 +179,21 @@ namespace PMSAWebMVC
         }
     }
 
+    /// <summary>
+    //[Authorize(Roles = "Admin, Editor")]
+    //public class HomeController : Controller
+    //{
+    //    public ActionResult Index()
+    //    {
+    //        return View();
+    //    }
+    //    [AuthorizeDeny(Roles = "Editor")]
+    //    public ActionResult About()
+    //    {
+    //        return View();
+    //    }
+    //}
+    /// </summary>
     //https://stackoverflow.com/questions/30943232/asp-net-mvc-blacklist-for-roles-users
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class AuthorizeDenyAttribute : AuthorizeAttribute

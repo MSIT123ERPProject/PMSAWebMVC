@@ -9,7 +9,9 @@ namespace PMSAWebMVC
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                "~/Scripts/jquery-{version}.js"));
+                "~/Scripts/jquery-{version}.js",
+                "~/Scripts/jquery-migrate/jquery-migrate-3.1.0.js"
+                ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                 "~/Scripts/jquery.validate*"));
@@ -17,31 +19,39 @@ namespace PMSAWebMVC
             // 使用開發版本的 Modernizr 進行開發並學習。然後，當您
             // 準備好可進行生產時，請使用 https://modernizr.com 的建置工具，只挑選您需要的測試。
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                "~/Scripts/modernizr-*"));
+                  "~/Scripts/modernizr-*"
+                ));
 
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
-                //Bootstrap
-                "~/Content/bootstrap.css",
+                 //SB Admin
+                 //"~/Content/sbTemplate/sb-admin.css",
+                 //Bootstrap
+                 //"~/Content/bootstrap.css",
+                 "~/Content/MDB/css/bootstrap.css",
                 //MDB
                 "~/Content/MDB/css/mdb.css",
+                "~/Content/MDB/css/bootstrap.theme.css",
                 "~/Content/MDB/css/addons/datatables.min.css",
                 "~/Content/MDB/css/addons/datatables-select.min.css",
                 "~/Content/MDB/css/addons/directives.min.css",
                 "~/Content/MDB/css/addons/flag.min.css",
                 "~/Content/MDB/css/addons/jquery.zmd.hierarchical-display.min.css",
                 "~/Content/MDB/css/addons/rating.min.css",
-                "~/Content/MDB/css/modules/animations-extended.min.css",
-                //SB Admin
-                //"~/Content/sbTemplate/sb-admin.css",
+                "~/Content/MDB/css/modules/animations-extended.css",
                 //Site
-                "~/Content/Site.css"));
+                "~/Content/Site.css"
+                ));
 
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 //Bootstrap
                 "~/Scripts/MDB/popper.js",
-                "~/Scripts/bootstrap.js",
+                //"~/Scripts/bootstrap.js",
+                "~/Scripts/MDB/bootstrap.js",
+                //SB Admin
+                "~/Scripts/jquery.easing.js",
+                "~/Scripts/sbTemplate/sb-admin.js",
                 //MDB
                 "~/Scripts/MDB/mdb.js",
                 "~/Scripts/MDB/addons/datatables.min.js",
@@ -57,21 +67,25 @@ namespace PMSAWebMVC
                 "~/Scripts/MDB/modules/scrolling-navbar.min.js",
                 "~/Scripts/MDB/modules/treeview.min.js",
                 "~/Scripts/MDB/modules/wow.min.js",
-                //SB Admin
-                "~/Scripts/jquery.easing.js",
-                "~/Scripts/sbTemplate/sb-admin.js"
+                //Site
+                "~/Scripts/Site.js"
                 ));
 
             //表單
             bundles.Add(new StyleBundle("~/Content/form").Include(
                 //DatetimePicker
                 "~/Content/tempusdominus/tempusdominus-bootstrap-4.css",
-                 //pickadate
-                 "~/Content/pickadate/themes/classic.css",
-                 "~/Content/pickadate/themes/classic.date.css",
-                 "~/Content/pickadate/themes/classic.time.css",
+                //pickadate
+                "~/Content/pickadate/themes/classic.css",
+                "~/Content/pickadate/themes/classic.date.css",
+                "~/Content/pickadate/themes/classic.time.css",
                 //SweetAlert
-                "~/Content/sweetAlert/sweetalert2.css"
+                "~/Content/sweetAlert/sweetalert2.css",
+                //MagicInput
+                "~/Content/MagicInput/magic-input.css",
+                "~/Content/MagicInput/magic-input.site.css",
+                //toastr
+                "~/Content/toastr.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/form").Include(
@@ -80,32 +94,33 @@ namespace PMSAWebMVC
                 //DatetimePicker
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.js",
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.zh-TW.js",
-                 //pickadate
-                 "~/Scripts/pickadate/picker.js",
-                 "~/Scripts/pickadate/picker.date.js",
-                 "~/Scripts/pickadate/picker.time.js",
-                 "~/Scripts/pickadate/translations/zh_TW.js",
-                 //SweetAlert
-                "~/Scripts/sweetAlert/sweetalert2.all.js"
+                //pickadate
+                "~/Scripts/pickadate/picker.js",
+                "~/Scripts/pickadate/picker.date.js",
+                "~/Scripts/pickadate/picker.time.js",
+                "~/Scripts/pickadate/translations/zh_TW.js",
+                //SweetAlert
+                "~/Scripts/sweetAlert/sweetalert2.all.js",
+                //toastr
+                "~/Scripts/toastr.js"
                 ));
 
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
-                "~/Content/DataTables/css/datatables.css"
-                //"~/Content/DataTables/css/dataTables.bootstrap4.css",
-                //"~/Content/DataTables/css/responsive.bootstrap4.css",
-                //"~/Content/DataTables/css/fixedHeader.bootstrap4.css"
+                "~/Content/DataTables/css/datatables.css",
+                "~/Content/DataTables/css/dataTables.site.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
                 "~/Scripts/DataTables/datatables.js",
-                //"~/Scripts/DataTables/jquery.dataTables.js",
-                //"~/Scripts/DataTables/dataTables.bootstrap4.js",
-                //"~/Scripts/DataTables/dataTables.responsive.js",
-                //"~/Scripts/DataTables/responsive.bootstrap4.js",
-                //"~/Scripts/DataTables/dataTables.fixedHeader.js",
                 "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
                 ));
+
+            //HighCharts
+            bundles.Add(new ScriptBundle("~/bundles/HighCharts").Include(
+                "~/Scripts/highcharts/highcharts.js"
+                ));
+
         }
     }
 }

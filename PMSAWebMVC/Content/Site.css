@@ -1,7 +1,9 @@
 ﻿body, html {
     font-family: 'Microsoft JhengHei', Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     letter-spacing: 1px;
+    background-color: #f4f8f9;
 }
+
 
 /* sidebar =================*/
 .sidebar {
@@ -120,13 +122,18 @@
                 display: none;
             }
 }
+
+#sidebarToggle {
+    display: inline-block;
+}
+
 /*mobile*/
 #sidebarToggleMobile {
     position: absolute !important;
-    top: 0;
+    top: 15.4px;
+    left: 12.6px;
     display: none;
-    background-color: #3a3f48 !important;
-    font-size: 8px !important;
+    background-color: #212529 !important;
 }
 
 @media (max-width: 580px) {
@@ -142,6 +149,10 @@
     #wrapper #content-wrapper {
         width: 100%;
         margin-top: 30px;
+    }
+
+    #sidebarToggle {
+        display: none;
     }
 
     #sidebarToggleMobile {
@@ -396,14 +407,17 @@
 
 /*--------------------sidebar-brand----------------------*/
 .navbtn {
-    z-index: 9999;
-    position: absolute;
+    /*z-index: 9999;*/
+    /*display:inline-flex;*/
+    /*position: absolute;
     top: 10px;
-    left: -5px;
+    left: -5px;*/
+    /*width:90px;*/
+    /*text-align:center;*/
 }
 
 .sidebar.toggled #sidebarToggle.navbtn {
-    left: 3px;
+    /*left: 3px;*/
 }
 
 .navbtn i {
@@ -411,12 +425,12 @@
 }
 
 .sidebar-brand {
-    margin-top: 9px;
-    letter-spacing: 2px;
+    /*margin-top: 8px;
+    letter-spacing: 2px;*/
 }
 
 .sidebar-wrapper .sidebar-brand {
-    display: flex;
+    display: inline-flex;
     align-items: flex-end;
     text-align: right;
 }
@@ -500,7 +514,7 @@
         /*width: 100%;*/
         text-decoration: none;
         position: relative;
-        padding: 8px 30px 8px 20px;
+        padding: 8px 15px 8px 20px;
     }
 
         .sidebar-wrapper .sidebar-menu ul li a i {
@@ -651,122 +665,84 @@
 
 /*------scroll bar---------------------*/
 
-::-webkit-scrollbar {
+.sidebar::-webkit-scrollbar {
     width: 5px;
     height: 7px;
     position: absolute;
 }
 
-::-webkit-scrollbar-button {
+.sidebar::-webkit-scrollbar-button {
     width: 0px;
     height: 0px;
 }
 
-::-webkit-scrollbar-thumb {
+.sidebar::-webkit-scrollbar-thumb {
     background: #525965;
     border: 0px none #ffffff;
     border-radius: 0px;
 }
 
-    ::-webkit-scrollbar-thumb:hover {
+    .sidebar::-webkit-scrollbar-thumb:hover {
         background: #525965;
     }
 
-    ::-webkit-scrollbar-thumb:active {
+    .sidebar::-webkit-scrollbar-thumb:active {
         background: #525965;
     }
 
-::-webkit-scrollbar-track {
+.sidebar::-webkit-scrollbar-track {
     background: transparent;
     border: 0px none #ffffff;
     border-radius: 50px;
 }
 
-    ::-webkit-scrollbar-track:hover {
+    .sidebar::-webkit-scrollbar-track:hover {
         background: transparent;
     }
 
-    ::-webkit-scrollbar-track:active {
+    .sidebar::-webkit-scrollbar-track:active {
         background: transparent;
     }
 
-::-webkit-scrollbar-corner {
+.sidebar::-webkit-scrollbar-corner {
     background: transparent;
 }
 
-/*-----------------------------chiller-theme-------------------------------------------------*/
+/*Rounded Outline Button*/
 
-.chiller-theme .sidebar-wrapper {
-    background: #31353D;
+.btn-icon {
+    padding: 0;
+    text-align: center;
+    /*display: inline-block;*/
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 
-    .chiller-theme .sidebar-wrapper .sidebar-header,
-    .chiller-theme .sidebar-wrapper .sidebar-search,
-    .chiller-theme .sidebar-wrapper .sidebar-menu {
-        border-top: 1px solid #3a3f48;
-    }
-
-        .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
-        .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
-            border-color: transparent;
-            box-shadow: none;
-        }
-
-        .chiller-theme .sidebar-wrapper .sidebar-header .user-info .user-role,
-        .chiller-theme .sidebar-wrapper .sidebar-header .user-info .user-status,
-        .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
-        .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text,
-        .chiller-theme .sidebar-wrapper .sidebar-brand > a,
-        .chiller-theme .sidebar-wrapper .sidebar-menu ul li a,
-        .chiller-theme .sidebar-footer > a {
-            color: #818896;
-        }
-
-            .chiller-theme .sidebar-wrapper .sidebar-menu ul li:hover > a,
-            .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active > a,
-            .chiller-theme .sidebar-wrapper .sidebar-header .user-info,
-            .chiller-theme .sidebar-wrapper .sidebar-brand > a:hover,
-            .chiller-theme .sidebar-footer > a:hover i {
-                color: #b8bfce;
-            }
-
-.page-wrapper.chiller-theme.toggled #close-sidebar {
-    color: #bdbdbd;
+.btn-icon, .btn-icon-md {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
 }
 
-    .page-wrapper.chiller-theme.toggled #close-sidebar:hover {
-        color: #ffffff;
-    }
-
-.chiller-theme .sidebar-wrapper ul li:hover a i,
-.chiller-theme .sidebar-wrapper .sidebar-dropdown .sidebar-submenu li a:hover:before,
-.chiller-theme .sidebar-wrapper .sidebar-search input.search-menu:focus + span,
-.chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active a i {
-    color: #16c7ff;
-    text-shadow: 0px 0px 10px rgba(22, 199, 255, 0.5);
+.btn-icon-lg {
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 22.8px;
 }
 
-.chiller-theme .sidebar-wrapper .sidebar-menu ul li a i,
-.chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown div,
-.chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
-.chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
-    background: #3a3f48;
+.btn-icon-sm {
+    width: 23.6px;
+    height: 23.6px;
+    line-height: 23.6px;
+    font-size: 14.1px;
 }
-
-.chiller-theme .sidebar-wrapper .sidebar-menu .header-menu span {
-    color: #6c7b88;
-}
-
-.chiller-theme .sidebar-footer {
-    background: #3a3f48;
-    box-shadow: 0px -1px 5px #282c33;
-    border-top: 1px solid #464a52;
-}
-
-    .chiller-theme .sidebar-footer > a:first-child {
-        border-left: none;
-    }
-
-    .chiller-theme .sidebar-footer > a:last-child {
-        border-right: none;
-    }

@@ -66,6 +66,31 @@ namespace PMSAWebMVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 取得請購單基本資料
+        /// </summary>
+        /// <param name="id">請購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetPRInfoViewModel(string id) {
+            Repository rep = new Repository(User.Identity.GetEmployee());
+            var vm = rep.GetPRInfoViewModel(id);
+            return PartialView("_CreatePRInfoPartial", vm);
+        }
+
+        /// <summary>
+        /// 取得請購明細表
+        /// </summary>
+        /// <param name="id">請購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetPRDtlTableViewModel(string id)
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var vm = rep.GetPRDtlTableViewModel(id);
+            return PartialView("_CreatePRDtlTablePartial", vm);
+        }
+
         [HttpGet]
         public ActionResult GetPurchaseOrderDtlList(string id, string supplierCode)
         {

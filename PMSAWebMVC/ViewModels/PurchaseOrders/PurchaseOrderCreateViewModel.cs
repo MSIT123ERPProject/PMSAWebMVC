@@ -29,6 +29,22 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string Tel { get; set; }
     }
 
+    public class PRDtlTableViewModel
+    {
+        [Display(Name = "請購單明細編號")]
+        public string PurchaseRequisitionDtlCode { get; set; }
+        [Display(Name = "料件品名")]
+        public string PartName { get; set; }
+        [Display(Name = "請購數量")]
+        public int Qty { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        [Display(Name = "需求日期")]
+        public DateTime DateRequired { get; set; }
+        [Display(Name = "建議供應商")]
+        public string SupplierName { get; set; }
+    }
+
     public class SupplierItem
     {
         public string SupplierCode { get; set; }
@@ -94,13 +110,45 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         {
             this.emp = emp;
         }
+        private PMSAEntities db;
+        public Repository(Employee emp, PMSAEntities ent)
+        {
+            this.emp = emp;
+            this.db = ent;
+        }
 
-        public PRInfoViewModel GetPRInfoViewModel(string PurchaseRequisitionID)
+        /// <summary>
+        /// 查詢尚未被採購的請購明細
+        /// </summary>
+        /// <param name="purchaseRequisitionID"></param>
+        /// <returns></returns>
+        public IEnumerable<PRDtlTableViewModel> GetPRDtlTableViewModel(string purchaseRequisitionID)
+        {
+            var prdq = from prd in db.PurchaseRequisitionDtl
+                       where !(from prdRel in db.PRPORelation
+                               select prdRel.PurchaseRequisitionDtlCode).Contains(prd.PurchaseRequisitionDtlCode)
+                       select new PRDtlTableViewModel
+                       {
+                           PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,
+                           PartName = prd.Part.PartName,
+                           Qty = prd.Qty,
+                           DateRequired = prd.DateRequired,
+                           SupplierName = prd.SupplierInfo.SupplierName
+                       };
+            return prdq;
+        }
+
+        /// <summary>
+        /// 查詢請購單基本資料
+        /// </summary>
+        /// <param name="purchaseRequisitionID"></param>
+        /// <returns></returns>
+        public PRInfoViewModel GetPRInfoViewModel(string purchaseRequisitionID)
         {
             using (PMSAEntities db = new PMSAEntities())
             {
                 var infoq = from pr in db.PurchaseRequisition
-                            where pr.PurchaseRequisitionID == PurchaseRequisitionID
+                            where pr.PurchaseRequisitionID == purchaseRequisitionID
                             select new PRInfoViewModel
                             {
                                 Name = pr.Employee.Name,

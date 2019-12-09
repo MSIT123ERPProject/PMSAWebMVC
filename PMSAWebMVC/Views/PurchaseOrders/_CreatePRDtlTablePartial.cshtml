@@ -1,0 +1,38 @@
+﻿@model IEnumerable<PMSAWebMVC.ViewModels.PurchaseOrders.PRDtlTableViewModel>
+
+<table id="dataTablesPR" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
+    <thead>
+        <tr class="bg-primary text-white text-center">
+            <th></th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().PurchaseRequisitionDtlCode)</th>
+            <th data-priority="1">@Html.DisplayNameFor(model => model.FirstOrDefault().PartName)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Qty)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DateRequired)</th>
+            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().SupplierName)</th>
+            <th data-priority="1">功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td></td>
+            <td> @Html.DisplayFor(m => item.PurchaseRequisitionDtlCode)</td>
+            <td>@Html.DisplayFor(m => item.PartName)</td>
+            <td>@Html.DisplayFor(m => item.Qty)</td>
+            <td>@Html.DisplayFor(m => item.DateRequired)</td>
+            <td>@Html.DisplayFor(m => item.SupplierName)</td>
+            <td>
+                <div class="table-data-feature">
+                    <span data-toggle="modal" data-target="#detailModal" data-dtlcode="@item.PurchaseRequisitionDtlCode">
+                        <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
+                            <i class="far fa-file"></i>
+                        </button>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+

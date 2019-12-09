@@ -77,7 +77,7 @@
 </div>
 
 @*供應商資訊*@
-<div class="card mb-3">
+<div class="card mb-3 d-none">
     <div class="card-header">
         <a data-toggle="collapse" href="#collapse-supplierinfo" aria-expanded="true" aria-controls="collapse-supplierinfo" id="heading-supplierinfo" class="d-block nounderline">
             <i class="far fa-building"></i> 供應商 <i class="fa fa-chevron-down"></i>
@@ -131,11 +131,11 @@
 </div>
 
 @*明細分頁*@
-<div id="tab" class="btn-group btn-group-toggle btn-block mb-3" data-toggle="buttons">
+<div id="tab" class="btn-group btn-group-toggle btn-block mb-3 dtl-content d-none" data-toggle="buttons">
 
     <a href="#prdtl" class="btn btn-outline-primary active" data-toggle="tab">
         <input type="radio" name="options" id="optprdtl" autocomplete="off" checked>
-        請購明細 <span class="badge badge-pill badge-danger">10</span>
+        請購明細 <span class="badge badge-pill badge-danger" id="prdtlCount">10</span>
     </a>
     <a href="#podtl" class="btn btn-outline-primary" data-toggle="tab">
         <input type="radio" name="options" id="optpodtl" autocomplete="off">
@@ -144,67 +144,9 @@
 
 </div>
 
-<div class="tab-content">
+<div class="tab-content dtl-content d-none">
     @*請購明細內容*@
-    <div class="tab-pane active" id="prdtl">
-
-        <table id="dataTablesPR" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
-            <thead>
-                <tr class="bg-primary text-white text-center">
-                    <th>&nbsp;</th>
-                    <th>請購單明細編號</th>
-                    <th data-priority="1">料件品名</th>
-                    <th>請購數量</th>
-                    <th>需求日期</th>
-                    <th>建議供應商</th>
-                    <th data-priority="1">功能</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td>Nixon</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>誌慶股份有限公司</td>
-                    <td>
-                        <div class="table-data-feature">
-                            <span data-toggle="modal" data-target="#detailModal">
-                                <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
-                                    <i class="far fa-file"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>Nixon</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>邱泉順企業有限公司</td>
-                    <td>
-                        <div class="table-data-feature">
-                            <div class="table-data-feature">
-                                <span data-toggle="modal" data-target="#detailModal">
-                                    <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
-                                        <i class="far fa-file"></i>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        @*<div class="form-group">
-                <button id="btnSubmit2" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
-            </div>*@
-
-    </div>
+    <div class="tab-pane active" id="prdtl"></div>
 
     @*採購明細內容*@
     <div class="tab-pane" id="podtl">
@@ -549,35 +491,10 @@
                 $(this).tab('show');
                 $(this).addClass("active").siblings().removeClass("active");
                 //切換分頁會造成RWD不作用
-                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
+                resizeDatatable();
             });
 
-            //請購明細
-            let dtPR = $('#dataTablesPR').DataTable({
-                ordering: false,
-                fixedHeader: false,
-                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
-                order: [[2, 'desc']],
-                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
-                responsive: {
-                    details: {
-                        type: 'column',
-                        target: 0
-                    }
-                },
-                columnDefs: [{
-                    targets: 0,
-                    className: 'control',
-                    searchable: false
-                },
-                { orderable: false, targets: [0, 1, -1] },
-                ],
-            });
 
-            dtPR.on('responsive-resize', function (e, datatable, columns) {
-                //修正縮放大小不正確的問題
-                dtPR.columns.adjust().responsive.recalc();
-            });
 
             //採購明細
             let dtPO = $('#dataTablesPO').DataTable({
@@ -629,9 +546,9 @@
                 }).done(function (result) {
                     $("#btnImportPR").prop("disabled", false);
                     $(this).parent().parent().removeClass("mb-3");
-                    $('#PRInfoContainer').fadeOut(200, function () {
-                        $(this).html(result).fadeIn(200);
-                    })
+                    $('#PRInfoContainer').fadeOut(250, function () {
+                        $(this).html(result).fadeIn(250);
+                    });
                     $("#warning").remove();
                     $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
                     }).fail(function (e) {
@@ -641,9 +558,65 @@
 
             //匯入請購單資料
             $("#btnImportPR").click(function () {
-
+                 $.ajax({
+                    url: "@Url.Action("GetPRDtlTableViewModel", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: $("#SelectedPurchaseRequisitionID").val()
+                    },
+                 }).done(function (result) {
+                     //建立內容
+                     $('#prdtl').html(result);
+                     console.log($("#dataTablesPR tr").length);
+                     $('#prdtlCount').text($("#dataTablesPR tr").length);
+                     initDataTablesPR();                    
+                     //顯示內容
+                     $('.dtl-content').hide().removeClass("d-none").fadeIn(500);
+                     resizeDatatable();
+                     //暫時限制單筆請購單
+                    $('#SelectedPurchaseRequisitionID').prop("disabled", true);
+                     $("#btnImportPR").fadeOut(500, function () {
+                        $(this).remove();
+                    });
+                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
 
             });
+
+            function initDataTablesPR() {
+                //請購明細
+                let dtPR = $('#dataTablesPR').DataTable({
+                    ordering: false,
+                    fixedHeader: false,
+                    //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                    order: [[2, 'desc']],
+                    //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                    responsive: {
+                        details: {
+                            type: 'column',
+                            target: 0
+                        }
+                    },
+                    columnDefs: [{
+                        targets: 0,
+                        className: 'control',
+                        searchable: false
+                    },
+                    { orderable: false, targets: [0, 1, -1] },
+                    ],
+                });
+
+                dtPR.on('responsive-resize', function (e, datatable, columns) {
+                    //修正縮放大小不正確的問題
+                    dtPR.columns.adjust().responsive.recalc();
+                });
+            }
+
+            function resizeDatatable() {
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
+            }
 
 
         @*$('#SelectedPurchaseRequisitionID').change(function() {

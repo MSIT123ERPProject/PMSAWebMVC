@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
 using PMSAWebMVC.Services;
+using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using PMSAWebMVC.Controllers;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace PMSAWebMVC.Utilities.TingHuan
 {
@@ -37,26 +38,49 @@ namespace PMSAWebMVC.Utilities.TingHuan
         /// <param name="requesterRole"></param>
         /// <param name="purchaseOrderID"></param>
         /// <returns></returns>
-        //public Task SendAsync(IdentityMessage message)
-        //{
-        //    throw new NotImplementedException();
-        //}
-        //public ShipNoticesUtilities(ApplicationUserManager userManager)
-        //{
-        //    UserManager = userManager;
-        //}
-        //private ApplicationUserManager _userManager;
-        //public ApplicationUserManager UserManager
-        //{
-        //    get
-        //    {
-        //        return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-        //    }
-        //    private set
-        //    {
-        //        _userManager = value;
-        //    }
-        //}
+        public ShipNoticesUtilities()
+        {
+        }
+        public ShipNoticesUtilities(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+        public async Task SendMailToBuyer(List<OrderDtlForMail> shipNotice)
+        {
+            string shipDtlMail = $"<table><tr><td>{shipNotice.FirstOrDefault().ShipNoticeID}</td></tr>";
+            foreach (var snd in shipNotice)
+            {
+                DateTime shipdate = (DateTime)snd.ShipDate;
+                shipDtlMail += "<tr>";
+                shipDtlMail += $"<td>{snd.ShipNoticeID}</td><td>{snd.PartNumber}</td><td>{snd.PartName}</td><td>{snd.ShipQty}</td><td>{shipdate.ToString("yyyy/MM/dd")}</td>";
+                shipDtlMail += "</tr>";
+            }
+            shipDtlMail += "</table>";
+            //先找到你要寄信的人(這邊用供應商帳號找)，並儲存 user.Id
+            //這裡的值在資料庫的 dbo.AppUsers table
+            var user = UserManager.Users.Where(x => x.UserName == "SE00001").SingleOrDefault();
+            //user.Id 等等寄信方法第一個參數會用到
+            var userId = user.Id;
+            //string shipDtlMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\ShipNotices\..."));
+            //信裡要用的變數
+            //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            //string SupAccID = user.UserName;
+
+            //寄信
+            await UserManager.SendEmailAsync(userId, "商品出貨通知", shipDtlMail);
+        }
         ////////////////////////////////////////////////////////
         //找出該purchaseOrderID最新一筆異動資料
         public int FindPOChangedOID(string requesterRole, string purchaseOrderID)
@@ -75,7 +99,7 @@ namespace PMSAWebMVC.Utilities.TingHuan
             return pOChangedOID;
         }
         //找出該purchaseOrderDtlCode最新一筆異動資料
-        public int FindPOChangedOIDByDtlCode(string requesterRole,string purchaseOrderDtlCode)
+        public int FindPOChangedOIDByDtlCode(string requesterRole, string purchaseOrderDtlCode)
         {
             var poc = db.POChanged.Where(x => (x.RequesterRole == requesterRole) && (x.PurchaseOrderDtlCode == purchaseOrderDtlCode));
             DateTime dt = poc.FirstOrDefault().RequestDate;
@@ -92,13 +116,14 @@ namespace PMSAWebMVC.Utilities.TingHuan
         }
 
         //寄送出貨通知明細給公司採購
-        public async Task sendShipDtlMailToBuyer( List<int> shipDtlList ) {
+        public async Task sendShipDtlMailToBuyer(List<int> shipDtlList)
+        {
             string tempMail = "";
             string img = "";
             string callbackUrl = "";
             string pwd = "";
             string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
-            
+
             //寄信
             //await UserManager.SendEmailAsync(user.Id, "重設您的密碼", MailBody);
 
@@ -165,6 +190,6 @@ namespace PMSAWebMVC.Utilities.TingHuan
 
         }
 
-       
+
     }
 }

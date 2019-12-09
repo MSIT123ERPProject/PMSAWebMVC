@@ -43,6 +43,14 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public DateTime DateRequired { get; set; }
         [Display(Name = "建議供應商")]
         public string SupplierName { get; set; }
+        //請購單新增使用
+        [Display(Name = "料件批量")]
+        public int QtyPerUnit { get; set; }
+        [Display(Name = "請購料件總數")]
+        //請購數量 * 料件批量
+        public int TotalPartQty { get; set; }
+        [Display(Name = "料件編號")]
+        public string PartNumber { get; set; }
     }
 
     public class SupplierItem
@@ -118,6 +126,30 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         }
 
         /// <summary>
+        /// 查詢請購明細資料
+        /// </summary>
+        /// <param name="purchaseOrderDtlCode"></param>
+        /// <returns></returns>
+        public PRDtlTableViewModel GetPRDtlInfoViewModel(string purchaseOrderDtlCode)
+        {
+            var prdq = from prd in db.PurchaseRequisitionDtl
+                       where prd.PurchaseRequisitionDtlCode == purchaseOrderDtlCode
+                       select new PRDtlTableViewModel
+                       {
+                           PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,
+                           PartName = prd.Part.PartName,
+                           Qty = prd.Qty,
+                           DateRequired = prd.DateRequired,
+                           SupplierName = prd.SupplierInfo.SupplierName,
+                           QtyPerUnit = prd.Part.QtyPerUnit,
+                           TotalPartQty = prd.Part.QtyPerUnit * prd.Qty,
+                           PartNumber = prd.Part.PartNumber
+                       };
+            return prdq.FirstOrDefault();
+        }
+
+
+        /// <summary>
         /// 查詢尚未被採購的請購明細
         /// </summary>
         /// <param name="purchaseRequisitionID"></param>
@@ -133,7 +165,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                            PartName = prd.Part.PartName,
                            Qty = prd.Qty,
                            DateRequired = prd.DateRequired,
-                           SupplierName = prd.SupplierInfo.SupplierName
+                           SupplierName = prd.SupplierInfo.SupplierName,
+                           QtyPerUnit = prd.Part.QtyPerUnit,
+                           TotalPartQty = prd.Part.QtyPerUnit * prd.Qty,
+                           PartNumber = prd.Part.PartNumber
                        };
             return prdq;
         }

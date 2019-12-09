@@ -1,0 +1,54 @@
+﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.PRDtlTableViewModel
+
+<div class="card mb-3">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#collapse-supplierinfo" aria-expanded="true" aria-controls="collapse-supplierinfo" id="heading-supplierinfo" class="d-block nounderline">
+            <i class="far fa-building"></i> 請購明細資料 <i class="fa fa-chevron-down"></i>
+        </a>
+    </div>
+
+    <div id="collapse-supplierinfo" class="collapse show" aria-labelledby="heading-supplierinfo">
+        <div class="card-body mb-0 pb-0 pt-2">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.PurchaseRequisitionDtlCode)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.PurchaseRequisitionDtlCode)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.PartName)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.PartName)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.Qty)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.Qty)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.DateRequired)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.DateRequired)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.SupplierName)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.SupplierName)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.QtyPerUnit)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.QtyPerUnit)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.TotalPartQty)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.TotalPartQty)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

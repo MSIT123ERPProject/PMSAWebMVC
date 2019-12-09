@@ -72,10 +72,24 @@ namespace PMSAWebMVC.Controllers
         /// <param name="id">請購單編號</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult GetPRInfoViewModel(string id) {
+        public ActionResult GetPRInfoViewModel(string id)
+        {
             Repository rep = new Repository(User.Identity.GetEmployee());
             var vm = rep.GetPRInfoViewModel(id);
             return PartialView("_CreatePRInfoPartial", vm);
+        }
+
+        /// <summary>
+        /// 取得請購明細資料
+        /// </summary>
+        /// <param name="id">請購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetPRDtlInfoViewModel(string id)
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var vm = rep.GetPRDtlInfoViewModel(id);
+            return PartialView("_CreatePODtlInfoPartial", vm);
         }
 
         /// <summary>

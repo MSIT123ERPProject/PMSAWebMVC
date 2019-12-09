@@ -2364,6 +2364,7 @@
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
+    <Content Include="Views\PurchaseOrders\_CreatePODtlInfoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

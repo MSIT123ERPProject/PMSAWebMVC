@@ -261,10 +261,11 @@
             <!--Body-->
             <div class="modal-body">
 
+                <div id="modalPRDtlInfo" class="col-md-8"></div>
+
                 <button id="button-demo">簡易DEMO</button>
 
                 <button id="button-demo2">DEMO2</button>
-
 
                 <div class="row justify-content-md-center">
                     <div class="multiple-items col-md-10 u-slick--gutters-1"
@@ -438,7 +439,7 @@
                 toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
             });
 
-            //slick測試
+             //Modal已顯示
             $('#detailModal').on('shown.bs.modal', function (event) {
                 //var button = $(event.relatedTarget) // Button that triggered the modal
                 //var recipient = button.data('whatever') // Extract info from data-* attributes
@@ -449,6 +450,27 @@
                 //modal.find('.modal-body input').val(recipient)
                 $('.multiple-items').not('.slick-initialized').slick(slickOptions);
             })
+
+            //Modal顯示前
+            $('#detailModal').on('show.bs.modal', function (event) {
+                var span = $(event.relatedTarget);
+                var dtlcode = span.data('dtlcode');
+                setPRDtlInfo(dtlcode);
+            });
+
+            function setPRDtlInfo(purchaseOrderDtlCode) {
+                $.ajax({
+                    url: "@Url.Action("GetPRDtlInfoViewModel", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: purchaseOrderDtlCode
+                    },
+                }).done(function (result) {
+                    $("#modalPRDtlInfo").html(result);
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
 
             $('#detailModal').on('hidden.bs.modal', function (event) {
                 $('.multiple-items').slick('unslick');
@@ -493,8 +515,6 @@
                 //切換分頁會造成RWD不作用
                 resizeDatatable();
             });
-
-
 
             //採購明細
             let dtPO = $('#dataTablesPO').DataTable({
@@ -569,7 +589,7 @@
                      $('#prdtl').html(result);
                      console.log($("#dataTablesPR tr").length);
                      $('#prdtlCount').text($("#dataTablesPR tr").length);
-                     initDataTablesPR();                    
+                     initDataTablesPR();
                      //顯示內容
                      $('.dtl-content').hide().removeClass("d-none").fadeIn(500);
                      resizeDatatable();
@@ -585,9 +605,11 @@
 
             });
 
+
+            var dtPR;
             function initDataTablesPR() {
                 //請購明細
-                let dtPR = $('#dataTablesPR').DataTable({
+                dtPR = $('#dataTablesPR').DataTable({
                     ordering: false,
                     fixedHeader: false,
                     //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
@@ -604,7 +626,7 @@
                         className: 'control',
                         searchable: false
                     },
-                    { orderable: false, targets: [0, 1, -1] },
+                        { orderable: false, targets: [0, 1, -1] }
                     ],
                 });
 
@@ -613,11 +635,6 @@
                     dtPR.columns.adjust().responsive.recalc();
                 });
             }
-
-            function resizeDatatable() {
-                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
-            }
-
 
         @*$('#SelectedPurchaseRequisitionID').change(function() {
             supplierList.empty();

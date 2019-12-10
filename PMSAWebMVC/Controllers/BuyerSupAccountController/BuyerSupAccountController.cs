@@ -20,7 +20,7 @@ using System.Web.Mvc;
 namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 {
     [Authorize(Roles = "Buyer, Manager")]
-    public class BuyerSupAccountController : Controller
+    public class BuyerSupAccountController : BaseController
     {
         public BuyerSupAccountController()
         {
@@ -77,12 +77,81 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
             return View(m);
         }
 
+        [HttpPost]
+        public ActionResult CreateSupInfo(SupInfoViewModel SupInfoModel)
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    BuyerSupAcc_Parent p = new BuyerSupAcc_Parent();
+            //    p.SupInfoModel = SupInfoModel;
+            //    return View("Create", p);
+            //}
+
+            //檢查是否有公司可選
+            var result = getAllSupInfoNoContactOnlySupInfoToIndexAjax().Data;
+            var data = JsonConvert.SerializeObject(result);
+            if (data == "[]")
+            {
+                try
+                {
+                    //supInfo
+                    var maxsupThanOID = db.SupplierInfo.Select(x => x.SupplierInfoOID).Max() + 1;
+                    string SupCodestr = String.Format("S{0:00000}", Convert.ToDouble(maxsupThanOID));
+                    SupplierInfo supinfo = new SupplierInfo();
+                    supinfo.SupplierCode = SupCodestr;
+                    supinfo.SupplierName = SupInfoModel.SupplierName;
+                    supinfo.TaxID = SupInfoModel.TaxID;
+                    supinfo.Tel = SupInfoModel.Tel;
+                    supinfo.Email = SupInfoModel.Email;
+                    supinfo.Address = SupInfoModel.Address;
+                    supinfo.SupplierRatingOID = null;
+
+                    db.SupplierInfo.Add(supinfo);
+                    var r1 = db.SaveChanges();
+                    if (r1 > 0)
+                    {
+                        //新增公司後回到view
+                        return RedirectToAction("Create");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "填寫欄位有錯誤");
+                        BuyerSupAcc_Parent p = new BuyerSupAcc_Parent();
+                        p.SupInfoModel = SupInfoModel;
+                        return View("Create", p);
+                    }
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    var entityError = ex.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(x => x.ErrorMessage);
+                    var getFullMessage = string.Join("; ", entityError);
+                    var exceptionMessage = string.Concat(ex.Message, "errors are: ", getFullMessage);
+                    Console.WriteLine(exceptionMessage);
+                    if (!ModelState.IsValid)
+                    {
+                        BuyerSupAcc_Parent p = new BuyerSupAcc_Parent();
+                        p.SupInfoModel = SupInfoModel;
+                        return View("Create", p);
+                    }
+                }
+            }
+            //新增公司後回到view
+            return RedirectToAction("Create");
+        }
+
         // POST: BuyerSupAccount/Create
         [HttpPost]
-        public ActionResult Create(BuyerSupAcc_Parent m)
+        public async Task<ActionResult> Create(BuyerSupAcc_Parent m, string AccStatus)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "填寫欄位有錯誤");
+                    return View(m);
+                }
+
+                //==================================================================================
                 var maxThanOID = db.SupplierAccount.Select(x => x.SupplierAccountOID).Max() + 1;
 
                 string SupAccIDstr = String.Format("SE{0:00000}", Convert.ToDouble(maxThanOID));
@@ -108,21 +177,35 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                 sa.SendLetterStatus = null;
                 sa.SendLetterDate = null;
 
-                db.SaveChanges();
-
                 //user
                 ApplicationUser user = new ApplicationUser();
                 user.Id = Guid.NewGuid().ToString();
                 user.Email = m.BuyerSupAccount_CreateViewModel.Email;
                 user.PasswordHash = hashpwd;
-                UserManager.UpdateSecurityStamp(user.Id);
                 user.PhoneNumber = m.BuyerSupAccount_CreateViewModel.Mobile;
                 user.UserName = SupAccIDstr;
                 user.RealName = m.BuyerSupAccount_CreateViewModel.ContactName;
                 user.LastPasswordChangedDate = null;
 
-                UserManager.Create(user);
-                ViewBag.msg = "新增成功!";
+                var r1 = UserManager.Create(user);
+                db.SupplierAccount.Add(sa);
+                var r2 = db.SaveChanges();
+                //var r2 = UserManager.Update(user);
+                if (r1.Succeeded && r2 > 0)
+                {
+                    //判斷是否要寄信 補寄信
+                    if (AccStatus == "on")
+                    {
+                        await sendMailatIndex(user, user.UserName);
+                    }
+                    return View("Index");
+                }
+                else
+                {
+                    var err = string.Join(",", r1.Errors);
+                    ModelState.AddModelError("", err);
+                    return View("Create");
+                }
             }
             catch (DbEntityValidationException ex)
             {
@@ -142,10 +225,9 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                         Console.WriteLine(message);
                     }
                 }
-                ViewBag.msg = "對不起，新增失敗，請檢查網路連線再重試一次";
+                TempData["msg"] = "對不起，新增失敗，請檢查網路連線再重試一次";
                 return View();
             }
-            return View("Index");
         }
 
         //updateSupAccUsersAtIndex
@@ -153,7 +235,6 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
         //TODO 有SupId的地方要再比對一次是不是該登入者負責的
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeDeny(Roles = "Manager")]
         public async Task<ActionResult> updateSupAccUsersAtIndex(string SupId, bool AccStatus, bool sendResetMail)
         {
             var user = await UserManager.Users.Where(x => x.UserName.Contains("S") && x.UserName == SupId).SingleOrDefaultAsync();
@@ -173,8 +254,11 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
                 //新增Supplier
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
-                user.Roles.Clear();
-                var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+                if (!userRoles.Contains("Supplier"))
+                {
+                    user.Roles.Clear();
+                    var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+                }
                 //更新紀錄狀態的欄位
                 await AccStatusReset(SupId);
             }
@@ -271,6 +355,56 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
             return Json(sups, JsonRequestBehavior.AllowGet);
         }
 
+        public async Task<ActionResult> getManagerAllSupAccToIndexAjax()
+        {
+            List<object> sups = new List<object>();
+            var supInfo = db.SupplierInfo;
+            var supAcc = db.SupplierAccount;
+            var rating = db.SupplierRating;
+            //datatime 要轉型
+            var js = new JsonSerializerSettings()
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
+            //判斷登入者是誰顯示專屬廠商
+            string LoginAccId = User.Identity.GetUserName();
+            string LognId = User.Identity.GetUserId();
+
+            //供應商帳號
+            var usersWithSupplierAccountID = UserManager.Users.Where(x => x.UserName.Contains("S")).ToList();
+            var usersOfsupAccfromCreator = usersWithSupplierAccountID.Join(supAcc, u => u.UserName, sa => sa.SupplierAccountID, (u, sa) => new
+            {
+                UserName = u.UserName,
+                Email = u.Email,
+                RealName = u.RealName,
+                CreatorEmployeeID = sa.CreatorEmployeeID,
+                SupplierAccountID = sa.SupplierAccountID,
+                SupplierCode = sa.SupplierCode
+            }).Where(y => y.CreatorEmployeeID == LoginAccId);
+
+            foreach (var x in usersOfsupAccfromCreator)
+            {
+                var user = new
+                {
+                    SupplierCode = await supInfo.Join(supAcc, s => s.SupplierCode, sa => sa.SupplierCode, (s, sa) => new { SupplierCode = s.SupplierCode, SupplierAccountID = sa.SupplierAccountID }).Where(y => y.SupplierAccountID == x.UserName).Select(y => y.SupplierCode).FirstOrDefaultAsync(),
+                    SupplierName = await supInfo.Join(supAcc, s => s.SupplierCode, sa => sa.SupplierCode, (s, sa) => new { SupplierName = s.SupplierName, SupplierAccountID = sa.SupplierAccountID }).Where(y => y.SupplierAccountID == x.UserName).Select(y => y.SupplierName).FirstOrDefaultAsync(),
+                    SupplierAccountID = x.UserName,
+                    ContactName = x.RealName,
+                    Email = x.Email,
+                    Mobile = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
+                    Tel = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
+                    AccountStatus = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
+                    ModifiedDate = JsonConvert.SerializeObject(await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
+                    CreatorEmployeeID = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.CreatorEmployeeID).FirstOrDefaultAsync(),
+                    CreateDate = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.SupplierAccount.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
+                    SendLetterDate = await supAcc.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.SupplierAccount.Where(e => e.SupplierAccountID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
+                    LastPasswordChangedDate = await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync(), js)
+                };
+                sups.Add(user);
+            }
+            return Json(sups, JsonRequestBehavior.AllowGet);
+        }
+
         //SupCode 拿 supAcc
         public async Task<ActionResult> getAllSupAccBySupCodeToIndexAjax(string id)
         {
@@ -308,17 +442,18 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
         }
 
         //SupInfoNoContactOnlySupInfo
-        public ActionResult getAllSupInfoNoContactOnlySupInfoToIndexAjax()
+        public JsonResult getAllSupInfoNoContactOnlySupInfoToIndexAjax()
         {
-            var supInfos = db.SupplierInfo.Select(x => x.SupplierCode).ToList();
-            var supAccs = db.SupplierAccount.Select(x => x.SupplierCode).ToList();
+            var supInfos = db.SupplierInfo.Select(x => x.SupplierCode);
+            var supAccs = db.SupplierAccount.Select(x => x.SupplierCode);
             var onlySupInfos = supInfos.Except(supAccs);
 
             List<SupplierInfo> NoContactOnlySupInfo = new List<SupplierInfo>();
 
             foreach (var os in onlySupInfos)
             {
-                NoContactOnlySupInfo = db.SupplierInfo.Where(x => x.SupplierCode == os).ToList();
+                var s = db.SupplierInfo.Where(x => x.SupplierCode == os).FirstOrDefault();
+                NoContactOnlySupInfo.Add(s);
             }
             //加jsonignore加到快崩潰..用匿名物件避開TMD的導覽屬性
             List<object> list = new List<object>();
@@ -335,6 +470,10 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                     SupplierRatingOID = s.SupplierRatingOID
                 };
                 list.Add(company);
+            }
+            if (list == null)
+            {
+                return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
             }
             return Json(list, JsonRequestBehavior.AllowGet);
         }
@@ -406,8 +545,11 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
             //新增Supplier
             var userRoles = await UserManager.GetRolesAsync(user.Id);
-            user.Roles.Clear();
-            var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            if (!userRoles.Contains("Supplier"))
+            {
+                user.Roles.Clear();
+                var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            }
 
             //更新狀態欄位 user sa table
             await AccStatusReset(Id);
@@ -415,7 +557,6 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
         // 帳戶確認及密碼重設
         //用 SupplierAccountID 寄信
-        [AuthorizeDeny(Roles = "Manager")]
         private async Task sendMailatIndex(ApplicationUser user, string Id)
         {
             //sa table user table
@@ -452,8 +593,11 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
             //新增Supplier
             var userRoles = await UserManager.GetRolesAsync(user.Id);
-            user.Roles.Clear();
-            var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            if (!userRoles.Contains("Supplier"))
+            {
+                user.Roles.Clear();
+                var result = await UserManager.AddToRolesAsync(user.Id, "Supplier");
+            }
 
             await updateTable(user, supAcc);
             //更新狀態欄位 user supAcc table

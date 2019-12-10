@@ -200,8 +200,11 @@
     <Compile Include="Common\IdentityExtensions.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccSettingController\BuyerSettingController.cs" />
+    <Compile Include="Controllers\AccSettingController\SupSettingController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
+    <Compile Include="Controllers\BuyerSupAccountController\SupInfoCompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryDtlsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -210,12 +213,17 @@
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
     <Compile Include="Controllers\AdminController\RolesAdminController.cs" />
+    <Compile Include="Controllers\ReportsController\MGReportsController.cs" />
+    <Compile Include="Controllers\ReportsController\PSReportsController.cs" />
+    <Compile Include="Controllers\ReportsController\WSReportsController.cs" />
+    <Compile Include="Controllers\SourceListsController.cs" />
+    <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
+    <Compile Include="Controllers\StockInDtlsController.cs" />
+    <Compile Include="Controllers\StockInsController.cs" />
     <Compile Include="Controllers\SupplierController\OrdersController.cs" />
     <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
-    <Compile Include="Controllers\SourceListsController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
     <Compile Include="Controllers\SupplierController\SupplierStocksController.cs" />
-    <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -247,6 +255,10 @@
     <Compile Include="Metadata\SourceListDtl.cs" />
     <Compile Include="Metadata\SourceListDtlMetadata.cs" />
     <Compile Include="Metadata\SourceListMetadata.cs" />
+    <Compile Include="Metadata\StockIn.cs" />
+    <Compile Include="Metadata\StockInDtl.cs" />
+    <Compile Include="Metadata\StockInDtlMetadata.cs" />
+    <Compile Include="Metadata\StockInMetadata.cs" />
     <Compile Include="Metadata\SupplierInfo.cs" />
     <Compile Include="Metadata\SupplierInfoMetadata.cs" />
     <Compile Include="Metadata\WarehouseInfo.cs" />
@@ -406,10 +418,16 @@
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccount_CreateViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
-    <Compile Include="ViewModels\BuyerSupAccount\SupCompanyInfoViewModel.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\SupInfoViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
+    <Compile Include="ViewModels\Setting\BuyerCompInfoViewModel.cs" />
+    <Compile Include="ViewModels\Setting\BuyerSettingViewModel.cs" />
+    <Compile Include="ViewModels\Setting\Buyer_parent.cs" />
+    <Compile Include="ViewModels\Setting\SupInfoViewModel.cs" />
+    <Compile Include="ViewModels\Setting\SupSettingViewModel.cs" />
+    <Compile Include="ViewModels\Setting\Sup_parent.cs" />
     <Compile Include="ViewModels\ShipNotices\ShipNoticeViewModel.cs" />
     <Compile Include="ViewModels\UsersAdmin\UsersAdminViewModel.cs" />
   </ItemGroup>
@@ -2368,10 +2386,24 @@
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
+    <Content Include="Views\StockIns\Create.cshtml" />
+    <Content Include="Views\StockIns\Delete.cshtml" />
+    <Content Include="Views\StockIns\Details.cshtml" />
+    <Content Include="Views\StockIns\Edit.cshtml" />
+    <Content Include="Views\StockIns\Index.cshtml" />
+    <Content Include="Views\StockInDtls\Create.cshtml" />
+    <Content Include="Views\StockInDtls\Delete.cshtml" />
+    <Content Include="Views\StockInDtls\Details.cshtml" />
+    <Content Include="Views\StockInDtls\Edit.cshtml" />
+    <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePODtlInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreateSLItemPartial.cshtml" />
+    <Content Include="Views\SupInfoCompany\Index.cshtml" />
+    <Content Include="Views\SupInfoCompany\Create.cshtml" />
+    <Content Include="Views\SupSetting\Index.cshtml" />
+    <Content Include="Views\BuyerSetting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2382,6 +2414,7 @@
     <Folder Include="Utilities\ShiYuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
+    <Folder Include="Views\Buyer\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,217 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.StockIn>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        入庫總表
+    </div>
+    <div class="card-body">
+        <button type="button" class="btn btn-warning" id="btnAdd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-plus"></i></button>
+
+        <div class="table-responsive">
+            <br />
+            <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr class="bg-primary text-white text-center">
+                        <th>@Html.DisplayNameFor(model => model.StockInID)</th>
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderReceiveID)</th>
+                        <th>@Html.DisplayNameFor(model => model.SignFlow.OriginatorID)</th>
+                        <th>@Html.DisplayNameFor(model => model.SignStatus)</th>
+                        <th>@Html.DisplayNameFor(model => model.AddStockDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.CreateDate)</th>
+                        <th style="width:10%;">編輯</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.StockInID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PurchaseOrderReceiveID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SignStatus)</td>
+                        <td>@Html.DisplayFor(modelItem => item.AddStockDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CreateDate)</td>
+                        <td class="table-data-feature">
+                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.StockInID">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </span>
+                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.StockInID">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                            </span>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $('#dataTable').DataTable();
+
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+
+        //下拉選單
+        loadEmployees();
+        async function loadEmployees() {
+            var response = await fetch('@Url.Action("getemployeeid", "WarehouseInfoes")');
+            var datas = await response.json();
+            for (var i = 0, max = datas.length; i < max; i++) {
+                var employeeId = datas[i].EmployeeID
+                var employeeName = datas[i].Name
+                var opt = new Option(employeeId+" "+employeeName, employeeId);
+                $('#EmployeeID').append(opt)
+            }
+        }
+
+        //新增
+        $(document).on('click', "#btnAdd", function () {
+            let id1 = 'POR-20191023-001';
+            $.getJSON("@Url.Action("Create", "StockIns")/" + id1, function () {
+                
+            })
+        });
+
+        $('#btnSave').click(function () {
+            var table = $('#dataTable').DataTable();
+            var cell4 = '<span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> <span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span> <button name="click01" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除"><i class="far fa-trash-alt"></i></button>'
+            if($("#WarehouseCode").val() == '' || $("#WarehouseName").val() == '' || $("#Address").val() == ''){
+                toastr.error("'*' 為必填欄位","警告");
+            } else {
+                var warehouseinfoObj = {
+                    WarehouseCode:$("#WarehouseCode").val(),
+                    WarehouseName:$("#WarehouseName").val(),
+                    Address:$("#Address").val(),
+                    EmployeeID:$("#EmployeeID").val(),
+                    Tel:$("#Tel").val(),
+                    Remark:$("#Remark").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Create", "WarehouseInfoes")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(warehouseinfoObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        table.row.add([$("#WarehouseCode").val(), $("#WarehouseName").val(), $("#Address").val(), cell4]).draw(false);
+                    }
+                }).fail(function(response){
+                    toastr.error(response.message, "警告");
+                })
+                $('#warehouseModal').modal('hide');
+            }
+
+        })
+
+        
+
+        //檢視
+        $(document).on('click', "button[name = 'click03']", function () {
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Detail", "WarehouseInfoes")/" + id1, function (datas) {
+                document.getElementById("code2").innerHTML = '';
+                document.getElementById("name2").innerHTML = '';
+                document.getElementById("add2").innerHTML = '';
+                document.getElementById("tel2").innerHTML = '';
+                $('#ModalTitle').text('檢視倉庫資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('#btnSave').hide();
+                $('#btnUpdate').hide();
+                $("#WarehouseCode").val(datas[0].WarehouseCode);
+                $("#WarehouseName").val(datas[0].WarehouseName);
+                $("#Address").val(datas[0].Address);
+                $("#EmployeeID").val(datas[0].EmployeeID);
+                $("#Tel").val(datas[0].Tel);
+                $("#Remark").val(datas[0].Remark);
+            })
+        });
+
+        //更新
+        var sell;
+        $(document).on('click', "td", function () {
+            var table = $('#dataTable').DataTable();
+            var rowss = $(this).closest("tr");  //抓取列
+            var celss = $(this).siblings("#cel"); //抓取欄
+            sell = table.row(rowss).cell(celss);
+        })
+        $(document).on('click', "button[name = 'click04']", function () {
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Detail", "WarehouseInfoes")/" + id1, function (datas) {
+                document.getElementById("code2").innerHTML = '';
+                document.getElementById("name2").innerHTML = '';
+                document.getElementById("add2").innerHTML = '';
+                document.getElementById("tel2").innerHTML = '';
+                $('#ModalTitle').text('修改倉庫資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', false);
+                $('#btnSave').hide();
+                $('#btnUpdate').show();
+                $("#WarehouseCode").val(datas[0].WarehouseCode);
+                $("#WarehouseName").val(datas[0].WarehouseName);
+                $("#Address").val(datas[0].Address);
+                $("#EmployeeID").val(datas[0].EmployeeID);
+                $("#Tel").val(datas[0].Tel);
+                $("#Remark").val(datas[0].Remark);
+            })
+        });
+
+        $('#btnUpdate').click(function () {
+            var table = $('#dataTable').DataTable();
+            if($("#Address").val() == ''){
+                toastr.error("'*' 為必填欄位","警告");
+            }else{
+                var warehouseinfoObj = {
+                    WarehouseCode:$("#WarehouseCode").val(),
+                    WarehouseName:$("#WarehouseName").val(),
+                    Address:$("#Address").val(),
+                    EmployeeID:$("#EmployeeID").val(),
+                    Tel:$("#Tel").val(),
+                    Remark:$("#Remark").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Edit", "WarehouseInfoes")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(warehouseinfoObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        sell.data($("#Address").val()).draw();
+                    }
+                }).fail(function(response){
+                    toastr.error(response.message, "警告");
+                })
+                $('#warehouseModal').modal('hide');
+            }
+        })
+        
+    </script>
+
+}

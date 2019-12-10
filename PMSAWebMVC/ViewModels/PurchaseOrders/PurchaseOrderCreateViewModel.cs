@@ -15,6 +15,33 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string PurchaseRequisitionIdValue { get; set; }
     }
 
+    public class POCSourceListViewModel
+    {
+        [Display(Name = "供應商")]
+        public string SupplierName { get; set; }
+        [Display(Name = "評等")]
+        public string RatingName { get; set; }
+        [Display(Name = "批量")]
+        public int QtyPerUnit { get; set; }
+        [Display(Name = "最小訂貨量")]
+        public int? MOQ { get; set; }
+        [Display(Name = "單價")]
+        public int UnitPrice { get; set; }
+        [Display(Name = "供應商庫存數量")]
+        public int UnitsInStock { get; set; }
+        [Display(Name = "購買折扣")]
+        public IEnumerable<POCSourceListDtlItem> SourceListDtlItem { get; set; }
+    }
+
+    public class POCSourceListDtlItem
+    {
+        [Display(Name = "需求量")]
+        public int QtyDemanded { get; set; }
+        [DisplayFormat(DataFormatString = "{0:P0}")]
+        [Display(Name = "折扣")]
+        public decimal Discount { get; set; }
+    }
+
     public class PRInfoViewModel
     {
         [Display(Name = "請購人員")]
@@ -43,6 +70,14 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public DateTime DateRequired { get; set; }
         [Display(Name = "建議供應商")]
         public string SupplierName { get; set; }
+        //請購單新增使用
+        [Display(Name = "料件批量")]
+        public int QtyPerUnit { get; set; }
+        [Display(Name = "請購料件總數")]
+        //請購數量 * 料件批量
+        public int TotalPartQty { get; set; }
+        [Display(Name = "料件編號")]
+        public string PartNumber { get; set; }
     }
 
     public class SupplierItem
@@ -118,6 +153,57 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         }
 
         /// <summary>
+        /// 查詢料件的貨源清單
+        /// </summary>
+        /// <param name="PartNumber"></param>
+        /// <returns></returns>
+        public IEnumerable<POCSourceListViewModel> GetPOCSourceListViewModel(string partNumber)
+        {
+            var slq = from sl in db.SourceList
+                      where sl.PartNumber == partNumber
+                      select new POCSourceListViewModel
+                      {
+                          SupplierName = sl.SupplierInfo.SupplierName,
+                          RatingName = sl.SupplierInfo.SupplierRating.RatingName,
+                          QtyPerUnit = sl.QtyPerUnit,
+                          MOQ = sl.MOQ,
+                          UnitPrice = sl.UnitPrice,
+                          UnitsInStock = sl.UnitsInStock,
+                          SourceListDtlItem = (from sld in sl.SourceListDtl
+                                               select new POCSourceListDtlItem
+                                               {
+                                                   QtyDemanded = sld.QtyDemanded,
+                                                   Discount = sld.Discount
+                                               })
+                      };
+            return slq;
+        }
+
+        /// <summary>
+        /// 查詢請購明細資料
+        /// </summary>
+        /// <param name="purchaseOrderDtlCode"></param>
+        /// <returns></returns>
+        public PRDtlTableViewModel GetPRDtlInfoViewModel(string purchaseOrderDtlCode)
+        {
+            var prdq = from prd in db.PurchaseRequisitionDtl
+                       where prd.PurchaseRequisitionDtlCode == purchaseOrderDtlCode
+                       select new PRDtlTableViewModel
+                       {
+                           PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,
+                           PartName = prd.Part.PartName,
+                           Qty = prd.Qty,
+                           DateRequired = prd.DateRequired,
+                           SupplierName = prd.SupplierInfo.SupplierName,
+                           QtyPerUnit = prd.Part.QtyPerUnit,
+                           TotalPartQty = prd.Part.QtyPerUnit * prd.Qty,
+                           PartNumber = prd.Part.PartNumber
+                       };
+            return prdq.FirstOrDefault();
+        }
+
+
+        /// <summary>
         /// 查詢尚未被採購的請購明細
         /// </summary>
         /// <param name="purchaseRequisitionID"></param>
@@ -133,7 +219,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                            PartName = prd.Part.PartName,
                            Qty = prd.Qty,
                            DateRequired = prd.DateRequired,
-                           SupplierName = prd.SupplierInfo.SupplierName
+                           SupplierName = prd.SupplierInfo.SupplierName,
+                           QtyPerUnit = prd.Part.QtyPerUnit,
+                           TotalPartQty = prd.Part.QtyPerUnit * prd.Qty,
+                           PartNumber = prd.Part.PartNumber
                        };
             return prdq;
         }

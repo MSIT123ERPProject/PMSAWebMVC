@@ -14,7 +14,7 @@ using System.Web;
 using System.Web.Mvc;
 
 
-namespace PMSAWebMVC.Controllers
+namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
     public class ShipNoticesController : BaseController
     {
@@ -30,6 +30,7 @@ namespace PMSAWebMVC.Controllers
         public ShipNoticesController()
         {
             db = new PMSAEntities();
+            utilities = new ShipNoticesUtilities();
             //supplierCode = "S00001";
             //supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
@@ -96,7 +97,7 @@ namespace PMSAWebMVC.Controllers
             List<shipOrderViewModel> qlist = query.ToList();
             for (int i = 0; i < qlist.Count(); i++)
             {
-                ShipNoticesUtilities utilities = new ShipNoticesUtilities();
+                //ShipNoticesUtilities utilities = new ShipNoticesUtilities();
                 string d = utilities.GetStatus(qlist[i].PurchaseOrderStatus);
                 qlist[i].PurchaseOrderStatusDisplay = d;
             }
@@ -154,6 +155,7 @@ namespace PMSAWebMVC.Controllers
             supplierAccount = supplier.SupplierAccountID;
             supplierCode = supplier.SupplierCode;
             ////////////////////////////////////////////////////
+            //ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string message = "";
             //此LIST要用來存放出貨明細ID 用來寄送電子郵件給公司採購員
             List<string> shipDtlList = new List<string>();
@@ -281,7 +283,6 @@ namespace PMSAWebMVC.Controllers
                 //更新採購單明細POChangedOID欄位
                 //找出最新一筆採購單異動資料且是供應商的
                 dtl.POChangedOID = utilities.FindPOChangedOIDByDtlCode(RequesterRoleSupplier, dtl.PurchaseOrderDtlCode);
-
                 //把資料庫中的每筆訂單明細以及貨源清單資料狀態改為追蹤
                 db.Entry(dtl).State = EntityState.Modified;
                 db.Entry(sourceList).State = EntityState.Modified;

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PMSAWebMVC.Controllers.SupplierController
+namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
-    public class SupplierHomePageController : Controller
+    public class SupplierHomeController : Controller
     {
         private PMSAEntities db;
         string supplierAccount;
@@ -16,7 +16,7 @@ namespace PMSAWebMVC.Controllers.SupplierController
         string POChangedCategoryCodeShipped;
         string RequesterRoleSupplier;
         ShipNoticesUtilities utilities;
-        public SupplierHomePageController()
+        public SupplierHomeController()
         {
             db = new PMSAEntities();
             //supplierCode = "S00001";

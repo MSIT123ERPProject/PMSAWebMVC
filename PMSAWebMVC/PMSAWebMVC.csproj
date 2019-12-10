@@ -196,6 +196,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\SupplierArea\SupplierAreaAreaRegistration.cs" />
     <Compile Include="Common\HtmlHelperExtensions.cs" />
     <Compile Include="Common\IdentityExtensions.cs" />
     <Compile Include="Common\StringExtensions.cs" />
@@ -2097,6 +2098,7 @@
     <Content Include="Content\slick\fonts\slick.ttf" />
     <Content Include="Content\slick\fonts\slick.woff" />
     <Content Include="Content\slick\slick-theme.site.css" />
+    <Content Include="Areas\SupplierArea\Views\web.config" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2383,10 +2385,12 @@
     <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\SupplierArea\Controllers\" />
+    <Folder Include="Areas\SupplierArea\Models\" />
+    <Folder Include="Areas\SupplierArea\Views\Shared\" />
     <Folder Include="assets\parts\" />
     <Folder Include="assets\products\" />
     <Folder Include="Utilities\ChengHao\" />

@@ -1,38 +1,43 @@
 ﻿@model PMSAWebMVC.Models.VerifyCodeViewModel
 @{
     ViewBag.Title = "驗證";
+    Layout = "~/Views/Account/_LoginLayout.cshtml";
 }
 
-<h2>@ViewBag.Title.</h2>
+<div class="container-fluid card d-flex p-5" style="background-color: white; width: 50vw; margin: 10px auto;align-items:center;flex-direction:column;">
 
-@using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
-    @Html.AntiForgeryToken()
-    @Html.Hidden("provider", @Model.Provider)
-    @Html.Hidden("rememberMe", @Model.RememberMe)
-    <h4>輸入驗證碼</h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Code, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <div class="checkbox">
-                @Html.CheckBoxFor(m => m.RememberBrowser)
-                @Html.LabelFor(m => m.RememberBrowser)
+    @using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("provider", @Model.Provider)
+        @Html.Hidden("rememberMe", @Model.RememberMe)
+    <h2 style="font-weight:700;">
+        <img width="40" style="transform: translateY(-1px);margin-right:5px;"  src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMjsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8xXyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwIiB5MT0iMjU3Ljk5OTkiIHgyPSI1MTIiIHkyPSIyNTcuOTk5OSIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAtMSAwIDUxMy45OTk5KSI+DQoJPHN0b3AgIG9mZnNldD0iMCIgc3R5bGU9InN0b3AtY29sb3I6IzgwRDhGRiIvPg0KCTxzdG9wICBvZmZzZXQ9IjAuMTYiIHN0eWxlPSJzdG9wLWNvbG9yOiM4OEQxRkYiLz4NCgk8c3RvcCAgb2Zmc2V0PSIwLjQxMyIgc3R5bGU9InN0b3AtY29sb3I6IzlGQkVGRSIvPg0KCTxzdG9wICBvZmZzZXQ9IjAuNzI1IiBzdHlsZT0ic3RvcC1jb2xvcjojQzRBMEZEIi8+DQoJPHN0b3AgIG9mZnNldD0iMSIgc3R5bGU9InN0b3AtY29sb3I6I0VBODBGQyIvPg0KPC9saW5lYXJHcmFkaWVudD4NCjxwYXRoIHN0eWxlPSJmaWxsOnVybCgjU1ZHSURfMV8pOyIgZD0iTTQ2Mi42MjIsNDFINDkuMzc4QzIyLjE1MSw0MSwwLDYzLjM5NSwwLDkwLjkyM1YzMzAuMzFjMCwyNy41MjgsMjIuMTUxLDQ5LjkyMyw0OS4zNzgsNDkuOTIzDQoJaDM5LjczNFY0NTFjMCw4LjA5Miw0Ljg3NywxNS4zODcsMTIuMzU0LDE4LjQ4MWM3LjQ1NywzLjA4NSwxNi4wNjcsMS4zOTEsMjEuOC00LjM1MWw4NC43NTUtODQuODk3aDI1NC42MDENCgljMjcuMjI3LDAsNDkuMzc4LTIyLjM5Niw0OS4zNzgtNDkuOTIzVjkwLjkyM0M1MTIsNjMuMzk1LDQ4OS44NDksNDEsNDYyLjYyMiw0MXogTTQ3MiwzMzAuMzFjMCw1LjQ3Mi00LjIwNyw5LjkyMy05LjM3OCw5LjkyMw0KCUgxOTkuNzI4Yy01LjMxMSwwLTEwLjQwMiwyLjExMi0xNC4xNTQsNS44N2wtNTYuNDYxLDU2LjU1NnYtNDIuNDI2YzAtMTEuMDQ2LTguOTU0LTIwLTIwLTIwSDQ5LjM3OA0KCWMtNS4xNzEsMC05LjM3OC00LjQ1Mi05LjM3OC05LjkyM1Y5MC45MjNDNDAsODUuNDUyLDQ0LjIwNyw4MSw0OS4zNzgsODFoNDEzLjI0NGM1LjE3MSwwLDkuMzc4LDQuNDUyLDkuMzc4LDkuOTIzTDQ3MiwzMzAuMzENCglMNDcyLDMzMC4zMXogTTI4MywyMTAuNWMwLDE0LjkxMi0xMi4wODgsMjctMjcsMjdzLTI3LTEyLjA4OC0yNy0yN3MxMi4wODgtMjcsMjctMjdDMjcwLjkxMiwxODMuNSwyODMsMTk1LjU4OSwyODMsMjEwLjV6DQoJIE0xNjUuNDksMjEwLjVjMCwxNC45MTItMTIuMDg4LDI3LTI3LDI3cy0yNy0xMi4wODgtMjctMjdzMTIuMDg4LTI3LDI3LTI3QzE1My40MDEsMTgzLjUsMTY1LjQ5LDE5NS41ODksMTY1LjQ5LDIxMC41eg0KCSBNMzczLjUxLDE4My41YzE0LjkxMiwwLDI3LDEyLjA4OCwyNywyN3MtMTIuMDg4LDI3LTI3LDI3cy0yNy0xMi4wODgtMjctMjdDMzQ2LjUxLDE5NS41ODksMzU4LjU5OSwxODMuNSwzNzMuNTEsMTgzLjV6Ii8+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8L3N2Zz4NCg==" alt="" />
+        輸入驗證碼
+    </h2>
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div style="border: 1px solid #eee;background-color: #eee; padding: 20px;">
+            <div class="form-group">
+                <div class="col-12">
+                    @Html.LabelFor(m => m.Code, new { @class = "control-label",style = "font-weight:700;" })
+                    @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-12 mb-5">
+                    <div class="checkbox custom-control custom-checkbox">
+                        @Html.CheckBoxFor(m => m.RememberBrowser, new { @class = "custom-control-input" })
+                        @Html.LabelFor(m => m.RememberBrowser, new { @class = "custom-control-label" })
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input type="submit" class="btn btn-primary" style="width:100%;" value="提交" />
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="提交" />
-        </div>
-    </div>
-}
-
+    }
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

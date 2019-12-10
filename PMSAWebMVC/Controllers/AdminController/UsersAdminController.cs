@@ -272,6 +272,7 @@ namespace PMSAWebMVC.Controllers
             await UserManager.UpdateSecurityStampAsync(user.Id);
             user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
             user.LastPasswordChangedDate = null;
+            await UserManager.UpdateAsync(user);
 
             var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
             emp.PasswordHash = user.PasswordHash;
@@ -307,6 +308,8 @@ namespace PMSAWebMVC.Controllers
             string pwd = generateFirstPwd();
             await UserManager.UpdateSecurityStampAsync(user.Id);
             user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
+            user.LastPasswordChangedDate = null;
+            await UserManager.UpdateAsync(user);
 
             var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
             emp.PasswordHash = user.PasswordHash;

@@ -89,12 +89,10 @@ namespace PMSAWebMVC.Controllers
             }
             // 這不會計算為帳戶鎖定的登入失敗
             // 若要啟用密碼失敗來觸發帳戶鎖定，請變更為 shouldLockout: true
+            //登入(加 cookies (在 Startup.Auth.cs 的 UseCookieAuthentication裡))
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", "Account", new { UserName = model.UserName, ReturnUrl = "", RememberMe = model.RememberMe });
-
                 case SignInStatus.Success:
                     var user = UserManager.Users.Where(x => x.UserName == model.UserName).FirstOrDefault();
                     if (user.LastPasswordChangedDate == null)
@@ -107,6 +105,9 @@ namespace PMSAWebMVC.Controllers
                     }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", "Account", new { UserName = model.UserName, ReturnUrl = "", RememberMe = model.RememberMe });
 
                 case SignInStatus.Failure:
                 default:
@@ -125,14 +126,13 @@ namespace PMSAWebMVC.Controllers
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
-        public async Task<ActionResult> VerifyCode(string token, string provider, string returnUrl, bool rememberMe)
+        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
-            // 需要使用者已透過使用者名稱/密碼或外部登入進行登入
-            //if (!await SignInManager.HasBeenVerifiedAsync())
-            //{
-            //    return View("Error");
-            //}
-            return View(new VerifyCodeViewModel { token = token, Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+            if (!await SignInManager.HasBeenVerifiedAsync())
+            {
+                return View("Error");
+            }
+            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
         //
@@ -151,12 +151,20 @@ namespace PMSAWebMVC.Controllers
             // 如果使用者輸入不正確的代碼來表示一段指定的時間，則使用者帳戶
             // 會有一段指定的時間遭到鎖定。
             // 您可以在 IdentityConfig 中設定帳戶鎖定設定
-            var result = SignInManager.TwoFactorSignIn(model.token, model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
+            string id = SignInManager.GetVerifiedUserId();
+            var user = UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
-
+                    if (user.LastPasswordChangedDate == null)
+                    {
+                        return RedirectToAction("ResetPassword", "Account");
+                    }
+                    else
+                    {
+                        return RedirectToLocal(model.ReturnUrl);
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
 
@@ -387,19 +395,16 @@ namespace PMSAWebMVC.Controllers
         //
         // GET: /Account/SendCode
         [AllowAnonymous]
-        public async Task<ActionResult> SendCode(string userName, string returnUrl, bool rememberMe)
+        public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
-            TempData["userName"] = userName;
-            //var userId = await SignInManager.GetVerifiedUserIdAsync();
-            var user = UserManager.FindByName(userName);
-            var userId = user.Id;
+            var userId = await SignInManager.GetVerifiedUserIdAsync();
             if (!string.IsNullOrWhiteSpace(userId))
             {
                 var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
                 var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-                return View(new SendCodeViewModel { userName = userName, Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+                return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
             }
-            return View("Login");
+            return View("Error");
         }
 
         //
@@ -409,21 +414,17 @@ namespace PMSAWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendCode(SendCodeViewModel model)
         {
-            model.userName = TempData["userName"].ToString();
-            var userId = User.Identity.GetUserId();
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
             // 產生並傳送 Token
-            string token = await SignInManager.SendTwoFactorCodeAsync(model.userName, model.SelectedProvider);
-            //return Content($"<script>alert('{r}')</script>");
-            //if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
-            //{
-            //    return View("Error");
-            //}
-            return RedirectToAction("VerifyCode", new { token = token, Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
+            {
+                return View("Error");
+            }
+            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
         }
 
         //

@@ -12,9 +12,9 @@
         <button type="button" class="btn btn-warning" id="inventorydtladd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-plus"></i></button>
         <div class="table-responsive">
             <br />
-            <table class="table table-striped table-bordered nowrap" id="dataTable" cellspacing="0" style="width:100%">
+            <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary text-white text-center">
                         <th style="width:20%;">@Html.DisplayNameFor(model => model.InventoryCode)</th>
                         <th style="width:10%;">@Html.DisplayNameFor(model => model.WarehouseInfo.WarehouseName)</th>
                         <th style="width:7%;">分類名稱</th>
@@ -22,7 +22,7 @@
                         <th style="width:10%;">@Html.DisplayNameFor(model => model.UnitsOnStockOutOrder)</th>
                         <th style="width:10%;">@Html.DisplayNameFor(model => model.UnitsOnStockInOrder)</th>
                         <th style="width:8%;">@Html.DisplayNameFor(model => model.UnitsInStock)</th>
-                        <th style="width:20%;">編輯</th>
+                        <th style="width:7%;">編輯</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,13 +36,18 @@
                         <td>@Html.DisplayFor(modelItem => item.UnitsOnStockOutOrder)</td>
                         <td>@Html.DisplayFor(modelItem => item.UnitsOnStockInOrder)</td>
                         <td id="cel">@Html.DisplayFor(modelItem => item.UnitsInStock)</td>
-                        <td>
-                            <button name="click04" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-primary" data-dc="@item.InventoryCode">
-                                <i class="fa fa-pencil"></i>
-                            </button>|
-                            <button name="click03" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-primary" data-dc="@item.InventoryCode">
-                                <i class="fa fa-tasks"></i>
-                            </button>
+                        <td class="table-data-feature">
+                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.InventoryCode">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </span>
+                            
+                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.InventoryCode">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                            </span>
                         </td>
                     </tr>
                     }
@@ -129,7 +134,7 @@
 
         $(document).on('click', "#btnCreate", function () {
             var table = $('#dataTable').DataTable();
-            var cell4 = '<button name="click04" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-primary"><i class="fa fa-pencil"></i></button>| <button name="click03" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-primary"><i class="fa fa-tasks"></i></button>'
+            var cell4 = '<span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> <span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span>'
             if ($("#UnitsInStock").val() <= 0 || $("#SafetyQty").val() < 0){
                 toastr.error("必需大於零，且不能為負數","警告");
             }else{
@@ -199,8 +204,10 @@
             var table = $('#dataTable').DataTable();
             var rowss = $(this).closest("tr");  //抓取列
             var celss = $(this).siblings("#cel"); //抓取欄
-            let id1 = this.dataset.dc;
             sell = table.row(rowss).cell(celss);
+        })
+        $(document).on('click', "button[name = 'click04']", function () {
+            let id1 = this.dataset.dc;
             if (id1 == undefined) {
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
@@ -232,8 +239,6 @@
         });
 
         $(document).on('click', "#btnUpdate", function () {
-            var table = $('#dataTable').DataTable();
-            var cell4 = '<button name="click04" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-primary"><i class="fa fa-pencil"></i></button>| <button name="click03" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-primary"><i class="fa fa-tasks"></i></button>'
             if ($("#UnitsInStock").val() <= 0 || $("#SafetyQty").val() < 0){
                 toastr.error("必需大於零，且不能為負數","警告");
             }else{

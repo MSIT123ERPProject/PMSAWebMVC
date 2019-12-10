@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Index";
+    var SuccessMsg = TempData["Success"];
 }
 
 @section styles
@@ -60,63 +61,10 @@
             animation: 0.4s fadeinShow 0.3s both;
         }
 
-        #example_wrapper {
-            /*display: none;*/
-        }
-        /* +-collaspe =============*/
-        /*td.control {
-            margin: 0;
-            transition: 0.2s;
-            vertical-align: middle;
-            font-weight: 500;
-        }
-
-            td.control:hover, td.control:active {
-                color: white;
-                border-bottom: 0px !important;
-                background-color: #409EFF;
-                transition: 0.2s;
-            }
-
-        table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            display: block;
-            position: relative;
-            color: #409EFF;
-            border: 0;
-            border-radius: 0;
-            box-shadow: none;
-            box-sizing: content-box;
-            text-align: center;
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 14px;
-            content: '✚' !important;
-            background-color: transparent;
-        }
-
-        table.dataTable.dtr-column > tbody > tr > td.control:hover::before, table.dataTable.dtr-column > tbody > tr > th.control:hover::before {
-            color: white;
-        }
-
-        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
-        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
-            content: '▂' !important;
-            background-color: transparent;
-            transform: translateY(-5px)
-        }
-
-        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
-        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
-            background-color: transparent;
-        }*/
         /*===================sorting*/
         table.dataTable.order-column tbody tr > .sorting_1, table.dataTable.order-column tbody tr > .sorting_2, table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1, table.dataTable.display tbody tr > .sorting_2, table.dataTable.display tbody tr > .sorting_3 {
             background-color: transparent;
-            border-left: 2px solid #4385F4 !important;
+            border-left: 2px solid #28A2FC !important;
         }
 
         /*================*/
@@ -140,7 +88,7 @@
         }
 
         th {
-            background-color: #4385F4;
+            background-color: #28A2FC;
             color: white;
             /*border: 0px;*/
             box-sizing: border-box;
@@ -151,7 +99,7 @@
         }
 
         .table thead th {
-            border-bottom: 4px double #4385F4;
+            border-bottom: 4px double #28A2FC;
         }
 
         tbody tr {
@@ -397,7 +345,7 @@
         #Non.tag {
             box-shadow: none;
             outline: none !important;
-            border-bottom: 2px solid #4385F4;
+            border-bottom: 2px solid #28A2FC;
             background-color: #E4E7ED;
         }
 
@@ -411,6 +359,9 @@
                 background-color: #67C23A;
                 margin-right: 10px;
             }
+        .btn-outline-secondary {
+            border-color: transparent !important;
+        }
     </style>
 }
 <div class="wrapall">
@@ -500,7 +451,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">採購員帳號資料</h5>
+                <h5 class="modal-title" id="editModalLabel">供應商帳號資料</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -654,7 +605,7 @@
 @section scripts{
     @if (User.IsInRole("Manager"))
     {
-        <script type="text/javascript">
+<script type="text/javascript">
         var url = '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")';
         $("#Table").ready(() => {
             var columns = [];
@@ -877,12 +828,46 @@
                         url: '@Url.Action("updateSupAccUsersAtIndex", "BuyerSupAccount")',
                         data: formData,
                         success: function (result) {
-                            alert("更新成功");
+                                    toastr.options = {
+                                      "closeButton": true,
+                                      "debug": false,
+                                      "newestOnTop": false,
+                                      "progressBar": false,
+                                      "positionClass": "toast-top-right",
+                                      "preventDuplicates": false,
+                                      "onclick": null,
+                                      "showDuration": "300",
+                                      "hideDuration": "1000",
+                                      "timeOut": "5000",
+                                      "extendedTimeOut": "1000",
+                                      "showEasing": "swing",
+                                      "hideEasing": "linear",
+                                      "showMethod": "fadeIn",
+                                      "hideMethod": "fadeOut"
+                                    }
+                                    toastr.success(`${formData.SupId} 更新成功!`)
                             //更新datatable
                             oTable.ajax.reload();
                         },
                         error: function (result) {
-                            alert("更新失敗nooooooooooooooooo");
+                                    toastr.options = {
+                                        "closeButton": true,
+                                        "debug": false,
+                                        "newestOnTop": false,
+                                        "progressBar": false,
+                                        "positionClass": "toast-top-right",
+                                        "preventDuplicates": false,
+                                        "onclick": null,
+                                        "showDuration": "300",
+                                        "hideDuration": "1000",
+                                        "timeOut": "5000",
+                                        "extendedTimeOut": "1000",
+                                        "showEasing": "swing",
+                                        "hideEasing": "linear",
+                                        "showMethod": "fadeIn",
+                                        "hideMethod": "fadeOut"
+                                    }
+                                    toastr.error(`${formData.SupId} 更新失敗，請檢查網路連線後再試一次。`)
                             console.log(result)
                         }
                     })
@@ -893,21 +878,71 @@
             $("tbody").on('click', '.deleteBtn', function (e) {
                 console.log(e.currentTarget);
                 console.log($(this).closest('tr').find('td:eq(3)').find('td').remove().end().text() )
-                alert("aaaa!")
-                $.ajax({
+                var supId = $(this).closest('tr').find('td:eq(3)').find('td').remove().end().text();
+                Swal.fire({
+                  title: `重設帳號: ${supId} ?`,
+                  text: "確定後將重設密碼並寄出帳密",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#28A2FC',
+                  cancelButtonColor: '#E8296C',
+                  confirmButtonText: '確定發送'
+                }).then((result) => {
+                  if (result.value) {  $.ajax({
                     type: "POST",
                     url: '@Url.Action("sendMail", "BuyerSupAccount")',
-                    data: { Id: $(this).closest('tr').find('td:eq(3)').find('td').remove().end().text() },
+                    data: { Id: supId },
                     success: function (result) {
-                        alert("send");
-
-                        //更新datatable
-                        oTable.ajax.reload();
-                    },
-                    error: function (result) {
-                        alert("send失敗nooooooooooooooooo");
-                        console.log(result)
-                    }
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(`${supId} 發送成功!`)
+                            //更新datatable
+                            oTable.ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.options = {
+                                "closeButton": true,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            }
+                            toastr.error('發送失敗，請檢查網路連線後再試一次。')
+                            console.log(result)
+                        }
+                    })
+                    Swal.fire({
+                      title: `已發送!`,
+                      text: `已將 ${supId} 重設密碼發送至該信箱`,
+                      type: 'success',
+                      confirmButtonColor: '#28A2FC'
+                    })
+                  }
                 })
             })
         });
@@ -921,6 +956,27 @@
             $("#All").removeClass("tag");
         })
         $(document).ready(function () {
+            var SuccessMsg = '@SuccessMsg'
+            if(SuccessMsg){
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success(SuccessMsg)
+            }
 
             $('#AccountStatusSwitch').change(() => {
                 if ($('#AccountStatusSwitch').prop('checked') == false) {
@@ -975,11 +1031,11 @@
                 }
             })
         })
-        </script>
+</script>
     }
     else if (User.IsInRole("Buyer"))
     {
-        <script type="text/javascript">
+<script type="text/javascript">
         var url = '@Url.Action("getAllSupAccToIndexAjax", "BuyerSupAccount")';
         $("#Table").ready(() => {
             var columns = [];
@@ -1149,9 +1205,10 @@
 
                 //SupAccID
                 console.log($(this).closest('tr').find('td:eq(1)').find('td').remove().end().text());
+                var supId = $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text();
                 $.getJSON(
                     '@Url.Action("getAllSupAccBySupCodeToIndexAjax")',
-                    { id: $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() },
+                    { id: supId },
                     function(x){
                         console.log(x)
                         $("#ContactName").val(x.ContactName);
@@ -1199,12 +1256,46 @@
                         url: '@Url.Action("updateSupAccUsersAtIndex", "BuyerSupAccount")',
                         data: formData,
                         success: function (result) {
-                            alert("更新成功");
+                                    toastr.options = {
+                                      "closeButton": true,
+                                      "debug": false,
+                                      "newestOnTop": false,
+                                      "progressBar": false,
+                                      "positionClass": "toast-top-right",
+                                      "preventDuplicates": false,
+                                      "onclick": null,
+                                      "showDuration": "300",
+                                      "hideDuration": "1000",
+                                      "timeOut": "5000",
+                                      "extendedTimeOut": "1000",
+                                      "showEasing": "swing",
+                                      "hideEasing": "linear",
+                                      "showMethod": "fadeIn",
+                                      "hideMethod": "fadeOut"
+                                    }
+                                    toastr.success(`${formData.SupId} 更新成功!`)
                             //更新datatable
                             oTable.ajax.reload();
                         },
                         error: function (result) {
-                            alert("更新失敗nooooooooooooooooo");
+                                    toastr.options = {
+                                        "closeButton": true,
+                                        "debug": false,
+                                        "newestOnTop": false,
+                                        "progressBar": false,
+                                        "positionClass": "toast-top-right",
+                                        "preventDuplicates": false,
+                                        "onclick": null,
+                                        "showDuration": "300",
+                                        "hideDuration": "1000",
+                                        "timeOut": "5000",
+                                        "extendedTimeOut": "1000",
+                                        "showEasing": "swing",
+                                        "hideEasing": "linear",
+                                        "showMethod": "fadeIn",
+                                        "hideMethod": "fadeOut"
+                                    }
+                                    toastr.error(`${formData.SupId} 更新失敗，請檢查網路連線後再試一次。`)
                             console.log(result)
                         }
                     })
@@ -1215,21 +1306,71 @@
             $("tbody").on('click', '.deleteBtn', function (e) {
                 console.log(e.currentTarget);
                 console.log($(this).closest('tr').find('td:eq(3)').find('td').remove().end().text() )
-                alert("aaaa!")
-                $.ajax({
+                var supId = $(this).closest('tr').find('td:eq(3)').find('td').remove().end().text();
+                Swal.fire({
+                  title: `重設帳號: ${supId} ?`,
+                  text: "確定後將重設密碼並寄出帳密",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#28A2FC',
+                  cancelButtonColor: '#E8296C',
+                  confirmButtonText: '確定發送'
+                }).then((result) => {
+                  if (result.value) {  $.ajax({
                     type: "POST",
                     url: '@Url.Action("sendMail", "BuyerSupAccount")',
-                    data: { Id: $(this).closest('tr').find('td:eq(3)').find('td').remove().end().text() },
+                    data: { Id: supId },
                     success: function (result) {
-                        alert("send");
-
-                        //更新datatable
-                        oTable.ajax.reload();
-                    },
-                    error: function (result) {
-                        alert("send失敗nooooooooooooooooo");
-                        console.log(result)
-                    }
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(`${supId} 發送成功!`)
+                            //更新datatable
+                            oTable.ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.options = {
+                                "closeButton": true,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            }
+                            toastr.error('發送失敗，請檢查網路連線後再試一次。')
+                            console.log(result)
+                        }
+                    })
+                    Swal.fire({
+                      title: `已發送!`,
+                      text: `已將 ${supId} 重設密碼發送至該信箱`,
+                      type: 'success',
+                      confirmButtonColor: '#28A2FC'
+                    })
+                  }
                 })
             })
         });
@@ -1243,6 +1384,27 @@
             $("#All").removeClass("tag");
         })
         $(document).ready(function () {
+            var SuccessMsg = '@SuccessMsg';
+            if(SuccessMsg){
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success(SuccessMsg)
+            }
 
             $('#AccountStatusSwitch').change(() => {
                 if ($('#AccountStatusSwitch').prop('checked') == false) {
@@ -1297,6 +1459,6 @@
                 }
             })
         })
-        </script>
+</script>
     }
 }

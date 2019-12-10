@@ -2321,7 +2321,6 @@
     <Content Include="webfonts\fa-brands-400.ttf" />
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Templates\RESXManager\ResxManagerGlobalTemplate.Master" />
-    <Content Include="Views\Account\SupLogin.cshtml" />
     <Content Include="Views\Account\_LoginLayout.cshtml" />
     <Content Include="Views\InventoryDtls\Create.cshtml" />
     <Content Include="Views\InventoryDtls\Delete.cshtml" />
@@ -2392,7 +2391,6 @@
     <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
-
     <Content Include="Views\SupInfoCompany\Index.cshtml" />
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
     <Content Include="Views\SupSetting\Index.cshtml" />

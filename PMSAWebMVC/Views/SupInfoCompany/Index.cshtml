@@ -1,5 +1,9 @@
 ﻿@model PMSAWebMVC.ViewModels.BuyerSupAccount.SupInfoViewModel
 
+@{
+    var SuccessMsg = TempData["Success"];
+}
+
 @section styles
 {
 
@@ -112,9 +116,8 @@
         /*===================sorting*/
         table.dataTable.order-column tbody tr > .sorting_1, table.dataTable.order-column tbody tr > .sorting_2, table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1, table.dataTable.display tbody tr > .sorting_2, table.dataTable.display tbody tr > .sorting_3 {
             background-color: transparent;
-            border-left: 2px solid #4385F4;
+            border-left: 2px solid #28A2FC;
         }
-
 
         /*================*/
         table.table th, table.table td {
@@ -137,7 +140,7 @@
         }
 
         th {
-            background-color: #4385F4;
+            background-color: #28A2FC;
             color: white;
             /*border: 0px;*/
             box-sizing: border-box;
@@ -148,7 +151,7 @@
         }
 
         .table thead th {
-            border-bottom: 4px double #4385F4;
+            border-bottom: 4px double #28A2FC;
         }
 
         tbody tr {
@@ -405,7 +408,7 @@
         #Non.tag {
             box-shadow: none;
             outline: none !important;
-            border-bottom: 2px solid #4385F4;
+            border-bottom: 2px solid #28A2FC;
             background-color: #E4E7ED;
         }
 
@@ -422,6 +425,10 @@
 
         .card-body {
             padding-top: 0;
+        }
+
+        .btn-outline-secondary {
+            border-color: transparent !important;
         }
     </style>
 }
@@ -594,7 +601,29 @@
         })
 
         $(document).ready(function () {
-
+        //=============================================================
+           var message = '@SuccessMsg';
+                    if(message){
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(message)
+                    }
+        //=============================================================
             //防止重複ajax......
             var pendingRequests = {};
             // 所有ajax請求的通用前置filter

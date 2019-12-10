@@ -11,7 +11,7 @@ namespace PMSAWebMVC.ViewModels.Setting
     {
         //TODO 待補 remote
         [Display(Name = "供應商帳號")]
-        [Remote("AccountCheck", "Members", ErrorMessage = "此帳號已被註冊過")]
+        //[Remote("AccountCheck", "Members", ErrorMessage = "此帳號已被註冊過")]
         public string SupplierAccountID { get; set; }
 
         [Display(Name = "聯絡人姓名")]

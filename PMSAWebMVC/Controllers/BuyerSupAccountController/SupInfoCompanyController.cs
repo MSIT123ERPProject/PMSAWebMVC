@@ -68,31 +68,40 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
         [ValidateAntiForgeryToken]
         public ActionResult Create(SupInfoViewModel m)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var maxThanOID = db.SupplierInfo.Select(x => x.SupplierInfoOID).Max() + 1;
-                string SupCodestr = String.Format("S{0:00000}", Convert.ToDouble(maxThanOID));
-                var supInfo = db.SupplierInfo;
-                SupplierInfo s = new SupplierInfo();
-                s.SupplierCode = SupCodestr;
-                s.SupplierName = m.SupplierName;
-                s.TaxID = m.TaxID;
-                s.Address = m.Address;
-                s.Email = m.Email;
-                s.Tel = m.Tel;
-                s.SupplierRatingOID = m.SupplierRatingOID;
-
-                supInfo.Add(s);
-                var result = db.SaveChanges();
-
-                if (result > 0)
+                if (ModelState.IsValid)
                 {
-                    return View("Index");
+                    var maxThanOID = db.SupplierInfo.Select(x => x.SupplierInfoOID).Max() + 1;
+                    string SupCodestr = String.Format("S{0:00000}", Convert.ToDouble(maxThanOID));
+                    var supInfo = db.SupplierInfo;
+                    SupplierInfo s = new SupplierInfo();
+                    s.SupplierCode = SupCodestr;
+                    s.SupplierName = m.SupplierName;
+                    s.TaxID = m.TaxID;
+                    s.Address = m.Address;
+                    s.Email = m.Email;
+                    s.Tel = m.Tel;
+                    s.SupplierRatingOID = m.SupplierRatingOID;
+
+                    supInfo.Add(s);
+                    var result = db.SaveChanges();
+
+                    if (result > 0)
+                    {
+                        TempData["Success"] = $"{s.SupplierName} 更新成功";
+                        return View("Index");
+                    }
+                    else
+                    {
+                        ViewBag.Error = "對不起，伺服器發生錯誤，請再試一次。";
+                        return View(m);
+                    }
                 }
-                else
-                {
-                    return View(m);
-                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = $"對不起，伺服器發生錯誤: {ex.Message}，請再試一次。";
             }
             return View(m);
         }

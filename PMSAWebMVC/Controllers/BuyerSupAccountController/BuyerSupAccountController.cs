@@ -111,6 +111,7 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                     if (r1 > 0)
                     {
                         //新增公司後回到view
+                        TempData["Success"] = $"{supinfo.SupplierName} 更新成功";
                         return RedirectToAction("Create");
                     }
                     else
@@ -136,6 +137,7 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                 }
             }
             //新增公司後回到view
+            TempData["Success"] = "更新成功";
             return RedirectToAction("Create");
         }
 
@@ -189,15 +191,17 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 
                 var r1 = UserManager.Create(user);
                 db.SupplierAccount.Add(sa);
-                var r2 = db.SaveChanges();
                 //var r2 = UserManager.Update(user);
-                if (r1.Succeeded && r2 > 0)
+                if (r1.Succeeded)
                 {
+                    //確定聯絡人信箱沒重複才可存到Acctable
+                    var r2 = db.SaveChanges();
                     //判斷是否要寄信 補寄信
                     if (AccStatus == "on")
                     {
                         await sendMailatIndex(user, user.UserName);
                     }
+                    TempData["Success"] = $"更新成功";
                     return View("Index");
                 }
                 else
@@ -225,7 +229,7 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                         Console.WriteLine(message);
                     }
                 }
-                TempData["msg"] = "對不起，新增失敗，請檢查網路連線再重試一次";
+                TempData["Error"] = "對不起，新增失敗，請檢查網路連線再重試一次";
                 return View();
             }
         }

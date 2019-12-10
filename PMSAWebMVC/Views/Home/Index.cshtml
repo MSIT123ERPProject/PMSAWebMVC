@@ -32,6 +32,7 @@
 
 }
 
+
 @*供應商倉管人員首頁圖表*@
 @if (User.IsInRole("Supplier"))
 {
@@ -186,7 +187,7 @@
 
             });
 
-            });
+         
             ////////////////////////////////////
         //庫存不足料件圖 column chart
         function unitsInStockChart() {
@@ -286,45 +287,10 @@
                 let percentage = [];
                 let partname = [];
                 let pie = [];
-<<<<<<< HEAD
-                console.log(datas);
-=======
->>>>>>> cde8e0ff621415942f8c198abc301ad8e3201271
                 for (var i = 0; i < datas.length; i++) {
                     percentage.push(datas[i].Percentage);
                     partname.push(datas[i].PartName);
                     pie.push({ name: datas[i].SourceListID, y: datas[i].ToalPrice });
-<<<<<<< HEAD
-                    //pie.push([datas[i].PartName, datas[i].Percentage]);
-                }
-                var chart = new Highcharts.chart({
-                    chart: {
-                        renderTo: 'container',
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
-                    title: {
-                        text: '各料件已出貨金額百分比',
-                    },
-                    tooltip: {
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                            },
-                            showInLegend: true,
-                        },
-
-                    },
-                });
-=======
                     }
                     if (pie[0] == null) {
                         toastr.error("查無資料", "通知");
@@ -354,10 +320,8 @@
                                 },
                                 showInLegend: true,
                             },
-
                         },
                     });
->>>>>>> cde8e0ff621415942f8c198abc301ad8e3201271
                     chart.addSeries({
                         type: 'pie',
                         name: '商品金額比例',

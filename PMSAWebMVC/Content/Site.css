@@ -35,7 +35,7 @@
         transform: none !important;
         left: calc(90px + 0.5rem) !important;
         margin: 0;
-        z-index: 99999;
+        z-index: 510;
     }
 
         .sidebar .nav-item .dropdown-menu.dropup {
@@ -157,7 +157,7 @@
 
     #sidebarToggleMobile {
         display: block;
-        z-index: 99999 !important;
+        z-index: 510 !important;
     }
 
     .sidebar .nav-item .nav-link {

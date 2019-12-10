@@ -15,23 +15,24 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td></td>
-            <td> @Html.DisplayFor(m => item.PurchaseRequisitionDtlCode)</td>
-            <td>@Html.DisplayFor(m => item.PartName)</td>
-            <td>@Html.DisplayFor(m => item.Qty)</td>
-            <td>@Html.DisplayFor(m => item.DateRequired)</td>
-            <td>@Html.DisplayFor(m => item.SupplierName)</td>
-            <td>
-                <div class="table-data-feature">
-                    <span data-toggle="modal" data-target="#detailModal" data-dtlcode="@item.PurchaseRequisitionDtlCode">
-                        <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
-                            <i class="far fa-file"></i>
-                        </button>
-                    </span>
-                </div>
-            </td>
-        </tr>
+            <tr>
+                <td></td>
+                <td>@Html.DisplayFor(m => item.PurchaseRequisitionDtlCode)</td>
+                <td>@Html.DisplayFor(m => item.PartName)</td>
+                <td>@Html.DisplayFor(m => item.Qty)</td>
+                <td>@Html.DisplayFor(m => item.DateRequired)</td>
+                <td>@Html.DisplayFor(m => item.SupplierName)</td>
+                <td>
+                    <div class="table-data-feature">
+                        <span data-toggle="modal" data-target="#detailModal" data-dtlcode="@item.PurchaseRequisitionDtlCode"
+                              data-partnumber="@item.PartNumber">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
+                                <i class="far fa-file"></i>
+                            </button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

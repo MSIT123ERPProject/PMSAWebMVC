@@ -15,6 +15,33 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string PurchaseRequisitionIdValue { get; set; }
     }
 
+    public class POCSourceListViewModel
+    {
+        [Display(Name = "供應商")]
+        public string SupplierName { get; set; }
+        [Display(Name = "評等")]
+        public string RatingName { get; set; }
+        [Display(Name = "批量")]
+        public int QtyPerUnit { get; set; }
+        [Display(Name = "最小訂貨量")]
+        public int? MOQ { get; set; }
+        [Display(Name = "單價")]
+        public int UnitPrice { get; set; }
+        [Display(Name = "供應商庫存數量")]
+        public int UnitsInStock { get; set; }
+        [Display(Name = "購買折扣")]
+        public IEnumerable<POCSourceListDtlItem> SourceListDtlItem { get; set; }
+    }
+
+    public class POCSourceListDtlItem
+    {
+        [Display(Name = "需求量")]
+        public int QtyDemanded { get; set; }
+        [DisplayFormat(DataFormatString = "{0:P0}")]
+        [Display(Name = "折扣")]
+        public decimal Discount { get; set; }
+    }
+
     public class PRInfoViewModel
     {
         [Display(Name = "請購人員")]
@@ -123,6 +150,33 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         {
             this.emp = emp;
             this.db = ent;
+        }
+
+        /// <summary>
+        /// 查詢料件的貨源清單
+        /// </summary>
+        /// <param name="PartNumber"></param>
+        /// <returns></returns>
+        public IEnumerable<POCSourceListViewModel> GetPOCSourceListViewModel(string partNumber)
+        {
+            var slq = from sl in db.SourceList
+                      where sl.PartNumber == partNumber
+                      select new POCSourceListViewModel
+                      {
+                          SupplierName = sl.SupplierInfo.SupplierName,
+                          RatingName = sl.SupplierInfo.SupplierRating.RatingName,
+                          QtyPerUnit = sl.QtyPerUnit,
+                          MOQ = sl.MOQ,
+                          UnitPrice = sl.UnitPrice,
+                          UnitsInStock = sl.UnitsInStock,
+                          SourceListDtlItem = (from sld in sl.SourceListDtl
+                                               select new POCSourceListDtlItem
+                                               {
+                                                   QtyDemanded = sld.QtyDemanded,
+                                                   Discount = sld.Discount
+                                               })
+                      };
+            return slq;
         }
 
         /// <summary>

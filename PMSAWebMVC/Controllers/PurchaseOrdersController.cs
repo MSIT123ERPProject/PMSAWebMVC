@@ -105,6 +105,19 @@ namespace PMSAWebMVC.Controllers
             return PartialView("_CreatePRDtlTablePartial", vm);
         }
 
+        /// <summary>
+        /// 取得請購明細表關連之貨源清單
+        /// </summary>
+        /// <param name="id">料件編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetPOCSourceListViewModel(string id)
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var vm = rep.GetPOCSourceListViewModel(id);
+            return PartialView("_CreateSLItemPartial", vm);
+        }        
+
         [HttpGet]
         public ActionResult GetPurchaseOrderDtlList(string id, string supplierCode)
         {

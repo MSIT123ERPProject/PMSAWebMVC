@@ -24,7 +24,8 @@
                 <td>@Html.DisplayFor(m => item.SupplierName)</td>
                 <td>
                     <div class="table-data-feature">
-                        <span data-toggle="modal" data-target="#detailModal" data-dtlcode="@item.PurchaseRequisitionDtlCode">
+                        <span data-toggle="modal" data-target="#detailModal" data-dtlcode="@item.PurchaseRequisitionDtlCode"
+                              data-partnumber="@item.PartNumber">
                             <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="加入採購單">
                                 <i class="far fa-file"></i>
                             </button>

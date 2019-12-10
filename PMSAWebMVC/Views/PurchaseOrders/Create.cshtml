@@ -270,192 +270,14 @@
 
                 <div id="modalPRDtlInfo" class="col-md-8"></div>
 
-                @*<button id="button-demo">簡易DEMO</button>
+                <div id="modalSLDtlInfo" class="row justify-content-md-center"></div>
 
-                    <button id="button-demo2">DEMO2</button>*@
-
-                <div class="row justify-content-md-center">
-
-                    <div class="multiple-items col-md-12 u-slick--gutters-1"
-                         data-arrows-classes="d-none d-lg-inline-block u-slick__arrow-classic u-slick__arrow-centered--y rounded-circle"
-                         data-arrow-left-classes="fas fa-arrow-left u-slick__arrow-classic-inner u-slick__arrow-classic-inner--left ml-lg-2 ml-xl-4"
-                         data-arrow-right-classes="fas fa-arrow-right u-slick__arrow-classic-inner u-slick__arrow-classic-inner--right mr-lg-2 mr-xl-4">
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                <label class="btn btn-outline-primary btn-block active">
-                                    <input type="radio" class="mgc" name="radio4" autocomplete="off"> 選取
-                                </label>
-                            </div>
-                            <!--Card content-->
-                            <div class="card-body">
-
-                                <h5 class="card-title">
-                                    <small>
-                                        <strong>供應商</strong>
-                                        <span class="badge badge-success" data-toggle="tooltip" title="評等">優良</span>
-                                    </small>
-                                    <br>
-                                    <span class="text-muted">誌慶股份有限公司</span>
-                                </h5>
-
-                                <ol class="list-unstyled mb-0">
-                                    <li class="border-top p-1">
-                                        <small><strong>批量</strong></small>
-                                        <br>
-                                        <span class="text-muted">50</span>
-                                    </li>
-                                    @*因資料庫內容不符，暫不實作最小訂貨量功能
-                                        <li class="border-top p-1">
-                                                <small><strong>最小訂貨量</strong></small>
-                                                <br>
-                                                <span class="text-muted">100</span>
-                                            </li>*@
-                                    <li class="border-top p-1">
-                                        <small><strong>單價</strong></small>
-                                        <br>
-                                        <span class="text-muted">149</span>
-                                    </li>
-                                    <li class="border-top p-1">
-                                        <small><strong>供應商庫存數量</strong></small>
-                                        <br>
-                                        <span class="text-muted">152</span>
-                                    </li>
-                                    <li class="border-top p-1">
-                                        <small><strong>購買折扣</strong></small>
-                                    </li>
-                                </ol>
-
-                                <ul class="list-group mt-0">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        50個以上
-                                        <span class="badge badge-primary badge-pill">折扣 5%</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        100個以上
-                                        <span class="badge badge-primary badge-pill">折扣 15%</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        150個以上
-                                        <span class="badge badge-primary badge-pill">折扣 25%</span>
-                                    </li>
-                                </ul>
-
-
-
-                            </div>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured2
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured3
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured4
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in Dapibus ac facilisis in Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured5
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured6
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured7
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit
-                        iusto nulla
-                        aperiam blanditiis ad consequatur in dolores culpa, dignissimos,
-                        eius
-                        non possimus fugiat. Esse ratione fuga, enim, ab officiis totam.
-                    </p>
-                </div>
-                <ul class="list-group z-depth-0">
-                    <li class="list-group-item justify-content-between">
-                        Cras justo odio
-                        <span class="badge badge-primary badge-pill">14</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Dapibus ac facilisis in
-                        <span class="badge badge-primary badge-pill">2</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Morbi leo risus
-                        <span class="badge badge-primary badge-pill">1</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Cras justo odio
-                        <span class="badge badge-primary badge-pill">14</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Dapibus ac facilisis in
-                        <span class="badge badge-primary badge-pill">2</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Morbi leo risus
-                        <span class="badge badge-primary badge-pill">1</span>
-                    </li>
-                </ul>
             </div>
 
             <!--Footer-->
             <div class="modal-footer bg-light">
+                @*<button id="button-demo">簡易DEMO</button>
+        <button id="button-demo2">DEMO2</button>*@
                 <button class="btn btn-primary" type="submit"><i class="far fa-file"></i> 加入採購單</button>
                 <button class="btn btn-primary" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
                 <input type="submit" class="btn btn-primary" name="name" value="送出" />
@@ -508,16 +330,35 @@
                 //var modal = $(this)
                 //modal.find('.modal-title').text('New message to ' + recipient)
                 //modal.find('.modal-body input').val(recipient)
-                $('.multiple-items').not('.slick-initialized').slick(slickOptions);
+                //$('.multiple-items').not('.slick-initialized').slick(slickOptions);
+                $('.multiple-items').slick(slickOptions);
             })
 
             //Modal顯示前
             $('#detailModal').on('show.bs.modal', function (event) {
                 var span = $(event.relatedTarget);
                 var dtlcode = span.data('dtlcode');
+                var partnumber = span.data('partnumber');
                 setPRDtlInfo(dtlcode);
+                setSLDtlInfo(partnumber);
             });
 
+            //設定Modal貨源清單
+            function setSLDtlInfo(partNumber) {
+                $.ajax({
+                    url: "@Url.Action("GetPOCSourceListViewModel", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: partNumber
+                    },
+                }).done(function (result) {
+                    $("#modalSLDtlInfo").html(result);
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
+
+            //設定Modal請購單資訊
             function setPRDtlInfo(purchaseOrderDtlCode) {
                 $.ajax({
                     url: "@Url.Action("GetPRDtlInfoViewModel", "PurchaseOrders")",

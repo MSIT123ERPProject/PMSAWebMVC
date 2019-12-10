@@ -2,6 +2,9 @@
 
 @{
     ViewBag.Title = "Index";
+    var SuccessMsg = TempData["SuccessMsg"];
+    var ErrorMsg = TempData["ErrorMsg"];
+    var emailAlert = TempData["Sended"];
 }
 
 @section styles
@@ -133,75 +136,76 @@
     <div class="row">
         <div class="card col-lg-6 col-12 m-2">
             <div class="card-body">
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("Index", "SupSetting"))
                 {
                     @Html.AntiForgeryToken()
 
-                    <div class="form-horizontal">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <h4>個人資料</h4>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupSettingViewModel.SupplierAccountID, htmlAttributes: new { @class = "control-label  col-lg-12" })
-                            <div class="col-12">
-                                @Html.EditorFor(model => model.SupSettingViewModel.SupplierAccountID, new { htmlAttributes = new { @class = "form-control col-lg-12 disabled" } })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupSettingViewModel.ContactName, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
-                                @Html.EditorFor(model => model.SupSettingViewModel.ContactName, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
-                                @Html.ValidationMessageFor(model => model.SupSettingViewModel.ContactName, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupSettingViewModel.Email, htmlAttributes: new { @class = "control-label  col-lg-12" })
-                            <div class="col-12">
-                                @Html.EditorFor(model => model.SupSettingViewModel.Email, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
-                                @Html.ValidationMessageFor(model => model.SupSettingViewModel.Email, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupSettingViewModel.Mobile, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
-                                @Html.EditorFor(model => model.SupSettingViewModel.Mobile, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
-                                @Html.ValidationMessageFor(model => model.SupSettingViewModel.Mobile, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupSettingViewModel.Tel, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
-                                @Html.EditorFor(model => model.SupSettingViewModel.Tel, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
-                                @Html.ValidationMessageFor(model => model.SupSettingViewModel.Tel, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <h4>安全性設定</h4>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
-                                @Html.DropDownListFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="y", Selected=false },
-                                                                                                                        new SelectListItem { Text="否", Value="n", Selected=true }}, new { @class = "form-control  col-lg-12" })
-                                @Html.ValidationMessageFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-12 mt-4 mb-4">
-                                <input type="submit" value="確定修改" class="btn btn-primary" />
-                            </div>
+                    <h4>個人資料</h4>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SupSettingViewModel.SupplierAccountID, htmlAttributes: new { @class = "control-label  col-lg-12" })
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.SupSettingViewModel.SupplierAccountID, new { htmlAttributes = new { @class = "form-control col-lg-12 disabled" } })
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SupSettingViewModel.ContactName, htmlAttributes: new { @class = "control-label col-lg-12" })
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.SupSettingViewModel.ContactName, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
+                            @Html.ValidationMessageFor(model => model.SupSettingViewModel.ContactName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SupSettingViewModel.Email, htmlAttributes: new { @class = "control-label  col-lg-12" })
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.SupSettingViewModel.Email, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
+                            @Html.ValidationMessageFor(model => model.SupSettingViewModel.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SupSettingViewModel.Mobile, htmlAttributes: new { @class = "control-label col-lg-12" })
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.SupSettingViewModel.Mobile, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
+                            @Html.ValidationMessageFor(model => model.SupSettingViewModel.Mobile, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SupSettingViewModel.Tel, htmlAttributes: new { @class = "control-label col-lg-12" })
+                        <div class="col-12">
+                            @Html.EditorFor(model => model.SupSettingViewModel.Tel, new { htmlAttributes = new { @class = "form-control  col-lg-12" } })
+                            @Html.ValidationMessageFor(model => model.SupSettingViewModel.Tel, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <h4 class="mt-5">安全性設定</h4>
+                    <div id="alert" class="alert alert-danger font-weight-bold"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, htmlAttributes: new { @class = "control-label col-lg-12" })
+                        <div class="col-12">
+                            @Html.DropDownListFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="false"},
+                                                                                                                    new SelectListItem { Text="否", Value="false"}}, new { @class = "form-control col-lg-12 TFA" })
+                            @Html.ValidationMessageFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-12 mt-4 mb-4">
+                            <input type="submit" value="確定修改" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
                 }
             </div>
         </div>
         <div class="card col-lg-5 col-12 m-2">
             <div class="card-body">
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("IndexRight", "SupSetting"))
                 {
                     @Html.AntiForgeryToken()
 
@@ -256,3 +260,86 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script>
+        var err = '@ErrorMsg';
+        if(err){
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr.error(err)
+        }
+        //SuccessMsg
+           var message = '@SuccessMsg';
+                    if(message){
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(message)
+                    }
+        $(document).ready(function(){
+            $.getJSON( '@Url.Action("isEmailConfirmed","SupSetting")',
+                function(d){
+                    if(d.isEmailConfirmed == false){
+                        $("#alert").html(`<i class="fas fa-flag-checkered"></i> ${d.text} <a href="@Url.Action("sendMailConfirm", "SupSetting")"><i class="fas fa-paper-plane"></i>點此寄送驗證信</a>`)
+                        $(".TFA").attr("disabled",'disabled')
+                        //emailAlert
+                        var message = '@emailAlert';
+                        if(message){
+                                toastr.options = {
+                                  "closeButton": true,
+                                  "debug": false,
+                                  "newestOnTop": false,
+                                  "progressBar": false,
+                                  "positionClass": "toast-top-right",
+                                  "preventDuplicates": false,
+                                  "onclick": null,
+                                  "showDuration": "300",
+                                  "hideDuration": "1000",
+                                  "timeOut": "5000",
+                                  "extendedTimeOut": "1000",
+                                  "showEasing": "swing",
+                                  "hideEasing": "linear",
+                                  "showMethod": "fadeIn",
+                                  "hideMethod": "fadeOut"
+                                }
+                                toastr.success(message)
+                        }
+                    }
+                    else{
+                        $("#alert").html(`<i class="fas fa-flag-checkered"></i> ${d.text}`)
+                    }
+                }
+            )
+        })
+    </script>
+}

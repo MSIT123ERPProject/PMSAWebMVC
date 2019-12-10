@@ -150,7 +150,7 @@ namespace PMSAWebMVC.Controllers.AccSettingController
             }
             catch
             {
-                TempData["ErrorMsg"] = "修改失敗，請檢查網路連線再試一次。";
+                TempData["ErrorMsg"] = "修改失敗，不可空值，並請檢查網路連線再試一次...";
                 return RedirectToAction("Index");
             }
         }

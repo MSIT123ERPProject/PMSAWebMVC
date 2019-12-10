@@ -29,6 +29,6 @@ namespace PMSAWebMVC.ViewModels.Setting
         public string Tel { get; set; }
 
         [Display(Name = "是否啟用雙因素驗證")]
-        public Nullable<bool> EnableTwoFactorAuth { get; set; }
+        public bool EnableTwoFactorAuth { get; set; }
     }
 }

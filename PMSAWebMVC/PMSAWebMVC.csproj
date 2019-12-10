@@ -202,7 +202,7 @@
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccSettingController\BuyerSettingController.cs" />
-    <Compile Include="Controllers\AccSettingController\SupSettingController.cs" />
+    <Compile Include="Areas\SupplierArea\Controllers\SupSettingController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\SupInfoCompanyController.cs" />
@@ -2109,17 +2109,14 @@
     <Content Include="Content\slick\fonts\slick.ttf" />
     <Content Include="Content\slick\fonts\slick.woff" />
     <Content Include="Content\slick\slick-theme.site.css" />
-
     <Content Include="Content\IconKit\fonts\iconkit.eot" />
     <Content Include="Content\IconKit\fonts\iconkit.otf" />
     <Content Include="Content\IconKit\fonts\iconkit.ttf" />
     <Content Include="Content\IconKit\fonts\iconkit.woff" />
     <Content Include="Content\IconKit\fonts\iconkit.woff2" />
-
     <Content Include="Areas\SupplierArea\Views\web.config" />
     <Content Include="Areas\SupplierArea\Views\_ViewStart.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupplierHome\Index.cshtml" />
-
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2403,15 +2400,12 @@
     <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
-
     <Content Include="Views\PurchaseOrders\_CreatePODtlInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreateSLItemPartial.cshtml" />
     <Content Include="Views\SupInfoCompany\Index.cshtml" />
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
-    <Content Include="Views\SupSetting\Index.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\SupSetting\Index.cshtml" />
     <Content Include="Views\BuyerSetting\Index.cshtml" />
-
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

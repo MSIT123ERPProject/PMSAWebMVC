@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
 using PMSAWebMVC.ViewModels.Setting;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PMSAWebMVC.Controllers.AccSettingController
+namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
     public class SupSettingController : BaseController
     {

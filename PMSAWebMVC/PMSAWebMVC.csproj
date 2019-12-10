@@ -588,6 +588,9 @@
     <Content Include="Content\fontawesome-all.min.css" />
     <Content Include="Content\fontawesome.css" />
     <Content Include="Content\fontawesome.min.css" />
+    <Content Include="Content\IconKit\css\iconkit.css" />
+    <Content Include="Content\IconKit\css\iconkit.min.css" />
+    <Content Include="Content\IconKit\fonts\iconkit.svg" />
     <Content Include="Content\MagicInput\magic-input.css" />
     <Content Include="Content\MagicInput\magic-input.min.css" />
     <Content Include="Content\MagicInput\magic-input.site.css" />
@@ -658,7 +661,6 @@
     <Content Include="Content\pickadate\themes\rtl.css" />
     <Content Include="Content\regular.css" />
     <Content Include="Content\regular.min.css" />
-    <Content Include="Content\sbTemplate\mdb.min.css" />
     <Content Include="Content\sbTemplate\sb-admin.css" />
     <Content Include="Content\slick\ajax-loader.gif" />
     <Content Include="Content\slick\fonts\slick.svg" />
@@ -2088,6 +2090,11 @@
     <Content Include="Content\slick\fonts\slick.ttf" />
     <Content Include="Content\slick\fonts\slick.woff" />
     <Content Include="Content\slick\slick-theme.site.css" />
+    <Content Include="Content\IconKit\fonts\iconkit.eot" />
+    <Content Include="Content\IconKit\fonts\iconkit.otf" />
+    <Content Include="Content\IconKit\fonts\iconkit.ttf" />
+    <Content Include="Content\IconKit\fonts\iconkit.woff" />
+    <Content Include="Content\IconKit\fonts\iconkit.woff2" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2212,7 +2219,6 @@
     <Content Include="Scripts\resxmanager\jquery.spellchecker.js" />
     <Content Include="Scripts\resxmanager\jquery.textarea-expander.js" />
     <Content Include="Scripts\resxmanager\jquery.watermark.min.js" />
-    <Content Include="Scripts\sbTemplate\mdb.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.min.js" />
     <Content Include="Scripts\Site.js" />

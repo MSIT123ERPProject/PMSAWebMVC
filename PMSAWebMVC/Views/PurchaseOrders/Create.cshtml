@@ -32,6 +32,18 @@
         #dataTablesPO tbody tr td:nth-child(n+4):nth-child(-n+8) {
             text-align: right;
         }
+
+        @@media (min-width: 768px) and (max-width: 992px) {
+            .modal-fluid .col-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            .modal-fluid .col-md-8 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
     </style>
 }
 
@@ -258,26 +270,79 @@
 
                 <div id="modalPRDtlInfo" class="col-md-8"></div>
 
-                <button id="button-demo">簡易DEMO</button>
+                @*<button id="button-demo">簡易DEMO</button>
 
-                <button id="button-demo2">DEMO2</button>
+                    <button id="button-demo2">DEMO2</button>*@
 
                 <div class="row justify-content-md-center">
-                    <div class="multiple-items col-md-10 u-slick--gutters-1"
+
+                    <div class="multiple-items col-md-12 u-slick--gutters-1"
                          data-arrows-classes="d-none d-lg-inline-block u-slick__arrow-classic u-slick__arrow-centered--y rounded-circle"
                          data-arrow-left-classes="fas fa-arrow-left u-slick__arrow-classic-inner u-slick__arrow-classic-inner--left ml-lg-2 ml-xl-4"
                          data-arrow-right-classes="fas fa-arrow-right u-slick__arrow-classic-inner u-slick__arrow-classic-inner--right mr-lg-2 mr-xl-4">
                         <div class="card shadow-none" style="width: 18rem;">
                             <div class="card-header">
-                                Featured1
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
+                                <label class="btn btn-outline-primary btn-block active">
+                                    <input type="radio" class="mgc" name="radio4" autocomplete="off"> 選取
+                                </label>
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
+                            <!--Card content-->
+                            <div class="card-body">
+
+                                <h5 class="card-title">
+                                    <small>
+                                        <strong>供應商</strong>
+                                        <span class="badge badge-success" data-toggle="tooltip" title="評等">優良</span>
+                                    </small>
+                                    <br>
+                                    <span class="text-muted">誌慶股份有限公司</span>
+                                </h5>
+
+                                <ol class="list-unstyled mb-0">
+                                    <li class="border-top p-1">
+                                        <small><strong>批量</strong></small>
+                                        <br>
+                                        <span class="text-muted">50</span>
+                                    </li>
+                                    @*因資料庫內容不符，暫不實作最小訂貨量功能
+                                        <li class="border-top p-1">
+                                                <small><strong>最小訂貨量</strong></small>
+                                                <br>
+                                                <span class="text-muted">100</span>
+                                            </li>*@
+                                    <li class="border-top p-1">
+                                        <small><strong>單價</strong></small>
+                                        <br>
+                                        <span class="text-muted">149</span>
+                                    </li>
+                                    <li class="border-top p-1">
+                                        <small><strong>供應商庫存數量</strong></small>
+                                        <br>
+                                        <span class="text-muted">152</span>
+                                    </li>
+                                    <li class="border-top p-1">
+                                        <small><strong>購買折扣</strong></small>
+                                    </li>
+                                </ol>
+
+                                <ul class="list-group mt-0">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        50個以上
+                                        <span class="badge badge-primary badge-pill">折扣 5%</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        100個以上
+                                        <span class="badge badge-primary badge-pill">折扣 15%</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        150個以上
+                                        <span class="badge badge-primary badge-pill">折扣 25%</span>
+                                    </li>
+                                </ul>
+
+
+
+                            </div>
                         </div>
                         <div class="card shadow-none" style="width: 18rem;">
                             <div class="card-header">
@@ -478,7 +543,7 @@
                 fade: false,
                 centerMode: false,
                 centerPadding: '50px',
-                slidesToShow: 3,
+                slidesToShow: 5,
                 slidesToScroll: 1,
                 focusOnSelect: false,
                 easing: "linear",
@@ -498,6 +563,11 @@
                     {
                         breakpoint: 992, settings: {
                             slidesToShow: 2,
+                        }
+                    },
+                            {
+                        breakpoint: 1200, settings: {
+                            slidesToShow: 4,
                         }
                     },
                 ],

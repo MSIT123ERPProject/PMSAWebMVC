@@ -62,6 +62,23 @@
                 });
                 $("#dataTableUOD").DataTable(
                     {
+                        ordering: false,
+                        //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                        order: [[2, 'desc']],
+                        //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                        responsive: {
+                            details: {
+                                type: 'column',
+                                target: 0
+                            }
+                        },
+                        columnDefs: [{
+                            targets: 0,
+                            className: 'control'
+                        },
+                        { orderable: false, targets: [0, 1, -1] },
+                        { className: 'text-center', targets: [5, 6, 7, 8, 9, 10, 11] },
+                        ],
                         language: {
                             url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
                         },
@@ -233,7 +250,8 @@
                     targets: 0,
                     className: 'control'
                 },
-                { orderable: false, targets: [0, 1, -1] },
+                    { orderable: false, targets: [0, 1, -1] },
+                    {className:'text-center',targets:[5,6,7,8,9,10,11]},
                 ],
             });
         }

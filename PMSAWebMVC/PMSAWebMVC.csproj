@@ -196,6 +196,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\SupplierArea\SupplierAreaAreaRegistration.cs" />
     <Compile Include="Common\HtmlHelperExtensions.cs" />
     <Compile Include="Common\IdentityExtensions.cs" />
     <Compile Include="Common\StringExtensions.cs" />
@@ -220,10 +221,10 @@
     <Compile Include="Controllers\AdminController\UsersAdminController.cs" />
     <Compile Include="Controllers\StockInDtlsController.cs" />
     <Compile Include="Controllers\StockInsController.cs" />
-    <Compile Include="Controllers\SupplierController\OrdersController.cs" />
-    <Compile Include="Controllers\SupplierController\ShipNoticesController.cs" />
-    <Compile Include="Controllers\SupplierController\SupplierHomePageController.cs" />
-    <Compile Include="Controllers\SupplierController\SupplierStocksController.cs" />
+    <Compile Include="Areas\SupplierArea\Controllers\SupplierController\OrdersController.cs" />
+    <Compile Include="Areas\SupplierArea\Controllers\SupplierController\ShipNoticesController.cs" />
+    <Compile Include="Areas\SupplierArea\Controllers\SupplierHomeController.cs" />
+    <Compile Include="Areas\SupplierArea\Controllers\SupplierController\SupplierStocksController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -2108,11 +2109,17 @@
     <Content Include="Content\slick\fonts\slick.ttf" />
     <Content Include="Content\slick\fonts\slick.woff" />
     <Content Include="Content\slick\slick-theme.site.css" />
+
     <Content Include="Content\IconKit\fonts\iconkit.eot" />
     <Content Include="Content\IconKit\fonts\iconkit.otf" />
     <Content Include="Content\IconKit\fonts\iconkit.ttf" />
     <Content Include="Content\IconKit\fonts\iconkit.woff" />
     <Content Include="Content\IconKit\fonts\iconkit.woff2" />
+
+    <Content Include="Areas\SupplierArea\Views\web.config" />
+    <Content Include="Areas\SupplierArea\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\SupplierHome\Index.cshtml" />
+
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2265,8 +2272,8 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Views\Shared\ResetPwdSupEmailTemplate.html" />
     <Content Include="Views\Shared\ResetPwdEmailTemplate.html" />
-    <Content Include="Views\ShipNotices\ShipNoticeDisplay.cshtml" />
-    <Content Include="Views\ShipNotices\ShipNoticesDtlTemplate.html" />
+    <Content Include="Areas\SupplierArea\Views\ShipNotices\ShipNoticeDisplay.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\ShipNotices\ShipNoticesDtlTemplate.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2372,16 +2379,15 @@
     <Content Include="Views\SourceLists\EditDtl.cshtml" />
     <Content Include="Views\SourceLists\Index.cshtml" />
     <Content Include="Views\SourceLists\IndexDtl.cshtml" />
-    <Content Include="Views\SupplierStocks\Index.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\SupplierStocks\Index.cshtml" />
     <Content Include="Views\UsersAdmin\Index.cshtml" />
     <Content Include="Views\WarehouseInfoes\Index.cshtml" />
     <Content Include="Views\Shared\Deny.cshtml" />
-    <Content Include="Views\ShipNotices\UnshipOrderDtl.cshtml" />
-    <Content Include="Views\ShipNotices\Index.cshtml" />
-    <Content Include="Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\ShipNotices\UnshipOrderDtl.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\ShipNotices\Index.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
-    <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
     <Content Include="Views\Account\ConfirmEmailError.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
@@ -2398,15 +2404,20 @@
     <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
+
     <Content Include="Views\PurchaseOrders\_CreatePODtlInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreateSLItemPartial.cshtml" />
     <Content Include="Views\SupInfoCompany\Index.cshtml" />
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
     <Content Include="Views\SupSetting\Index.cshtml" />
     <Content Include="Views\BuyerSetting\Index.cshtml" />
+
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\SupplierArea\Models\" />
+    <Folder Include="Areas\SupplierArea\Views\Shared\" />
     <Folder Include="assets\parts\" />
     <Folder Include="assets\products\" />
     <Folder Include="Utilities\ChengHao\" />

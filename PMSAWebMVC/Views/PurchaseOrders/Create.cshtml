@@ -34,14 +34,14 @@
         }
 
         @@media (min-width: 768px) and (max-width: 992px) {
+            .modal-fluid .col-md-8, .modal-fluid .col-md-4 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
             .modal-fluid .col-6 {
                 flex: 0 0 50%;
                 max-width: 50%;
-            }
-
-            .modal-fluid .col-md-8 {
-                flex: 0 0 100%;
-                max-width: 100%;
             }
         }
     </style>
@@ -267,28 +267,89 @@
 
             <!--Body-->
             <div class="modal-body">
+                <!--請購明細資料-->
+                <div class="row">
+                    <div id="modalPRDtlInfo" class="col-12"></div>
+                </div>
 
-                <div id="modalPRDtlInfo" class="col-md-8"></div>
+                <div class="row">
+                    <!--貨源清單-->
+                    <div class="col-sm-12 col-lg-6" id="modalSLDtlInfo"></div>
 
-                <div id="modalSLDtlInfo" class="row justify-content-md-center"></div>
+                    <!--採購明細資料-->
+                    <div id="modalPRDtlInput" class="col-sm-12 col-lg-6">
+
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <a data-toggle="collapse" href="#collapse-prdtlInput" aria-expanded="true" aria-controls="collapse-prdtlInput" id="heading-prdtlInput" class="d-block nounderline">
+                                    <i class="fab fa-wpforms"></i> 採購明細資料 <i class="fa fa-chevron-down"></i>
+                                </a>
+                            </div>
+
+                            <div id="collapse-prdtlInput" class="collapse show" aria-labelledby="heading-prdtlInput">
+                                <div class="card-body mb-0 pb-0 pt-2">
+
+                                    <form>
+                                        <div class="form-row">
+
+                                            <div class="md-form col-md-4 col-6 text-info">
+                                                <input type="number" id="TotalSourceListQty" class="form-control" disabled value="500">
+                                                <label for="TotalSourceListQty" class="disabled text-info">料件總數</label>
+                                            </div>
+
+                                            <div class="md-form col-md-4 col-6 text-info">
+                                                <input type="number" id="PurchaseUnitPrice" class="form-control" disabled value="100">
+                                                <label for="PurchaseUnitPrice" class="disabled text-info">單價</label>
+                                            </div>
+
+                                            <div class="md-form col-md-4 col-6 text-info">
+                                                <input type="text" id="Discount" class="form-control" disabled value="0%">
+                                                <label for="Discount" class="disabled text-info">折扣</label>
+                                            </div>
+
+                                            <div class="md-form col-md-4 col-6">
+                                                <input type="number" id="Qty" class="form-control" value="10">
+                                                <label for="Qty">數量 <span class="text-danger">*</span></label>
+                                            </div>
+
+                                            <div class="md-form col-md-4 col-6">
+                                                <input type="text" class="form-control datetimepicker-input" id="DateRequired" data-toggle="datetimepicker" data-target="#DateRequired" />
+                                                <label for="DateRequired">要求到貨日期 <span class="text-danger">*</span></label>
+                                            </div>
+
+                                            <div class="md-form col-md-4 col-6">
+                                                <input type="number" id="Total" class="form-control" disabled value="3000">
+                                                <label for="Total" class="disabled text-info">小計</label>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row mt-0 mb-3">
+
+                                            <div class="col-6">
+                                                <button class="btn btn-primary btn-block" type="submit"><i class="far fa-file"></i> 加入採購單</button>
+                                                <button class="btn btn-primary btn-block" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <button class="btn btn-outline-primary btn-block" data-dismiss="modal">取消</button>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!--採購明細資料 End-->
+                </div>
 
             </div>
 
-            <!--Footer-->
-            <div class="modal-footer bg-light">
-                @*<button id="button-demo">簡易DEMO</button>
-        <button id="button-demo2">DEMO2</button>*@
-                <button class="btn btn-primary" type="submit"><i class="far fa-file"></i> 加入採購單</button>
-                <button class="btn btn-primary" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
-                <input type="submit" class="btn btn-primary" name="name" value="送出" />
-                <a href="#" class="btn btn-primary" role="button">content</a>
-                <a href="#" class="btn btn-primary" role="button">content</a>
-                <input type="radio" name="name" class="btn btn-primary" />Radio測試
-                <button class="btn btn-outline-primary" data-dismiss="modal">
-                    取消
-                </button>
-
-            </div>
         </div>
         <!--/.Content-->
     </div>
@@ -300,6 +361,10 @@
     <script src="~/Scripts/slick/slick.js"></script>
     <script>
         $(document).ready(function () {
+
+            $(function () {
+                $('#DateRequired').datetimepicker();
+            });
 
             $(window).on('resize', function () {
                 console.log($(window).width());
@@ -321,6 +386,50 @@
                 toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
             });
 
+
+
+            var slickOptions = {
+                infinite: true,
+                arrows: true,
+                dots: true,
+                fade: false,
+                centerMode: false,
+                centerPadding: '50px',
+                slidesToShow: 2,
+                slidesToScroll: 1,
+                focusOnSelect: false,
+                easing: "linear",
+                lazyLoad: 'progressive',
+                swipeToSlide: true,
+                responsive: [
+                    {
+                        breakpoint: 554, settings: {
+                            slidesToShow: 1,
+                        }
+                    },
+                    {
+                        breakpoint: 768, settings: {
+                            slidesToShow: 1,
+                        }
+                    },
+                    {
+                        breakpoint: 992, settings: {
+                            slidesToShow: 1,
+                        }
+                    },
+                    {
+                        breakpoint: 1200, settings: {
+                            slidesToShow: 2,
+                        }
+                    },
+                ],
+            };
+
+            //Modal已隱藏
+            $('#detailModal').on('hidden.bs.modal', function (event) {
+                $('#sldtl-items').slick('unslick');
+            })
+
              //Modal已顯示
             $('#detailModal').on('shown.bs.modal', function (event) {
                 //var button = $(event.relatedTarget) // Button that triggered the modal
@@ -330,8 +439,8 @@
                 //var modal = $(this)
                 //modal.find('.modal-title').text('New message to ' + recipient)
                 //modal.find('.modal-body input').val(recipient)
-                //$('.multiple-items').not('.slick-initialized').slick(slickOptions);
-                $('.multiple-items').slick(slickOptions);
+                //$('#sldtl-items').not('.slick-initialized').slick(slickOptions);
+                $('#sldtl-items').slick(slickOptions);
             })
 
             //Modal顯示前
@@ -342,6 +451,16 @@
                 setPRDtlInfo(dtlcode);
                 setSLDtlInfo(partnumber);
             });
+
+            //貨源清單收起
+            $('body').on('hidden.bs.collapse', '#collapse-sldtlInfo', function (e) {
+                  $('#sldtl-items').slick('unslick');
+            })
+
+            //貨源清單打開
+            $('body').on('shown.bs.collapse', '#collapse-sldtlInfo', function (e) {
+                $('#sldtl-items').slick(slickOptions);
+            })
 
             //設定Modal貨源清單
             function setSLDtlInfo(partNumber) {
@@ -373,46 +492,7 @@
                     });
             }
 
-            $('#detailModal').on('hidden.bs.modal', function (event) {
-                $('.multiple-items').slick('unslick');
-            })
 
-            var slickOptions = {
-                infinite: true,
-                arrows: true,
-                dots: true,
-                fade: false,
-                centerMode: false,
-                centerPadding: '50px',
-                slidesToShow: 5,
-                slidesToScroll: 1,
-                focusOnSelect: false,
-                easing: "linear",
-                lazyLoad: 'progressive',
-                swipeToSlide: true,
-                responsive: [
-                    {
-                        breakpoint: 554, settings: {
-                            slidesToShow: 1,
-                        }
-                    },
-                    {
-                        breakpoint: 768, settings: {
-                            slidesToShow: 1,
-                        }
-                    },
-                    {
-                        breakpoint: 992, settings: {
-                            slidesToShow: 2,
-                        }
-                    },
-                            {
-                        breakpoint: 1200, settings: {
-                            slidesToShow: 4,
-                        }
-                    },
-                ],
-            };
 
             //分頁樣式測試
             $(".btn-group-toggle a[data-toggle='tab']").click(function () {

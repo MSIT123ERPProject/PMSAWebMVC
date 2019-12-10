@@ -10,8 +10,8 @@
     width: 90px !important;
     background-color: #212529;
     min-height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
 }
 
     .sidebar .nav-item:last-child {
@@ -666,14 +666,14 @@
 /*------scroll bar---------------------*/
 
 .sidebar::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
     height: 7px;
     position: absolute;
 }
 
 .sidebar::-webkit-scrollbar-button {
-    width: 0px;
-    height: 0px;
+    /*width: 0px;
+    height: 0px;*/
 }
 
 .sidebar::-webkit-scrollbar-thumb {
@@ -692,8 +692,9 @@
 
 .sidebar::-webkit-scrollbar-track {
     background: transparent;
-    border: 0px none #ffffff;
+    border: 0px none;
     border-radius: 50px;
+    margin: 0 5px 0 5px;
 }
 
     .sidebar::-webkit-scrollbar-track:hover {

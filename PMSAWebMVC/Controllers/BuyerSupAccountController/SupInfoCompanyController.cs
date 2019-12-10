@@ -174,8 +174,9 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                 }
             }
             return Json(sups, JsonRequestBehavior.AllowGet);
-        } //SupInfoNoContactOnlySupInfo
+        }
 
+        //SupInfoNoContactOnlySupInfo
         public JsonResult getAllSupInfoNoContactOnlySupInfoToIndexAjax()
         {
             var supInfos = db.SupplierInfo.Select(x => x.SupplierCode);

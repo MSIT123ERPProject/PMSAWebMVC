@@ -2418,7 +2418,6 @@
     <Folder Include="Utilities\ShiYuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
-    <Folder Include="Views\Buyer\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

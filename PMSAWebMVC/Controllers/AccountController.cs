@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PMSAWebMVC;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.Services;
 using System;
 using System.Data.Entity;
 using System.Globalization;
@@ -235,24 +236,155 @@ namespace PMSAWebMVC.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByEmailAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null)
                 {
                     // 不顯示使用者不存在或未受確認
                     return View("ForgotPasswordConfirmation");
                 }
 
-                // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
-                // 傳送包含此連結的電子郵件
-                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "重設密碼", "請按 <a href=\"" + callbackUrl + "\">這裏</a> 重設密碼");
-                return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                //// 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
+                //// 傳送包含此連結的電子郵件
+                //string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //await UserManager.SendEmailAsync(user.Id, "重設密碼", "請按 <a href=\"" + callbackUrl + "\">這裏</a> 重設密碼");
+                //return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                //判斷登入者為供應方、採購方
+                string LoginAccId = user.UserName;
+                string LognId = user.Id;
+                //採購方
+                if (UserManager.IsInRole(LognId, "Buyer") || UserManager.IsInRole(LognId, "Manager") ||
+                    UserManager.IsInRole(LognId, "ProductionControl") || UserManager.IsInRole(LognId, "NewEmployee") ||
+                    UserManager.IsInRole(LognId, "Admin") || UserManager.IsInRole(LognId, "Warehouse"))
+                {
+                    //採購方 忘記密碼重設密碼
+                    //重設db密碼
+                    //1.重設 user 密碼
+                    string pwd = generateFirstPwd();
+                    await UserManager.UpdateSecurityStampAsync(LognId);
+                    user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
+                    user.LastPasswordChangedDate = null;
+                    await UserManager.UpdateAsync(user);
+
+                    var emp = db.Employee.Where(x => x.EmployeeID == LoginAccId).SingleOrDefault();
+                    emp.PasswordHash = user.PasswordHash;
+
+                    // 傳送包含此連結的電子郵件
+                    var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
+                    string codeB = await UserManager.GenerateEmailConfirmationTokenAsync(LognId);
+                    var callbackUrlB = Url.Action("ConfirmEmail", "Account", new { userId = LognId, code = codeB }, protocol: Request.Url.Scheme);
+                    string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdEmailTemplate.html"));
+                    // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
+                    string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
+                    string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrlB, pwd);
+                    //寄信
+                    await UserManager.SendEmailAsync(LognId, "重設您的密碼", MailBody);
+
+                    //3.更新db寄信相關欄位
+                    //SendLetterDate
+                    emp.SendLetterDate = DateTime.Now;
+                    //SendLetterStatus
+                    emp.SendLetterStatus = "S";
+
+                    //更新狀態欄位 user emo table
+                    await AccStatusResetEmp(LoginAccId);
+                    return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                }
+                //供應方
+                else if (UserManager.IsInRole(LognId, "Supplier"))
+                {
+                    //供應商 忘記密碼重設密碼//sa table user table
+                    //重設資料庫該 user 密碼 並 hash 存入 db
+                    //重設db密碼
+                    //1.重設 user 密碼
+                    string pwd = generateFirstPwd();
+                    await UserManager.UpdateSecurityStampAsync(LognId);
+                    user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
+                    user.LastPasswordChangedDate = null;
+
+                    var SupAcc = db.SupplierAccount.Where(x => x.SupplierAccountID == LoginAccId).SingleOrDefault();
+                    SupAcc.PasswordHash = user.PasswordHash;
+
+                    // 傳送包含此連結的電子郵件
+                    var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(LognId);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = LognId, code = code }, protocol: Request.Url.Scheme);
+                    string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\Shared\ResetPwdSupEmailTemplate.html"));
+                    // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
+                    string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
+
+                    string SupAccIDstr = user.UserName;
+                    string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd, SupAccIDstr);
+
+                    //寄信
+                    await UserManager.SendEmailAsync(LognId, "重設您的密碼", MailBody);
+
+                    //3.更新db寄信相關欄位
+                    //SendLetterDate
+                    SupAcc.SendLetterDate = DateTime.Now;
+                    //SendLetterStatus
+                    SupAcc.SendLetterStatus = "S";
+
+                    await updateTable(user, SupAcc);
+
+                    //新增Supplier
+                    var userRoles = await UserManager.GetRolesAsync(LognId);
+                    if (!userRoles.Contains("Supplier"))
+                    {
+                        user.Roles.Clear();
+                        var result = await UserManager.AddToRolesAsync(LognId, "Supplier");
+                    }
+
+                    //更新狀態欄位 user sa table
+                    await AccStatusResetSup(LoginAccId);
+                    return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                }
             }
 
             // 如果執行到這裡，發生某項失敗，則重新顯示表單
             return View(model);
         }
 
+        private async Task AccStatusResetEmp(string EmpId)
+        {
+            var user = await UserManager.FindByNameAsync(EmpId);
+            var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
+
+            //emp table
+            //寄信成功狀態設為 R
+            emp.AccountStatus = "R";
+
+            //4.存到資料庫
+            //更新此 user table
+            await updateEmpUserTable(user, emp);
+        }
+
+        //Reset 帳號為重啟時 LastPasswordChangedDate = null /  SendLetterDate / resetPwd 和 寄信
+        //D -> R
+        //用 SupplierAccountID
+        private async Task AccStatusResetSup(string Id)
+        {
+            var user = await UserManager.FindByNameAsync(Id);
+            var supAcc = db.SupplierAccount.Where(x => x.SupplierAccountID == Id).SingleOrDefault();
+
+            //supAcc table
+            //寄信成功狀態設為 R
+            supAcc.AccountStatus = "R";
+
+            //4.存到資料庫
+            //更新此 user table var resultOfupdate =
+            await updateTable(user, supAcc);
+            //if (result.Succeeded && resultOfupdate > 0)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+        }
+
+        //==============================================================================
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]

@@ -1,23 +1,27 @@
 ﻿@model PMSAWebMVC.Models.SendCodeViewModel
 @{
-    ViewBag.Title = "傳送";
+    ViewBag.Title = "傳送驗證碼";
+    Layout = "~/Views/Account/_LoginLayout.cshtml";
 }
 
-<h2>@ViewBag.Title.</h2>
+<div class="container-fluid card d-flex p-5" style="background-color: white;width: 50vw; margin: 10px auto;align-items:center;flex-direction:column;">
 
-@using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
-    @Html.AntiForgeryToken()
-    @Html.Hidden("rememberMe", @Model.RememberMe)
-    <h4>傳送驗證碼</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-8">
-            選取雙因素驗證提供者:
-            @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers)
-            <input type="submit" value="提交" class="btn btn-default" />
+    @using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("rememberMe", @Model.RememberMe)
+        <h2 style="font-weight:700;">
+            <img width="55" style="transform: translateY(-4px);" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDIgOTggOTgiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAyIDk4IDk4OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOnVybCgjU1ZHSURfMV8pO30KCS5zdDF7ZmlsbDp1cmwoI1NWR0lEXzJfKTt9Cgkuc3Qye2ZpbGw6dXJsKCNTVkdJRF8zXyk7fQoJLnN0M3tmaWxsOnVybCgjU1ZHSURfNF8pO30KPC9zdHlsZT4KPGc+CgkKCQk8bGluZWFyR3JhZGllbnQgaWQ9IlNWR0lEXzFfIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjYwLjI1MjUiIHkxPSIyNS4zMzMzIiB4Mj0iNjAuMjUyNSIgeTI9IjgwLjY3MDciIGdyYWRpZW50VHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgLTEgMCAxMDQpIj4KCQk8c3RvcCBvZmZzZXQ9IjAiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEVGRDEiLz4KCQk8c3RvcCBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEFDRUEiLz4KCTwvbGluZWFyR3JhZGllbnQ+Cgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNOTEuNSwyNy41SDI5LjFjLTEuNywwLTMsMS4zLTMsM3Y0NWMwLDEuNywxLjMsMywzLDNoNjIuM2MxLjcsMCwzLTEuMywzLTN2LTQ1Qzk0LjUsMjguOCw5My4xLDI3LjUsOTEuNSwyNy41ICAgeiBNODMuMywzMy41TDU5LjUsNTMuNkwzNywzMy41SDgzLjN6IE04OC41LDcyLjVIMzIuMVYzNy4ybDI1LjMsMjIuNmMxLjEsMSwyLjgsMSwzLjksMC4xTDg4LjUsMzdWNzIuNXoiLz4KCQoJCTxsaW5lYXJHcmFkaWVudCBpZD0iU1ZHSURfMl8iIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMTcuOSIgeTE9IjI1LjMzMzMiIHgyPSIxNy45IiB5Mj0iODAuNjcwNyIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAtMSAwIDEwNCkiPgoJCTxzdG9wIG9mZnNldD0iMCIgc3R5bGU9InN0b3AtY29sb3I6IzAwRUZEMSIvPgoJCTxzdG9wIG9mZnNldD0iMSIgc3R5bGU9InN0b3AtY29sb3I6IzAwQUNFQSIvPgoJPC9saW5lYXJHcmFkaWVudD4KCTxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0yMC41LDUwaC01LjJjLTEuNywwLTMsMS4zLTMsM3MxLjMsMywzLDNoNS4yYzEuNywwLDMtMS4zLDMtM1MyMi4yLDUwLDIwLjUsNTB6Ii8+CgkKCQk8bGluZWFyR3JhZGllbnQgaWQ9IlNWR0lEXzNfIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjEzLjUiIHkxPSIyNS4zMzMzIiB4Mj0iMTMuNSIgeTI9IjgwLjY3MDciIGdyYWRpZW50VHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgLTEgMCAxMDQpIj4KCQk8c3RvcCBvZmZzZXQ9IjAiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEVGRDEiLz4KCQk8c3RvcCBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMEFDRUEiLz4KCTwvbGluZWFyR3JhZGllbnQ+Cgk8cGF0aCBjbGFzcz0ic3QyIiBkPSJNMjAuNSw2Mi4yaC0xNGMtMS43LDAtMywxLjMtMywzYzAsMS43LDEuMywzLDMsM2gxNGMxLjcsMCwzLTEuMywzLTNTMjIuMiw2Mi4yLDIwLjUsNjIuMnoiLz4KCQoJCTxsaW5lYXJHcmFkaWVudCBpZD0iU1ZHSURfNF8iIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMTMuNSIgeTE9IjI1LjMzMzMiIHgyPSIxMy41IiB5Mj0iODAuNjcwNyIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAtMSAwIDEwNCkiPgoJCTxzdG9wIG9mZnNldD0iMCIgc3R5bGU9InN0b3AtY29sb3I6IzAwRUZEMSIvPgoJCTxzdG9wIG9mZnNldD0iMSIgc3R5bGU9InN0b3AtY29sb3I6IzAwQUNFQSIvPgoJPC9saW5lYXJHcmFkaWVudD4KCTxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0yMC41LDM3LjhoLTE0Yy0xLjcsMC0zLDEuMy0zLDNzMS4zLDMsMywzaDE0YzEuNywwLDMtMS4zLDMtM1MyMi4yLDM3LjgsMjAuNSwzNy44eiIvPgo8L2c+Cjwvc3ZnPgo=" alt="" />
+            傳送驗證碼
+        </h2>
+        <hr />
+        <div class="col-12" style="border: 1px solid #eee;background-color: #eee; padding: 20px;">
+            <p class="col-12" style="font-weight:700;">選取雙因素驗證提供者:</p>
+            @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers, new { @class = "form-control mt-3 mb-5" })
+            <input type="submit" value="提交" class="col-12 btn btn-primary" />
         </div>
-    </div>
-}
+    }
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

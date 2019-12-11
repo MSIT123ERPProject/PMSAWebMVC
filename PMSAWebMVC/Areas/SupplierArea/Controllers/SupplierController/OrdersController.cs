@@ -10,7 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PMSAWebMVC.Controllers.SupplierController
+namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
     public class OrdersController : Controller
     {

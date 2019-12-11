@@ -1,7 +1,10 @@
 ﻿@model PMSAWebMVC.ViewModels.Setting.Sup_parent
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "基本資料設定";
+    var SuccessMsg = TempData["SuccessMsg"];
+    var ErrorMsg = TempData["ErrorMsg"];
+    var emailAlert = TempData["Sended"];
 }
 
 @section styles
@@ -62,7 +65,7 @@
         /*===================sorting*/
         table.dataTable.order-column tbody tr > .sorting_1, table.dataTable.order-column tbody tr > .sorting_2, table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1, table.dataTable.display tbody tr > .sorting_2, table.dataTable.display tbody tr > .sorting_3 {
             background-color: transparent;
-            border-left: 2px solid #4385F4 !important;
+            border-left: 2px solid #28A2FC !important;
         }
         /*input ======================*/
         .form-group label {
@@ -72,11 +75,9 @@
         }
 
         .disabled {
-            background-color: none;
+            background-color: #eee;
             border: 0;
-            font-size: 15px;
-            padding: 0;
-            padding-left: 2px;
+            font-size: 16px;
             height: auto;
             color: #909399;
         }
@@ -107,9 +108,9 @@
             .row h4 {
                 font-size: 18px;
                 margin-bottom: 20px;
-                border-bottom: 2px solid #007bff;
+                border-bottom: 2px solid #28A2FC;
                 padding-bottom: 5px;
-                color: #007bff;
+                color: #28A2FC;
                 font-weight: 800 !important;
             }
 
@@ -117,7 +118,7 @@
                     counter-increment: section;
                     display: inline-block;
                     content: counter(section);
-                    background-color: #007bff;
+                    background-color: #28A2FC;
                     color: white;
                     font-size: 16px;
                     border-radius: 10px;
@@ -135,7 +136,7 @@
     <div class="row">
         <div class="card col-lg-6 col-12 m-2">
             <div class="card-body">
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("Index", "SupSetting"))
                 {
                     @Html.AntiForgeryToken()
 
@@ -182,12 +183,13 @@
                             </div>
                         </div>
 
-                        <h4>安全性設定</h4>
+                        <h4 class="mt-5">安全性設定</h4>
+                        <div id="alert" class="alert alert-danger font-weight-bold"></div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.DropDownListFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="y", Selected=false },
-                                                                                                                        new SelectListItem { Text="否", Value="n", Selected=true }}, new { @class = "form-control  col-lg-12" })
+                                @Html.DropDownListFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="false"},
+                                                                                                                        new SelectListItem { Text="否", Value="false"}}, new { @class = "form-control col-lg-12 TFA" })
                                 @Html.ValidationMessageFor(model => model.SupSettingViewModel.EnableTwoFactorAuth, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -203,7 +205,7 @@
         </div>
         <div class="card col-lg-5 col-12 m-2">
             <div class="card-body">
-                @using (Html.BeginForm())
+                @using (Html.BeginForm("IndexRight", "SupSetting"))
                 {
                     @Html.AntiForgeryToken()
 
@@ -258,3 +260,86 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script>
+        var err = '@ErrorMsg';
+        if(err){
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr.error(err)
+        }
+        //SuccessMsg
+           var message = '@SuccessMsg';
+                    if(message){
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(message)
+                    }
+        $(document).ready(function(){
+            $.getJSON( '@Url.Action("isEmailConfirmed","SupSetting")',
+                function(d){
+                    if(d.isEmailConfirmed == false){
+                        $("#alert").html(`<i class="fas fa-flag-checkered"></i> ${d.text} <a href="@Url.Action("sendMailConfirm", "SupSetting")"><i class="fas fa-paper-plane"></i>點此寄送驗證信</a>`)
+                        $(".TFA").attr("disabled",'disabled')
+                        //emailAlert
+                        var message = '@emailAlert';
+                        if(message){
+                                toastr.options = {
+                                  "closeButton": true,
+                                  "debug": false,
+                                  "newestOnTop": false,
+                                  "progressBar": false,
+                                  "positionClass": "toast-top-right",
+                                  "preventDuplicates": false,
+                                  "onclick": null,
+                                  "showDuration": "300",
+                                  "hideDuration": "1000",
+                                  "timeOut": "5000",
+                                  "extendedTimeOut": "1000",
+                                  "showEasing": "swing",
+                                  "hideEasing": "linear",
+                                  "showMethod": "fadeIn",
+                                  "hideMethod": "fadeOut"
+                                }
+                                toastr.success(message)
+                        }
+                    }
+                    else{
+                        $("#alert").html(`<i class="fas fa-flag-checkered"></i> ${d.text}`)
+                    }
+                }
+            )
+        })
+    </script>
+}

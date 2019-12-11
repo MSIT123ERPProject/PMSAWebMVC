@@ -14,7 +14,7 @@ using System.Web;
 using System.Web.Mvc;
 
 
-namespace PMSAWebMVC.Controllers
+namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
     public class ShipNoticesController : BaseController
     {
@@ -30,6 +30,7 @@ namespace PMSAWebMVC.Controllers
         public ShipNoticesController()
         {
             db = new PMSAEntities();
+            utilities = new ShipNoticesUtilities();
             //supplierCode = "S00001";
             //supplierAccount = "SE00001";
             POChangedCategoryCodeShipped = "S";
@@ -81,6 +82,7 @@ namespace PMSAWebMVC.Controllers
             supplierAccount = supplier.SupplierAccountID;
             supplierCode = supplier.SupplierCode;
             ////////////////////////////////////////////////////
+            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string status = PurchaseOrderStatus;
             var query = from po in db.PurchaseOrder.AsEnumerable()
                         where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)
@@ -96,6 +98,7 @@ namespace PMSAWebMVC.Controllers
             List<shipOrderViewModel> qlist = query.ToList();
             for (int i = 0; i < qlist.Count(); i++)
             {
+                //ShipNoticesUtilities utilities = new ShipNoticesUtilities();
                 string d = utilities.GetStatus(qlist[i].PurchaseOrderStatus);
                 qlist[i].PurchaseOrderStatusDisplay = d;
             }
@@ -153,6 +156,7 @@ namespace PMSAWebMVC.Controllers
             supplierAccount = supplier.SupplierAccountID;
             supplierCode = supplier.SupplierCode;
             ////////////////////////////////////////////////////
+            //ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string message = "";
             //此LIST要用來存放出貨明細ID 用來寄送電子郵件給公司採購員
             List<string> shipDtlList = new List<string>();
@@ -280,7 +284,6 @@ namespace PMSAWebMVC.Controllers
                 //更新採購單明細POChangedOID欄位
                 //找出最新一筆採購單異動資料且是供應商的
                 dtl.POChangedOID = utilities.FindPOChangedOIDByDtlCode(RequesterRoleSupplier, dtl.PurchaseOrderDtlCode);
-
                 //把資料庫中的每筆訂單明細以及貨源清單資料狀態改為追蹤
                 db.Entry(dtl).State = EntityState.Modified;
                 db.Entry(sourceList).State = EntityState.Modified;
@@ -487,7 +490,7 @@ namespace PMSAWebMVC.Controllers
         {
             string supAccID = supplierAccount;
             string shipDtlMail = $"<h2>出貨單號:{shipNotice.FirstOrDefault().ShipNoticeID}</h2>";
-            shipDtlMail += $"<table><thead><tr><th>出貨商品明細</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
+            shipDtlMail += $"<table><thead><tr><th>出貨商品明細流水號</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
             foreach (var snd in shipNotice)
             {
                 DateTime shipDate = (DateTime)snd.ShipDate;

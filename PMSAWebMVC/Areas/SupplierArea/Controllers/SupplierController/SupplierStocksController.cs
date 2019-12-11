@@ -9,7 +9,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PMSAWebMVC.Controllers
+namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
     public class SupplierStocksController : BaseController
     {

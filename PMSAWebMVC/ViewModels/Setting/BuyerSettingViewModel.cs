@@ -11,7 +11,7 @@ namespace PMSAWebMVC.ViewModels.Setting
     {
         //TODO 待補 remote
         [Display(Name = "員工編號(帳號)")]
-        [Remote("AccountCheck", "Members", ErrorMessage = "此帳號已被註冊過")]
+        //[Remote("AccountCheck", "Members", ErrorMessage = "此帳號已被註冊過")]
         public string EmployeeID { get; set; }
 
         [Display(Name = "採購員姓名")]
@@ -29,6 +29,6 @@ namespace PMSAWebMVC.ViewModels.Setting
         public string Tel { get; set; }
 
         [Display(Name = "是否啟用雙因素驗證")]
-        public Nullable<bool> EnableTwoFactorAuth { get; set; }
+        public bool EnableTwoFactorAuth { get; set; }
     }
 }

@@ -1,7 +1,11 @@
 ﻿@model PMSAWebMVC.ViewModels.Setting.Buyer_parent
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "基本資料設定";
+    var SuccessMsg = TempData["SuccessMsg"];
+    var ErrorMsg = TempData["ErrorMsg"];
+    var emailAlert = TempData["Sended"];
+
 }
 
 @section styles
@@ -61,7 +65,7 @@
         /*===================sorting*/
         table.dataTable.order-column tbody tr > .sorting_1, table.dataTable.order-column tbody tr > .sorting_2, table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1, table.dataTable.display tbody tr > .sorting_2, table.dataTable.display tbody tr > .sorting_3 {
             background-color: transparent;
-            border-left: 2px solid #4385F4 !important;
+            border-left: 2px solid #28A2FC !important;
         }
         /*input ======================*/
         .form-group label {
@@ -71,11 +75,9 @@
         }
 
         .disabled {
-            background-color: none;
+            background-color: #eee;
             border: 0;
-            font-size: 15px;
-            padding: 0;
-            padding-left: 2px;
+            font-size: 16px;
             height: auto;
             color: #909399;
         }
@@ -106,9 +108,9 @@
             .row h4 {
                 font-size: 18px;
                 margin-bottom: 20px;
-                border-bottom: 2px solid #007bff;
+                border-bottom: 2px solid #28A2FC;
                 padding-bottom: 5px;
-                color: #007bff;
+                color: #28A2FC;
                 font-weight: 800 !important;
             }
 
@@ -116,7 +118,7 @@
                     counter-increment: section;
                     display: inline-block;
                     content: counter(section);
-                    background-color: #007bff;
+                    background-color: #28A2FC;
                     color: white;
                     font-size: 16px;
                     border-radius: 10px;
@@ -142,11 +144,11 @@
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <h4>個人資料</h4>
+                        <h4>個人資料設定</h4>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerSettingViewModel.EmployeeID, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerSettingViewModel.EmployeeID, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.BuyerSettingViewModel.EmployeeID, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.EmployeeID, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -183,11 +185,13 @@
                             </div>
                         </div>
 
-                        <h4>安全性設定</h4>
+                        <h4 class="mt-5">安全性設定</h4>
+                        <div id="alert" class="alert alert-danger font-weight-bold"></div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.DropDownListFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="false"},
+                                                                                                                        new SelectListItem { Text="否", Value="false"}}, new { @class = "form-control  col-lg-12 TFA" })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -210,46 +214,40 @@
                     <div class="form-horizontal">
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <h4>公司資料</h4>
+                        <h4>公司資料總覽</h4>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.CompanyName, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.TaxID, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.TaxID, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.TaxID, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.TaxID, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.Email, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Email, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.Tel, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Tel, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Tel, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.Tel, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.Address, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Address, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.Address, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-12 mt-4 mb-4">
-                                <input type="submit" value="確定修改" class="btn btn-primary" />
                             </div>
                         </div>
                     </div>
@@ -258,3 +256,86 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script>
+        var err = '@ErrorMsg';
+        if(err){
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr.error(err)
+        }
+        //SuccessMsg
+           var message = '@SuccessMsg';
+                    if(message){
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(message)
+                    }
+        $(document).ready(function(){
+            $.getJSON( '@Url.Action("isEmailConfirmed","BuyerSetting")',
+                function(d){
+                    if(d.isEmailConfirmed == false){
+                        $("#alert").html(`<i class="fas fa-flag-checkered"></i> ${d.text} <a href="@Url.Action("sendMailConfirm","BuyerSetting")"><i class="fas fa-paper-plane"></i>點此寄送驗證信</a>`)
+                        $(".TFA").attr("disabled",'disabled')
+                        //emailAlert
+                        var message = '@emailAlert';
+                        if(message){
+                                toastr.options = {
+                                  "closeButton": true,
+                                  "debug": false,
+                                  "newestOnTop": false,
+                                  "progressBar": false,
+                                  "positionClass": "toast-top-right",
+                                  "preventDuplicates": false,
+                                  "onclick": null,
+                                  "showDuration": "300",
+                                  "hideDuration": "1000",
+                                  "timeOut": "5000",
+                                  "extendedTimeOut": "1000",
+                                  "showEasing": "swing",
+                                  "hideEasing": "linear",
+                                  "showMethod": "fadeIn",
+                                  "hideMethod": "fadeOut"
+                                }
+                                toastr.success(message)
+                        }
+                    }
+                    else{
+                        $("#alert").html(`<i class="fas fa-flag-checkered"></i> ${d.text}`)
+                    }
+                }
+            )
+        })
+    </script>
+}

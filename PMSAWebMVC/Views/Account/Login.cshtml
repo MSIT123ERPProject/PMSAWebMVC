@@ -40,12 +40,13 @@
         .container {
             box-shadow: 0 5px 20px rgba(0,0,0,0.8);
             transition: 0.3s;
-            max-width: 650px;
+            max-width: 700px;
             min-height: 86vh;
             animation: fadein 1s;
             position: relative;
             margin: 30px;
             overflow: auto;
+            overflow-x: hidden;
         }
 
         #loginForm {
@@ -131,7 +132,7 @@
 
         /*============================*/
         .pwdWrap {
-            margin: 50px 0 60px 0;
+            margin: 40px 0 30px 0;
             font-weight: 500;
             letter-spacing: 2px;
         }
@@ -299,6 +300,13 @@
                                 @Html.CheckBoxFor(m => m.RememberMe, new { @class = "custom-control-input" })
                                 @Html.LabelFor(m => m.RememberMe, new { @class = "custom-control-label" })
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <a class="font-weight-bold" href="@Url.Action("ForgotPassword","Account")">
+                                <i class="fas fa-unlock-alt"></i> 忘記密碼?
+                            </a>
                         </div>
                     </div>
                     <div class="form-group">

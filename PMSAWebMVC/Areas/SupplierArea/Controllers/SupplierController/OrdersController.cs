@@ -10,7 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PMSAWebMVC.Controllers.SupplierController
+namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
     public class OrdersController : Controller
     {
@@ -41,23 +41,55 @@ namespace PMSAWebMVC.Controllers.SupplierController
             //  PurchaseOrderID = x.PurchaseOrderID,
             //  PurchaseOrderOID = x.PurchaseOrderOID
             //})).AsEnumerable();
-            var qpo = (from po in db.PurchaseOrder
-                       where po.SupplierCode == supplierCode
+            var qpoP = from po in db.PurchaseOrder
+                       where po.PurchaseOrderStatus == "P" && po.SupplierCode == supplierCode
                        select new
                        {
-                           SupplierCode = po.SupplierCode,
-                           PurchaseOrderID = po.PurchaseOrderID,
-                           PurchaseOrderOID = po.PurchaseOrderOID
-                       }).ToList().Select( x=>new PurchaseOrder {
-                           SupplierCode = x.SupplierCode,
-                           PurchaseOrderID = x.PurchaseOrderID,
-                           PurchaseOrderOID = x.PurchaseOrderOID
-                       });
-            //var s = q.ToList();
-            var d = qpo.ToList();
-            return View(qpo);
+                           PurchaseOrderID = po.PurchaseOrderID
+                       };
+            List<SelectListItem> orderList = new List<SelectListItem>();
+            foreach (var orderID in qpoP)
+            {
+                SelectListItem order = new SelectListItem()
+                {
+                    Text = orderID.PurchaseOrderID,
+                    Value = orderID.PurchaseOrderID,
+                    Selected = false,
+                };
+                orderList.Add(order);
+            }
+            OrderSendedToSupplierViewModel orderModel = new OrderSendedToSupplierViewModel()
+            {
+                SupplierCode = supplierCode,
+                orderID = orderList[0].Value,
+                orderList = orderList
+            };
+            return View(orderModel);
         }
-        public JsonResult GetPurchaseOrderS( string supplierCode )
+        //Orders/IndexView
+        public class OrderSendedToSupplierViewModel
+        {
+            public string SupplierCode { get; set; }
+            public string orderID { get; set; }
+            public IEnumerable<SelectListItem> orderList { get; set; }
+        }
+        //Get the Information of order which was selected 
+        public ActionResult GetOrderInfo(string orderID)
+        {
+            var qpo = (from emp in db.Employee.AsEnumerable()
+                       join po in db.PurchaseOrder on emp.EmployeeID equals po.EmployeeID
+                       where po.PurchaseOrderID == orderID
+                       select new Employee
+                       {
+                           Name = emp.Name,
+                           Mobile = emp.Mobile,
+                           Tel = emp.Tel,
+                           Email = emp.Email,
+                       }
+                       ).SingleOrDefault();
+            return PartialView("_IndexOrderInfoPartialView",qpo);
+        }
+        public JsonResult GetPurchaseOrderS(string supplierCode)
         {
             var qpo = (from po in db.PurchaseOrder
                        where po.PurchaseOrderStatus == "P" && po.SupplierCode == supplierCode

@@ -26,6 +26,7 @@
             "sortDescending": ": activate to sort column descending"
         }
     }
-
-
 });
+function resizeDatatable() {
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
+}

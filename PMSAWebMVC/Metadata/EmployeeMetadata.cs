@@ -4,7 +4,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Models
 {
-    internal class EmployeeMetadata
+    public class EmployeeMetadata
     {
         public int EmployeeOID { get; set; }
 

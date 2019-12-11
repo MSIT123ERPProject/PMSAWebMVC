@@ -2101,6 +2101,7 @@
     <Content Include="Areas\SupplierArea\Views\web.config" />
     <Content Include="Areas\SupplierArea\Views\_ViewStart.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupplierHome\Index.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\Orders\_IndexOrderInfoPartialView.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2371,7 +2372,7 @@
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
     <Content Include="Views\Account\ConfirmEmailError.cshtml" />
-    <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
     <Content Include="Views\StockIns\Create.cshtml" />

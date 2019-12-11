@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b08065df1a0440bd8934ebf9634068fb" Name="Diagram1">
+      <Diagram DiagramId="b08065df1a0440bd8934ebf9634068fb" Name="Diagram1" ZoomLevel="101">
         <EntityTypeShape EntityType="PMSAModel.AuthRole" Width="1.5" PointX="0.75" PointY="37.25" IsExpanded="true" />
         <EntityTypeShape EntityType="PMSAModel.CompanyInfo" Width="1.5" PointX="0.75" PointY="33" IsExpanded="true" />
         <EntityTypeShape EntityType="PMSAModel.Employee" Width="1.5" PointX="3" PointY="34.25" IsExpanded="true" />

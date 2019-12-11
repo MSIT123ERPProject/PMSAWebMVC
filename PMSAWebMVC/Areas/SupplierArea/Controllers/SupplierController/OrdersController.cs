@@ -43,10 +43,11 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //})).AsEnumerable();
             var qpoP = from po in db.PurchaseOrder
                        where po.PurchaseOrderStatus == "P" && po.SupplierCode == supplierCode
-                       select new
+                       select new 
                        {
                            PurchaseOrderID = po.PurchaseOrderID
                        };
+            var s = qpoP.ToList();
             List<SelectListItem> orderList = new List<SelectListItem>();
             foreach (var orderID in qpoP)
             {
@@ -58,10 +59,22 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                 };
                 orderList.Add(order);
             }
-            OrderSendedToSupplierViewModel orderModel = new OrderSendedToSupplierViewModel()
+            OrderSendedToSupplierViewModel orderModel;
+            if (orderList.Count() != 0)
+            {
+                 orderModel = new OrderSendedToSupplierViewModel()
+                {
+                    SupplierCode = supplierCode,
+                    orderID = orderList[0].Value,
+                    orderList = orderList
+                };
+                return View(orderModel);
+            }
+
+            orderModel = new OrderSendedToSupplierViewModel()
             {
                 SupplierCode = supplierCode,
-                orderID = orderList[0].Value,
+                orderID="orderID",
                 orderList = orderList
             };
             return View(orderModel);
@@ -87,7 +100,24 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                            Email = emp.Email,
                        }
                        ).SingleOrDefault();
-            return PartialView("_IndexOrderInfoPartialView",qpo);
+            return PartialView("_IndexOrderInfoPartialView", qpo);
+        }
+        //GetOrderDtl
+        public ActionResult GetOrderDtl(string orderID)
+        {
+            var qorder = from pod in db.PurchaseOrderDtl
+                         where pod.PurchaseOrderID == orderID
+                         select new
+                         {
+                             pod.PurchaseOrderDtlCode,
+                             pod.PartName,
+                             pod.PartNumber,
+                             pod.PurchasedQty,
+                             pod.Qty,
+                             pod.QtyPerUnit,
+                             pod.CommittedArrivalDate,
+                         };
+            return Json(new { data = qorder }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult GetPurchaseOrderS(string supplierCode)
         {
@@ -117,10 +147,27 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
         //此方法為答交按鈕的方法，此功能為辰哥負責
-        public ActionResult OrderApply()
+        public ActionResult OrderApply(string orderID)
         {
+            ///////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            string supplierAccount = supplier.SupplierAccountID;
+            string supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             //供應商答交程式碼
-            return View();
+            PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
+                                   where po.PurchaseOrderID == orderID
+                                   select po).SingleOrDefault();
+            order.PurchaseOrderStatus = "E";
+            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
+            if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
+            {
+                return Json("fail", JsonRequestBehavior.AllowGet);
+            }
+            db.SaveChanges();
+            return Json("success", JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -15,6 +15,10 @@
         .border-top-dashed {
             border-top: 1px dashed #3C4055;
         }
+
+        .border-bottom-dashed {
+            border-bottom: 1px dashed #3C4055;
+        }
         /*連結無底線*/
         .nounderline {
             text-decoration: none !important
@@ -31,6 +35,11 @@
         #dataTablesPR tbody tr td:nth-child(n+4):nth-child(-n+5),
         #dataTablesPO tbody tr td:nth-child(n+4):nth-child(-n+8) {
             text-align: right;
+        }
+
+        .md-form {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
         @@media (min-width: 768px) and (max-width: 992px) {
@@ -292,6 +301,24 @@
                                     <form>
                                         <div class="form-row">
 
+                                            <div class="md-form col-12 border-bottom-dashed pb-1">
+                                                <strong class="text-primary"><i class="fas fa-pen"></i> 輸入內容</strong>
+                                            </div>
+
+                                            <div class="md-form col-md-4 col-6">
+                                                <input type="number" id="Qty" class="form-control" value="10">
+                                                <label for="Qty">數量 <span class="text-danger">*</span></label>
+                                            </div>
+
+                                            <div class="md-form col-md-4 col-6">
+                                                <input type="text" class="form-control datetimepicker-input" id="DateRequired" data-toggle="datetimepicker" data-target="#DateRequired" />
+                                                <label for="DateRequired">要求到貨日期 <span class="text-danger">*</span></label>
+                                            </div>
+
+                                            <div class="md-form col-12 border-bottom-dashed pb-1">
+                                                <strong class="text-primary"><i class="fas fa-calculator"></i> 採購結果</strong>
+                                            </div>
+
                                             <div class="md-form col-md-4 col-6 text-info">
                                                 <input type="number" id="TotalSourceListQty" class="form-control" disabled value="500">
                                                 <label for="TotalSourceListQty" class="disabled text-info">料件總數</label>
@@ -307,18 +334,8 @@
                                                 <label for="Discount" class="disabled text-info">折扣</label>
                                             </div>
 
-                                            <div class="md-form col-md-4 col-6">
-                                                <input type="number" id="Qty" class="form-control" value="10">
-                                                <label for="Qty">數量 <span class="text-danger">*</span></label>
-                                            </div>
-
-                                            <div class="md-form col-md-4 col-6">
-                                                <input type="text" class="form-control datetimepicker-input" id="DateRequired" data-toggle="datetimepicker" data-target="#DateRequired" />
-                                                <label for="DateRequired">要求到貨日期 <span class="text-danger">*</span></label>
-                                            </div>
-
-                                            <div class="md-form col-md-4 col-6">
-                                                <input type="number" id="Total" class="form-control" disabled value="3000">
+                                            <div class="md-form col-md-4 col-6 text-info">
+                                                <input type="text" id="Total" class="form-control" disabled value="3000">
                                                 <label for="Total" class="disabled text-info">小計</label>
                                             </div>
 
@@ -362,15 +379,10 @@
     <script>
         $(document).ready(function () {
 
-            $(function () {
-                $('#DateRequired').datetimepicker();
-            });
-
             $(window).on('resize', function () {
                 console.log($(window).width());
                 console.log($(".sidebar").width());
             });
-
 
             //toastr測試
             toastr.options = {
@@ -450,6 +462,7 @@
                 var partnumber = span.data('partnumber');
                 setPRDtlInfo(dtlcode);
                 setSLDtlInfo(partnumber);
+                $('#DateRequired').datetimepicker();
             });
 
             //貨源清單收起

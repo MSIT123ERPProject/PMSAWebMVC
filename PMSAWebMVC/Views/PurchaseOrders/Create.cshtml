@@ -302,7 +302,7 @@
                                         <div class="form-row">
 
                                             <div class="md-form col-12 border-bottom-dashed pb-1">
-                                                <strong class="text-primary"><i class="fas fa-pen"></i> 輸入內容</strong>
+                                                <h6 class="text-primary"><i class="far fa-edit"></i> 輸入內容</h6>
                                             </div>
 
                                             <div class="md-form col-md-4 col-6">
@@ -316,7 +316,7 @@
                                             </div>
 
                                             <div class="md-form col-12 border-bottom-dashed pb-1">
-                                                <strong class="text-primary"><i class="fas fa-calculator"></i> 採購結果</strong>
+                                                <h6 class="text-primary"><i class="fas fa-calculator"></i> 採購結果</h6>
                                             </div>
 
                                             <div class="md-form col-md-4 col-6 text-info">
@@ -398,18 +398,17 @@
                 toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
             });
 
+           // infinite: true 會造成 radio button 無法正常顯示 checked 狀態
             var slickOptions = {
-                infinite: true,
+                infinite: false,
                 arrows: true,
                 dots: true,
                 fade: false,
                 centerMode: false,
-                centerPadding: '50px',
                 slidesToShow: 2,
                 slidesToScroll: 1,
                 focusOnSelect: false,
-                easing: "linear",
-                swipeToSlide: true,
+                swipeToSlide: false,
                 responsive: [
                     {
                         breakpoint: 554, settings: {
@@ -428,7 +427,7 @@
                     },
                     {
                         breakpoint: 1200, settings: {
-                            slidesToShow: 2,
+                            slidesToShow: 1,
                         }
                     },
                 ],
@@ -450,25 +449,29 @@
                 //modal.find('.modal-body input').val(recipient)
                 //$('#sldtl-items').not('.slick-initialized').slick(slickOptions);
 
-                var span = $(event.relatedTarget);
-                var dtlcode = span.data('dtlcode');
                 setTimeout(function () {
                     $('#sldtl-items').slick(slickOptions);
-                    //設定採購明細
-                    setPRDtlInput(dtlcode)
-                    $('#DateRequired').datetimepicker();
+                    $('#sldtl-items').slick('setPosition');
+                    $('#sldtl-items').resize();
                 }, 100);
             })
 
             //Modal顯示前
             $('#detailModal').on('show.bs.modal', function (event) {
-                var span = $(event.relatedTarget);
-                var dtlcode = span.data('dtlcode');
-                var partnumber = span.data('partnumber');
+                let span = $(event.relatedTarget);
+                let dtlcode = span.data('dtlcode');
+                let partnumber = span.data('partnumber');
                 //設定請購單明細
                 setPRDtlInfo(dtlcode);
                 //設定貨源清單
                 setSLDtlInfo(partnumber);
+                //設定採購明細
+                setPRDtlInput(dtlcode)
+                $('#DateRequired').datetimepicker();
+                //第一次顯示有可能無法正常排版的狀況，所以顯示前先起始關閉一次
+                $('#sldtl-items').slick(slickOptions);
+                $('#sldtl-items').slick('setPosition');
+                $('#sldtl-items').slick('unslick');
 
             });
 
@@ -481,6 +484,7 @@
             $('body').on('shown.bs.collapse', '#collapse-sldtlInfo', function (e) {
                 setTimeout(function () {
                     $('#sldtl-items').slick(slickOptions);
+                    $('#sldtl-items').slick('setPosition');
                 }, 100);
             })
 
@@ -518,10 +522,8 @@
                     $("#btnPODUpdate").hide();
                     if (data.SourceListID) {
                         let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
-                        console.log(sl);
                         sl.prop('checked', true);
-                        console.log(sl);
-                    }
+                          }
             });
 
             }

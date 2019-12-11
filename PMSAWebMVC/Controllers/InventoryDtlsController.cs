@@ -290,6 +290,58 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
+        public ActionResult StockInEdit(string id)
+        {
+            InventoryDtl inventoryDtl = new InventoryDtl();
+
+            //InventoryCode
+            inventoryDtl.InventoryCode = id;
+            //WarehouseCode
+            var wcode = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.WarehouseCode).ToList();
+            inventoryDtl.WarehouseCode = wcode[0];
+            //InventoryCategoryCode
+            var iccode = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.InventoryCategoryCode).ToList();
+            inventoryDtl.InventoryCategoryCode = iccode[0];
+            //SourceListID
+            var slid = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.SourceListID).ToList();
+            inventoryDtl.SourceListID = slid[0];
+            //PartNumber
+            var parnum = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.PartNumber).ToList();
+            inventoryDtl.PartNumber = parnum[0];
+            //UnitsInStock  庫存數量
+            var unit = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.UnitsInStock).ToList();
+            var unitin = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.UnitsOnStockInOrder).ToList();
+            inventoryDtl.UnitsInStock = unit[0] + unitin[0];
+            int qty = inventoryDtl.UnitsInStock;
+            //UnitsOnStockOutOrder
+            var unitout = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.UnitsOnStockOutOrder).ToList();
+            inventoryDtl.UnitsOnStockOutOrder = unitout[0];
+            //UnitsOnStockInOrder 入庫申請數量
+            inventoryDtl.UnitsOnStockInOrder = 0;
+            //SafetyQty
+            var safe = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.SafetyQty).ToList();
+            inventoryDtl.SafetyQty = safe[0];
+            //CreateDate
+            var crdate = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.CreateDate).ToList();
+            inventoryDtl.CreateDate = crdate[0];
+            //CreateEmployeeID
+            var cremid = db.InventoryDtl.Where(w => w.InventoryCode == id).Select(s => s.CreateEmployeeID).ToList();
+            inventoryDtl.CreateEmployeeID = cremid[0];
+            //LastModifiedDate
+            inventoryDtl.LastModifiedDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+            //LastModifiedEmployeeID
+            var use = User.Identity.GetEmployee();
+            inventoryDtl.LastModifiedEmployeeID = use.EmployeeID;
+
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(inventoryDtl).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return Json(new { qty, id = db.InventoryDtl.Max(x => x.InventoryDtlOID) }, JsonRequestBehavior.AllowGet);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -72,10 +72,24 @@ namespace PMSAWebMVC.Controllers
         /// <param name="id">請購單編號</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult GetPRInfoViewModel(string id) {
+        public ActionResult GetPRInfoViewModel(string id)
+        {
             Repository rep = new Repository(User.Identity.GetEmployee());
             var vm = rep.GetPRInfoViewModel(id);
             return PartialView("_CreatePRInfoPartial", vm);
+        }
+
+        /// <summary>
+        /// 取得請購明細資料
+        /// </summary>
+        /// <param name="id">請購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetPRDtlInfoViewModel(string id)
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var vm = rep.GetPRDtlInfoViewModel(id);
+            return PartialView("_CreatePODtlInfoPartial", vm);
         }
 
         /// <summary>
@@ -90,6 +104,19 @@ namespace PMSAWebMVC.Controllers
             var vm = rep.GetPRDtlTableViewModel(id);
             return PartialView("_CreatePRDtlTablePartial", vm);
         }
+
+        /// <summary>
+        /// 取得請購明細表關連之貨源清單
+        /// </summary>
+        /// <param name="id">料件編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetPOCSourceListViewModel(string id)
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var vm = rep.GetPOCSourceListViewModel(id);
+            return PartialView("_CreateSLItemPartial", vm);
+        }        
 
         [HttpGet]
         public ActionResult GetPurchaseOrderDtlList(string id, string supplierCode)

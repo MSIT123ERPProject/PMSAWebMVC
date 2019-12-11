@@ -39,3 +39,6 @@
         }
     }
 });
+function resizeDatatable() {
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
+}

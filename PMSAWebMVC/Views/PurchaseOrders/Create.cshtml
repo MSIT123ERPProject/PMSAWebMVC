@@ -33,11 +33,18 @@
             text-align: right;
         }
 
-        .modal {
-            z-index: 99999;
+        @@media (min-width: 768px) and (max-width: 992px) {
+            .modal-fluid .col-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            .modal-fluid .col-md-8 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
         }
     </style>
-
 }
 
 <h2 class="text-dark">@ViewBag.Title</h2>
@@ -261,140 +268,16 @@
             <!--Body-->
             <div class="modal-body">
 
-                <button id="button-demo">簡易DEMO</button>
+                <div id="modalPRDtlInfo" class="col-md-8"></div>
 
-                <button id="button-demo2">DEMO2</button>
+                <div id="modalSLDtlInfo" class="row justify-content-md-center"></div>
 
-
-                <div class="row justify-content-md-center">
-                    <div class="multiple-items col-md-10 u-slick--gutters-1"
-                         data-arrows-classes="d-none d-lg-inline-block u-slick__arrow-classic u-slick__arrow-centered--y rounded-circle"
-                         data-arrow-left-classes="fas fa-arrow-left u-slick__arrow-classic-inner u-slick__arrow-classic-inner--left ml-lg-2 ml-xl-4"
-                         data-arrow-right-classes="fas fa-arrow-right u-slick__arrow-classic-inner u-slick__arrow-classic-inner--right mr-lg-2 mr-xl-4">
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured1
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured2
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured3
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured4
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in Dapibus ac facilisis in Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured5
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured6
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                        <div class="card shadow-none" style="width: 18rem;">
-                            <div class="card-header">
-                                Featured7
-                                <input type="radio" name="radio4" class="mgc-switch bg-primary border-primary" />
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit
-                        iusto nulla
-                        aperiam blanditiis ad consequatur in dolores culpa, dignissimos,
-                        eius
-                        non possimus fugiat. Esse ratione fuga, enim, ab officiis totam.
-                    </p>
-                </div>
-                <ul class="list-group z-depth-0">
-                    <li class="list-group-item justify-content-between">
-                        Cras justo odio
-                        <span class="badge badge-primary badge-pill">14</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Dapibus ac facilisis in
-                        <span class="badge badge-primary badge-pill">2</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Morbi leo risus
-                        <span class="badge badge-primary badge-pill">1</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Cras justo odio
-                        <span class="badge badge-primary badge-pill">14</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Dapibus ac facilisis in
-                        <span class="badge badge-primary badge-pill">2</span>
-                    </li>
-                    <li class="list-group-item justify-content-between">
-                        Morbi leo risus
-                        <span class="badge badge-primary badge-pill">1</span>
-                    </li>
-                </ul>
             </div>
 
             <!--Footer-->
             <div class="modal-footer bg-light">
+                @*<button id="button-demo">簡易DEMO</button>
+        <button id="button-demo2">DEMO2</button>*@
                 <button class="btn btn-primary" type="submit"><i class="far fa-file"></i> 加入採購單</button>
                 <button class="btn btn-primary" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
                 <input type="submit" class="btn btn-primary" name="name" value="送出" />
@@ -438,7 +321,7 @@
                 toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
             });
 
-            //slick測試
+             //Modal已顯示
             $('#detailModal').on('shown.bs.modal', function (event) {
                 //var button = $(event.relatedTarget) // Button that triggered the modal
                 //var recipient = button.data('whatever') // Extract info from data-* attributes
@@ -447,8 +330,48 @@
                 //var modal = $(this)
                 //modal.find('.modal-title').text('New message to ' + recipient)
                 //modal.find('.modal-body input').val(recipient)
-                $('.multiple-items').not('.slick-initialized').slick(slickOptions);
+                //$('.multiple-items').not('.slick-initialized').slick(slickOptions);
+                $('.multiple-items').slick(slickOptions);
             })
+
+            //Modal顯示前
+            $('#detailModal').on('show.bs.modal', function (event) {
+                var span = $(event.relatedTarget);
+                var dtlcode = span.data('dtlcode');
+                var partnumber = span.data('partnumber');
+                setPRDtlInfo(dtlcode);
+                setSLDtlInfo(partnumber);
+            });
+
+            //設定Modal貨源清單
+            function setSLDtlInfo(partNumber) {
+                $.ajax({
+                    url: "@Url.Action("GetPOCSourceListViewModel", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: partNumber
+                    },
+                }).done(function (result) {
+                    $("#modalSLDtlInfo").html(result);
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
+
+            //設定Modal請購單資訊
+            function setPRDtlInfo(purchaseOrderDtlCode) {
+                $.ajax({
+                    url: "@Url.Action("GetPRDtlInfoViewModel", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: purchaseOrderDtlCode
+                    },
+                }).done(function (result) {
+                    $("#modalPRDtlInfo").html(result);
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
 
             $('#detailModal').on('hidden.bs.modal', function (event) {
                 $('.multiple-items').slick('unslick');
@@ -461,7 +384,7 @@
                 fade: false,
                 centerMode: false,
                 centerPadding: '50px',
-                slidesToShow: 3,
+                slidesToShow: 5,
                 slidesToScroll: 1,
                 focusOnSelect: false,
                 easing: "linear",
@@ -483,6 +406,11 @@
                             slidesToShow: 2,
                         }
                     },
+                            {
+                        breakpoint: 1200, settings: {
+                            slidesToShow: 4,
+                        }
+                    },
                 ],
             };
 
@@ -493,8 +421,6 @@
                 //切換分頁會造成RWD不作用
                 resizeDatatable();
             });
-
-
 
             //採購明細
             let dtPO = $('#dataTablesPO').DataTable({
@@ -569,7 +495,7 @@
                      $('#prdtl').html(result);
                      console.log($("#dataTablesPR tr").length);
                      $('#prdtlCount').text($("#dataTablesPR tr").length);
-                     initDataTablesPR();                    
+                     initDataTablesPR();
                      //顯示內容
                      $('.dtl-content').hide().removeClass("d-none").fadeIn(500);
                      resizeDatatable();
@@ -585,9 +511,11 @@
 
             });
 
+
+            var dtPR;
             function initDataTablesPR() {
                 //請購明細
-                let dtPR = $('#dataTablesPR').DataTable({
+                dtPR = $('#dataTablesPR').DataTable({
                     ordering: false,
                     fixedHeader: false,
                     //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
@@ -604,7 +532,7 @@
                         className: 'control',
                         searchable: false
                     },
-                    { orderable: false, targets: [0, 1, -1] },
+                        { orderable: false, targets: [0, 1, -1] }
                     ],
                 });
 
@@ -613,11 +541,6 @@
                     dtPR.columns.adjust().responsive.recalc();
                 });
             }
-
-            function resizeDatatable() {
-                $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
-            }
-
 
         @*$('#SelectedPurchaseRequisitionID').change(function() {
             supplierList.empty();

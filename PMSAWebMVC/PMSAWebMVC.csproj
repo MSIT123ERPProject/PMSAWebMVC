@@ -201,8 +201,11 @@
     <Compile Include="Common\IdentityExtensions.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccSettingController\BuyerSettingController.cs" />
+    <Compile Include="Controllers\AccSettingController\SupSettingController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
+    <Compile Include="Controllers\BuyerSupAccountController\SupInfoCompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryDtlsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -416,10 +419,16 @@
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccount_CreateViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
-    <Compile Include="ViewModels\BuyerSupAccount\SupCompanyInfoViewModel.cs" />
+    <Compile Include="ViewModels\BuyerSupAccount\SupInfoViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
+    <Compile Include="ViewModels\Setting\BuyerCompInfoViewModel.cs" />
+    <Compile Include="ViewModels\Setting\BuyerSettingViewModel.cs" />
+    <Compile Include="ViewModels\Setting\Buyer_parent.cs" />
+    <Compile Include="ViewModels\Setting\SupInfoViewModel.cs" />
+    <Compile Include="ViewModels\Setting\SupSettingViewModel.cs" />
+    <Compile Include="ViewModels\Setting\Sup_parent.cs" />
     <Compile Include="ViewModels\ShipNotices\ShipNoticeViewModel.cs" />
     <Compile Include="ViewModels\UsersAdmin\UsersAdminViewModel.cs" />
   </ItemGroup>
@@ -598,6 +607,9 @@
     <Content Include="Content\fontawesome-all.min.css" />
     <Content Include="Content\fontawesome.css" />
     <Content Include="Content\fontawesome.min.css" />
+    <Content Include="Content\IconKit\css\iconkit.css" />
+    <Content Include="Content\IconKit\css\iconkit.min.css" />
+    <Content Include="Content\IconKit\fonts\iconkit.svg" />
     <Content Include="Content\MagicInput\magic-input.css" />
     <Content Include="Content\MagicInput\magic-input.min.css" />
     <Content Include="Content\MagicInput\magic-input.site.css" />
@@ -668,7 +680,6 @@
     <Content Include="Content\pickadate\themes\rtl.css" />
     <Content Include="Content\regular.css" />
     <Content Include="Content\regular.min.css" />
-    <Content Include="Content\sbTemplate\mdb.min.css" />
     <Content Include="Content\sbTemplate\sb-admin.css" />
     <Content Include="Content\slick\ajax-loader.gif" />
     <Content Include="Content\slick\fonts\slick.svg" />
@@ -2098,10 +2109,18 @@
     <Content Include="Content\slick\fonts\slick.ttf" />
     <Content Include="Content\slick\fonts\slick.woff" />
     <Content Include="Content\slick\slick-theme.site.css" />
+
+    <Content Include="Content\IconKit\fonts\iconkit.eot" />
+    <Content Include="Content\IconKit\fonts\iconkit.otf" />
+    <Content Include="Content\IconKit\fonts\iconkit.ttf" />
+    <Content Include="Content\IconKit\fonts\iconkit.woff" />
+    <Content Include="Content\IconKit\fonts\iconkit.woff2" />
+
     <Content Include="Areas\SupplierArea\Views\web.config" />
     <Content Include="Areas\SupplierArea\Views\_ViewStart.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupplierHome\Index.cshtml" />
     <Content Include="Areas\SupplierArea\Views\Orders\_IndexOrderInfoPartialView.cshtml" />
+
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2226,7 +2245,6 @@
     <Content Include="Scripts\resxmanager\jquery.spellchecker.js" />
     <Content Include="Scripts\resxmanager\jquery.textarea-expander.js" />
     <Content Include="Scripts\resxmanager\jquery.watermark.min.js" />
-    <Content Include="Scripts\sbTemplate\mdb.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.js" />
     <Content Include="Scripts\sbTemplate\sb-admin.min.js" />
     <Content Include="Scripts\Site.js" />
@@ -2387,6 +2405,15 @@
     <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
+
+    <Content Include="Views\PurchaseOrders\_CreatePODtlInfoPartial.cshtml" />
+    <Content Include="Views\PurchaseOrders\_CreateSLItemPartial.cshtml" />
+    <Content Include="Views\SupInfoCompany\Index.cshtml" />
+    <Content Include="Views\SupInfoCompany\Create.cshtml" />
+    <Content Include="Views\SupSetting\Index.cshtml" />
+    <Content Include="Views\BuyerSetting\Index.cshtml" />
+
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2399,6 +2426,7 @@
     <Folder Include="Utilities\ShiYuan\" />
     <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
+    <Folder Include="Views\Buyer\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

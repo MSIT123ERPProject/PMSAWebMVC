@@ -25,6 +25,7 @@ namespace PMSAWebMVC
             //共用
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/fontawesome-all.css",
+                "~/Content/IconKit/css/iconkit.css",
                  //SB Admin
                  //"~/Content/sbTemplate/sb-admin.css",
                  //Bootstrap

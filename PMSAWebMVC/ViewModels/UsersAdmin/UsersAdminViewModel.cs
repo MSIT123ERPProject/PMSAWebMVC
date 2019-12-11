@@ -43,5 +43,8 @@ namespace PMSAWebMVC.ViewModels.UsersAdmin
 
         [DisplayName("使用者更改密碼日期")]
         public Nullable<System.DateTime> LastPasswordChangedDate { get; set; }
+
+        [DisplayName("驗證狀態")]
+        public bool EmailConfirm { get; set; }
     }
 }

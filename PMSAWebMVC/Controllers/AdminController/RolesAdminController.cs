@@ -96,41 +96,43 @@ namespace PMSAWebMVC.Controllers
 
         private class usersArray
         {
-            public string UserName { get; set; }
-            public string arr { get; set; }
-            public string RoleNameEn { get; set; }
-            public string RoleNameCh { get; set; }
+            public string RoleId { get; set; }
+            public string usersAccId { get; set; }
+            public string RoleEnName { get; set; }
+            public string RoleChName { get; set; }
         }
 
         public ActionResult getTwoRolesToIndexAjax()
         {
             var roles = RoleManager.Roles.ToList();
             var users = UserManager.Users.ToList();
-            List<object> allRoles = new List<object>();
             List<usersArray> allUsers = new List<usersArray>();
             List<object> obj = new List<object>();
+            var all = users.Join(roles, u => u.Roles.Select(x => x.RoleId), r => r.Users.Select(x => x.RoleId), (u, r) => new { u.UserName, r.Name });
             foreach (var u in users)
             {
+                var RoleNameEnarr = roles.Where(y => (u.Roles.Select(x => x.RoleId)).Contains(y.Id)).Select(r => r.Name);
+                var RoleNameCharr = roles.Where(y => (u.Roles.Select(x => x.RoleId)).Contains(y.Id)).Select(r => r.Description);
                 usersArray userArr = new usersArray
                 {
-                    //RoleNameEn = r.Name,
-                    //RoleNameCh = r.Description,
-                    UserName = u.UserName,
-                    arr = string.Join(",", u.Roles.Select(x => x.RoleId))
+                    RoleId = "-",
+                    RoleEnName = string.Join(",", RoleNameEnarr),
+                    RoleChName = string.Join(",", RoleNameCharr),
+                    usersAccId = u.UserName,
                 };
                 allUsers.Add(userArr);
             }
             foreach (var x in allUsers)
             {
-                var splitArr = x.arr.Split(',');
+                var splitArr = x.RoleEnName.Split(',');
                 if (splitArr.Count() >= 2)
                 {
                     usersArray userArr = new usersArray
                     {
-                        //RoleNameEn = r.Name,
-                        //RoleNameCh = r.Description,
-                        UserName = x.UserName,
-                        arr = string.Join(",", splitArr)
+                        RoleId = "-",
+                        RoleEnName = x.RoleEnName,
+                        RoleChName = x.RoleChName,
+                        usersAccId = x.usersAccId
                     };
                     obj.Add(userArr);
                 }

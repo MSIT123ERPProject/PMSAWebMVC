@@ -268,6 +268,9 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
                             </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmailConfirm)
+                            </th>
                             <th data-priority="1">動作</th>
                         </tr>
                     </thead>
@@ -347,6 +350,12 @@
                                                             @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
                                                         </label>
                                                         <input type="text" class="form-control disabled" name="LastPasswordChangedDate" id="LastPasswordChangedDate">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="EmailConfirm">
+                                                            @Html.DisplayNameFor(model => model.EmailConfirm)
+                                                        </label>
+                                                        <div id="EmailConfirm"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -489,6 +498,9 @@
 
         $("#createEmp").ready(() => {
             var oTable = $('#createEmp').DataTable({
+                ordering: true,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [],
                 responsive: {
                     details: {
                         type: 'column',
@@ -520,8 +532,14 @@
                         "data": null,
                         "defaultContent": ""
                     },
-                    { "data": "EmployeeID" },
-                    { "data": "Name" },
+                    {
+                        "data": "EmployeeID",
+                        "ordering": true
+                    },
+                    {
+                        "data": "Name",
+                        "ordering": true
+                    },
                     {
                         "data": "Role[,]",
                         "render": function (d) {
@@ -553,7 +571,8 @@
                                 }
                             })
                             return String(arrAll);
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "Email",
@@ -562,7 +581,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "Mobile",
@@ -571,7 +591,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "Tel",
@@ -580,7 +601,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "AccountStatus",
@@ -595,7 +617,8 @@
                                 return `<h5><span class="badge badge-warning">重設</span></h5>`
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "ManagerID",
@@ -604,7 +627,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "ModifiedDate",
@@ -616,7 +640,8 @@
                                 d = str.split("T").join(" ");
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "CreateDate",
@@ -628,7 +653,8 @@
                                 d = str.split("T").join(" ");
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                      },
                     {
                         "data": "SendLetterDate",
@@ -640,7 +666,8 @@
                                 d = str.split("T").join(" ");
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                      },
                     {
                         "data": "LastPasswordChangedDate",
@@ -653,7 +680,20 @@
                             }
                             return d;
                         },
-                        "defaultContent": "-"
+                        "defaultContent": "-",
+                        "ordering": true
+                    },
+                    {
+                        "data": "EmailConfirm",
+                        "render": function (d) {
+                            if (d == true) {
+                                return `<h5><span class="badge badge-primary">已驗證</span></h5>`;
+                            } else {
+                                return `<h5><span class="badge badge-danger">尚未</span></h5>`;
+                            }
+                        },
+                        "defaultContent": "-",
+                        "ordering": true
                     },
                     {
                         "data": "actionbtn",
@@ -703,6 +743,17 @@
                                 }
                             }
                         $("#AccountStatus").html(getAccountStatus());
+                        //
+                        function getEmailConfirm() {
+                            if (x.EmailConfirm == null) {
+                                return "-";
+                            } else if (x.EmailConfirm == true) {
+                                return `<h5><span class="badge badge-primary">已驗證</span></h5>`
+                            } else if (x.EmailConfirm == false) {
+                                return `<h5><span class="badge badge-danger">尚未</span></h5>`
+                            }
+                        }
+                        $("#EmailConfirm").html(getEmailConfirm());
                         x.RolesList.forEach(r => {
                             $("#" + r.Value).prop('checked', r.Selected);
                         });

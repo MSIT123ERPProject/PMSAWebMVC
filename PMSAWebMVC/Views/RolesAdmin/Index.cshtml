@@ -441,7 +441,12 @@
                 oTable.ajax.url('@Url.Action("getRolesByNameToIndexAjax", "RolesAdmin")' +'?RoleName=Buyer').load();
             })*@
             $("#All").click(() => {
+                oTable.search("").draw();
                 oTable.ajax.url(url).load();
+            })
+            $("#two").click(() => {
+                oTable.search("").draw();
+                oTable.ajax.url('@Url.Action("getTwoRolesToIndexAjax","RolesAdmin")').load();
             })
         });
 
@@ -457,7 +462,7 @@
         })
 
         $(document).ready(function () {
-            
+
         //=============================================================
            var message = '@SuccessMsg';
                     if(message){

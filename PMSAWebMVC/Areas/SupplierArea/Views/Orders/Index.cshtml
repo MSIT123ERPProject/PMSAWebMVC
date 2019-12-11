@@ -96,6 +96,7 @@
                         else {
                             toastr.fail( "答交失敗，異動總表未儲存","通知" );
                         }
+                        $("#btnImportOrder").prop("disable", true);
                         }).fail(function () {
                             alert("OrderApply ajax fail");
                         });

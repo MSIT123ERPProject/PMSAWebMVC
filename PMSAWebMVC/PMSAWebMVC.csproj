@@ -415,6 +415,7 @@
     <Compile Include="Services\MembersDBService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
+    <Compile Include="Utilities\YaChen\PurchaseOrderCreateSession.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccount_CreateViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
@@ -2412,7 +2413,6 @@
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />
     <Folder Include="Utilities\ShiYuan\" />
-    <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
     <Folder Include="Views\Buyer\" />
     <Folder Include="Views\Default\" />

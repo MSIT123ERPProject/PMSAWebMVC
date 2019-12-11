@@ -76,10 +76,6 @@ namespace PMSAWebMVC
             bundles.Add(new StyleBundle("~/Content/form").Include(
                 //DatetimePicker
                 "~/Content/tempusdominus/tempusdominus-bootstrap-4.css",
-                //pickadate
-                "~/Content/pickadate/themes/classic.css",
-                "~/Content/pickadate/themes/classic.date.css",
-                "~/Content/pickadate/themes/classic.time.css",
                 //SweetAlert
                 "~/Content/sweetAlert/sweetalert2.css",
                 //MagicInput
@@ -95,11 +91,6 @@ namespace PMSAWebMVC
                 //DatetimePicker
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.js",
                 "~/Scripts/tempusdominus/tempusdominus-bootstrap-4.zh-TW.js",
-                //pickadate
-                "~/Scripts/pickadate/picker.js",
-                "~/Scripts/pickadate/picker.date.js",
-                "~/Scripts/pickadate/picker.time.js",
-                "~/Scripts/pickadate/translations/zh_TW.js",
                 //SweetAlert
                 "~/Scripts/sweetAlert/sweetalert2.all.js",
                 //toastr

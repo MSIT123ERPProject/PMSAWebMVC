@@ -283,7 +283,7 @@
 
                 <div class="row">
                     <!--貨源清單-->
-                    <div class="col-sm-12 col-lg-6" id="modalSLDtlInfo"></div>
+                    <div id="modalSLDtlInfo" class="col-sm-12 col-lg-6"></div>
 
                     <!--採購明細資料-->
                     <div id="modalPRDtlInput" class="col-sm-12 col-lg-6">
@@ -306,12 +306,12 @@
                                             </div>
 
                                             <div class="md-form col-md-4 col-6">
-                                                <input type="number" id="Qty" class="form-control" value="10">
+                                                <input type="number" id="Qty" class="form-control" value="0">
                                                 <label for="Qty">數量 <span class="text-danger">*</span></label>
                                             </div>
 
                                             <div class="md-form col-md-4 col-6">
-                                                <input type="text" class="form-control datetimepicker-input" id="DateRequired" data-toggle="datetimepicker" data-target="#DateRequired" />
+                                                <input type="text" class="form-control datetimepicker-input" id="DateRequired" data-toggle="datetimepicker" data-target="#DateRequired" value=" " />
                                                 <label for="DateRequired">要求到貨日期 <span class="text-danger">*</span></label>
                                             </div>
 
@@ -320,22 +320,22 @@
                                             </div>
 
                                             <div class="md-form col-md-4 col-6 text-info">
-                                                <input type="number" id="TotalSourceListQty" class="form-control" disabled value="500">
+                                                <input type="text" id="TotalSourceListQty" class="form-control" disabled value=" ">
                                                 <label for="TotalSourceListQty" class="disabled text-info">料件總數</label>
                                             </div>
 
                                             <div class="md-form col-md-4 col-6 text-info">
-                                                <input type="number" id="PurchaseUnitPrice" class="form-control" disabled value="100">
-                                                <label for="PurchaseUnitPrice" class="disabled text-info">單價</label>
+                                                <input type="text" id="OriginalUnitPrice" class="form-control" disabled value=" ">
+                                                <label for="OriginalUnitPrice" class="disabled text-info">單價</label>
                                             </div>
 
                                             <div class="md-form col-md-4 col-6 text-info">
-                                                <input type="text" id="Discount" class="form-control" disabled value="0%">
+                                                <input type="text" id="Discount" class="form-control" disabled value=" ">
                                                 <label for="Discount" class="disabled text-info">折扣</label>
                                             </div>
 
                                             <div class="md-form col-md-4 col-6 text-info">
-                                                <input type="text" id="Total" class="form-control" disabled value="3000">
+                                                <input type="text" id="Total" class="form-control" disabled value=" ">
                                                 <label for="Total" class="disabled text-info">小計</label>
                                             </div>
 
@@ -344,8 +344,8 @@
                                         <div class="row mt-0 mb-3">
 
                                             <div class="col-6">
-                                                <button class="btn btn-primary btn-block" type="submit"><i class="far fa-file"></i> 加入採購單</button>
-                                                <button class="btn btn-primary btn-block" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
+                                                <button id="btnPODAdd" class="btn btn-primary btn-block" type="submit"><i class="far fa-file"></i> 加入採購單</button>
+                                                <button id="btnPODUpdate" class="btn btn-primary btn-block" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
                                             </div>
 
                                             <div class="col-6">
@@ -398,8 +398,6 @@
                 toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
             });
 
-
-
             var slickOptions = {
                 infinite: true,
                 arrows: true,
@@ -411,7 +409,6 @@
                 slidesToScroll: 1,
                 focusOnSelect: false,
                 easing: "linear",
-                lazyLoad: 'progressive',
                 swipeToSlide: true,
                 responsive: [
                     {
@@ -452,7 +449,15 @@
                 //modal.find('.modal-title').text('New message to ' + recipient)
                 //modal.find('.modal-body input').val(recipient)
                 //$('#sldtl-items').not('.slick-initialized').slick(slickOptions);
-                $('#sldtl-items').slick(slickOptions);
+
+                var span = $(event.relatedTarget);
+                var dtlcode = span.data('dtlcode');
+                setTimeout(function () {
+                    $('#sldtl-items').slick(slickOptions);
+                    //設定採購明細
+                    setPRDtlInput(dtlcode)
+                    $('#DateRequired').datetimepicker();
+                }, 100);
             })
 
             //Modal顯示前
@@ -460,9 +465,11 @@
                 var span = $(event.relatedTarget);
                 var dtlcode = span.data('dtlcode');
                 var partnumber = span.data('partnumber');
+                //設定請購單明細
                 setPRDtlInfo(dtlcode);
+                //設定貨源清單
                 setSLDtlInfo(partnumber);
-                $('#DateRequired').datetimepicker();
+
             });
 
             //貨源清單收起
@@ -472,7 +479,9 @@
 
             //貨源清單打開
             $('body').on('shown.bs.collapse', '#collapse-sldtlInfo', function (e) {
-                $('#sldtl-items').slick(slickOptions);
+                setTimeout(function () {
+                    $('#sldtl-items').slick(slickOptions);
+                }, 100);
             })
 
             //設定Modal貨源清單
@@ -490,7 +499,34 @@
                     });
             }
 
-            //設定Modal請購單資訊
+
+                        //設定Modal新增採購明細
+            function setPRDtlInput(prdtlcode) {
+
+                $.getJSON('@Url.Action("GetPODtlItemViewModel", "PurchaseOrders")', { id: prdtlcode}, function (data) {
+                if (!data) {
+                    return;
+                    }
+                    $("#Qty").val(data.Qty);
+                    console.log(data);
+                    $("#DateRequired").val(data.DateRequiredToShow);
+                    $("#TotalSourceListQty").val(data.TotalSourceListQty);
+                    $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
+                    $("#Discount").val(data.DiscountToShow);
+                    $("#Total").val(data.TotalToShow);
+                    $("#btnPODAdd").show();
+                    $("#btnPODUpdate").hide();
+                    if (data.SourceListID) {
+                        let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
+                        console.log(sl);
+                        sl.prop('checked', true);
+                        console.log(sl);
+                    }
+            });
+
+            }
+
+           //設定Modal請購單資訊
             function setPRDtlInfo(purchaseOrderDtlCode) {
                 $.ajax({
                     url: "@Url.Action("GetPRDtlInfoViewModel", "PurchaseOrders")",

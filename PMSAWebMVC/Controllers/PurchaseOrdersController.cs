@@ -1,4 +1,5 @@
 ﻿using PMSAWebMVC.Models;
+using PMSAWebMVC.Utilities.YaChen;
 using PMSAWebMVC.ViewModels;
 using PMSAWebMVC.ViewModels.PurchaseOrders;
 using System;
@@ -15,11 +16,13 @@ namespace PMSAWebMVC.Controllers
     public class PurchaseOrdersController : BaseController
     {
         private PMSAEntities db;
+        PurchaseOrderCreateSession session;
 
         public PurchaseOrdersController()
         {
             db = new PMSAEntities();
             db.Database.Log = Console.Write;
+            session = PurchaseOrderCreateSession.Current;
         }
 
         // GET: PurchaseOrders
@@ -93,6 +96,20 @@ namespace PMSAWebMVC.Controllers
         }
 
         /// <summary>
+        /// 取得新增時的採購明細資料
+        /// </summary>
+        /// <param name="id">請購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetPODtlItemViewModel(string id)
+        {
+            session.PODItemEditting = null;
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var data = rep.GetPODtlItemViewModel(id);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
         /// 取得請購明細表
         /// </summary>
         /// <param name="id">請購單編號</param>
@@ -102,6 +119,10 @@ namespace PMSAWebMVC.Controllers
         {
             Repository rep = new Repository(User.Identity.GetEmployee(), db);
             var vm = rep.GetPRDtlTableViewModel(id);
+            var pr = rep.GetPurchaseRequisition(id);
+            //存入Session
+            session.PRDItems = vm;
+            session.PRItems.Add(pr);
             return PartialView("_CreatePRDtlTablePartial", vm);
         }
 
@@ -113,10 +134,10 @@ namespace PMSAWebMVC.Controllers
         [HttpGet]
         public ActionResult GetPOCSourceListViewModel(string id)
         {
-            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            Repository rep = new Repository(User.Identity.GetEmployee());
             var vm = rep.GetPOCSourceListViewModel(id);
             return PartialView("_CreateSLItemPartial", vm);
-        }        
+        }
 
         [HttpGet]
         public ActionResult GetPurchaseOrderDtlList(string id, string supplierCode)
@@ -146,6 +167,12 @@ namespace PMSAWebMVC.Controllers
 
         private void ConfigureViewModel(PurchaseOrderCreateViewModel model)
         {
+            //將先前Session中的內容先清空
+            if (this.session.PRDItems.Count() > 0)
+            {
+                session.ResetAllItems();
+            }
+            //取得請購單資料
             //參考資料：https://dotnetfiddle.net/PBi075
             Repository rep = new Repository(User.Identity.GetEmployee());
             IList<PurchaseRequisitionItem> purchaseRequisitions = rep.GetPurchaseRequisitionList();

@@ -211,6 +211,29 @@ namespace PMSAWebMVC.Controllers
             return PartialView("_CreateSLItemPartial", vm);
         }
 
+        /// <summary>
+        /// 取得供應商資訊
+        /// </summary>
+        /// <param name="id">料件編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetSUPInfoViewModel()
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee());
+            if (session.Supplier == null)
+            {
+                return new EmptyResult();
+            }
+            var vm = new SUPInfoViewModel
+            {
+                SupplierName = session.Supplier.SupplierInfo.SupplierName,
+                ContactName = session.Supplier.ContactName,
+                Email = session.Supplier.Email,
+                Tel = session.Supplier.Tel
+            };
+            return PartialView("_CreateSUPInfoPartial", vm);
+        }
+
         [HttpGet]
         public ActionResult GetPurchaseOrderDtlList(string id, string supplierCode)
         {

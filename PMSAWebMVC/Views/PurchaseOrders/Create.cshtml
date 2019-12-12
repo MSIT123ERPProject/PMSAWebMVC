@@ -95,42 +95,7 @@
         </a>
     </div>
 
-    <div id="collapse-supplierinfo" class="collapse show" aria-labelledby="heading-supplierinfo">
-        <div class="card-body pb-0 pt-0">
-            <div class="form-horizontal">
-                <div class="row mb-0 mt-0 align-items-center">
-
-                    <div class="card-body pb-0">
-                        <div class="row">
-                            <div class="col-md-3 col-6">
-                                <small><strong>供應商名稱</strong></small>
-                                <br>
-                                <p class="text-muted">誌慶股份有限公司</p>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <small><strong>聯絡人</strong></small>
-                                <br>
-                                <p class="text-muted">林政苓</p>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <small><strong>電子信箱</strong></small>
-                                <br>
-                                <p class="text-muted">h1051235@gmail.com</p>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <small><strong>聯絡電話</strong></small>
-                                <br>
-                                <p class="text-muted">02-4076125</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
+    <div id="collapse-supplierinfo" class="collapse show" aria-labelledby="heading-supplierinfo"></div>
 </div>
 
 @*明細分頁*@
@@ -459,11 +424,32 @@
            async function btnPODAddClick() {
                 //先更新資料
                 await setPRDtlInputUpdate("add");
-                //顯示表格
-                await showPODtlToTableViewModel();
+               //顯示表格
+               await showPODtlToTableViewModel();
                await showPRDtlToTableViewModel();
+               if ($("#collapse-supplierinfo").children().length == 0) {
+                   showSUPInfoViewModel();
+               }
                $('#detailModal').modal('hide');
                $(this).prop("disabled", false);
+            }
+
+            //顯示供應商資訊
+            async function showSUPInfoViewModel() {
+                await $.ajax({
+                    url: "@Url.Action("GetSUPInfoViewModel", "PurchaseOrders")",
+                    type: "get",
+                }).done(function (result) {
+                    if (result == "") {
+                        $("#supplierInfo").hide();
+                        $("#collapse-supplierinfo").html("");
+                    } else {
+                        $("#collapse-supplierinfo").html(result);
+                        $("#supplierInfo").hide().removeClass("d-none").fadeIn(500);
+                    }
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
             }
 
             //顯示採購明細表
@@ -543,7 +529,6 @@
                 resizeDatatable();
             });
 
-
             //顯示請購單資訊
             async function showPRDtlToTableViewModel() {
                 await $.ajax({
@@ -581,6 +566,7 @@
                 showPRInfoViewModel();
             });
 
+            //顯示請購單資訊
             async function showPRInfoViewModel() {
                 await $.ajax({
                     url: "@Url.Action("GetPRInfoViewModel", "PurchaseOrders")",

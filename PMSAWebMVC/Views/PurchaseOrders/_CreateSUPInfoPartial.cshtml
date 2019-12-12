@@ -1,0 +1,35 @@
+﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.SUPInfoViewModel
+
+<div class="card-body pb-0 pt-0">
+    <div class="form-horizontal">
+        <div class="row mb-0 mt-0 align-items-center">
+
+            <div class="card-body pb-0">
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.SupplierName)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.SupplierName)</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.ContactName)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.ContactName)</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.Email)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.Email)</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.Tel)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.Tel)</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

@@ -10,11 +10,20 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.ViewModels.PurchaseOrders
 {
-    public class PurchaseRequisitionItem
-    {
-        public string PurchaseRequisitionIdDisplay { get; set; }
-        public string PurchaseRequisitionIdValue { get; set; }
+    /// <summary>
+    /// 供應商資訊
+    /// </summary>
+    public class SUPInfoViewModel {
+        [Display(Name = "供應商名稱")]
+        public string SupplierName { get; set; }
+        [Display(Name = "聯絡人")]
+        public string ContactName { get; set; }
+        [Display(Name = "電子信箱")]
+        public string Email { get; set; }
+        [Display(Name = "聯絡電話")]
+        public string Tel { get; set; }
     }
+
     /// <summary>
     /// 採購單新增編輯時的貨源清單
     /// </summary>
@@ -723,6 +732,12 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
 
             return pods;
         }
+    }
+
+    public class PurchaseRequisitionItem
+    {
+        public string PurchaseRequisitionIdDisplay { get; set; }
+        public string PurchaseRequisitionIdValue { get; set; }
     }
 
     public class PurchaseOrderCreateViewModel

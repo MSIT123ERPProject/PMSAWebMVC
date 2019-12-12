@@ -143,11 +143,52 @@ namespace PMSAWebMVC.Controllers
         public ActionResult GetPRDtlTableViewModel(string id)
         {
             Repository rep = new Repository(User.Identity.GetEmployee(), db);
-            var vm = rep.GetPRDtlTableViewModel(id);
-            var pr = rep.GetPurchaseRequisition(id);
-            //存入Session
-            session.PRDItems = vm;
-            session.PRItems.Add(pr);
+            IList<PRDtlTableViewModel> vm = null;
+            PurchaseRequisition pr = null;
+            if (session.PRDItems == null || session.PRDItems.Count == 0)
+            {
+                vm = rep.GetPRDtlTableViewModel(id);
+                pr = rep.GetPurchaseRequisition(id);
+                //存入Session
+                session.PRDItems = vm;
+                session.PRItems.Add(pr);
+            }
+            else
+            {
+                vm = session.PRDItems;
+            }
+            //已加入一個採購明細，整筆採購單只能是單一供應商的料件
+            if (session.Supplier != null)
+            {
+                var slq = db.SourceList.Where(sl => sl.SupplierCode == session.Supplier.SupplierCode);
+                foreach (var sl in slq)
+                {
+                    foreach (var vmitem in vm)
+                    {
+                        if (vmitem.PartNumber != sl.PartNumber)
+                        {
+                            vm.Remove(vmitem);
+                            break;
+                        }
+                    }
+                }
+            }
+            //將加入採購單的明細排除
+            if (session.PODItems != null && session.PODItems.Count > 0)
+            {
+                foreach (var pod in session.PODItems)
+                {
+                    foreach (var vmitem in vm)
+                    {
+                        if (vmitem.PurchaseRequisitionDtlCode == pod.PurchaseRequisitionDtlCode)
+                        {
+                            vm.Remove(vmitem);
+                            break;
+                        }
+                    }
+                }
+            }
+
             return PartialView("_CreatePRDtlTablePartial", vm);
         }
 

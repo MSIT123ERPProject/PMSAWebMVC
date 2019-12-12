@@ -115,11 +115,23 @@ namespace PMSAWebMVC.Controllers
         /// <param name="id">請購單編號</param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult GetPODtlUpdateItemViewModel(int qty, DateTime dateRequired, string sourceList, string modalPrdCode)
+        public JsonResult GetPODtlUpdateItemViewModel(int qty, DateTime dateRequired, string sourceList, string modalPrdCode, string mode)
         {
-            Repository rep = new Repository(User.Identity.GetEmployee(), db);            
-            var data = rep.GetPODtlUpdateItemViewModel(qty, dateRequired, sourceList, modalPrdCode);
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var data = rep.GetPODtlUpdateItemViewModel(qty, dateRequired, sourceList, modalPrdCode, mode);
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 加入新增的採購明細資料到表格
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult AddPODtlToTableViewModel()
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            rep.AddPODtlToTableViewModel();
+            return PartialView("_CreatePODItemPartial", session.PODItems);
         }
 
         /// <summary>

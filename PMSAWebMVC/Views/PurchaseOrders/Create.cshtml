@@ -3,6 +3,8 @@
 @{
                 /**/
 
+                /**/
+
                 ViewBag.Title = "新增採購單";
 }
 
@@ -149,11 +151,11 @@
 
     <a href="#prdtl" class="btn btn-outline-primary active" data-toggle="tab">
         <input type="radio" name="options" id="optprdtl" autocomplete="off" checked>
-        請購明細 <span class="badge badge-pill badge-danger" id="prdtlCount">10</span>
+        請購明細 <span class="badge badge-pill badge-danger" id="prdtlCount">0</span>
     </a>
     <a href="#podtl" class="btn btn-outline-primary" data-toggle="tab">
         <input type="radio" name="options" id="optpodtl" autocomplete="off">
-        採購明細 <span class="badge badge-pill badge-danger">5</span>
+        採購明細 <span class="badge badge-pill badge-danger" id="podtlCount">0</span>
     </a>
 
 </div>
@@ -163,97 +165,7 @@
     <div class="tab-pane active" id="prdtl"></div>
 
     @*採購明細內容*@
-    <div class="tab-pane" id="podtl">
-        <table id="dataTablesPO" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
-            <thead>
-                <tr class="bg-primary text-white text-center">
-                    <th>&nbsp;</th>
-                    <th>料件編號</th>
-                    <th data-priority="1">料件品名</th>
-                    <th>單價</th>
-                    <th>採購數量</th>
-                    <th>折扣</th>
-                    <th>金額</th>
-                    <th>要求到貨日期</th>
-                    <th data-priority="1">功能</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td>S12345</td>
-                    <td>Edinburgh</td>
-                    <td>$500</td>
-                    <td>61</td>
-                    <td>1%</td>
-                    <td>$320,800</td>
-                    <td>2011/04/25</td>
-                    <td>
-                        <div class="table-data-feature">
-                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                                <i class="far fa-edit"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
-                                <i class='far fa-trash-alt'></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>S45678</td>
-                    <td>Edinburgh</td>
-                    <td>$450</td>
-                    <td>10</td>
-                    <td>0%</td>
-                    <td>$320,800</td>
-                    <td>2011/04/25</td>
-                    <td>
-                        <div class="table-data-feature">
-                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                                <i class="far fa-edit"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
-                                <i class='far fa-trash-alt'></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="form-group">
-            <button id="btnSubmit2" type="button" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
-        </div>
-
-
-        @*@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <i class="fas fa-list"></i> 請購明細
-                    </div>
-                    <div class="card-body">
-                        @if (TempData["ErrorMessage"] != null)
-                        {
-                            <div class="alert alert-warning" id="warning">
-                                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                                @TempData["ErrorMessage"]
-                            </div>
-                        }
-                        <div class="table-responsive" id="dataTablesContainer"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出申請</button>
-                </div>
-
-
-            }*@
-
-    </div>
+    <div class="tab-pane" id="podtl"></div>
 </div>
 
 @*加入採購單、編輯Modal*@
@@ -547,13 +459,13 @@
 
             //數量和貨源改變要重新計算折扣
             $("#Qty").on("keyup mouseup", function (e) {
-                setPRDtlInputUpdate();
+                setPRDtlInputUpdate("edit");
             });
 
             $("body").on('change', 'input[type=radio][name=sourceList]', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-                setPRDtlInputUpdate();
+                setPRDtlInputUpdate("edit");
             });
 
             function chkQtyValue() {
@@ -575,7 +487,34 @@
                 }
             }
 
-            function setPRDtlInputUpdate() {
+            //加入採購單
+            $("#btnPODAdd").on('click', function () {
+                //先更新資料
+                setPRDtlInputUpdate("add");
+                //顯示表格
+                AddPODtlToTableViewModel();
+                //關閉Modal
+                $('#detailModal').modal('hide');
+            });  
+
+            //顯示採購明細表
+            function AddPODtlToTableViewModel() {
+                $.ajax({
+                    url: "@Url.Action("AddPODtlToTableViewModel", "PurchaseOrders")",
+                    type: "get",
+                 }).done(function (result) {
+                     //建立內容
+                     $('#podtl').html(result);    
+                     initDataTablesPO();
+                     $('#podtlCount').text(dtPO.context[0].aoData.length);
+                     //顯示內容
+                     resizeDatatable();
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
+
+            function setPRDtlInputUpdate(mode) {
 
                 $("#btnPODAdd").prop("disabled", false);
 
@@ -594,7 +533,8 @@
                     qty: qty,
                     dateRequired: dateRequired,
                     sourceList: sourceList,
-                    modalPrdCode: modalPrdCode
+                    modalPrdCode: modalPrdCode, 
+                    mode: mode
                 }, function (data) {
                     if (!data) {
                         return;
@@ -642,31 +582,36 @@
             });
 
             //採購明細
-            let dtPO = $('#dataTablesPO').DataTable({
-                ordering: false,
-                fixedHeader: false,
-                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
-                order: [[2, 'desc']],
-                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
-                responsive: {
-                    details: {
-                        type: 'column',
-                        target: 0
-                    }
-                },
-                columnDefs: [{
-                    targets: 0,
-                    className: 'control',
-                    searchable: false
-                },
-                { orderable: false, targets: [0, 1, -1] },
-                ],
-            });
+            var dtPO;
+            function initDataTablesPO() {
+                dtPO = $('#dataTablesPO').DataTable({
+                    ordering: false,
+                    fixedHeader: false,
+                    //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                    order: [[2, 'desc']],
+                    //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                    responsive: {
+                        details: {
+                            type: 'column',
+                            target: 0
+                        }
+                    },
+                    columnDefs: [{
+                        targets: 0,
+                        className: 'control',
+                        searchable: false
+                    },
+                    { orderable: false, targets: [0, 1, -1] },
+                    ],
+                });
 
-            dtPO.on('responsive-resize', function (e, datatable, columns) {
-                //修正縮放大小不正確的問題
-                dtPO.columns.adjust().responsive.recalc();
-            });
+                dtPO.on('responsive-resize', function (e, datatable, columns) {
+                    //修正縮放大小不正確的問題
+                    dtPO.columns.adjust().responsive.recalc();
+                });
+            }
+
+           
 
             let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseOrders")';
             let supplierList = $('#SelectedSupplierName');
@@ -712,9 +657,8 @@
                  }).done(function (result) {
                      //建立內容
                      $('#prdtl').html(result);
-                     //console.log($("#dataTablesPR tr").length);
-                     $('#prdtlCount').text($("#dataTablesPR tr").length);
                      initDataTablesPR();
+                     $('#prdtlCount').text(dtPR.context[0].aoData.length);
                      //顯示內容
                      $('.dtl-content').hide().removeClass("d-none").fadeIn(500);
                      resizeDatatable();

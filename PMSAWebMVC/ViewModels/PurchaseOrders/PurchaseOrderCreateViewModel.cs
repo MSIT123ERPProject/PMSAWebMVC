@@ -376,6 +376,13 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             }
         }
 
+        /// <summary>
+        /// 加入新增的採購明細資料到表格
+        /// </summary>
+        public void AddPODtlToTableViewModel() {
+            session.PODItems.Add(session.PODItemEditting);
+            session.PODItemEditting = null;
+        }
 
         /// <summary>
         /// 取得單一採購明細編輯後資料 - 新版使用方法
@@ -385,7 +392,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <param name="sourceListID"></param>
         /// <param name="purchaseRequisitionDtlCode"></param>
         /// <returns></returns>
-        public PurchaseOrderDtlItem GetPODtlUpdateItemViewModel(int qty, DateTime dateRequired, string sourceListID, string purchaseRequisitionDtlCode)
+        public PurchaseOrderDtlItem GetPODtlUpdateItemViewModel(int qty, DateTime dateRequired, string sourceListID, string purchaseRequisitionDtlCode, string mode)
         {
             PurchaseOrderDtlItem podedit = session.PODItemEditting;
             //採購明細編輯中
@@ -430,12 +437,21 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             podedit.Total = podedit.PurchaseUnitPrice * podedit.Qty;
 
             //已存在的(需正式加入採購單才做改變)
-            //foreach (var item in session.PODItems.Where(item => item.SourceListID == sl.SourceListID))
-            //{
-            //    item.Discount = discount;
-            //    item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - discount));
-            //    item.Total = item.PurchaseUnitPrice * item.Qty;
-            //}
+            if (mode=="add")
+            {
+                foreach (var item in session.PODItems.Where(item => item.SourceListID == sl.SourceListID))
+                {
+                    item.Discount = discount;
+                    item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - discount));
+                    item.Total = item.PurchaseUnitPrice * item.Qty;
+                }
+                //假如貨源清單沒值需加入
+                if (session.Supplier == null)
+                {
+                    var sa = db.SupplierAccount.Where(item => item.SupplierCode == sl.SupplierInfo.SupplierCode).ToList().FirstOrDefault();
+                    session.Supplier = sa;
+                }
+            }
 
             return session.PODItemEditting;
         }
@@ -550,14 +566,6 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             podedit.Total = podedit.PurchaseUnitPrice * podedit.Qty;
 
             session.PODItemEditting = podedit;
-
-            //已存在的(需正式加入採購單才做改變)
-            //foreach (var item in session.PODItems.Where(item => item.SourceListID == sl.SourceListID))
-            //{
-            //    item.Discount = discount;
-            //    item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - discount));
-            //    item.Total = item.PurchaseUnitPrice * item.Qty;
-            //}
 
             return session.PODItemEditting;
         }

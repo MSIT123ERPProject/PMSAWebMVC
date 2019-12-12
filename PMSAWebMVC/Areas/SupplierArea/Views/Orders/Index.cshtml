@@ -56,7 +56,7 @@
 @section scripts{
     <script>
         $(document).ready(function () {
-            $("#divApply").hide();
+            $("#btnApply").hide();
             //下拉式選單
             $("#btnImportOrder").prop("disable", true);
             $("#orderID").change(function () {
@@ -82,6 +82,7 @@
                 //let apply = document.createElement("button");
                 //apply.append("class", "btn btn-success");
                 //apply.append("class", "btn btn-block");
+                $("#btnApply").show();
                 $("#btnApply").click(function () {
                     $.ajax({
                         url: `@Url.Action("OrderApply","Orders")`,

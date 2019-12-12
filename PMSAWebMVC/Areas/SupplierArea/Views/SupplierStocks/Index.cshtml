@@ -10,12 +10,10 @@
 </nav>
 <div class="card mb-3">
     <div class="card-header">
-            @*<i class="fas fa-table"></i>
-            <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>*@
-        </div>
+    </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
+            <table class="table table-striped hover order-column nowrap text-left" cellspacing="0" style="width:100%" id="dataTable">
                 <thead>
                     <tr class="bg-primary text-white text-center">
                         <th data-priority="1"></th>
@@ -86,7 +84,11 @@
     <script>
             $(document).ready(function () {
                 dataTableDisplay();
-                ClickUpdateButton()
+                ClickUpdateButton();
+                dataTablesId.on('responsive-resize', function (e, datatable, columns) {
+                    //修正縮放大小不正確的問題
+                    dataTablesId.columns.adjust().responsive.recalc();
+                });
         });
         /////////////////////////////////////////////
         let table;

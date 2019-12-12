@@ -2118,9 +2118,7 @@
     <Content Include="Areas\SupplierArea\Views\web.config" />
     <Content Include="Areas\SupplierArea\Views\_ViewStart.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupplierHome\Index.cshtml" />
-
     <Content Include="Areas\SupplierArea\Views\Orders\_IndexOrderInfoPartialView.cshtml" />
-
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2398,6 +2396,7 @@
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupSetting\Index.cshtml" />
     <Content Include="Views\BuyerSetting\Index.cshtml" />
+    <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

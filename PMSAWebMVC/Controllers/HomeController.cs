@@ -17,7 +17,6 @@ namespace PMSAWebMVC.Controllers
         public HomeController()
         {
         }
-
         //建構子多載
         public HomeController(ApplicationUserManager userManager)
         {

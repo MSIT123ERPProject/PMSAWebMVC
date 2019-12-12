@@ -1,7 +1,11 @@
-﻿using PMSAWebMVC.Models;
+﻿using Microsoft.SqlServer.Server;
+using PMSAWebMVC.Models;
 using PMSAWebMVC.Utilities.TingHuan;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -169,6 +173,40 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
         {
             public string name { get; set; }
             public int value { get; set; }
+        }
+        public ActionResult ShipQtyByStatus()
+        {
+            //var qpod = from pod in db.PurchaseOrderDtl
+            //           join po in db.PurchaseOrder on pod.PurchaseOrderID equals po.PurchaseOrderID
+            //           into res 
+            //           from  in res.DefaultIfEmpty()
+            //           join sl in db.SourceList on .SourceListID equals sl.SourceListID
+            //           join snd in db.ShipNoticeDtl on pod.PurchaseOrderDtlCode equals snd.PurchaseOrderDtlCode
+            //           where po.SupplierCode == supplierCode 
+            //           select new
+            //           {
+            //               pod.PartName,
+            //               pod.PartNumber,
+            //               pod.Qty,
+            //               sl.UnitsOnOrder,
+            //               snd.ShipQty
+            //           };
+            //var s = qpod.ToList();
+            using ( var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString)) {
+                connection.Open();
+                using ( SqlCommand cmd = new SqlCommand(@"SELECT  pod.PartName, pod.PartNumber, pod.Qty, sl.UnitsOnOrder, snd.ShipQty FROM  PurchaseOrderDtl AS pod LEFT OUTER JOIN PurchaseOrder AS po ON pod.PurchaseOrderID = po.PurchaseOrderID LEFT OUTER JOIN SourceList AS sl ON pod.SourceListID = sl.SourceListID LEFT OUTER JOIN ShipNoticeDtl AS snd ON pod.PurchaseOrderDtlCode = snd.PurchaseOrderDtlCode  ",connection) ) {
+                    SqlDataReader Reader = cmd.ExecuteReader();
+                    var qpod = Reader.Cast<IDataRecord>().Select(x=>new {
+                        PartName = x["PartName"], 
+                        PartNumber = x["PartNumber"],
+                       Qty = x["Qty"],
+                       UnitsOnOrder= x["UnitsOnOrder"],
+                        ShipQty =x["ShipQty"]
+                    }).ToList();
+                    return Json(qpod, JsonRequestBehavior.AllowGet);
+                }
+            }
+             
         }
     }
 }

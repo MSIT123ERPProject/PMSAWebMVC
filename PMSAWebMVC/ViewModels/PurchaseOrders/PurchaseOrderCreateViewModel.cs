@@ -29,6 +29,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public int QtyPerUnit { get; set; }
         [Display(Name = "最小訂貨量")]
         public int? MOQ { get; set; }
+        [DisplayFormat(DataFormatString = "{0:C0}")]
+        [DataType(DataType.Currency)]
         [Display(Name = "單價")]
         public int UnitPrice { get; set; }
         [Display(Name = "供應商庫存數量")]

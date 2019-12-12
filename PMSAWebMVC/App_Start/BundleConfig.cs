@@ -113,6 +113,17 @@ namespace PMSAWebMVC
                 "~/Scripts/highcharts/highcharts.js"
                 ));
 
+            //Slick
+            bundles.Add(new StyleBundle("~/Content/Slick").Include(
+                "~/Content/slick/slick.css",
+                "~/Content/slick/slick-theme.css",
+                "~/Content/slick/slick-theme.site.css"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/Slick").Include(
+                "~/Scripts/slick/slick.js"
+                ));
+
         }
     }
 }

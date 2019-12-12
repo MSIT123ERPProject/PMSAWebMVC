@@ -120,9 +120,6 @@
                  className: 'control'
              },
                  { orderable: false, targets: [0, 1, -1] },
-                 { orderable: true, targets: [2, 3, 4] },
-                 { ordering: true, targets: [2, 3, 4] },
-                 
                  //{ targets: [4, 5, 6, 7, 8], className: 'dt-body-right' },
                  { className: 'text-left', targets: [3] },
                  { className: 'text-center', targets: [1,2,4,5,6,7,8] },
@@ -178,8 +175,9 @@
                     "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
              "autoWidth": false,
              dom: 'lfrtip',
+             //ordering: true,
+             //order: [],
                 });
-              
         }
         /////////////////////////////////////////////////////
         //調整庫存按鈕

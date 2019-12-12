@@ -19,7 +19,7 @@
                         <th style="width:10%;">@Html.DisplayNameFor(model => model.WarehouseInfo.WarehouseName)</th>
                         <th style="width:7%;">分類名稱</th>
                         <th style="width:15%;">料件名稱</th>
-                        <th style="width:10%;">@Html.DisplayNameFor(model => model.UnitsOnStockOutOrder)</th>
+                        @*<th style="width:10%;">@Html.DisplayNameFor(model => model.UnitsOnStockOutOrder)</th>*@
                         <th style="width:10%;">@Html.DisplayNameFor(model => model.UnitsOnStockInOrder)</th>
                         <th style="width:8%;">@Html.DisplayNameFor(model => model.UnitsInStock)</th>
                         <th style="width:7%;">編輯</th>
@@ -28,28 +28,31 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr id="inn">
-                        <td id="hidetd">@Html.DisplayFor(modelItem => item.InventoryCode)</td>
-                        <td>@Html.DisplayFor(modelItem => item.WarehouseInfo.WarehouseName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.InventoryCategory.InventoryCategoryName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Part.PartName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.UnitsOnStockOutOrder)</td>
-                        <td>@Html.DisplayFor(modelItem => item.UnitsOnStockInOrder)</td>
-                        <td id="cel">@Html.DisplayFor(modelItem => item.UnitsInStock)</td>
-                        <td class="table-data-feature">
-                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
-                                <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.InventoryCode">
-                                    <i class="far fa-eye"></i>
+                        <tr id="inn">
+                            <td id="hidetd">@Html.DisplayFor(modelItem => item.InventoryCode)</td>
+                            <td>@Html.DisplayFor(modelItem => item.WarehouseInfo.WarehouseName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.InventoryCategory.InventoryCategoryName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Part.PartName)</td>
+                            @*<td>@Html.DisplayFor(modelItem => item.UnitsOnStockOutOrder)</td>*@
+                            <td id="cel01">@Html.DisplayFor(modelItem => item.UnitsOnStockInOrder)</td>
+                            <td id="cel">@Html.DisplayFor(modelItem => item.UnitsInStock)</td>
+                            <td class="table-data-feature">
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.InventoryCode">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </span>
+
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.InventoryCode">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                </span>
+                                <button name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫" data-dc="@item.InventoryCode" data-stocin="@item.UnitsOnStockInOrder">
+                                    <i class="far fa-arrow-alt-circle-down"></i>
                                 </button>
-                            </span>
-                            
-                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
-                                <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.InventoryCode">
-                                    <i class="far fa-edit"></i>
-                                </button>
-                            </span>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -58,10 +61,35 @@
     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
 </div>
 
+<style>
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: blueviolet;
+    }
+
+    .modal-title {
+        color: white;
+    }
+
+    .required:after {
+        margin: 2px;
+        content: '*';
+        color: red;
+    }
+
+    #bt {
+        border-style: none;
+    }
+</style>
+
 @section scripts
 {
     <script>
-        $('#dataTable').DataTable();
+        $('#dataTable').DataTable({
+            ordering: true,
+            order: []
+        });
 
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();
@@ -130,13 +158,15 @@
             $('#SourceListID')[0].selectedIndex = 0;
             $('#btnCreate').show();                       //顯示按鈕
             $('#btnUpdate').hide();                       //隱藏按鈕
+            loadSlidlist();
         })
 
         $(document).on('click', "#btnCreate", function () {
             var table = $('#dataTable').DataTable();
-            var cell4 = '<span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> <span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span>'
-            if ($("#UnitsInStock").val() <= 0 || $("#SafetyQty").val() < 0){
-                toastr.error("必需大於零，且不能為負數","警告");
+            var cell4 = '&nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> &nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span> &nbsp;<button id="bt" name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫"><i class="far fa-arrow-alt-circle-down"></i></button>'
+
+            if ($("#UnitsInStock").val() < 0 || $("#SafetyQty").val() < 0) {
+                toastr.error("不能為負數","警告");
             }else{
                 var inventorydtlObj = {
                     WarehouseCode:$("#WarehouseName").val(),
@@ -154,7 +184,8 @@
                 }).done(function (response) {
                     if (response.status) {
                         toastr.success(response.message, "通知");
-                        table.row.add([response.c, $("#WarehouseName :selected").text(), $("#InventoryCategoryCode :selected").text(), response.pa, response.uis, response.uos, response.uii, cell4]).draw(false);
+                        loadSlidlist();
+                        table.row.add([response.c, $("#WarehouseName :selected").text(), $("#InventoryCategoryCode :selected").text(), response.pa, response.uis, response.uii, cell4]).draw(false);
                     }
                 }).fail(function(response){
                     toastr.error(response.message, "警告");
@@ -187,7 +218,7 @@
                 $("#InventoryCategoryCode01").val(datas[0].InventoryCategoryName);
                 $("#SourceListID01").val(datas[0].SourceListID);
                 $("#PartName").val(datas[0].PartName);
-                $("#UnitsOnStockOutOrder").val(datas[0].UnitsOnStockOutOrder);
+                //$("#UnitsOnStockOutOrder").val(datas[0].UnitsOnStockOutOrder);
                 $("#UnitsOnStockInOrder").val(datas[0].UnitsOnStockInOrder);
                 $("#SafetyQty").val(datas[0].SafetyQty);
                 $("#UnitsInStock").val(datas[0].UnitsInStock);
@@ -227,7 +258,7 @@
                 $("#InventoryCategoryCode01").val(datas[0].InventoryCategoryName);
                 $("#SourceListID01").val(datas[0].SourceListID);
                 $("#PartName").val(datas[0].PartName);
-                $("#UnitsOnStockOutOrder").val(datas[0].UnitsOnStockOutOrder);
+                //$("#UnitsOnStockOutOrder").val(datas[0].UnitsOnStockOutOrder);
                 $("#UnitsOnStockInOrder").val(datas[0].UnitsOnStockInOrder);
                 $("#SafetyQty").val(datas[0].SafetyQty);
                 $("#UnitsInStock").val(datas[0].UnitsInStock);
@@ -270,83 +301,136 @@
                 $('#inventorydtlModal').modal('hide');
             }
         });
+
+        //入庫
+        var sein;
+        $(document).on('click', "td", function () {
+            var table = $('#dataTable').DataTable();
+            var rowss = $(this).closest("tr");  //抓取列
+            var celss = $(this).siblings("#cel01"); //抓取欄
+            sein = table.row(rowss).cell(celss);
+        })
+        $(document).on('click', "button[name = 'click05']", function () {
+            var table = $('#dataTable').DataTable();
+            let id1 = this.dataset.dc;
+            let sto = this.dataset.stocin;
+            console.log(sto);
+            if (sto == 0) {
+                toastr.error("入庫申請數量為0，無法入庫", "警告");
+            } else {
+                if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            Swal.fire({
+                title: '確定要入庫 ?',
+                text: "確認後會將商品入庫 !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '確定'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: `@Url.Action("StockInEdit", "InventoryDtls")`,
+                        type: 'POST',
+                        data: { id: id1 }
+
+                    }).done(function (result) {
+                        Swal.fire(
+                            '入庫成功 !',
+                            '此資料已成功入庫',
+                            'success'
+                        );
+                        sein.data(0).draw(false);
+                        sell.data(result.qty).draw(false);
+                    }).fail(function () {
+                            toastr.error("入庫失敗", "警告");
+                        })
+                    }
+                })
+            }
+            
+        });
     </script>
 }
 
 <!--Modal-->
-    <div class="modal fade bd-example-modal-lg" id="inventorydtlModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="inventorydtlModalLabel"></h5>
-                </div>
-                <div class="modal-body">
-                    <form id="addForm">
-                        <div class="form-group">
-                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.InventoryCode)</label>
-                            <input type="text" class="form-control" id="InventoryCode" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="WarehouseName">@Html.DisplayNameFor(model => model.WarehouseInfo.WarehouseName)</label>
-                            <br />
-                            <select style="width:300px;height:40px" id="WarehouseName" name="da1"></select>
-                            <input type="text" class="form-control" id="WarehouseName01" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="WarehouseName">@Html.DisplayNameFor(model => model.InventoryCategoryCode)</label>
-                            <br />
-                            <select style="width:300px;height:40px" id="InventoryCategoryCode" name="da1"></select>
-                            <input type="text" class="form-control" id="InventoryCategoryCode01" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="Address">@Html.DisplayNameFor(model => model.SourceListID)</label>
-                            <br />
-                            <select style="width:300px;height:40px" id="SourceListID" name="da1"></select>
-                            <input type="text" class="form-control" id="SourceListID01" name="dta">
-                        </div>
-                        <div class="form-group" name="dta">
-                            <label for="InventoryCode">@Html.DisplayNameFor(model => model.Part.PartName)</label>
-                            <input type="text" class="form-control" id="PartName" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.UnitsOnStockOutOrder)</label>
-                            <input type="text" class="form-control" id="UnitsOnStockOutOrder" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.UnitsOnStockInOrder)</label>
-                            <input type="text" class="form-control" id="UnitsOnStockInOrder" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="EmployeeID">@Html.DisplayNameFor(model => model.UnitsInStock)</label>
-                            <input type="number" class="form-control" id="UnitsInStock" name="da00" @*onblur="strtel()"*@>
-                        </div>
-                        <div class="form-group">
-                            <label for="Tel">@Html.DisplayNameFor(model => model.SafetyQty)</label>
-                            <input type="number" class="form-control" id="SafetyQty" name="da00" @*onblur="strtel()"*@>
-                        </div>
-                        <div class="form-group">
-                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.Employee.Name)</label>
-                            <input type="text" class="form-control" id="Name" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.CreateDate)</label>
-                            <input type="text" class="form-control" id="CreateDate" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.Employee1.Name)</label>
-                            <input type="text" class="form-control" id="Nameend" name="dta">
-                        </div>
-                        <div class="form-group">
-                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.LastModifiedDate)</label>
-                            <input type="text" class="form-control" id="LastModifiedDate" name="dta">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button id="btnCreate" type="button" class="btn btn-primary">新增</button>
-                    <button id="btnUpdate" type="button" class="btn btn-success">修改</button>
-                </div>
+<div class="modal fade bd-example-modal-lg" id="inventorydtlModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inventorydtlModalLabel"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.InventoryCode)</label>
+                        <input type="text" class="form-control" id="InventoryCode" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="WarehouseName">@Html.DisplayNameFor(model => model.WarehouseInfo.WarehouseName)</label>
+                        <br />
+                        <select class="form-control" id="WarehouseName" name="da1"></select>
+                        <input type="text" class="form-control" id="WarehouseName01" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="WarehouseName">@Html.DisplayNameFor(model => model.InventoryCategoryCode)</label>
+                        <br />
+                        <select class="form-control" id="InventoryCategoryCode" name="da1"></select>
+                        <input type="text" class="form-control" id="InventoryCategoryCode01" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="Address">@Html.DisplayNameFor(model => model.SourceListID)</label>
+                        <br />
+                        <select class="form-control" id="SourceListID" name="da1"></select>
+                        <input type="text" class="form-control" id="SourceListID01" name="dta">
+                    </div>
+                    <div class="form-group" name="dta">
+                        <label for="InventoryCode">@Html.DisplayNameFor(model => model.Part.PartName)</label>
+                        <input type="text" class="form-control" id="PartName" name="dta">
+                    </div>
+                    @*<div class="form-group">
+                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.UnitsOnStockOutOrder)</label>
+                        <input type="text" class="form-control" id="UnitsOnStockOutOrder" name="dta">
+                    </div>*@
+                    <div class="form-group">
+                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.UnitsOnStockInOrder)</label>
+                        <input type="text" class="form-control" id="UnitsOnStockInOrder" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="EmployeeID">@Html.DisplayNameFor(model => model.UnitsInStock)</label>
+                        <input type="number" class="form-control" id="UnitsInStock" name="da00" @*onblur="strtel()"*@>
+                    </div>
+                    <div class="form-group">
+                        <label for="Tel">@Html.DisplayNameFor(model => model.SafetyQty)</label>
+                        <input type="number" class="form-control" id="SafetyQty" name="da00" @*onblur="strtel()"*@>
+                    </div>
+                    <div class="form-group">
+                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.Employee.Name)</label>
+                        <input type="text" class="form-control" id="Name" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.CreateDate)</label>
+                        <input type="text" class="form-control" id="CreateDate" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.Employee1.Name)</label>
+                        <input type="text" class="form-control" id="Nameend" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.LastModifiedDate)</label>
+                        <input type="text" class="form-control" id="LastModifiedDate" name="dta">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="btnCreate" type="button" class="btn btn-primary">新增</button>
+                <button id="btnUpdate" type="button" class="btn btn-success">修改</button>
             </div>
         </div>
     </div>
+</div>

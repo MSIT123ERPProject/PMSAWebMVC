@@ -72,6 +72,10 @@
         content:'*';
         color:red;
     }
+
+    #bt{
+        border-style:none;
+    }
 </style>
 
 @section scripts
@@ -104,6 +108,7 @@
             $('input[name="da"]').val("");
             $('input[name="dta"]').val("");
             $('#EmployeeID')[0].selectedIndex = 0;
+            $('#btnDemo').show();
             $('#btnSave').show();
             $('#btnUpdate').hide();
             document.getElementById("code2").innerHTML = '';
@@ -114,7 +119,7 @@
 
         $('#btnSave').click(function () {
             var table = $('#dataTable').DataTable();
-            var cell4 = '<span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> <span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span> <button name="click01" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除"><i class="far fa-trash-alt"></i></button>'
+            var cell4 = '&nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> &nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span> &nbsp;<button id="bt" name="click01" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除"><i class="far fa-trash-alt"></i></button>'
             if($("#WarehouseCode").val() == '' || $("#WarehouseName").val() == '' || $("#Address").val() == ''){
                 toastr.error("'*' 為必填欄位","警告");
             } else {
@@ -155,7 +160,7 @@
             }
             Swal.fire({
                 title: '確定要刪除 ?',
-                text: "刪除後擬將沒有機會後悔 !",
+                text: "刪除後將沒有機會後悔 !",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -200,6 +205,7 @@
                 $('*[name="dta"]').attr('disabled', true);
                 $('#btnSave').hide();
                 $('#btnUpdate').hide();
+                $('#btnDemo').hide();
                 $("#WarehouseCode").val(datas[0].WarehouseCode);
                 $("#WarehouseName").val(datas[0].WarehouseName);
                 $("#Address").val(datas[0].Address);
@@ -208,6 +214,14 @@
                 $("#Remark").val(datas[0].Remark);
             })
         });
+
+        //Demo
+        $(document).on('click', "#btnDemo", function () {
+            $("#WarehouseCode").val("NTPUN05");
+            $("#WarehouseName").val("新北永和05倉");
+            $("#Address").val("新北市永和區民權路53號");
+            $("#Tel").val("02-2942-9900");
+        })
 
         //更新
         var sell;
@@ -232,6 +246,7 @@
                 $('*[name="dta"]').attr('disabled', false);
                 $('#btnSave').hide();
                 $('#btnUpdate').show();
+                $('#btnDemo').hide();
                 $("#WarehouseCode").val(datas[0].WarehouseCode);
                 $("#WarehouseName").val(datas[0].WarehouseName);
                 $("#Address").val(datas[0].Address);
@@ -376,6 +391,7 @@
                 <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
                 <button id="btnSave" name="btnSave" type="button" class="btn btn-primary">新增</button>
                 <button id="btnUpdate" name="btnUpdate" type="button" class="btn btn-success">修改</button>
+                <button id="btnDemo" name="btnDemo" type="button" class="btn btn-success">Demo</button>
             </div>
         </div>
     </div>

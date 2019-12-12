@@ -2118,6 +2118,9 @@
     <Content Include="Areas\SupplierArea\Views\web.config" />
     <Content Include="Areas\SupplierArea\Views\_ViewStart.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupplierHome\Index.cshtml" />
+
+    <Content Include="Areas\SupplierArea\Views\Orders\_IndexOrderInfoPartialView.cshtml" />
+
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2333,10 +2336,6 @@
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Templates\RESXManager\ResxManagerGlobalTemplate.Master" />
     <Content Include="Views\Account\_LoginLayout.cshtml" />
-    <Content Include="Views\InventoryDtls\Create.cshtml" />
-    <Content Include="Views\InventoryDtls\Delete.cshtml" />
-    <Content Include="Views\InventoryDtls\Details.cshtml" />
-    <Content Include="Views\InventoryDtls\Edit.cshtml" />
     <Content Include="Views\InventoryDtls\Index.cshtml" />
     <Content Include="Views\Parts\Create.cshtml" />
     <Content Include="Views\Parts\Delete.cshtml" />
@@ -2386,18 +2385,10 @@
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
     <Content Include="Views\Account\ConfirmEmailError.cshtml" />
-    <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
-    <Content Include="Views\StockIns\Create.cshtml" />
-    <Content Include="Views\StockIns\Delete.cshtml" />
-    <Content Include="Views\StockIns\Details.cshtml" />
-    <Content Include="Views\StockIns\Edit.cshtml" />
     <Content Include="Views\StockIns\Index.cshtml" />
-    <Content Include="Views\StockInDtls\Create.cshtml" />
-    <Content Include="Views\StockInDtls\Delete.cshtml" />
-    <Content Include="Views\StockInDtls\Details.cshtml" />
-    <Content Include="Views\StockInDtls\Edit.cshtml" />
     <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />

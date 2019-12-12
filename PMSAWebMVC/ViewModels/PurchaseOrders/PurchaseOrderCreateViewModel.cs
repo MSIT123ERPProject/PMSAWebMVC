@@ -35,7 +35,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public int UnitPrice { get; set; }
         [Display(Name = "供應商庫存數量")]
         public int UnitsInStock { get; set; }
-        [Display(Name = "購買折扣")]        
+        [Display(Name = "購買折扣")]
         public IEnumerable<POCSourceListDtlItem> SourceListDtlItem { get; set; }
     }
     /// <summary>
@@ -170,7 +170,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 {
                     return DateRequired.ToString("yyyy/MM/dd");
                 }
-            }    
+            }
         }
 
         public string SourceListID { get; set; }
@@ -240,7 +240,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                                                    })
                           };
                 return slq.ToList();
-            }          
+            }
         }
 
         /// <summary>
@@ -397,84 +397,102 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             now = new DateTime(now.Year, now.Month, now.Day);
             //取得顯示資料
             PurchaseRequisitionDtl prd = db.PurchaseRequisitionDtl.Find(purchaseRequisitionDtlCode);
-            if (prd.SuggestSupplierCode != null)
+
+            SourceList sl = null;
+            Part p = prd.Part;
+
+            //採購單已設定供應商
+            if (session.Supplier != null)
+            {
+                sl = db.SourceList.Find($"{prd.PartNumber}-{session.Supplier.SupplierCode}");
+            }
+            else if (prd.SuggestSupplierCode != null)
             {
                 //有建議供應商，預先給定值
-                SourceList sl = db.SourceList.Find($"{prd.PartNumber}-{prd.SuggestSupplierCode}");
-                Part p = prd.Part;
-
-                //設定基本資料
-
-                //請購料件總數
-                int totalPartQty = p.QtyPerUnit * prd.Qty;
-                //請購批量數量(預設不得超買)
-                int qty = totalPartQty / sl.QtyPerUnit;
-                //採購料件總數
-                int totalSourceListQty = qty * sl.QtyPerUnit;
-
-                podedit = new PurchaseOrderDtlItem
-                {
-                    PartNumber = prd.PartNumber,
-                    PartName = p.PartName,
-                    PartSpec = p.PartSpec,
-                    QtyPerUnit = sl.QtyPerUnit,
-                    OriginalUnitPrice = sl.UnitPrice,
-                    //暫不實作最小訂貨量MOQ
-                    //Qty = sl.MOQ.HasValue && prd.Qty < sl.MOQ.Value ? sl.MOQ.Value : prd.Qty,
-                    Qty = qty,
-                    TotalPartQty = totalPartQty,
-                    TotalSourceListQty = totalSourceListQty,
-                    Discount = 0M,
-                    DateRequired = prd.DateRequired.AddDays(-7),
-                    SourceListID = sl.SourceListID,
-                    PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode
-                };
-
-                //計算折扣，需從已加入的相同貨源請購明細計算總數來得到折扣
-                int totalQty = session.PODItems.Where(item => item.SourceListID == sl.SourceListID).Sum(item => item.Qty) + qty;
-                List<SourceListDtl> slds = db.SourceListDtl.Where(s =>
-                        s.SourceListID == sl.SourceListID &&
-                        s.DiscountBeginDate <= now &&
-                        s.DiscountEndDate >= now).OrderBy(o => o.QtyDemanded).ToList();
-                decimal discount = 0M;
-                foreach (SourceListDtl sld in slds)
-                {
-                    if (totalQty >= sld.QtyDemanded)
-                    {
-                        discount = sld.Discount;
-                    }
-                }
-
-                //設定折扣
-
-                //新增的
-                podedit.Discount = discount;
-                podedit.PurchaseUnitPrice = (int)Math.Ceiling(podedit.OriginalUnitPrice * (1 - discount));
-                podedit.Total = podedit.PurchaseUnitPrice * podedit.Qty;
-
-                session.PODItemEditting = podedit;
-
-                //已存在的
-                foreach (var item in session.PODItems.Where(item => item.SourceListID == sl.SourceListID))
-                {
-                    item.Discount = discount;
-                    item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - discount));
-                    item.Total = item.PurchaseUnitPrice * item.Qty;
-                }
-
+                sl = db.SourceList.Find($"{prd.PartNumber}-{prd.SuggestSupplierCode}");
             }
             else
             {
-                //沒有建議供應商
-                session.PODItemEditting = new PurchaseOrderDtlItem
+                //找出等級較高的供應商
+                //1	未設定
+                //2   不佳
+                //3   優良
+                var slsq = db.SourceList.Where(item => item.PartNumber == prd.PartNumber)
+                    .Select(item => new { item, item.SupplierInfo }).ToList();
+                //調整SupplierRatingOID大小
+                foreach (var item in slsq)
                 {
-                    Qty = 0,
-                    TotalSourceListQty = 0,
-                    Discount = 0,
-                    Total = 0,
-                    PurchaseRequisitionDtlCode = purchaseRequisitionDtlCode,
-                    DateRequired = prd.DateRequired.AddDays(-7),
-                };
+                    if (!item.SupplierInfo.SupplierRatingOID.HasValue)
+                    {
+                        item.SupplierInfo.SupplierRatingOID = 1;
+                    }
+                    else if (item.SupplierInfo.SupplierRatingOID.Value == 2)
+                    {
+                        item.SupplierInfo.SupplierRatingOID = -1;
+                    }
+                }
+                //重新排序
+                var sup = slsq.OrderByDescending(item => item.SupplierInfo.SupplierRatingOID);
+                sl = sup.First().item;
+            }
+
+            //設定基本資料
+
+            //請購料件總數
+            int totalPartQty = p.QtyPerUnit * prd.Qty;
+            //請購批量數量(預設不得超買)
+            int qty = totalPartQty / sl.QtyPerUnit;
+            //採購料件總數
+            int totalSourceListQty = qty * sl.QtyPerUnit;
+
+            podedit = new PurchaseOrderDtlItem
+            {
+                PartNumber = prd.PartNumber,
+                PartName = p.PartName,
+                PartSpec = p.PartSpec,
+                QtyPerUnit = sl.QtyPerUnit,
+                OriginalUnitPrice = sl.UnitPrice,
+                //暫不實作最小訂貨量MOQ
+                //Qty = sl.MOQ.HasValue && prd.Qty < sl.MOQ.Value ? sl.MOQ.Value : prd.Qty,
+                Qty = qty,
+                TotalPartQty = totalPartQty,
+                TotalSourceListQty = totalSourceListQty,
+                Discount = 0M,
+                DateRequired = prd.DateRequired.AddDays(-7),
+                SourceListID = sl.SourceListID,
+                PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode
+            };
+
+            //計算折扣，需從已加入的相同貨源請購明細計算總數來得到折扣
+            int totalQty = session.PODItems.Where(item => item.SourceListID == sl.SourceListID).Sum(item => item.Qty) + qty;
+            List<SourceListDtl> slds = db.SourceListDtl.Where(s =>
+                    s.SourceListID == sl.SourceListID &&
+                    s.DiscountBeginDate <= now &&
+                    s.DiscountEndDate >= now).OrderBy(o => o.QtyDemanded).ToList();
+            decimal discount = 0M;
+            foreach (SourceListDtl sld in slds)
+            {
+                if (totalQty >= sld.QtyDemanded)
+                {
+                    discount = sld.Discount;
+                }
+            }
+
+            //設定折扣
+
+            //新增的
+            podedit.Discount = discount;
+            podedit.PurchaseUnitPrice = (int)Math.Ceiling(podedit.OriginalUnitPrice * (1 - discount));
+            podedit.Total = podedit.PurchaseUnitPrice * podedit.Qty;
+
+            session.PODItemEditting = podedit;
+
+            //已存在的
+            foreach (var item in session.PODItems.Where(item => item.SourceListID == sl.SourceListID))
+            {
+                item.Discount = discount;
+                item.PurchaseUnitPrice = (int)Math.Ceiling(item.OriginalUnitPrice * (1 - discount));
+                item.Total = item.PurchaseUnitPrice * item.Qty;
             }
 
             return session.PODItemEditting;

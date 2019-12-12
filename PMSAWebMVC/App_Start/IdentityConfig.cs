@@ -106,7 +106,7 @@ namespace PMSAWebMVC
             manager.RegisterTwoFactorProvider("電子郵件代碼", new EmailTokenProvider<ApplicationUser>
             {
                 Subject = "安全碼",
-                BodyFormat = "您的安全碼為 {0}"
+                BodyFormat = "您的安全碼為 {0} ，請在六分鐘內登入以免失效，感謝您。"
             });
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
@@ -274,5 +274,4 @@ namespace PMSAWebMVC
             filterContext.Result = new RedirectResult("/Home/Deny");
         }
     }
-
 }

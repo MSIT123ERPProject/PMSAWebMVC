@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "新增供應商帳號";
+    var ErrorMsg = TempData["Error"];
+    var SuccessMsg = TempData["Success"];
 }
 @section styles{
     <style>
@@ -302,6 +304,48 @@
         })
 
         $(document).ready(function () {
+            var msg = '@ErrorMsg';
+            if(msg){
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.error(msg)
+            }
+            var SuccessMsg = '@SuccessMsg'
+            if(SuccessMsg){
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success(SuccessMsg)
+            }
             if ($('#AccountStatusSwitch').prop('checked') == true) {
                 $('#lert').addClass('show');
             } else {

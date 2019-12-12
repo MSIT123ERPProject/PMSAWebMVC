@@ -2,7 +2,7 @@
 @model PMSAWebMVC.ViewModels.UsersAdmin.UsersAdminViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "管理採購員帳號";
 }
 @section styles
 {
@@ -60,71 +60,37 @@
             animation: 0.4s fadeinShow 0.3s both;
         }
 
-        #example_wrapper {
-            /*display: none;*/
-        }
-        /* +-collaspe =============*/
-        td.control {
-            margin: 0;
-            transition: 0.2s;
-            vertical-align: middle;
-            font-weight: 500;
-        }
-
-            td.control:hover, td.control:active {
-                color: white;
-                border-bottom: 0px !important;
-                background-color: #409EFF;
-                transition: 0.2s;
-            }
-
-        table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            display: block;
-            position: relative;
-            color: #409EFF;
-            border: 0;
-            border-radius: 0;
-            box-shadow: none;
-            box-sizing: content-box;
-            text-align: center;
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 14px;
-            content: '✚' !important;
+        /*===================sorting*/
+        table.dataTable.order-column tbody tr > .sorting_1, table.dataTable.order-column tbody tr > .sorting_2, table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1, table.dataTable.display tbody tr > .sorting_2, table.dataTable.display tbody tr > .sorting_3 {
             background-color: transparent;
+            border-left: 2px solid #28A2FC !important;
         }
 
-        table.dataTable.dtr-column > tbody > tr > td.control:hover::before, table.dataTable.dtr-column > tbody > tr > th.control:hover::before {
-            color: white;
-        }
-
-        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
-        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
-            content: '▂' !important;
-            background-color: transparent;
-            transform: translateY(-5px)
-        }
-
-        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
-        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
-            background-color: transparent;
-        }
         /*================*/
+        table.table th, table.table td {
+            padding-top: 0.8rem;
+            padding-bottom: 0.7rem;
+        }
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            /* padding: 8px 10px; */
+            padding: 12px;
+        }
+
+        table.dataTable.dtr-column > tbody > tr > td.control:before {
+            top: calc( 60% - 1px);
+        }
+
         table.dataTable {
             border-collapse: collapse !important;
             /*border: 0;*/
         }
 
         th {
-            /*background-color: #212529;
-            color: white;*/
+            background-color: #28A2FC;
+            color: white;
             /*border: 0px;*/
             box-sizing: border-box;
-            height: 10px;
         }
 
         .table-bordered th, .table-bordered td {
@@ -132,7 +98,7 @@
         }
 
         .table thead th {
-            border-bottom: 0;
+            border-bottom: 4px double #28A2FC;
         }
 
         tbody tr {
@@ -159,155 +125,8 @@
             color: #909399;
         }
         /*btn ==============================*/
-        td.action-btn {
-            /*padding: 5px 0 0 5px !important;*/
-        }
-
-        .action-btn > button i:before {
-            display: block;
-        }
-
-        .editBtn, .detailBtn, .deleteBtn, .addBtn {
-            border: 0;
-            background-color: transparent;
-            font-size: 20px;
-            box-sizing: border-box;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            /*margin: 5px;*/
-            transition: 0.5s;
-            border-radius: 20px;
-            padding: 5px 10px 10px 9px;
-            box-shadow: none;
-        }
-
-            .editBtn:hover, .detailBtn:hover, .deleteBtn:hover, .addBtn:hover {
-                opacity: 0.8;
-                transition: 0.5s;
-                box-shadow: 0 2px 8px #909399;
-            }
-
-            .editBtn:focus, .detailBtn:focus, .deleteBtn:focus, .addBtn:focus {
-                opacity: 0.8;
-                outline: none;
-                transition: 0.5s;
-                box-shadow: 0 0px 3px #909399;
-            }
-
-        .editBtn {
-            color: #409EFF;
-        }
-
-            .editBtn:focus {
-                color: #FFFFFF;
-                background-color: #409EFF;
-            }
-
-            .editBtn:hover {
-                opacity: 1;
-                color: #FFFFFF;
-                background-color: #409EFF;
-            }
-
-        .detailBtn {
-            color: #909399;
-        }
-
-            .detailBtn:focus {
-                color: #FFFFFF;
-                background-color: #909399;
-            }
-
-            .detailBtn:hover {
-                opacity: 1;
-                color: #FFFFFF;
-                background-color: #909399;
-            }
-
-        .deleteBtn {
-            color: #F56C6C;
-        }
-
-            .deleteBtn:focus {
-                color: #FFFFFF;
-                background-color: #F56C6C;
-            }
-
-            .deleteBtn:hover {
-                opacity: 1;
-                color: #FFFFFF;
-                background-color: #F56C6C;
-            }
-
-        .addBtn {
-            color: #67C23A;
-        }
-
-            .addBtn:focus {
-                color: #FFFFFF;
-                background-color: #67C23A;
-            }
-
-            .addBtn:hover {
-                opacity: 1;
-                color: #FFFFFF;
-                background-color: #67C23A;
-            }
-        /*btn wild/*/
-        .wild {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-left: 0 !important;
-            margin-top: 8px !important;
-        }
-        /*btn =======================*/
-        .editBtn.bd, .detailBtn.bd, .deleteBtn.bd, .addBtn.bd {
-            border: 0;
-            font-size: 20px;
-            box-sizing: border-box;
-            width: auto;
-            height: auto;
-            text-align: center;
-            /*margin: 5px;*/
-            transition: 0.5s;
-            font-size: 15px;
-            letter-spacing: 1px;
-            border-radius: .125rem;
-        }
-
-            .editBtn.bd.r, .detailBtn.bd.r, .deleteBtn.bd.r, .addBtn.bd.r {
-                width: 35px;
-                height: 35px;
-                border-radius: 40px;
-            }
-
-        .editBtn.fillbtn, .detailBtn.fillbtn, .deleteBtn.fillbtn, .addBtn.fillbtn {
-            color: white;
-        }
-
-            .editBtn.fillbtn:hover, .detailBtn.fillbtn:hover, .deleteBtn.fillbtn:hover, .addBtn.fillbtn:hover {
-                opacity: 0.5;
-            }
-
-        .deleteBtn.fillbtn {
-            color: #F56C6C;
-            background-color: #fde2e2;
-            border: 1px solid #F56C6C;
-        }
-
-        .addBtn.fillbtn {
-            background-color: #67C23A;
-        }
-
-        .editBtn.fillbtn {
-            color: #409EFF;
-            background-color: #d9ecff;
-            border: 1px solid #409EFF;
-        }
-
-        .detailBtn.fillbtn {
-            background-color: #909399;
+        .btn.btn-outline-secondary {
+            margin-right: 10px;
         }
         /*badge ============*/
         td h5 {
@@ -355,11 +174,46 @@
         .modal-footer {
             background-color: #eee;
         }
-        .card-header h5 {
-            font-size: 18px;
-            margin: 0;
+
+        .card-header {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+        }
+
+            .card-header h5 {
+                font-size: 18px;
+                margin: 0;
+            }
+
+        .card-body {
+            padding-top: 0px;
+        }
+
+        #All.tag,
+        #Non.tag {
+            box-shadow: none;
+            outline: none !important;
+            border-bottom: 2px solid #28A2FC;
+            background-color: #E4E7ED;
+        }
+
+            #All.tag::before,
+            #Non.tag::before {
+                content: '';
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: #67C23A;
+                margin-right: 10px;
+            }
+
+        .btn-outline-secondary {
+            border-color: transparent !important;
         }
     </style>
+
 }
 <div class="wrapall">
     <h2>管理採購員帳號</h2>
@@ -367,20 +221,17 @@
 
     <div class="card">
         <div class="card-header">
-            <h5>
+            <h5 style="font-size: 16px; margin: 15px; padding-left: 10px;">
                 <i class="fas fa-table"></i>
                 採購員帳號
             </h5>
-            @*<a href="@Url.Action("Create","UsersAdmin")">
-                    <button class="btn addBtn bd fillbtn"><i class='fas fa-plus-square'></i> 新增</button>
-                </a>*@
         </div>
         <div class="card-body">
             <div class="table-responsive" style="width:98%; padding: 10px">
                 <table class="table table-striped table-border nowrap" id="createEmp" style="width:100%;">
                     <thead>
                         <tr role="row">
-                            <th>動作</th>
+                            <th data-priority="1"></th>
                             <th>
                                 @Html.DisplayNameFor(model => model.EmployeeID)
                             </th>
@@ -417,7 +268,10 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
                             </th>
-                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EmailConfirm)
+                            </th>
+                            <th data-priority="1">動作</th>
                         </tr>
                     </thead>
                     <tbody id="tb"></tbody>
@@ -496,6 +350,12 @@
                                                             @Html.DisplayNameFor(model => model.LastPasswordChangedDate)
                                                         </label>
                                                         <input type="text" class="form-control disabled" name="LastPasswordChangedDate" id="LastPasswordChangedDate">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="EmailConfirm">
+                                                            @Html.DisplayNameFor(model => model.EmailConfirm)
+                                                        </label>
+                                                        <div id="EmailConfirm"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -638,24 +498,28 @@
 
         $("#createEmp").ready(() => {
             var oTable = $('#createEmp').DataTable({
+                ordering: true,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [],
                 responsive: {
                     details: {
                         type: 'column',
-                        target: -1
+                        target: 0
                     }
                 },
                 "columnDefs": [{
                         className: 'control',
                         orderable: false,
-                        targets: -1
+                        targets: 0
                     },
                     {
                         defaultContent: `
-                                <button class="btn editBtn bd r fillbtn" title="啟用停用/角色設定"><i class="far fa-edit"></i></button>
-                                <button class="btn deleteBtn bd r fillbtn" title="重設密碼"><i class="far fa-envelope"></i></button>`,
+                                <button class="btn editBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="啟用停用"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="重設密碼"><i class="far fa-envelope"></i></button>
+                        `,
                         orderable: false,
                         className: 'action-btn',
-                        targets: 0
+                        targets: -1
                     },
                 ],
                 "ajax": {
@@ -665,19 +529,17 @@
                 },
                 "columns": [
                     {
-                        "data": "actionbtn",
-                        "orderable": false,
-                        "render": function () {
-                            var frag = $(document.createDocumentFragment());
-                            var str = `
-                                <button class="btn editBtn bd r fillbtn" title="啟用停用/角色設定"><i class="far fa-edit"></i></button>
-                                <button class="btn deleteBtn bd r fillbtn" title="重設密碼"><i class="far fa-envelope"></i></button>`
-                            frag.append(str);
-                            $("td.action-btn").html(frag);
-                        }
+                        "data": null,
+                        "defaultContent": ""
                     },
-                    { "data": "EmployeeID" },
-                    { "data": "Name" },
+                    {
+                        "data": "EmployeeID",
+                        "ordering": true
+                    },
+                    {
+                        "data": "Name",
+                        "ordering": true
+                    },
                     {
                         "data": "Role[,]",
                         "render": function (d) {
@@ -709,7 +571,8 @@
                                 }
                             })
                             return String(arrAll);
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "Email",
@@ -718,7 +581,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "Mobile",
@@ -727,7 +591,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "Tel",
@@ -736,7 +601,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "AccountStatus",
@@ -751,7 +617,8 @@
                                 return `<h5><span class="badge badge-warning">重設</span></h5>`
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "ManagerID",
@@ -760,7 +627,8 @@
                                 return "-";
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "ModifiedDate",
@@ -772,7 +640,8 @@
                                 d = str.split("T").join(" ");
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                     },
                     {
                         "data": "CreateDate",
@@ -784,7 +653,8 @@
                                 d = str.split("T").join(" ");
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                      },
                     {
                         "data": "SendLetterDate",
@@ -796,7 +666,8 @@
                                 d = str.split("T").join(" ");
                             }
                             return d;
-                        }
+                        },
+                        "ordering": true
                      },
                     {
                         "data": "LastPasswordChangedDate",
@@ -809,11 +680,32 @@
                             }
                             return d;
                         },
-                        "defaultContent": "-"
+                        "defaultContent": "-",
+                        "ordering": true
                     },
                     {
-                        "data": null,
-                        "defaultContent": ""
+                        "data": "EmailConfirm",
+                        "render": function (d) {
+                            if (d == true) {
+                                return `<h5><span class="badge badge-primary">已驗證</span></h5>`;
+                            } else {
+                                return `<h5><span class="badge badge-danger">尚未</span></h5>`;
+                            }
+                        },
+                        "defaultContent": "-",
+                        "ordering": true
+                    },
+                    {
+                        "data": "actionbtn",
+                        "orderable": false,
+                        "render": function () {
+                            var frag = $(document.createDocumentFragment());
+                            var str = `
+                                <button class="btn editBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="啟用停用"><i class="far fa-edit"></i></button>
+                                <button class="btn deleteBtn btn-outline-secondary btn-icon" data-toggle="tooltip" title="重設密碼"><i class="far fa-envelope"></i></button>`;
+                            frag.append(str);
+                            $("td.action-btn").html(frag);
+                        }
                     }
                 ]
                 },
@@ -851,6 +743,17 @@
                                 }
                             }
                         $("#AccountStatus").html(getAccountStatus());
+                        //
+                        function getEmailConfirm() {
+                            if (x.EmailConfirm == null) {
+                                return "-";
+                            } else if (x.EmailConfirm == true) {
+                                return `<h5><span class="badge badge-primary">已驗證</span></h5>`
+                            } else if (x.EmailConfirm == false) {
+                                return `<h5><span class="badge badge-danger">尚未</span></h5>`
+                            }
+                        }
+                        $("#EmailConfirm").html(getEmailConfirm());
                         x.RolesList.forEach(r => {
                             $("#" + r.Value).prop('checked', r.Selected);
                         });
@@ -878,16 +781,48 @@
                                 url: '@Url.Action("updateEmployeeUsersAtIndex", "UsersAdmin")',
                                 data: formData,
                                 success: function (result) {
-                                    alert("更新成功");
+                                    toastr.options = {
+                                      "closeButton": true,
+                                      "debug": false,
+                                      "newestOnTop": false,
+                                      "progressBar": false,
+                                      "positionClass": "toast-top-right",
+                                      "preventDuplicates": false,
+                                      "onclick": null,
+                                      "showDuration": "300",
+                                      "hideDuration": "1000",
+                                      "timeOut": "5000",
+                                      "extendedTimeOut": "1000",
+                                      "showEasing": "swing",
+                                      "hideEasing": "linear",
+                                      "showMethod": "fadeIn",
+                                      "hideMethod": "fadeOut"
+                                    }
+                                    toastr.success(`${formData.EmpId} 更新成功!`)
                                 },
                                 complete: function () {
-                                    console.log("ffffff")
-
                                     //更新datatable
                                     oTable.ajax.reload();
                                 },
                                 error: function (result) {
-                                    alert("更新失敗nooooooooooooooooo");
+                                    toastr.options = {
+                                        "closeButton": true,
+                                        "debug": false,
+                                        "newestOnTop": false,
+                                        "progressBar": false,
+                                        "positionClass": "toast-top-right",
+                                        "preventDuplicates": false,
+                                        "onclick": null,
+                                        "showDuration": "300",
+                                        "hideDuration": "1000",
+                                        "timeOut": "5000",
+                                        "extendedTimeOut": "1000",
+                                        "showEasing": "swing",
+                                        "hideEasing": "linear",
+                                        "showMethod": "fadeIn",
+                                        "hideMethod": "fadeOut"
+                                    }
+                                    toastr.error(`${formData.EmpId} 更新失敗，請檢查網路連線後再試一次。`)
                                     console.log(result)
                                 }
                             })
@@ -899,21 +834,72 @@
             $("tbody").on('click', '.deleteBtn', function (e) {
                 console.log(e.currentTarget);
                 console.log($(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() )
-                alert("aaaa!")
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("sendMail", "UsersAdmin")',
-                    data: { EmpId: $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text() },
-                    success: function (result) {
-                        alert("send");
-
-                        //更新datatable
-                        oTable.ajax.reload();
-                    },
-                    error: function (result) {
-                        alert("send失敗nooooooooooooooooo");
-                        console.log(result)
-                    }
+                var EmpId = $(this).closest('tr').find('td:eq(1)').find('td').remove().end().text();
+                Swal.fire({
+                  title: `重設帳號: ${EmpId} ?`,
+                  text: "確定後將重設密碼並寄出帳密",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#28A2FC',
+                  cancelButtonColor: '#E8296C',
+                  confirmButtonText: '確定發送'
+                }).then((result) => {
+                  if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("sendMail", "UsersAdmin")',
+                        data: { EmpId: EmpId },
+                        success: function (result) {
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(`${EmpId} 發送成功!`)
+                            //更新datatable
+                            oTable.ajax.reload();
+                        },
+                        error: function (result) {
+                            toastr.options = {
+                                "closeButton": true,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            }
+                            toastr.error('發送失敗，請檢查網路連線後再試一次。')
+                            console.log(result)
+                        }
+                    })
+                    Swal.fire({
+                      title: `已發送!`,
+                      text: `已將 ${EmpId} 重設密碼發送至該信箱`,
+                      type: 'success',
+                      confirmButtonColor: '#28A2FC'
+                    })
+                  }
                 })
             })
         });

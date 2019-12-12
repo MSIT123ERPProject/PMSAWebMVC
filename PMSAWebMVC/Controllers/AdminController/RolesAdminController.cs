@@ -27,6 +27,7 @@ namespace PMSAWebMVC.Controllers
         }
 
         private ApplicationUserManager _userManager;
+
         public ApplicationUserManager UserManager
         {
             get
@@ -40,6 +41,7 @@ namespace PMSAWebMVC.Controllers
         }
 
         private ApplicationRoleManager _roleManager;
+
         public ApplicationRoleManager RoleManager
         {
             get
@@ -60,6 +62,85 @@ namespace PMSAWebMVC.Controllers
             return View(RoleManager.Roles);
         }
 
+        //========================================================================
+
+        public ActionResult getAllRolesToIndexAjax()
+        {
+            var roles = RoleManager.Roles.ToList();
+            var users = UserManager.Users.ToList();
+            List<object> allRoles = new List<object>();
+            List<string> UsersFinal = new List<string>();
+
+            foreach (var r in roles)
+            {
+                foreach (var u in users)
+                {
+                    //每個 role 的 Id
+                    var role = RoleManager.FindById(r.Id);
+                    if (UserManager.IsInRole(u.Id, role.Name))
+                    {
+                        var user = new
+                        {
+                            RoleId = r.Id,
+                            RoleEnName = r.Name,
+                            RoleChName = r.Description,
+                            usersAccId = u.UserName
+                        };
+                        allRoles.Add(user);
+                    }
+                }
+            }
+
+            return Json(allRoles, JsonRequestBehavior.AllowGet);
+        }
+
+        private class usersArray
+        {
+            public string RoleId { get; set; }
+            public string usersAccId { get; set; }
+            public string RoleEnName { get; set; }
+            public string RoleChName { get; set; }
+        }
+
+        public ActionResult getTwoRolesToIndexAjax()
+        {
+            var roles = RoleManager.Roles.ToList();
+            var users = UserManager.Users.ToList();
+            List<usersArray> allUsers = new List<usersArray>();
+            List<object> obj = new List<object>();
+            var all = users.Join(roles, u => u.Roles.Select(x => x.RoleId), r => r.Users.Select(x => x.RoleId), (u, r) => new { u.UserName, r.Name });
+            foreach (var u in users)
+            {
+                var RoleNameEnarr = roles.Where(y => (u.Roles.Select(x => x.RoleId)).Contains(y.Id)).Select(r => r.Name);
+                var RoleNameCharr = roles.Where(y => (u.Roles.Select(x => x.RoleId)).Contains(y.Id)).Select(r => r.Description);
+                usersArray userArr = new usersArray
+                {
+                    RoleId = "-",
+                    RoleEnName = string.Join(",", RoleNameEnarr),
+                    RoleChName = string.Join(",", RoleNameCharr),
+                    usersAccId = u.UserName,
+                };
+                allUsers.Add(userArr);
+            }
+            foreach (var x in allUsers)
+            {
+                var splitArr = x.RoleEnName.Split(',');
+                if (splitArr.Count() >= 2)
+                {
+                    usersArray userArr = new usersArray
+                    {
+                        RoleId = "-",
+                        RoleEnName = x.RoleEnName,
+                        RoleChName = x.RoleChName,
+                        usersAccId = x.usersAccId
+                    };
+                    obj.Add(userArr);
+                }
+            }
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        //========================================================================
         //
         // GET: /Roles/Details/5
         [HttpGet]

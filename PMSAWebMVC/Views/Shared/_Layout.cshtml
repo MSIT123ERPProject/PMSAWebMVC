@@ -60,16 +60,16 @@
                             </a>
                             <div class="sidebar-submenu dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
 
-                                @if (User.IsInRole("Buyer")|| User.IsInRole("Warehouse")|| User.IsInRole("Admin")|| User.IsInRole("Manager") || User.IsInRole("ProductionControl"))
+                                @if (User.IsInRole("Buyer") || User.IsInRole("Warehouse") || User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("ProductionControl"))
                                 {
                                     <a class="dropdown-item" href="@Url.Action("Index", "BuyerSetting")">基本資料設定</a>
                                 }
 
                                 @if (User.IsInRole("Supplier"))
                                 {
-                                    <a class="dropdown-item" href="@Url.Action("Index", "SupSetting")">基本資料設定</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "SupSetting", new { Area = "SupplierArea" })">基本資料設定</a>
                                 }
-                                <a class="dropdown-item" href="@Url.Action("ResetPassword", "Account")">重設密碼</a>
+                                <a class="dropdown-item" href="@Url.Action("ResetPassword", "Account", new { Area = "" })">重設密碼</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" style="font-weight: 600;letter-spacing:2px;" href="@Url.Action( "LogOff", "Account",new { Area=""})"><i class="fas fa-power-off"></i>登出</a>
                             </div>
@@ -101,18 +101,29 @@
                         }
                         @if (User.IsInRole("Warehouse"))
                         {
-                            <li class="sidebar-dropdown nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-fw fa-folder"></i>
-                                    <span>@PMSAWebMVC.Resources.AppResource.Inventory</span>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "WarehouseInfoes")">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.WarehouseInfoes</span>
                                 </a>
-                                <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
-                                    @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.Inventory</h6>*@
-                                    <a class="dropdown-item" href="@Url.Action("Index", "WarehouseInfoes")">@PMSAWebMVC.Resources.AppResource.WarehouseInfoes</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "InventoryDtls")">@PMSAWebMVC.Resources.AppResource.InventoryDtls</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "StockIns")">入庫總表</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "StockInDtls")">入庫明細</a>
-                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "InventoryDtls")">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.InventoryDtls</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "StockIns")">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>入庫總表</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "StockInDtls")">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>入庫明細</span>
+                                </a>
                             </li>
                         }
                         @if (User.IsInRole("Admin"))

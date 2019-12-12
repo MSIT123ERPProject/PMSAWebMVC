@@ -41,7 +41,7 @@ namespace PMSAWebMVC.Controllers
         {
             var report = db.StockInDtl.AsEnumerable().
                          Where(w => w.EXP < DateTime.Now.AddMonths(1)).
-                         Select(g => new { name = g.PartNumber, count = g.StockInQty });
+                         Select(g => new { name = g.PartNumber, y = g.StockInQty });
 
             return Json(report, JsonRequestBehavior.AllowGet);
         }

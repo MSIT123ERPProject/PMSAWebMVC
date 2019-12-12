@@ -151,7 +151,8 @@ namespace PMSAWebMVC.Controllers
                     Selected = userRoles.Contains(r.Name),
                     Text = r.Description,
                     Value = r.Name
-                })
+                }),
+                EmailConfirm = user.EmailConfirmed
             };
 
             return Json(userA, JsonRequestBehavior.AllowGet);
@@ -184,7 +185,8 @@ namespace PMSAWebMVC.Controllers
                     ManagerID = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
                     CreateDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
                     SendLetterDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
-                    LastPasswordChangedDate = await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync(), js)
+                    LastPasswordChangedDate = await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync(), js),
+                    EmailConfirm = x.EmailConfirmed
                 };
                 emps.Add(user);
             }
@@ -272,6 +274,7 @@ namespace PMSAWebMVC.Controllers
             await UserManager.UpdateSecurityStampAsync(user.Id);
             user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
             user.LastPasswordChangedDate = null;
+            await UserManager.UpdateAsync(user);
 
             var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
             emp.PasswordHash = user.PasswordHash;
@@ -307,6 +310,8 @@ namespace PMSAWebMVC.Controllers
             string pwd = generateFirstPwd();
             await UserManager.UpdateSecurityStampAsync(user.Id);
             user.PasswordHash = UserManager.PasswordHasher.HashPassword(pwd);
+            user.LastPasswordChangedDate = null;
+            await UserManager.UpdateAsync(user);
 
             var emp = db.Employee.Where(x => x.EmployeeID == EmpId).SingleOrDefault();
             emp.PasswordHash = user.PasswordHash;
@@ -321,7 +326,7 @@ namespace PMSAWebMVC.Controllers
             // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
             string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
             string MailBody = MembersDBService.getMailBody(tempMail, img, callbackUrl, pwd);
-            
+
             //寄信
             await UserManager.SendEmailAsync(user.Id, "重設您的密碼", MailBody);
 

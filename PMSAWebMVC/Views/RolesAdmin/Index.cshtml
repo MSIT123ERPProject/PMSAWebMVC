@@ -2,35 +2,529 @@
 
 @{
     ViewBag.Title = "角色管理";
+    var SuccessMsg = TempData["Success"];
 }
 
-<h2>角色管理</h2>
+@section styles
+{
 
-<p>
-    <a class="btn btn-warning" href="@Url.Action("Create","RolesAdmin")">＋新增角色</a>
-</p>
-<table class="table">
-    <tr>
-        <th>
-            角色名稱
-        </th>
-        <th>
+    <style>
+        @@keyframes fadeinShowBody {
+            0% {
+                opacity: 0;
+            }
 
-        </th>
-    </tr>
+            20% {
+                opacity: 0.8;
+            }
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.ActionLink("編輯", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("明細", "Details", new { id = item.Id }) |
-                @Html.ActionLink("刪除", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-    }
+            100% {
+                opacity: 1;
+            }
+        }
 
-</table>
+        @@keyframes fadeinShow {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            vertical-align: middle;
+        }
+
+        body {
+            /*animation: 0.3s fadeinShowBody 0.3s both;*/
+        }
+        /*標題 包在.wrapall中使用*/
+        .wrapall h2 {
+            font-weight: 500;
+            color: #909399;
+            letter-spacing: 2px;
+            margin-bottom: 0px;
+        }
+
+        .wrapall h6 {
+            font-size: 13px;
+            letter-spacing: 5px;
+            margin-left: 3px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #C0C4CC;
+        }
+
+        .wrapall {
+            animation: 0.4s fadeinShow 0.3s both;
+        }
+
+        #example_wrapper {
+            /*display: none;*/
+        }
+        /* +-collaspe =============*/
+        /*td.control {
+            margin: 0;
+            transition: 0.2s;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+            td.control:hover, td.control:active {
+                color: white;
+                border-bottom: 0px !important;
+                background-color: #409EFF;
+                transition: 0.2s;
+            }
+
+        table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            display: block;
+            position: relative;
+            color: #409EFF;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            box-sizing: content-box;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 14px;
+            content: '✚' !important;
+            background-color: transparent;
+        }
+
+        table.dataTable.dtr-column > tbody > tr > td.control:hover::before, table.dataTable.dtr-column > tbody > tr > th.control:hover::before {
+            color: white;
+        }
+
+        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+            content: '▂' !important;
+            background-color: transparent;
+            transform: translateY(-5px)
+        }
+
+        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+            background-color: transparent;
+        }*/
+        /*===================sorting*/
+        table.dataTable.order-column tbody tr > .sorting_1, table.dataTable.order-column tbody tr > .sorting_2, table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1, table.dataTable.display tbody tr > .sorting_2, table.dataTable.display tbody tr > .sorting_3 {
+            background-color: transparent;
+            border-left: 2px solid #28A2FC;
+        }
+
+        /*================*/
+        table.table th, table.table td {
+            padding-top: 0.8rem;
+            padding-bottom: 0.7rem;
+        }
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            /* padding: 8px 10px; */
+            padding: 12px;
+        }
+
+        table.dataTable.dtr-column > tbody > tr > td.control:before {
+            top: calc( 60% - 1px);
+        }
+
+        table.dataTable {
+            border-collapse: collapse !important;
+            /*border: 0;*/
+        }
+
+        th {
+            background-color: #28A2FC;
+            color: white;
+            /*border: 0px;*/
+            box-sizing: border-box;
+        }
+
+        .table-bordered th, .table-bordered td {
+            /*border: 0px;*/
+        }
+
+        .table thead th {
+            border-bottom: 4px double #28A2FC;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #E4E7ED;
+        }
+
+        button i {
+            margin-top: 0px !important;
+        }
+        /*input ======================*/
+        .form-group label {
+            margin: 0;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .disabled {
+            background-color: none;
+            border: 0;
+            font-size: 15px;
+            padding: 0;
+            padding-left: 2px;
+            height: auto;
+            color: #909399;
+        }
+        /*badge ============*/
+        td h5 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        /*========*/
+        #Role .custom-control-label {
+            font-weight: 500 !important;
+            margin-top: 5px !important;
+        }
+
+        .editAcc span label {
+            font-weight: 500 !important;
+        }
+
+        .editAcc label.d-block {
+            margin-bottom: 5px !important;
+        }
+
+        .editAcc {
+            margin-top: 20px;
+        }
+
+        .set {
+            /*border: 3px double gray !important;*/
+            box-shadow: 0 0 3px #aaa;
+            margin-right: 10px;
+            padding: 10px;
+            /*border-radius: 10px;*/
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+        }
+
+        .modal-header {
+            background-color: #eee;
+        }
+
+        .modal-footer {
+            background-color: #eee;
+        }
+
+        .card-header {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+        }
+
+            .card-header h5 {
+                font-size: 18px;
+                margin: 0;
+            }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .nonCard {
+            overflow: auto;
+        }
+
+        #twoTable {
+            margin: 50px;
+            width: auto;
+        }
+
+            #twoTable th {
+                padding: 5px;
+                width: 50px !important;
+            }
+
+        #All.tag,
+        #two.tag,
+        #trio.tag {
+            box-shadow: none;
+            outline: none !important;
+            border-bottom: 2px solid #28A2FC;
+            background-color: #E4E7ED;
+        }
+
+            #All.tag::before,
+            #two.tag::before,
+            #trio.tag::before {
+                content: '';
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: #67C23A;
+                margin-right: 10px;
+            }
+
+        .card-body {
+            padding-top: 0;
+        }
+
+        .btn-outline-secondary {
+            border-color: transparent !important;
+        }
+    </style>
+}
+<div class="wrapall">
+    <h2>角色管理</h2>
+    <h6>查詢角色權限</h6>
+
+    <a class="btn btn-warning mb-3" id="AllBtn"><i class="fas fa-star-of-life"></i> 全部</a>
+    <a class="btn btn-warning mb-3" id="NewEmpBtn"><i class="fas fa-star"></i> 新進職員</a>
+    <a class="btn btn-warning mb-3" id="ManaBtn"><i class="fab fa-font-awesome-flag"></i> 主管</a>
+    <a class="btn btn-warning mb-3" id="BuyBtn"><i class="fas fa-shopping-cart"></i> 採購</a>
+    <a class="btn btn-warning mb-3" id="ProBtn"><i class="fab fa-product-hunt"></i> 生管</a>
+    <a class="btn btn-warning mb-3" id="AdBtn"><i class="fas fa-user-shield"></i> 系統管理員</a>
+    <a class="btn btn-warning mb-3" id="WareBtn"><i class="fas fa-truck-loading"></i> 倉管</a>
+
+    <div class="card">
+        <div class="card-header">
+            <button type="button" id="All" style="height: 50px; width:100%; justify-content: center; border-right: 1px solid #E4E7ED;border-radius: 0;" class="btn col-md-6 tag">
+                <i class="fas fa-user"></i>
+                角色總覽
+            </button>
+
+            <button type="button" id="two" style="height: 50px; width:100%; justify-content: center; border-radius: 0;" class="btn col-md-6">
+                <i class="fas fa-user-friends"></i>
+                二角色以上使用者
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive" style="width:98%; padding: 10px">
+                <table class="table table-striped table-border nowrap hover order-column" id="Table" style="width:100%;">
+                    <thead>
+                        <tr role="row" class="bg-primary text-white">
+                            <th></th>
+                            <th>
+                                @*@Html.DisplayNameFor(model => model.Id)*@
+                                角色ID
+                            </th>
+                            <th>
+                                @*@Html.DisplayNameFor(model => model.Description)*@
+                                角色名
+                            </th>
+                            <th>
+                                @*@Html.DisplayNameFor(model => model.Name)*@
+                                角色名(英)
+                            </th>
+                            <th>
+                                @*@Html.DisplayNameFor(model => model.Users)*@
+                                使用者
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted"></div>
+    </div>
+</div>
+
+@section scripts{
+    @*https://datatables.net/forums/discussion/56914*@
+    <script type="text/javascript">
+
+        var url = '@Url.Action("getAllRolesToIndexAjax", "RolesAdmin")';
+        $("#Table").ready(() => {
+            var oTable = $('#Table').DataTable({
+                ordering: true,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [],
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                "columnDefs": [{
+                    className: 'control',
+                    orderable: false,
+                    targets: 0,
+                    defaultContent:""
+                }],
+                "ajax": {
+                    "url": url,
+                    "type": "GET",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    {
+                        "data": null,
+                        "defaultContent": ""
+                    },
+                    {
+                        "data": "RoleId",
+                        "ordering": true
+                    },
+                    {
+                        "data": "RoleChName",
+                        "ordering": true
+                    },
+                    {
+                        "data": "RoleEnName",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        },
+                        "ordering": true
+                    },
+                    {
+                        "data": "usersAccId",
+                        "render": function (d) {
+                            if (d == null) {
+                                return "-";
+                            }
+                            return d;
+                        },
+                        "ordering": true
+                    }
+                ]
+                },
+            )
+            $("#AllBtn").click(() => {
+                oTable.search("").draw();
+            })
+            $("#NewEmpBtn").click(() => {
+                oTable.search("新進職員").draw();
+            })
+            $("#ManaBtn").click(() => {
+                oTable.search("主管").draw();
+            })
+            $("#BuyBtn").click(() => {
+                oTable.search("採購").draw();
+            })
+            $("#ProBtn").click(() => {
+                oTable.search("生管").draw();
+            })
+            $("#AdBtn").click(() => {
+                oTable.search("系統管理員").draw();
+            })
+            $("#WareBtn").click(() => {
+                oTable.search("倉管").draw();
+            })
+            @*$("#two").click(() => {
+                //採購 Buyer
+                //2c1018ee-5f46-4e4b-9780-0e202815aefe
+                //主管 Manager
+                //3891d904-35af-4a15-bac7-6bb680106456
+                //生管 ProductionControl
+                //8007de2d-8026-47ba-90ff-33caa6c4cbe6
+                //新進職員 NewEmployee
+                //9b6e37a9-9278-4130-a980-63cef454102f
+                //系統管理員 Admin
+                //b50363f9-803c-4c89-96d3-e09161643d7b
+                //倉管 Warehouse
+                //dd9bda36-68f1-480c-83d4-7ed64415a149
+
+                oTable.ajax.url('@Url.Action("getRolesByNameToIndexAjax", "RolesAdmin")' +'?RoleName=Buyer').load();
+            })*@
+            $("#All").click(() => {
+                oTable.search("").draw();
+                oTable.ajax.url(url).load();
+            })
+            $("#two").click(() => {
+                oTable.search("").draw();
+                oTable.ajax.url('@Url.Action("getTwoRolesToIndexAjax","RolesAdmin")').load();
+            })
+        });
+
+        //table按鈕藍底綠點特效
+        $("#All").click(function (e) {
+            $(this).addClass("tag");
+            //移除除了自己以外的
+            $("#two").removeClass("tag");
+        })
+        $("#two").click(function (e) {
+            $(this).addClass("tag");
+            $("#All").removeClass("tag");
+        })
+
+        $(document).ready(function () {
+
+        //=============================================================
+           var message = '@SuccessMsg';
+                    if(message){
+                            toastr.options = {
+                              "closeButton": true,
+                              "debug": false,
+                              "newestOnTop": false,
+                              "progressBar": false,
+                              "positionClass": "toast-top-right",
+                              "preventDuplicates": false,
+                              "onclick": null,
+                              "showDuration": "300",
+                              "hideDuration": "1000",
+                              "timeOut": "5000",
+                              "extendedTimeOut": "1000",
+                              "showEasing": "swing",
+                              "hideEasing": "linear",
+                              "showMethod": "fadeIn",
+                              "hideMethod": "fadeOut"
+                            }
+                            toastr.success(message)
+                    }
+        //=============================================================
+            //防止重複ajax......
+            var pendingRequests = {};
+            // 所有ajax請求的通用前置filter
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                var key = generatePendingRequestKey(options);
+                //請求是否已經存在
+                if (!pendingRequests[key]) {
+                    storePendingRequest(key, jqXHR);
+                } else {
+                    //如果ajax請求已經存在，下一次相同的請求則取消，防止重複請求
+                    jqXHR.abort();
+                }
+                //ajax請求完成時，從臨時物件中清除請求對應的資料
+                var complete = options.complete;
+                options.complete = function (jqXHR, textStatus) {
+                    //延時1000毫秒刪除請求資訊，表示同Key值請求不能在此時間段內重複提交
+                    setTimeout(function () {
+                        delete pendingRequests[jqXHR.pendingRequestKey];
+                    }, 1000);
+                    if ($.isFunction(complete)) {
+                        complete.apply(this, arguments);
+                    }
+                }
+                /**
+                * 將ajax請求儲存到臨時物件中，用於根據key判斷請求是否已經存在
+                */
+                function storePendingRequest(key, jqXHR) {
+                    pendingRequests[key] = jqXHR;
+                    jqXHR.pendingRequestKey = key;
+                }
+                /**
+                * 根據ajax請求引數構建一個臨時儲存key,此處簡單的使用url作為key，
+                * 不考慮為解決請求型別為get時相同路徑引起的快取問題，採用隨機碼構建URL的情況
+                */
+                function generatePendingRequestKey(options) {
+                    return options.url;
+                }
+            })
+        })
+    </script>
+
+}

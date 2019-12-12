@@ -202,7 +202,7 @@
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccSettingController\BuyerSettingController.cs" />
-    <Compile Include="Controllers\AccSettingController\SupSettingController.cs" />
+    <Compile Include="Areas\SupplierArea\Controllers\SupSettingController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\BuyerSupAccountController.cs" />
     <Compile Include="Controllers\BuyerSupAccountController\SupInfoCompanyController.cs" />
@@ -416,6 +416,7 @@
     <Compile Include="Services\MembersDBService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
+    <Compile Include="Utilities\YaChen\PurchaseOrderCreateSession.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccount_CreateViewModel.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
@@ -2109,16 +2110,15 @@
     <Content Include="Content\slick\fonts\slick.ttf" />
     <Content Include="Content\slick\fonts\slick.woff" />
     <Content Include="Content\slick\slick-theme.site.css" />
-
     <Content Include="Content\IconKit\fonts\iconkit.eot" />
     <Content Include="Content\IconKit\fonts\iconkit.otf" />
     <Content Include="Content\IconKit\fonts\iconkit.ttf" />
     <Content Include="Content\IconKit\fonts\iconkit.woff" />
     <Content Include="Content\IconKit\fonts\iconkit.woff2" />
-
     <Content Include="Areas\SupplierArea\Views\web.config" />
     <Content Include="Areas\SupplierArea\Views\_ViewStart.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupplierHome\Index.cshtml" />
+
     <Content Include="Areas\SupplierArea\Views\Orders\_IndexOrderInfoPartialView.cshtml" />
 
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -2335,12 +2335,7 @@
     <Content Include="webfonts\fa-brands-400.ttf" />
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Templates\RESXManager\ResxManagerGlobalTemplate.Master" />
-    <Content Include="Views\Account\SupLogin.cshtml" />
     <Content Include="Views\Account\_LoginLayout.cshtml" />
-    <Content Include="Views\InventoryDtls\Create.cshtml" />
-    <Content Include="Views\InventoryDtls\Delete.cshtml" />
-    <Content Include="Views\InventoryDtls\Details.cshtml" />
-    <Content Include="Views\InventoryDtls\Edit.cshtml" />
     <Content Include="Views\InventoryDtls\Index.cshtml" />
     <Content Include="Views\Parts\Create.cshtml" />
     <Content Include="Views\Parts\Delete.cshtml" />
@@ -2393,27 +2388,16 @@
     <Content Include="Areas\SupplierArea\Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
-    <Content Include="Views\StockIns\Create.cshtml" />
-    <Content Include="Views\StockIns\Delete.cshtml" />
-    <Content Include="Views\StockIns\Details.cshtml" />
-    <Content Include="Views\StockIns\Edit.cshtml" />
     <Content Include="Views\StockIns\Index.cshtml" />
-    <Content Include="Views\StockInDtls\Create.cshtml" />
-    <Content Include="Views\StockInDtls\Delete.cshtml" />
-    <Content Include="Views\StockInDtls\Details.cshtml" />
-    <Content Include="Views\StockInDtls\Edit.cshtml" />
     <Content Include="Views\StockInDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePRDtlTablePartial.cshtml" />
-
     <Content Include="Views\PurchaseOrders\_CreatePODtlInfoPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreateSLItemPartial.cshtml" />
     <Content Include="Views\SupInfoCompany\Index.cshtml" />
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
-    <Content Include="Views\SupSetting\Index.cshtml" />
+    <Content Include="Areas\SupplierArea\Views\SupSetting\Index.cshtml" />
     <Content Include="Views\BuyerSetting\Index.cshtml" />
-
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2424,9 +2408,7 @@
     <Folder Include="Utilities\ChengHao\" />
     <Folder Include="Utilities\ChengYing\" />
     <Folder Include="Utilities\ShiYuan\" />
-    <Folder Include="Utilities\YaChen\" />
     <Folder Include="Utilities\YangTing\" />
-    <Folder Include="Views\Buyer\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

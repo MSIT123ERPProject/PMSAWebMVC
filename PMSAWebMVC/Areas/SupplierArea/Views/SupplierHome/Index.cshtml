@@ -38,10 +38,10 @@
             @*<h2><i class="fas fa-chart-bar"></i>料件庫存數量</h2>*@
             <div class="card" id="container2"></div>
         </div>
-        <div class="col-md-4">
-            @*<h2><i class="fas fa-boxes"></i>料件出貨數量</h2>*@
+        @*<div class="col-md-4">
+            <h2><i class="fas fa-boxes"></i>料件出貨數量</h2>
             <div class="card" id="container3"></div>
-        </div>
+        </div>*@
         <div class="col-md-4">
             @*<h2><i class="fas fa-boxes"></i>料件出貨數量</h2>*@
             <div class="card" id="ShipQtyByStatus"></div>
@@ -395,7 +395,8 @@
                     console.log(partname);
                     Highcharts.chart('ShipQtyByStatus', {
                         chart: {
-                            type: 'bar'
+                            type: 'bar',
+                            height: '100%'
                         },
                         title: {
                             text: 'Stacked bar chart'

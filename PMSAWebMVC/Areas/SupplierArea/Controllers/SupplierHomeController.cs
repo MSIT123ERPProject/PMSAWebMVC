@@ -194,7 +194,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //var s = qpod.ToList();
             using ( var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString)) {
                 connection.Open();
-                using ( SqlCommand cmd = new SqlCommand(@"SELECT  pod.PartName, pod.PartNumber, pod.Qty, sl.UnitsOnOrder, snd.ShipQty FROM  PurchaseOrderDtl AS pod LEFT OUTER JOIN PurchaseOrder AS po ON pod.PurchaseOrderID = po.PurchaseOrderID LEFT OUTER JOIN SourceList AS sl ON pod.SourceListID = sl.SourceListID LEFT OUTER JOIN ShipNoticeDtl AS snd ON pod.PurchaseOrderDtlCode = snd.PurchaseOrderDtlCode  ",connection) ) {
+                using ( SqlCommand cmd = new SqlCommand(@"SELECT  pod.PartName, pod.PartNumber, pod.Qty, sl.UnitsOnOrder, snd.ShipQty FROM  PurchaseOrderDtl AS pod LEFT OUTER JOIN PurchaseOrder AS po ON pod.PurchaseOrderID = po.PurchaseOrderID LEFT OUTER JOIN SourceList AS sl ON pod.SourceListID = sl.SourceListID LEFT OUTER JOIN ShipNoticeDtl AS snd ON pod.PurchaseOrderDtlCode = snd.PurchaseOrderDtlCode  WHERE po.SupplierCode = 'S00002'", connection) ) {
                     SqlDataReader Reader = cmd.ExecuteReader();
                     var qpod = Reader.Cast<IDataRecord>().Select(x=>new {
                         PartName = x["PartName"], 

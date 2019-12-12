@@ -17,11 +17,12 @@
             <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
                     <tr class="bg-primary text-white text-left">
-                        @*<th>
-                                @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlOID)
-                            </th>*@
+
                         <th>
                             @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PartNumber)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Qty)
@@ -41,37 +42,16 @@
                         <th>動作</th>
                     </tr>
                 </thead>
-                @*<tfoot>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PurchaseRequisitionDtlCode)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Qty)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DateRequired)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Part.PartName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PurchaseRequisition.Product.ProductName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
-                        </th>
-                        <th>動作</th>
-                    </tr>
-                </tfoot>*@
+
                 @foreach (var item in Model)
                 {
                     <tr>
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlOID)
-                            </td>*@
+
                         <td>
                             @Html.DisplayFor(modelItem => item.PurchaseRequisitionDtlCode)
+                        </td>
+                        <td id="pnb">
+                            @Html.DisplayFor(modelItem => item.PartNumber)
                         </td>
                         <td id="qt">
                             @Html.DisplayFor(modelItem => item.Qty)
@@ -82,10 +62,7 @@
                         <td id="pn">
                             @Html.DisplayFor(modelItem => item.Part.PartName)
                         </td>
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.PurchaseRequisition.ProductNumber)
-                            </td>*@
-                        <td >
+                        <td>
                             @Html.DisplayFor(modelItem => item.PurchaseRequisition.Product.ProductName)
                         </td>
                         <td id="sn">
@@ -130,7 +107,7 @@
             var celss2 = $(this).siblings("#sn"); //抓取欄
             var celss3 = $(this).siblings("#dr");
             var celss4 = $(this).siblings("#pn");
-            
+
 
             sell = table.row(rowss).cell(celss);
             sell2 = table.row(rowss).cell(celss2);
@@ -138,12 +115,13 @@
             sell4 = table.row(rowss).cell(celss4);
 
 
-            
+
         })
 
 
         //檢視
-            $(document).on('click', "button[name = 'click1']", function () {
+        $(document).on('click', "button[name = 'click1']", function () {
+            loadSuggestSupplierCode();
                 document.getElementById("btnClose").innerHTML = "關閉";
             let id1 = this.dataset.dc;
             if(id1 == undefined){
@@ -165,59 +143,30 @@
 
         //修改檢視
         $(document).on('click', "button[name = 'click2']", function () {
-            @*let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseRequisitions")';
-            let sup = $('#sn');
-            let supplierList = $('#SuggestSupplierCode');
-            supplierList.empty();
-
-            $.getJSON(supplierListUrl, { id: $(this).val() }, function (data) {
-                if (!data) {
-                    return;
-                }
-                supplierList.append($('<option></option>').val('').text('請選擇'));
-                $.each(data, function (index, item) {
-                    supplierList.append($('<option></option>').val(item.Value).text(item.Text));
-                });
-                $("#btnSubmit").prop("disabled", true);
-            });*@
-
-
+            //code1 = $(this).parents('tr').find('td:nth-child(2)').text();
+            //console.log(code1)
+            loadSuggestSupplierCode();
                 document.getElementById("btnClose").innerHTML = "關閉";
             let id1 = this.dataset.dc;
             if(id1 == undefined){
                 id1 = $(this).parents('tr').find('td:first-child').text();
                 }
-  
-                //var rowss = $(this).closest("tr");
-                //var celss = $(this).parents('tr').find('#pn');
-                ////let partNumber = this.dataset.dc;
-                //var partNumber =celss.text();
-                //console.log(rowss);
-                //console.log(celss);
-                //console.log(celss.val());
-                //console.log(celss.text());
-                //console.log(partNumber);
-                //var data = { id: id1, partNumber:partNumber };
+
                 $.getJSON("@Url.Action("DetailDtl", "PurchaseRequisitions")/"+id1, function (datas) {
-                    //loadSuggestSupplierCode(val(datas[0].PartNumber));
                 $('#ModalTitle').text('檢視請購單明細資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', false);
-                //$('#btnUpdate').hide();
                 $("#PurchaseRequisitionDtlCode").val(datas[0].PurchaseRequisitionDtlCode);
                 $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
                 $("#PartNumber").val(datas[0].PartNumber);
                 $("#Qty").val(datas[0].Qty);
-
-                    //var opt = new Option(datas[0].SuggestSupplierName, datas[0].SuggestSupplierCode);
-                    //$('#SuggestSupplierCode').append(opt)
                     $("#SuggestSupplierCode").val(datas[0].SuggestSupplierCode);
                 $('#DateRequired').children("input").val(datas[0].DateRequired);
 
             })
         });
 
-     
+
 
         //修改更新
         $('#btnUpdate').click(function () {
@@ -255,11 +204,12 @@
         });
 
          //下拉選單
-        loadSuggestSupplierCode();
+
         async function loadSuggestSupplierCode() {
-            
+
             var response = await fetch('@Url.Action("getsuggestSupplierCode", "PurchaseRequisitions")');
             var datas = await response.json();
+            $("#SuggestSupplierCode").find("option").remove();
             for (var i = 0, max = datas.length; i < max; i++) {
                 var SupplierCode = datas[i].SupplierCode
                 var SupplierName = datas[i].SupplierName
@@ -298,9 +248,9 @@
                         <input type="text" class="form-control" id="Qty" name="dta">
                     </div>
                     @*<div class="form-group">
-            <label class="required" for="SuggestSupplierCode">@Html.DisplayNameFor(model => model.SuggestSupplierCode)</label>
-            <input type="text" class="form-control" id="SuggestSupplierCode" name="dta">
-        </div>*@
+                            <label class="required" for="SuggestSupplierCode">@Html.DisplayNameFor(model => model.SuggestSupplierCode)</label>
+                            <input type="text" class="form-control" id="SuggestSupplierCode" name="dta">
+                        </div>*@
                     <div class="form-group">
                         <label for="SuggestSupplierCode">建議供應商</label>
                         <br />
@@ -312,7 +262,9 @@
                         <div class="input-group date" id="DateRequired" data-target-input="nearest">
                             <input type="text" id="DateRequired2" class="form-control datetimepicker-input" data-target="#DateRequired" data-toggle="datetimepicker" name="dta" />
                             <div class="input-group-append" data-target="#DateRequired" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
                             </div>
                         </div>
                     </div>

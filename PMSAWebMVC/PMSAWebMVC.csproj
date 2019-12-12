@@ -413,6 +413,7 @@
     <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
     <Compile Include="ViewModels\ShipNotices\ShipNoticeViewModel.cs" />
+    <Compile Include="ViewModels\SourceLists\SourceListsCreateViewModel.cs" />
     <Compile Include="ViewModels\UsersAdmin\UsersAdminViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2322,7 +2323,6 @@
     <Content Include="Views\Shared\_LanguagePartial.cshtml" />
     <Content Include="Views\SourceLists\Create.cshtml" />
     <Content Include="Views\SourceLists\CreateDtl.cshtml" />
-    <Content Include="Views\SourceLists\CreateDtl2.cshtml" />
     <Content Include="Views\SourceLists\Details.cshtml" />
     <Content Include="Views\SourceLists\DetailsDtl.cshtml" />
     <Content Include="Views\SourceLists\Edit.cshtml" />
@@ -2345,6 +2345,8 @@
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Create.cshtml" />
+    <Content Include="Views\SourceLists\Createtest.cshtml" />
+    <Content Include="Views\SourceLists\_CreateSLItemPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

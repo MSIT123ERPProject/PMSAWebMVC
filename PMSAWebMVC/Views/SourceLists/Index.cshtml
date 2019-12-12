@@ -10,7 +10,7 @@
 <div class="card mb-3">
     <div class="card-header">
         <i class="fas fa-table"></i>
-        @Html.ActionLink("新增貨源清單", "Create", null, new { @class = "btn btn-info" })
+        @Html.ActionLink("新增貨源清單", "Createtest", null, new { @class = "btn btn-info" })
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -122,14 +122,15 @@
                             @*@Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" })*@
                             @Html.ActionLink("新增明細", "CreateDtl2", new { id = item.SourceListID }, new { @class = "btn btn-info" })
                             @*@Html.ActionLink("編輯", "Edit", new { id = item.SourceListID }, new { @class = "btn btn-info" })
-                                @Html.ActionLink("檢視", "Details", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
+        @Html.ActionLink("檢視", "Details", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
                             <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.SourceListID">
                                 <i class="far fa-eye"></i>
                             </button>
                             <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.SourceListID">
                                 <i class="far fa-edit"></i>
                             </button>
-                            <a name="click01" class="btn btn-outline-secondary btn-icon" data-wc="@item.SourceListID"><i class="far fa-trash-alt"></i></a>
+                            @*<a name="click01" class="btn btn-outline-secondary btn-icon" data-wc="@item.SourceListID"><i class="far fa-trash-alt"></i></a>*@
+                            <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.SourceListID }, new { @class = "far fa-file-alt" })</button>
                         </td>
                     </tr>
                 }

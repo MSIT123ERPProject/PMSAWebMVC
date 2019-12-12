@@ -7,7 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using PMSAWebMVC.Models;
-
+using PMSAWebMVC.ViewModels.SourceLists;
 
 namespace PMSAWebMVC.Controllers
 {
@@ -177,15 +177,15 @@ namespace PMSAWebMVC.Controllers
 
 
 
-        // GET: SourceListsDtl貨源清單明細
-        public ActionResult IndexDtl()
-        {
-            var sourceListDtl = db.SourceListDtl.Include(s => s.SourceList);
+        //// GET: SourceListsDtl貨源清單明細
+        //public ActionResult IndexDtl()
+        //{
+        //    var sourceListDtl = db.SourceListDtl.Include(s => s.SourceList);
 
             
 
-            return View(sourceListDtl);
-        }
+        //    return View(sourceListDtl);
+        //}
 
         //// GET: SourceListDtls/Details/5 貨源清單明細檢視畫面
         //public ActionResult DetailsDtl(int? id)
@@ -359,31 +359,184 @@ namespace PMSAWebMVC.Controllers
         //    return View(sourceListDtl);
         //}
         // GET: SourceListDtls/Delete/5 貨源清單明細不換頁刪除
-        [HttpPost]
+
+
+        ///////////////////////////////////////////////////////////////////////
+        ///
+        public ActionResult Createtest()
+        {
+            SourceListsCreateViewModel model = new SourceListsCreateViewModel();
+            model.DiscountBeginDatestring = DateTime.Now.ToString("yyyy/MM/dd");
+            model.DiscountEndDatestring = DateTime.Now.AddDays(1).ToString("yyyy/MM/dd");
+            ConfigureViewModel(model);
+            return View(model);
+        }
+
+        private void ConfigureViewModel(SourceListsCreateViewModel model)
+        {
+            //參考資料：https://dotnetfiddle.net/PBi075
+            IList<SupplierItem> Supplier = Repository.GetSupplierList();
+            model.SupplierList = new SelectList(Supplier, "SupplierCode", "SupplierName");
+            IList<PartItem> Part = Repository.GetPartList();
+            model.PartList = new SelectList(Part, "PartNumber", "PartName");
+
+
+        }
+
+
+
+        //新增貨源清單及明細
+        [HttpGet]
+        public ActionResult Creat(string partNumber, int qtyPerUnit, int? mOQ, int unitPrice, string supplierCode, int? safetyQty, int? eXP, int qtyDemanded, decimal discount, System.DateTime? discountBeginDate, System.DateTime? discountEndDate)
+        {
+            SourceList sourceList = new SourceList(); //取得貨源清單資料
+            sourceList.SourceListID = partNumber + supplierCode;
+            sourceList.PartNumber = partNumber;
+            sourceList.QtyPerUnit = qtyPerUnit;
+            sourceList.MOQ = mOQ;
+            sourceList.UnitPrice = unitPrice;
+            sourceList.SupplierCode = supplierCode;
+            sourceList.SafetyQty = safetyQty;
+            sourceList.EXP = eXP;
+
+            sourceList.UnitsInStock = 0;
+            sourceList.UnitsOnOrder = 0;
+
+            SourceListDtl sourceListDtl = new SourceListDtl(); //取得貨源清單明細資料
+            sourceListDtl.SourceListID = sourceList.SourceListID;
+            sourceListDtl.QtyDemanded = qtyDemanded;
+            sourceListDtl.Discount = discount;
+            sourceListDtl.DiscountBeginDate = discountBeginDate;
+            sourceListDtl.DiscountEndDate = discountEndDate;
+            sourceListDtl.CreateDate = DateTime.Now;
+
+
+            SourceListDtl sld0 = new SourceListDtl(); //建立折扣0
+            sld0.SourceListID = sourceList.SourceListID;
+            sld0.QtyDemanded = 1;
+            sld0.Discount = 0;
+            sld0.DiscountBeginDate = discountBeginDate;
+            sld0.DiscountEndDate = discountEndDate;
+            sld0.CreateDate = DateTime.Now;
+
+
+            SourceList s = db.SourceList.Find(sourceList.SourceListID);//檢查資料庫有無此資料
+            var slDtl = from sl in db.SourceListDtl
+                        where sl.SourceListID == sourceList.SourceListID && sl.Discount == 0
+                        select sl;
+            var test=slDtl.ToList();
+          
+
+            if (ModelState.IsValid)//丟資料庫
+            {
+                if (s is null) //判斷有無重複貨源清單
+                {
+                    db.SourceList.Add(sourceList);
+                }
+          
+                db.SourceListDtl.Add(sourceListDtl);
+                
+                db.SaveChanges();
+            }
+            if (test.Count == 0)//檢查有沒有無折扣貨源清單明細才新增
+            {
+            
+                    db.SourceListDtl.Add(sld0);
+             
+
+                db.SaveChanges();
+            }
+            IEnumerable<SourceListsDtlItem> pods = null;  //新建模型以供傳回
+            using (PMSAEntities db = new PMSAEntities())
+            {
+                var podq = from sl in db.SourceList
+                           join sld in db.SourceListDtl
+                           on sl.SourceListID equals sld.SourceListID
+                           where sl.SourceListID == sourceList.SourceListID
+                           orderby sld.Discount 
+                           select new SourceListsDtlItem
+                           {
+                               SourceListID = sl.SourceListID,
+                               PartNumber = sl.PartNumber,
+                               PartName=sl.Part.PartName,
+                               QtyPerUnit = sl.QtyPerUnit,
+                               MOQ = sl.MOQ,
+                               UnitPrice = sl.UnitPrice,
+                               SupplierCode = sl.SupplierCode,
+                               SupplierName=sl.SupplierInfo.SupplierName,
+                               UnitsInStock = sl.UnitsInStock,
+                               UnitsOnOrder = sl.UnitsOnOrder,
+                               SafetyQty = sl.SafetyQty,
+                               EXP = sl.EXP,
+
+                               SourceListDtlOID = sld.SourceListDtlOID,
+                               QtyDemanded = sld.QtyDemanded,
+                               Discount = sld.Discount,
+                               DiscountBeginDate = sld.DiscountBeginDate,
+                               DiscountEndDate = sld.DiscountEndDate,
+                               CreateDate = sld.CreateDate,
+                           };
+
+                pods = podq.ToList();
+
+                var data = pods;
+                SourceListsCreateViewModel vm = new SourceListsCreateViewModel
+                {
+                    SourceListsDtlSetVM = data, 
+
+                };
+                vm.SourceListID = data.First().SourceListID;
+                return PartialView("_CreateSLItemPartial", vm);
+            }
+        }
+
+        [HttpPost]//刪除
         public ActionResult DeleteDtl(int? id)
         {
-            try
+            if (id == null)
             {
-                if (id == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                SourceListDtl sourceListDtl = db.SourceListDtl.Find(id);
-                if (sourceListDtl == null)
-                {
-                    return HttpNotFound();
-                }
-                db.SourceListDtl.Remove(sourceListDtl);
-                db.SaveChanges();
-                return RedirectToAction("IndexDtl");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            catch
+            SourceListDtl sourceListDtl = db.SourceListDtl.Find(id);
+            SourceList sourceList = null;
+            SourceListDtl sourceListDtl2 = new SourceListDtl();
+            sourceListDtl2.SourceListID = sourceListDtl.SourceListID;
+
+
+
+            if (sourceListDtl == null)
             {
-                return Content("<script> alert('刪除失敗');window.location.href='../Index'</script>");
+                return HttpNotFound();
             }
-           
+            db.SourceListDtl.Remove(sourceListDtl);
+            db.SaveChanges();
+
+            using (PMSAEntities db = new PMSAEntities()) //判斷有無明細  無明細自動刪除
+            {
+                var data = from sld in db.SourceListDtl
+                           where sld.SourceListID == sourceListDtl2.SourceListID
+                           select sld;
+                var datas = data.ToList();
+                if (datas.Count == 0)
+                {
+                    sourceList = db.SourceList.Find(sourceListDtl2.SourceListID);
+                    var x = sourceList.SourceListID;
+                    db.SourceList.Remove(sourceList);
+                    db.SaveChanges();
+                }
+                
+            }
+            return RedirectToAction("Index");
+
+        }
+        public ActionResult IndexDtl(string id)//有條件 貨源清單明細檢視
+        {
+            var sourceListDtl = db.SourceListDtl.Include(s => s.SourceList).Where(s=>s.SourceListID==id);
+            return View(sourceListDtl);
         }
 
 
     }
 }
+
+

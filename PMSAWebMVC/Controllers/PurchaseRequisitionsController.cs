@@ -444,7 +444,7 @@ namespace PMSAWebMVC.Controllers
         {
             //參考資料：https://dotnetfiddle.net/PBi075
             IList<ProductItem> Product = Repository.GetProductList();
-            model.ProductList = new SelectList(Product, "ProductNameValue", "ProductNameDisplay");
+            model.ProductList = new SelectList(Product, "ProductNameDisplay", "ProductNameValue");
             if (!string.IsNullOrEmpty(model.SelectedProductName))
             {
                 IEnumerable<PartItem> parts = Repository.GetPartList(model.SelectedProductName);

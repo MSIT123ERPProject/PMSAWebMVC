@@ -379,9 +379,13 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <summary>
         /// 加入新增的採購明細資料到表格
         /// </summary>
-        public void AddPODtlToTableViewModel() {
-            session.PODItems.Add(session.PODItemEditting);
-            session.PODItemEditting = null;
+        public void AddPODtlToTableViewModel()
+        {
+            if (session.PODItemEditting != null)
+            {
+                session.PODItems.Add(session.PODItemEditting);
+                session.PODItemEditting = null;
+            }
         }
 
         /// <summary>
@@ -437,7 +441,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             podedit.Total = podedit.PurchaseUnitPrice * podedit.Qty;
 
             //已存在的(需正式加入採購單才做改變)
-            if (mode=="add")
+            if (mode == "add")
             {
                 foreach (var item in session.PODItems.Where(item => item.SourceListID == sl.SourceListID))
                 {

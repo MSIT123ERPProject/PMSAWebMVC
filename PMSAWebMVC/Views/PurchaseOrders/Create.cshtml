@@ -492,13 +492,13 @@
                 //先更新資料
                 setPRDtlInputUpdate("add");
                 //顯示表格
-                AddPODtlToTableViewModel();
+                showPODtlToTableViewModel();
                 //關閉Modal
                 $('#detailModal').modal('hide');
             });  
 
             //顯示採購明細表
-            function AddPODtlToTableViewModel() {
+            function showPODtlToTableViewModel() {
                 $.ajax({
                     url: "@Url.Action("AddPODtlToTableViewModel", "PurchaseOrders")",
                     type: "get",
@@ -514,6 +514,7 @@
                     });
             }
 
+            //設定採購單輸入內容更新
             function setPRDtlInputUpdate(mode) {
 
                 $("#btnPODAdd").prop("disabled", false);
@@ -571,8 +572,6 @@
                     });
             }
 
-
-
             //分頁樣式測試
             $(".btn-group-toggle a[data-toggle='tab']").click(function () {
                 $(this).tab('show');
@@ -621,6 +620,33 @@
 
 
             //顯示請購單資訊
+            function showPRDtlToTableViewModel() {
+                $.ajax({
+                    url: "@Url.Action("GetPRDtlTableViewModel", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: $("#SelectedPurchaseRequisitionID").val()
+                    },
+                 }).done(function (result) {
+                     //建立內容
+                     $('#prdtl').html(result);
+                     initDataTablesPR();
+                     $('#prdtlCount').text(dtPR.context[0].aoData.length);
+                     //顯示內容
+                     $('.dtl-content').hide().removeClass("d-none").fadeIn(500);
+                     resizeDatatable();
+                     //暫時限制單筆請購單
+                    $('#SelectedPurchaseRequisitionID').prop("disabled", true);
+                     $("#btnImportPR").fadeOut(500, function () {
+                        $(this).remove();
+                    });
+                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
+
+
             $("#btnImportPR").prop("disabled", true);
             $('#SelectedPurchaseRequisitionID').change(function () {
                 if (this.selectedIndex == 0) {
@@ -648,32 +674,9 @@
 
             //匯入請購單資料
             $("#btnImportPR").click(function () {
-                 $.ajax({
-                    url: "@Url.Action("GetPRDtlTableViewModel", "PurchaseOrders")",
-                    type: "get",
-                    data: {
-                        id: $("#SelectedPurchaseRequisitionID").val()
-                    },
-                 }).done(function (result) {
-                     //建立內容
-                     $('#prdtl').html(result);
-                     initDataTablesPR();
-                     $('#prdtlCount').text(dtPR.context[0].aoData.length);
-                     //顯示內容
-                     $('.dtl-content').hide().removeClass("d-none").fadeIn(500);
-                     resizeDatatable();
-                     //暫時限制單筆請購單
-                    $('#SelectedPurchaseRequisitionID').prop("disabled", true);
-                     $("#btnImportPR").fadeOut(500, function () {
-                        $(this).remove();
-                    });
-                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
-                    }).fail(function (e) {
-                        toastr.error(e.responseText);
-                    });
-
+                showPRDtlToTableViewModel();
+                showPODtlToTableViewModel(); 
             });
-
 
             var dtPR;
             function initDataTablesPR() {

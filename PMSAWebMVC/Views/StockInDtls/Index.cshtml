@@ -27,31 +27,37 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td id="hiden">@Html.DisplayFor(modelItem => item.StockInDtlOID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.InventoryDtl.WarehouseCode)</td>
-                        <td>@Html.DisplayFor(modelItem => item.StockIn.PurchaseOrderReceiveID)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Part.PartName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EXP)</td>
-                        <td id="cel">@Html.DisplayFor(modelItem => item.StockInQty)</td>
-                        <td class="table-data-feature">
-                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
-                                <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.StockInDtlOID">
-                                    <i class="far fa-eye"></i>
-                                </button>
-                            </span>
-                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
-                                <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.StockInDtlOID">
-                                    <i class="far fa-edit"></i>
-                                </button>
-                            </span>
-                            <span data-toggle="modal" data-target=".bd-example-modal-lg">
-                                <button name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫" data-dc="@item.StockInDtlOID">
-                                    <i class="far fa-arrow-alt-circle-down"></i>
-                                </button>
-                            </span>
-                        </td>
-                    </tr>
+                        string status = item.StockIn.SignStatus;
+
+                        <tr>
+                            <td id="hiden">@Html.DisplayFor(modelItem => item.StockInDtlOID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.InventoryDtl.WarehouseCode)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StockIn.PurchaseOrderReceiveID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Part.PartName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EXP)</td>
+                            <td id="cel">@Html.DisplayFor(modelItem => item.StockInQty)</td>
+                            <td class="table-data-feature">
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.StockInDtlOID">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </span>
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.StockInDtlOID">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                </span>
+                                @if (status == "Y")
+                                {
+                                    <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                        <button name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫" data-dc="@item.StockInDtlOID">
+                                            <i class="far fa-arrow-alt-circle-down"></i>
+                                        </button>
+                                    </span>
+                                }
+
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -63,6 +69,22 @@
 <style>
     #hiden {
         display: none;
+    }
+
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: blueviolet;
+    }
+
+    .modal-title {
+        color: white;
+    }
+
+    .required:after {
+        margin: 2px;
+        content: '*';
+        color: red;
     }
 </style>
 

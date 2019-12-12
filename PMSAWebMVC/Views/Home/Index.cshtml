@@ -45,7 +45,7 @@
         <a href="https://asp.net" class="btn btn-primary btn-lg"><h6 class="m-0">最新消息 &raquo;</h6></a>
     </div>
     <div class="row">
-        <div class="col-md-4" >
+        <div class="col-md-4">
             @*<h2><i class="fas fa-money-check-alt"></i>出貨金額比例</h2>*@
             @*DateTimePickerStart*@
             <div class="input-group date" id="datetimepickerIdStart" data-target-input="nearest">
@@ -65,11 +65,11 @@
             </div>
             <div id="container"></div>
         </div>
-        <div class="col-md-4" >
+        <div class="col-md-4">
             @*<h2><i class="fas fa-chart-bar"></i>料件庫存數量</h2>*@
             <div id="container2"></div>
         </div>
-        <div class="col-md-4" >
+        <div class="col-md-4">
             @*<h2><i class="fas fa-boxes"></i>料件出貨數量</h2>*@
             <div id="container3"></div>
         </div>
@@ -121,7 +121,7 @@
                     style: {
                         fontWeight: 'bold',
                         fontFamily: "微軟正黑體",
-                        fontsize: "30px",   
+                        fontsize: "30px",
                     },
                     backgroundColor: '#A5DEE4',
                     width: 510,
@@ -187,7 +187,7 @@
 
             });
 
-         
+
             ////////////////////////////////////
         //庫存不足料件圖 column chart
         function unitsInStockChart() {
@@ -430,7 +430,7 @@
                         fontFamily: "微軟正黑體",
                         fontsize: "30px"
                     },
-                    width: 500,
+                    width: 550,
                 },
                 title: {
                     useHTML: true,
@@ -940,7 +940,7 @@
                         fontFamily: "微軟正黑體",
                         fontsize: "30px"
                     },
-                    width: 500,
+                    width: 470,
                 },
                 title: {
                     useHTML: true,
@@ -1101,49 +1101,50 @@
             }
 
             function GetSInDtl() {
-                $.getJSON(`@Url.Action("GetSInDtl", "WSReports")`, function (datas) {
-                    let chart3 = new Highcharts.chart('sindtl',{
-                    chart: {
-                       type: 'packedbubble',
-                        height:'100%'
-                    },
-                    title: {
-                        text:'即將到期品'
-                    },
-                    tooltip: {
-                        useHTML: true,
-                        pointFormat: '<b>{point.name}:</b> {point.value}個<sub></sub>'
-                    },
-                    plotOptions: {
-                        packedbubble: {
-                            minSize: '30%',
-                            maxSize: '120%',
-                            zMin:0,
-                            zMax:1000,
-                            layoutAlgorithm: {
-                                splitSeries: false,
-                                gravitationalConstant:  0.02
-                            },
-                            dataLabels: {
-                                enabled: true,
-                                format: '{point.name}',
-                                filter: {
-                                    property: 'y',
-                                    operator: '>',
-                                    value:250
+                $.getJSON('@Url.Action("GetSInDtl", "WSReports")', function (datas) {
+
+                    //泡沫圖引用的 script跟其他的有差 所以要改變
+                    Highcharts.chart('sindtl', {
+                        chart: {
+                            type: 'packedbubble',
+                            height: '100%'
+                        },
+                        title: {
+                            text: '即將到期品'
+                        },
+                        tooltip: {
+                            useHTML: true,
+                            pointFormat: '<b>{point.name}:</b> {point.value}個<sub></sub>'
+                        },
+                        plotOptions: {
+                            packedbubble: {
+                                minSize: '30%',
+                                maxSize: '120%',
+                                zMin: 0,
+                                zMax: 1000,
+                                layoutAlgorithm: {
+                                    splitSeries: false,
+                                    gravitationalConstant: 0.02
                                 },
-                                style: {
-                                    color: 'black',
-                                    textOutline: 'none',
-                                    fontWeight:'normal'
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.name}',
+                                    filter: {
+                                        property: 'y',
+                                        operator: '>',
+                                        value: 250
+                                    },
+                                    style: {
+                                        color: 'black',
+                                        textOutline: 'none',
+                                        fontWeight: 'normal'
+                                    }
                                 }
                             }
-                        }
-                    },
-                    series: datas
-                });
-            });
-
+                        },
+                        series: datas
+                    });
+                })
             }
         </script>
     }

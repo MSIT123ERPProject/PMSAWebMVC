@@ -113,7 +113,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public bool Checked { get; set; }
         [Display(Name = "料件編號")]
         public string PartNumber { get; set; }
-        [Display(Name = "品名")]
+        [Display(Name = "料件品名")]
         public string PartName { get; set; }
         [DisplayFormat(DataFormatString = "{0:C0}")]
         [DataType(DataType.Currency)]

@@ -28,13 +28,14 @@
                     @foreach (var item in Model)
                     {
                         string status = item.StockIn.SignStatus;
+                        string date1 = String.Format("{0:yyyy/MM/dd}", item.EXP);
 
                         <tr>
                             <td id="hiden">@Html.DisplayFor(modelItem => item.StockInDtlOID)</td>
                             <td>@Html.DisplayFor(modelItem => item.InventoryDtl.WarehouseCode)</td>
                             <td>@Html.DisplayFor(modelItem => item.StockIn.PurchaseOrderReceiveID)</td>
                             <td>@Html.DisplayFor(modelItem => item.Part.PartName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.EXP)</td>
+                            <td>@Html.DisplayFor(modelItem => date1)</td>
                             <td id="cel">@Html.DisplayFor(modelItem => item.StockInQty)</td>
                             <td class="table-data-feature">
                                 <span data-toggle="modal" data-target=".bd-example-modal-lg">
@@ -120,7 +121,7 @@
                 $("#PartName").val(datas[0].partName);
                 $("#StockInQty").val(datas[0].StockInQty);
                 $("#Remark").val(datas[0].Remark);
-                $("#EXP").val(datas[0].EXP);
+                $("#EXP").val(datas[0].date);
                 let seninqty = datas[0].puqty - datas[0].StockInQty;
                 $("#senInQty").val(seninqty);
             })
@@ -151,7 +152,7 @@
                 $("#PartName").val(datas[0].partName);
                 $("#StockInQty").val(datas[0].StockInQty);
                 $("#Remark").val(datas[0].Remark);
-                $("#EXP").val(datas[0].EXP);
+                $("#EXP").val(datas[0].date);
                 let seninqty = datas[0].puqty - datas[0].StockInQty;
                 $("#senInQty").val(seninqty);
             })
@@ -215,7 +216,7 @@
                 $("#PartName").val(datas[0].partName);
                 $("#StockInQty").val(datas[0].StockInQty);
                 $("#Remark").val(datas[0].Remark);
-                $("#EXP").val(datas[0].EXP);
+                $("#EXP").val(datas[0].date);
                 let seninqty = datas[0].puqty - datas[0].StockInQty;
                 $("#senInQty").val(seninqty);
                 $("#InQty").val(0);
@@ -252,9 +253,9 @@
                     if (response.status) {
                         toastr.success(response.message, "通知");
                         sell.data(sum).draw();
+                    } else {
+                        toastr.error(response.message, "警告");
                     }
-                }).fail(function(response){
-                    toastr.error(response.message, "警告");
                 })
             $('#StockInModal').modal('hide');
             }

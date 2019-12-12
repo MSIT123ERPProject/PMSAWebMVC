@@ -36,7 +36,9 @@ namespace PMSAWebMVC.Controllers
             var putdhidd = purdhid[0];
             var purdtl = db.PurchaseOrderReceiveDtl.Where(w => w.PurchaseOrderReceiveID == putdhidd && w.PurchaseOrderDtl.PartNumber == part).Select(s => s.AcceptQty).ToList();
             var puqty = purdtl[0];
-            
+
+            var da2 = db.StockInDtl.Where(w => w.StockInDtlOID == id).Select(s => s.EXP).ToList();
+            string date = String.Format("{0:yyyy/MM/dd}", da2[0]);
 
             var datas = db.StockInDtl.AsEnumerable().Where(w => w.StockInDtlOID == id).
                         Select(s => new
@@ -47,7 +49,7 @@ namespace PMSAWebMVC.Controllers
                             partName,
                             puqty,
                             s.StockInQty,
-                            s.EXP
+                            date
                         });
 
             return Json(datas, JsonRequestBehavior.AllowGet);

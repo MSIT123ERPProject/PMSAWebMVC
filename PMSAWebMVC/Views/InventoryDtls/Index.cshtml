@@ -82,7 +82,10 @@
 @section scripts
 {
     <script>
-        $('#dataTable').DataTable();
+        $('#dataTable').DataTable({
+            ordering: true,
+            order: []
+        });
 
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();
@@ -177,7 +180,7 @@
                     if (response.status) {
                         toastr.success(response.message, "通知");
                         loadSlidlist();
-                        table.row.add([response.c, $("#WarehouseName :selected").text(), $("#InventoryCategoryCode :selected").text(), response.pa, response.uis, response.uos, response.uii, cell4]).draw(false);
+                        table.row.add([response.c, $("#WarehouseName :selected").text(), $("#InventoryCategoryCode :selected").text(), response.pa, response.uis, response.uii, cell4]).draw(false);
                     }
                 }).fail(function(response){
                     toastr.error(response.message, "警告");

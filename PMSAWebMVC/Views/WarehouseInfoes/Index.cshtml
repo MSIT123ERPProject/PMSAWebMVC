@@ -104,6 +104,7 @@
             $('input[name="da"]').val("");
             $('input[name="dta"]').val("");
             $('#EmployeeID')[0].selectedIndex = 0;
+            $('#btnDemo').show();
             $('#btnSave').show();
             $('#btnUpdate').hide();
             document.getElementById("code2").innerHTML = '';
@@ -200,6 +201,7 @@
                 $('*[name="dta"]').attr('disabled', true);
                 $('#btnSave').hide();
                 $('#btnUpdate').hide();
+                $('#btnDemo').hide();
                 $("#WarehouseCode").val(datas[0].WarehouseCode);
                 $("#WarehouseName").val(datas[0].WarehouseName);
                 $("#Address").val(datas[0].Address);
@@ -208,6 +210,14 @@
                 $("#Remark").val(datas[0].Remark);
             })
         });
+
+        //Demo
+        $(document).on('click', "#btnDemo", function () {
+            $("#WarehouseCode").val("NTPUN05");
+            $("#WarehouseName").val("新北永和05倉");
+            $("#Address").val("新北市永和區民權路53號");
+            $("#Tel").val("02-2942-9900");
+        })
 
         //更新
         var sell;
@@ -232,6 +242,7 @@
                 $('*[name="dta"]').attr('disabled', false);
                 $('#btnSave').hide();
                 $('#btnUpdate').show();
+                $('#btnDemo').hide();
                 $("#WarehouseCode").val(datas[0].WarehouseCode);
                 $("#WarehouseName").val(datas[0].WarehouseName);
                 $("#Address").val(datas[0].Address);
@@ -376,6 +387,7 @@
                 <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
                 <button id="btnSave" name="btnSave" type="button" class="btn btn-primary">新增</button>
                 <button id="btnUpdate" name="btnUpdate" type="button" class="btn btn-success">修改</button>
+                <button id="btnDemo" name="btnDemo" type="button" class="btn btn-success">Demo</button>
             </div>
         </div>
     </div>

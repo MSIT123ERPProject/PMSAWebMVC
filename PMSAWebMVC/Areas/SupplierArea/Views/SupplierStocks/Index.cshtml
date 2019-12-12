@@ -9,10 +9,10 @@
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
 </nav>
 <div class="card mb-3">
-    @*<div class="card-header py-3">
-            <i class="fas fa-table"></i>
-            <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>
-        </div>*@
+    <div class="card-header">
+            @*<i class="fas fa-table"></i>
+            <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>*@
+        </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
@@ -120,6 +120,9 @@
                  className: 'control'
              },
                  { orderable: false, targets: [0, 1, -1] },
+                 { orderable: true, targets: [2, 3, 4] },
+                 { ordering: true, targets: [2, 3, 4] },
+                 
                  //{ targets: [4, 5, 6, 7, 8], className: 'dt-body-right' },
                  { className: 'text-left', targets: [3] },
                  { className: 'text-center', targets: [1,2,4,5,6,7,8] },
@@ -173,8 +176,10 @@
                     "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
                     "order": [[1, "asc"]],
                     "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
-                    "autoWidth": false
+             "autoWidth": false,
+             dom: 'lfrtip',
                 });
+              
         }
         /////////////////////////////////////////////////////
         //調整庫存按鈕

@@ -20,6 +20,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
     /// </summary>
     public class POCSourceListViewModel
     {
+        /// <summary>
+        /// 前端使用是否需不顯示或禁用
+        /// </summary>
+        public bool Disable { get; set; }
         public string SourceListID { get; set; }
         [Display(Name = "供應商")]
         public string SupplierName { get; set; }
@@ -219,12 +223,20 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <returns></returns>
         public IEnumerable<POCSourceListViewModel> GetPOCSourceListViewModel(string partNumber)
         {
+            //存在供應商表採購單已新增一筆明細
+            string supplierName = "";
+            if (session.Supplier != null)
+            {
+                supplierName = session.Supplier.SupplierInfo.SupplierName;
+            }
+
             using (PMSAEntities db = new PMSAEntities())
             {
                 var slq = from sl in db.SourceList
                           where sl.PartNumber == partNumber
                           select new POCSourceListViewModel
                           {
+                              Disable = supplierName == "" ? false : sl.SupplierInfo.SupplierName != supplierName,
                               SourceListID = sl.SourceListID,
                               SupplierName = sl.SupplierInfo.SupplierName,
                               RatingName = sl.SupplierInfo.SupplierRating.RatingName,
@@ -239,6 +251,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                                                        Discount = sld.Discount
                                                    })
                           };
+
                 return slq.ToList();
             }
         }

@@ -1,54 +1,56 @@
-﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderCreateViewModel
+﻿@model IList<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderDtlItem>
 
-@*舊版採購單明細View*@
+@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreatePurchaseOrders" }))
+{
+    @Html.AntiForgeryToken()
 
-@Html.HiddenFor(m => m.PurchaseOrderOID)
-@Html.HiddenFor(m => m.PurchaseRequisitionID)
-
-<table class="table table-striped table-bordered tablesaw tablesaw-stack" data-tablesaw-mode="stack" id="dataTable" cellspacing="0" style="width:100%">
-    <thead>
-        <tr>
-            <th><input type="checkbox" name="chkAll" />@Html.DisplayNameFor(model => model.CheckedResultSetVM.FirstOrDefault().Checked)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseOrderDtlSetVM.FirstOrDefault().PartNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseOrderDtlSetVM.FirstOrDefault().PartName)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseOrderDtlSetVM.FirstOrDefault().OriginalUnitPrice)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseOrderDtlSetVM.FirstOrDefault().Qty)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseOrderDtlSetVM.FirstOrDefault().Discount)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseOrderDtlSetVM.FirstOrDefault().Total)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseOrderDtlSetVM.FirstOrDefault().DateRequired)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.PurchaseOrderDtlSetVM.Count(); i++)
-        {
-            <tr>
-                <td>
-                    @Html.CheckBoxFor(m => m.CheckedResultSetVM[i].Checked)
-                    @Html.HiddenFor(m => m.CheckedResultSetVM[i].PurchaseOrderDtlOID)
-                    @Html.HiddenFor(m => m.CheckedResultSetVM[i].PurchaseRequisitionDtlCode)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseOrderDtlSetVM.ElementAt(i).PartNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseOrderDtlSetVM.ElementAt(i).PartName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseOrderDtlSetVM.ElementAt(i).OriginalUnitPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseOrderDtlSetVM.ElementAt(i).Qty)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseOrderDtlSetVM.ElementAt(i).Discount)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseOrderDtlSetVM.ElementAt(i).Total)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseOrderDtlSetVM.ElementAt(i).DateRequired)
-                </td>
+    <table id="dataTablesPO" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
+        <thead>
+            <tr class="bg-primary text-white text-center">
+                <th>&nbsp;</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().PartNumber)</th>
+                <th data-priority="1">@Html.DisplayNameFor(m => m.FirstOrDefault().PartName)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().OriginalUnitPrice)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().Qty)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().Discount)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().Total)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().DateRequired)</th>
+                <th data-priority="1">功能</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+
+            @for (int i = 0; i < Model.Count(); ++i)
+            {
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(m => m[i].PartNumber)
+                        @Html.HiddenFor(m => m[i].PartNumber)
+                    </td>
+                    <td>@Html.DisplayFor(m => m[i].PartName)</td>
+                    <td>@Html.DisplayFor(m => m[i].OriginalUnitPrice)</td>
+                    <td>@Html.DisplayFor(m => m[i].Qty)</td>
+                    <td>@Html.DisplayFor(m => m[i].Discount)</td>
+                    <td>@Html.DisplayFor(m => m[i].Total)</td>
+                    <td>@Html.DisplayFor(m => m[i].DateRequired)</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <button id="btnSubmit" type="button" class="btn btn-primary btn-block" disabled><i class="far fa-paper-plane"></i> 送出申請</button>
+    </div>
+
+}

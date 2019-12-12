@@ -190,7 +190,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, htmlAttributes: new { @class = "control-label col-lg-12" })
                             <div class="col-12">
-                                @Html.DropDownListFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="false"},
+                                @Html.DropDownListFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="true"},
                                                                                                                         new SelectListItem { Text="否", Value="false"}}, new { @class = "form-control  col-lg-12 TFA" })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, "", new { @class = "text-danger" })
                             </div>

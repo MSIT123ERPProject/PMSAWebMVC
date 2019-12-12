@@ -194,7 +194,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             // 傳送包含此連結的電子郵件
             var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(LognId);
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = LognId, code = code }, protocol: Request.Url.Scheme);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { Area = "", userId = LognId, code = code }, protocol: Request.Url.Scheme);
             //寄信
             await UserManager.SendEmailAsync(LognId, "信箱驗證", $"<a href='{callbackUrl}'>請點此驗證信箱</a>");
             TempData["Sended"] = "已寄送!請到信箱收信!";

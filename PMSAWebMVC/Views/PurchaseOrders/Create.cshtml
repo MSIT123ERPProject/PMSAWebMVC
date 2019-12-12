@@ -105,14 +105,6 @@
             <div class="form-horizontal">
                 <div class="row mb-0 mt-0 align-items-center">
 
-                    @*@Html.LabelFor(m => m.SelectedSupplierName, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
-                        <div class="col-md-5">
-                            @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div class="w-100"></div>*@
-
                     <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-md-3 col-6">
@@ -308,8 +300,6 @@
 
 @section scripts
 {
-
-
     <script>
         $(document).ready(function () {
 
@@ -323,14 +313,6 @@
                 "closeButton": true,
                 "progressBar": true,
             }
-
-            $('#button-demo').click(function () {
-                toastr.success("鐵人賽~大~~平~~台！");
-            });
-
-            $('#button-demo2').click(function () {
-                toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
-            });
 
             // infinite: true 會造成 radio button 無法正常顯示 checked 狀態
             var slickOptions = {
@@ -367,52 +349,38 @@
                 ],
             };
 
-            //Modal已隱藏
-            $('#detailModal').on('hidden.bs.modal', function (event) {
-                $('#sldtl-items').slick('unslick');
-            })
-
-            //Modal已顯示
-            $('#detailModal').on('shown.bs.modal', function (event) {
-                //var button = $(event.relatedTarget) // Button that triggered the modal
-                //var recipient = button.data('whatever') // Extract info from data-* attributes
-                //// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                //// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                //var modal = $(this)
-                //modal.find('.modal-title').text('New message to ' + recipient)
-                //modal.find('.modal-body input').val(recipient)
-                //$('#sldtl-items').not('.slick-initialized').slick(slickOptions);
-
-                setTimeout(function () {
-                    $('#sldtl-items').slick(slickOptions);
-                    //$('#sldtl-items').slick('setPosition');
-                }, 100);
-
-                let span = $(event.relatedTarget);
-                let dtlcode = span.data('dtlcode');
-                //設定採購明細
-                setPRDtlInputInit(dtlcode);
-                $('#DateRequired').datetimepicker();
-            })
-
-            $('#sldtl-items').on('init', function (event, slick, direction) {
-                $('#sldtl-items').not('.slick-initialized').slick(slickOptions);
-                $('#sldtl-items').resize();
-            });
-
             //Modal顯示前
             $('#detailModal').on('show.bs.modal', function (event) {
                 let span = $(event.relatedTarget);
                 let dtlcode = span.data('dtlcode');
                 let partnumber = span.data('partnumber');
-                //設定請購單明細
-                setPRDtlInfo(dtlcode);
-                //設定貨源清單
-                setSLDtlInfo(partnumber);
-                //第一次顯示有可能無法正常排版的狀況，所以顯示前先起始關閉一次
-                $('#sldtl-items').slick(slickOptions);
-                $('#sldtl-items').slick('unslick');
+                detailModalShow(dtlcode, partnumber);
             });
+
+            async function detailModalShow(dtlcode, partnumber) {
+                //設定請購單明細
+                await setPRDtlInfo(dtlcode);
+                //設定貨源清單
+                await setSLDtlInfo(partnumber);
+                //設定採購明細
+                await setPRDtlInputInit(dtlcode);
+                $('#DateRequired').datetimepicker();
+            }
+
+            //Modal已顯示
+            $('#detailModal').on('shown.bs.modal', function (event) {
+                $('#sldtl-items').slick(slickOptions);
+                //$('#sldtl-items').not('.slick-initialized').slick(slickOptions);
+                setTimeout(function () {
+                    //$('#sldtl-items').slick(slickOptions);
+                    //$('#sldtl-items').slick('setPosition');
+                }, 100);
+            })
+
+            //Modal已隱藏
+            $('#detailModal').on('hidden.bs.modal', function (event) {
+                $('#sldtl-items').slick('unslick');
+            })
 
             //設定Modal貨源清單
             async function setSLDtlInfo(partNumber) {
@@ -429,31 +397,30 @@
                 });
             }
 
-
             //設定Modal新增採購明細
             async function setPRDtlInputInit(prdtlcode) {
-                await $.getJSON('@Url.Action("GetPODtlItemViewModel", "PurchaseOrders")', { id: prdtlcode }, function (data) {
-                    if (!data) {
-                        return;
-                    }
-
-                    $("#btnPODAdd").prop("disabled", true);
-
-                    $("#Qty").val(data.Qty);
-                    //console.log(data);
-                    $("#DateRequired").val(data.DateRequiredToShow);
-                    $("#TotalSourceListQty").val(data.TotalSourceListQty);
-                    $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
-                    $("#Discount").val(data.DiscountToShow);
-                    $("#Total").val(data.TotalToShow);
-                    $("#btnPODAdd").show();
-                    $("#btnPODUpdate").hide();
-                    if (data.SourceListID) {
-                        let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
-                        sl.prop('checked', true);
-                    }
-                    $("#btnPODAdd").prop("disabled", false);
-                });
+                await $.getJSON(
+                    '@Url.Action("GetPODtlItemViewModel", "PurchaseOrders")',
+                    { id: prdtlcode },
+                    function (data) {
+                        if (!data) {
+                            return;
+                        }
+                        $("#btnPODAdd").prop("disabled", true);
+                        $("#Qty").val(data.Qty);
+                        $("#DateRequired").val(data.DateRequiredToShow);
+                        $("#TotalSourceListQty").val(data.TotalSourceListQty);
+                        $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
+                        $("#Discount").val(data.DiscountToShow);
+                        $("#Total").val(data.TotalToShow);
+                        $("#btnPODAdd").show();
+                        $("#btnPODUpdate").hide();
+                        if (data.SourceListID) {
+                            let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
+                            sl.prop('checked', true);
+                        }
+                        $("#btnPODAdd").prop("disabled", false);
+                    });
             }
 
             //數量和貨源改變要重新計算折扣
@@ -491,10 +458,10 @@
                 e.preventDefault();
                 e.stopPropagation();
                 $(this).prop("disabled", true);
-                AddPOD();
+                btnPODAddClick();
             });
 
-           async function AddPOD() {
+           async function btnPODAddClick() {
                 //先更新資料
                 await setPRDtlInputUpdate("add");
                 //顯示表格
@@ -526,7 +493,6 @@
             async function setPRDtlInputUpdate(mode) {
 
                 $("#btnPODAdd").prop("disabled", false);
-
                 let qty = $("#Qty").val();
                 let dateRequired = $("#DateRequired").val();
                 let sourceList = $("input[name=sourceList]:checked").val();
@@ -549,18 +515,11 @@
                         return;
                     }
                     $("#Qty").val(data.Qty);
-                    //console.log(data);
                     $("#DateRequired").val(data.DateRequiredToShow);
                     $("#TotalSourceListQty").val(data.TotalSourceListQty);
                     $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
                     $("#Discount").val(data.DiscountToShow);
                     $("#Total").val(data.TotalToShow);
-                    //$("#btnPODAdd").show();
-                    //$("#btnPODUpdate").hide();
-                    //if (data.SourceListID) {
-                    //    let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
-                    //    sl.prop('checked', true);
-                    //}
                     $("#btnPODAdd").prop("disabled", false);
                     console.log('setPRDtlInputUpdate');
                 });
@@ -588,45 +547,6 @@
                 //切換分頁會造成RWD不作用
                 resizeDatatable();
             });
-
-            //採購明細
-            var dtPO;
-            function initDataTablesPO() {
-                dtPO = $('#dataTablesPO').DataTable({
-                    ordering: false,
-                    fixedHeader: false,
-                    paging: false,
-                    //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
-                    order: [[2, 'desc']],
-                    //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
-                    responsive: {
-                        details: {
-                            type: 'column',
-                            target: 0
-                        }
-                    },
-                    columnDefs: [{
-                        targets: 0,
-                        className: 'control',
-                        searchable: false
-                    },
-                    { orderable: false, targets: [0, 1, -1] },
-                    ],
-                });
-
-                dtPO.on('responsive-resize', function (e, datatable, columns) {
-                    //修正縮放大小不正確的問題
-                    dtPO.columns.adjust().responsive.recalc();
-                });
-            }
-
-
-
-            let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseOrders")';
-            let supplierList = $('#SelectedSupplierName');
-            $("#btnSubmit").prop("disabled", true);
-
-
 
 
             //顯示請購單資訊
@@ -656,7 +576,6 @@
                         toastr.error(e.responseText);
                     });
             }
-
 
             $("#btnImportPR").prop("disabled", true);
             $('#SelectedPurchaseRequisitionID').change(function () {
@@ -693,6 +612,38 @@
                 showPODtlToTableViewModel();
             });
 
+            //採購明細表
+            var dtPO;
+            function initDataTablesPO() {
+                dtPO = $('#dataTablesPO').DataTable({
+                    ordering: false,
+                    fixedHeader: false,
+                    paging: false,
+                    //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                    order: [[2, 'desc']],
+                    //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                    responsive: {
+                        details: {
+                            type: 'column',
+                            target: 0
+                        }
+                    },
+                    columnDefs: [{
+                        targets: 0,
+                        className: 'control',
+                        searchable: false
+                    },
+                    { orderable: false, targets: [0, 1, -1] },
+                    ],
+                });
+
+                dtPO.on('responsive-resize', function (e, datatable, columns) {
+                    //修正縮放大小不正確的問題
+                    dtPO.columns.adjust().responsive.recalc();
+                });
+            }
+
+            //請購明細表
             var dtPR;
             function initDataTablesPR() {
                 //請購明細
@@ -724,170 +675,7 @@
                 });
             }
 
-        @*$('#SelectedPurchaseRequisitionID').change(function() {
-            supplierList.empty();
-            $("#dataTablesContainer").html('');
-            $.getJSON(supplierListUrl, { id: $(this).val() }, function (data) {
-                if (!data) {
-                    return;
-                }
-                supplierList.append($('<option></option>').val('').text('請選擇'));
-                $.each(data, function (index, item) {
-                    supplierList.append($('<option></option>').val(item.Value).text(item.Text));
-                });
-                $("#btnSubmit").prop("disabled", true);
-            });
-            })
-
-            $('#SelectedSupplierName').change(function () {
-                $.ajax({
-                    url: "@Url.Action("GetPurchaseOrderDtlList", "PurchaseOrders")",
-                    type: "get",
-                    data: {
-                        id: $("#SelectedPurchaseRequisitionID").val(),
-                        supplierCode: $("#SelectedSupplierName").val()
-                    },
-                }).done(function (result) {
-                    $("#dataTablesContainer").html(result);
-                    $("#warning").remove();
-                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
-
-                    //全選、全勾消
-                    $("input[name=chkAll]").change(function () {
-                        let checked = $(this).prop("checked");
-                        $("#dataTable > tbody input:checkbox").prop("checked", checked);
-                    });
-                    $("#btnSubmit").prop("disabled", false);
-                }).fail(function (e) {
-                    alert(e.responseText);
-                    });
-
-                $.fn.dataTable.ext.errMode = 'throw';
-
-                $('#dataTable').DataTable(
-                    {
-                        paging: false,
-                        ordering: false,
-                        searching: false,
-                        language: {
-                            url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
-                        },
-                    }
-                );
-            })*@
         });
     </script>
 }
 
-
-@*@using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-horizontal">
-            <h4>PurchaseOrder</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.PurchaseOrderID, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.PurchaseOrderID, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.PurchaseOrderID, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.SupplierCode, "來自請購單號", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("PurchaseRequisitionID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.SupplierCode, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.EmployeeID, "EmployeeID", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("EmployeeID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ReceiverName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ReceiverName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ReceiverName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ReceiverTel, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ReceiverTel, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ReceiverTel, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ReceiverMobile, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ReceiverMobile, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ReceiverMobile, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ReceiptAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ReceiptAddress, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ReceiptAddress, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.CreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.CreateDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.CreateDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.PurchaseOrderStatus, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.PurchaseOrderStatus, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.PurchaseOrderStatus, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.SignStatus, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.SignStatus, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.SignStatus, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.SignFlowOID, "SignFlowOID", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("SignFlowOID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.SignFlowOID, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>
-        </div>
-    }
-
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
-
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }*@

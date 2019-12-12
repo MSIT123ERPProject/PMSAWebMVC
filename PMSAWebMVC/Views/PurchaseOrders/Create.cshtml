@@ -1,7 +1,9 @@
 ﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderCreateViewModel
 
 @{
-    ViewBag.Title = "新增採購單";
+                /**/
+
+                ViewBag.Title = "新增採購單";
 }
 
 @section styles{
@@ -418,7 +420,7 @@
                 toastr.info('<h1>鐵人賽</h1><p>大~~平~~台！</p>', '我只是DEMO');
             });
 
-           // infinite: true 會造成 radio button 無法正常顯示 checked 狀態
+            // infinite: true 會造成 radio button 無法正常顯示 checked 狀態
             var slickOptions = {
                 infinite: false,
                 arrows: true,
@@ -458,7 +460,7 @@
                 $('#sldtl-items').slick('unslick');
             })
 
-             //Modal已顯示
+            //Modal已顯示
             $('#detailModal').on('shown.bs.modal', function (event) {
                 //var button = $(event.relatedTarget) // Button that triggered the modal
                 //var recipient = button.data('whatever') // Extract info from data-* attributes
@@ -473,11 +475,11 @@
                     $('#sldtl-items').slick(slickOptions);
                     //$('#sldtl-items').slick('setPosition');
                 }, 100);
-                
+
                 let span = $(event.relatedTarget);
                 let dtlcode = span.data('dtlcode');
                 //設定採購明細
-                setPRDtlInput(dtlcode)
+                setPRDtlInputInit(dtlcode);
                 $('#DateRequired').datetimepicker();
             })
 
@@ -511,19 +513,21 @@
                     },
                 }).done(function (result) {
                     $("#sldtl-items").html(result);
-                    }).fail(function (e) {
-                        toastr.error(e.responseText);
-                    });
+                }).fail(function (e) {
+                    toastr.error(e.responseText);
+                });
             }
 
 
-                        //設定Modal新增採購明細
-            function setPRDtlInput(prdtlcode) {
-
-                $.getJSON('@Url.Action("GetPODtlItemViewModel", "PurchaseOrders")', { id: prdtlcode}, function (data) {
-                if (!data) {
-                    return;
+            //設定Modal新增採購明細
+            function setPRDtlInputInit(prdtlcode) {
+                $.getJSON('@Url.Action("GetPODtlItemViewModel", "PurchaseOrders")', { id: prdtlcode }, function (data) {
+                    if (!data) {
+                        return;
                     }
+
+                    $("#btnPODAdd").prop("disabled", true);
+
                     $("#Qty").val(data.Qty);
                     //console.log(data);
                     $("#DateRequired").val(data.DateRequiredToShow);
@@ -536,9 +540,80 @@
                     if (data.SourceListID) {
                         let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
                         sl.prop('checked', true);
-                          }
+                    }
+                    $("#btnPODAdd").prop("disabled", false);
+                });
+            }
+
+            //數量和貨源改變要重新計算折扣
+            $("#Qty").on("keyup mouseup", function (e) {
+                setPRDtlInputUpdate();
             });
 
+            $("body").on('change', 'input[type=radio][name=sourceList]', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                setPRDtlInputUpdate();
+            });
+
+            function chkQtyValue() {
+                if ($("#Qty").val() == "") {
+                    toastr.warning("數量為必填");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            function chkDateRequiredValue() {
+                let date = $("#DateRequired").val();
+                if (date == "") {
+                    toastr.warning("要求到貨日期為必填");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            function setPRDtlInputUpdate() {
+
+                $("#btnPODAdd").prop("disabled", false);
+
+                let qty = $("#Qty").val();
+                let dateRequired = $("#DateRequired").val();
+                let sourceList = $("input[name=sourceList]:checked").val();
+                let modalPrdCode = $("#modalPrdCode").text();
+                $("#btnPODAdd").prop("disabled", true);
+
+                if (!chkQtyValue() | !chkDateRequiredValue()) {
+                    //toastr.warning("請輸入必填欄位");
+                    return;
+                }
+
+                $.getJSON('@Url.Action("GetPODtlUpdateItemViewModel", "PurchaseOrders")', {
+                    qty: qty,
+                    dateRequired: dateRequired,
+                    sourceList: sourceList,
+                    modalPrdCode: modalPrdCode
+                }, function (data) {
+                    if (!data) {
+                        return;
+                    }
+                    $("#Qty").val(data.Qty);
+                    //console.log(data);
+                    $("#DateRequired").val(data.DateRequiredToShow);
+                    $("#TotalSourceListQty").val(data.TotalSourceListQty);
+                    $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
+                    $("#Discount").val(data.DiscountToShow);
+                    $("#Total").val(data.TotalToShow);
+                    //$("#btnPODAdd").show();
+                    //$("#btnPODUpdate").hide();
+                    //if (data.SourceListID) {
+                    //    let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
+                    //    sl.prop('checked', true);
+                    //}
+                    $("#btnPODAdd").prop("disabled", false);
+                });
             }
 
            //設定Modal請購單資訊

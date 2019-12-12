@@ -105,7 +105,20 @@ namespace PMSAWebMVC.Controllers
         {
             session.PODItemEditting = null;
             Repository rep = new Repository(User.Identity.GetEmployee(), db);
-            var data = rep.GetPODtlItemViewModel(id);
+            var data = rep.GetPODtlItemInitViewModel(id);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 取得新增時編輯後的採購明細資料
+        /// </summary>
+        /// <param name="id">請購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetPODtlUpdateItemViewModel(int qty, DateTime dateRequired, string sourceList, string modalPrdCode)
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);            
+            var data = rep.GetPODtlUpdateItemViewModel(qty, dateRequired, sourceList, modalPrdCode);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 

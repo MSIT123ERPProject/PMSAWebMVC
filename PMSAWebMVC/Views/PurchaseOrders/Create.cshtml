@@ -1,11 +1,11 @@
 ﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderCreateViewModel
 
 @{
-                /**/
+    /**/
 
-                /**/
+    /**/
 
-                ViewBag.Title = "新增採購單";
+    ViewBag.Title = "新增採購單";
 }
 
 @section styles{
@@ -409,15 +409,14 @@
                 setPRDtlInfo(dtlcode);
                 //設定貨源清單
                 setSLDtlInfo(partnumber);
-
                 //第一次顯示有可能無法正常排版的狀況，所以顯示前先起始關閉一次
                 $('#sldtl-items').slick(slickOptions);
                 $('#sldtl-items').slick('unslick');
             });
 
             //設定Modal貨源清單
-            function setSLDtlInfo(partNumber) {
-                $.ajax({
+            async function setSLDtlInfo(partNumber) {
+                await $.ajax({
                     url: "@Url.Action("GetPOCSourceListViewModel", "PurchaseOrders")",
                     type: "get",
                     data: {
@@ -432,8 +431,8 @@
 
 
             //設定Modal新增採購明細
-            function setPRDtlInputInit(prdtlcode) {
-                $.getJSON('@Url.Action("GetPODtlItemViewModel", "PurchaseOrders")', { id: prdtlcode }, function (data) {
+            async function setPRDtlInputInit(prdtlcode) {
+                await $.getJSON('@Url.Action("GetPODtlItemViewModel", "PurchaseOrders")', { id: prdtlcode }, function (data) {
                     if (!data) {
                         return;
                     }
@@ -463,8 +462,8 @@
             });
 
             $("body").on('change', 'input[type=radio][name=sourceList]', function (e) {
-                e.stopPropagation();
                 e.preventDefault();
+                e.stopPropagation();
                 setPRDtlInputUpdate("edit");
             });
 
@@ -488,35 +487,43 @@
             }
 
             //加入採購單
-            $("#btnPODAdd").on('click', function () {
+            $("#btnPODAdd").on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).prop("disabled", true);
+                AddPOD();
+            });
+
+           async function AddPOD() {
                 //先更新資料
-                setPRDtlInputUpdate("add");
+                await setPRDtlInputUpdate("add");
                 //顯示表格
-                showPODtlToTableViewModel();
-                showPRDtlToTableViewModel();
-                //關閉Modal
-                $('#detailModal').modal('hide');
-            });  
+                await showPODtlToTableViewModel();
+               await showPRDtlToTableViewModel();
+               $('#detailModal').modal('hide');
+               $(this).prop("disabled", false);
+            }
 
             //顯示採購明細表
-            function showPODtlToTableViewModel() {
-                $.ajax({
+            async function showPODtlToTableViewModel() {
+                await $.ajax({
                     url: "@Url.Action("AddPODtlToTableViewModel", "PurchaseOrders")",
                     type: "get",
                  }).done(function (result) {
                      //建立內容
-                     $('#podtl').html(result);    
+                     $('#podtl').html(result);
                      initDataTablesPO();
                      $('#podtlCount').text(dtPO.context[0].aoData.length);
                      //顯示內容
                      resizeDatatable();
+                     console.log("showPODtlToTableViewModel");
                     }).fail(function (e) {
                         toastr.error(e.responseText);
                     });
             }
 
             //設定採購單輸入內容更新
-            function setPRDtlInputUpdate(mode) {
+            async function setPRDtlInputUpdate(mode) {
 
                 $("#btnPODAdd").prop("disabled", false);
 
@@ -531,11 +538,11 @@
                     return;
                 }
 
-                $.getJSON('@Url.Action("GetPODtlUpdateItemViewModel", "PurchaseOrders")', {
+                await $.getJSON('@Url.Action("GetPODtlUpdateItemViewModel", "PurchaseOrders")', {
                     qty: qty,
                     dateRequired: dateRequired,
                     sourceList: sourceList,
-                    modalPrdCode: modalPrdCode, 
+                    modalPrdCode: modalPrdCode,
                     mode: mode
                 }, function (data) {
                     if (!data) {
@@ -555,12 +562,13 @@
                     //    sl.prop('checked', true);
                     //}
                     $("#btnPODAdd").prop("disabled", false);
+                    console.log('setPRDtlInputUpdate');
                 });
             }
 
            //設定Modal請購單資訊
-            function setPRDtlInfo(purchaseOrderDtlCode) {
-                $.ajax({
+            async function setPRDtlInfo(purchaseOrderDtlCode) {
+                await $.ajax({
                     url: "@Url.Action("GetPRDtlInfoViewModel", "PurchaseOrders")",
                     type: "get",
                     data: {
@@ -587,6 +595,7 @@
                 dtPO = $('#dataTablesPO').DataTable({
                     ordering: false,
                     fixedHeader: false,
+                    paging: false,
                     //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
                     order: [[2, 'desc']],
                     //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
@@ -611,7 +620,7 @@
                 });
             }
 
-           
+
 
             let supplierListUrl = '@Url.Action("GetSupplierList", "PurchaseOrders")';
             let supplierList = $('#SelectedSupplierName');
@@ -621,8 +630,8 @@
 
 
             //顯示請購單資訊
-            function showPRDtlToTableViewModel() {
-                $.ajax({
+            async function showPRDtlToTableViewModel() {
+                await $.ajax({
                     url: "@Url.Action("GetPRDtlTableViewModel", "PurchaseOrders")",
                     type: "get",
                     data: {
@@ -641,7 +650,8 @@
                      $("#btnImportPR").fadeOut(500, function () {
                         $(this).remove();
                     });
-                    $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
+                     $("#PurchaseRequisitionID").val($("#SelectedPurchaseRequisitionID").val());
+                     console.log("showPRDtlToTableViewModel");
                     }).fail(function (e) {
                         toastr.error(e.responseText);
                     });
@@ -654,7 +664,11 @@
                     $("btnImportPR").prop("disabled", true);
                     return;
                 }
-                $.ajax({
+                showPRInfoViewModel();
+            });
+
+            async function showPRInfoViewModel() {
+                await $.ajax({
                     url: "@Url.Action("GetPRInfoViewModel", "PurchaseOrders")",
                     type: "get",
                     data: {
@@ -671,12 +685,12 @@
                     }).fail(function (e) {
                         toastr.error(e.responseText);
                     });
-            });
+            }
 
             //匯入請購單資料
             $("#btnImportPR").click(function () {
                 showPRDtlToTableViewModel();
-                showPODtlToTableViewModel(); 
+                showPODtlToTableViewModel();
             });
 
             var dtPR;
@@ -685,6 +699,7 @@
                 dtPR = $('#dataTablesPR').DataTable({
                     ordering: false,
                     fixedHeader: false,
+                    paging: false,
                     //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
                     order: [[2, 'desc']],
                     //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄

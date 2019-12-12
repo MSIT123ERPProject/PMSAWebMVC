@@ -160,16 +160,22 @@ namespace PMSAWebMVC.Controllers
             //已加入一個採購明細，整筆採購單只能是單一供應商的料件
             if (session.Supplier != null)
             {
-                var slq = db.SourceList.Where(sl => sl.SupplierCode == session.Supplier.SupplierCode);
-                foreach (var sl in slq)
+                var slq = db.SourceList.Where(sl => sl.SupplierCode == session.Supplier.SupplierCode).ToList();
+                bool same = false;
+                for (int i = vm.Count() - 1; i >= 0; i--)
                 {
-                    foreach (var vmitem in vm)
+                    same = false;
+                    foreach (var sl in slq)
                     {
-                        if (vmitem.PartNumber != sl.PartNumber)
+                        if (vm[i].PartNumber == sl.PartNumber)
                         {
-                            vm.Remove(vmitem);
+                            same = true;
                             break;
                         }
+                    }
+                    if (same == false)
+                    {
+                        vm.Remove(vm[i]);
                     }
                 }
             }

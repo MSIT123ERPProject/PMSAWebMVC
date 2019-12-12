@@ -331,21 +331,23 @@ namespace PMSAWebMVC.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PurchaseOrderOID,PurchaseRequisitionID,CheckedResultSetVM")] PurchaseOrderCreateViewModel model)
+        public ActionResult Create(IList<PurchaseOrderDtlItem> model)
         {
-            if (model == null || model.CheckedResultSetVM.Count(s => s.Checked) == 0)
+            if (model?.Count() == 0)
             {
-                TempData["ErrorMessage"] = "採購細項請至少勾選一項";
-                return RedirectToAction("Create");
+                return Json(new { message = "採購明細為必填", status = "warning" });
             }
-
-            //從暫存新增至正式資料表
+            //建立設定資料
+            IList<PurchaseOrderDtlItem> pods = session.PODItems;
+            Employee emp = User.Identity.GetEmployee();
+            SupplierAccount sa = session.Supplier;
+            PurchaseRequisition pr = session.PRItems.First();
             DateTime now = DateTime.Now;
+
+            //寫入資料庫
             using (PMSAEntities db = new PMSAEntities())
             {
                 //新增採購單
-                PurchaseOrderTemp pot = db.PurchaseOrderTemp.Find(model.PurchaseOrderOID);
-                db.Entry(pot).State = EntityState.Detached;
                 string poId = $"PO-{now:yyyyMMdd}-";
                 int count = db.PurchaseOrder.Where(i => i.PurchaseOrderID.StartsWith(poId)).Count();
                 count++;
@@ -353,123 +355,229 @@ namespace PMSAWebMVC.Controllers
                 PurchaseOrder po = new PurchaseOrder
                 {
                     PurchaseOrderID = poId,
-                    SupplierCode = pot.SupplierCode,
-                    EmployeeID = pot.EmployeeID,
+                    SupplierCode = sa.SupplierCode,
+                    EmployeeID = emp.EmployeeID,
                     CreateDate = now,
                     PurchaseOrderStatus = "N"
                 };
                 db.PurchaseOrder.Add(po);
                 db.SaveChanges();
+
                 //新增採購單明細
                 int index = 0;
-                foreach (var item in model.CheckedResultSetVM)
+                foreach (var item in pods)
                 {
-                    if (!item.Checked)
-                    {
-                        continue;
-                    }
-                    var podt = db.PurchaseOrderDtlTemp.Find(item.PurchaseOrderDtlOID);
                     index++;
                     PurchaseOrderDtl pod = new PurchaseOrderDtl
                     {
                         PurchaseOrderDtlCode = $"{poId}-{index:000}",
                         PurchaseOrderID = poId,
-                        PartNumber = podt.PartNumber,
-                        PartName = podt.PartName,
-                        PartSpec = podt.PartSpec,
-                        QtyPerUnit = podt.QtyPerUnit,
-                        TotalPartQty = podt.TotalPartQty,
-                        OriginalUnitPrice = podt.OriginalUnitPrice,
-                        Discount = podt.Discount,
-                        PurchaseUnitPrice = podt.PurchaseUnitPrice,
-                        Qty = podt.Qty,
-                        PurchasedQty = podt.PurchasedQty,
-                        GoodsInTransitQty = podt.GoodsInTransitQty,
-                        Total = podt.Total,
-                        DateRequired = podt.DateRequired,
-                        CommittedArrivalDate = podt.CommittedArrivalDate,
-                        ShipDate = podt.ShipDate,
-                        ArrivedDate = podt.ArrivedDate,
-                        SourceListID = podt.SourceListID
+                        PartNumber = item.PartNumber,
+                        PartName = item.PartName,
+                        PartSpec = item.PartSpec,
+                        QtyPerUnit = item.QtyPerUnit,
+                        TotalPartQty = item.TotalPartQty,
+                        TotalSourceListQty = item.TotalSourceListQty,
+                        OriginalUnitPrice = item.OriginalUnitPrice,
+                        Discount = item.Discount,
+                        PurchaseUnitPrice = item.PurchaseUnitPrice,
+                        Qty = item.Qty,
+                        PurchasedQty = item.PurchasedQty,
+                        GoodsInTransitQty = item.GoodsInTransitQty,
+                        Total = item.Total,
+                        DateRequired = item.DateRequired,
+                        CommittedArrivalDate = item.CommittedArrivalDate,
+                        ShipDate = item.ShipDate,
+                        ArrivedDate = item.ArrivedDate,
+                        SourceListID = item.SourceListID,
+                        LastModifiedAccountID = emp.EmployeeID
                     };
                     db.PurchaseOrderDtl.Add(pod);
                     db.SaveChanges();
+
                     //請購單與採購單關聯
-                    //TODO: 應從暫存取出，目前暫以傳入方式處理
                     PRPORelation rel = new PRPORelation
                     {
                         PurchaseOrderID = poId,
                         PurchaseOrderDtlCode = pod.PurchaseOrderDtlCode,
-                        PurchaseRequisitionID = model.PurchaseRequisitionID,
+                        PurchaseRequisitionID = pr.PurchaseRequisitionID,
                         PurchaseRequisitionDtlCode = item.PurchaseRequisitionDtlCode,
                     };
                     db.PRPORelation.Add(rel);
                     db.SaveChanges();
-                    //採購單異動總表
+
+                    //採購單異動總表     
                     POChanged poc = new POChanged
                     {
                         PurchaseOrderID = poId,
                         POChangedCategoryCode = "N",
                         RequestDate = now,
                         RequesterRole = "P",
-                        RequesterID = pot.EmployeeID
+                        RequesterID = emp.EmployeeID,
+                        PurchaseOrderDtlCode = pod.PurchaseOrderDtlCode,
+                        Qty = pod.Qty,
+                        DateRequired = pod.DateRequired
                     };
                     db.POChanged.Add(poc);
                     db.SaveChanges();
+
                     //更新PurchaseOrderDtl.POChangedOID
                     pod.POChangedOID = poc.POChangedOID;
                     db.Entry(pod).Property(podp => podp.POChangedOID).IsModified = true;
                     db.SaveChanges();
                 }
-                //刪除暫存資料
-                var PRPORelationTemps = db.PRPORelationTemp.Where(i => i.PurchaseOrderOID == model.PurchaseOrderOID);
-                db.PRPORelationTemp.RemoveRange(PRPORelationTemps);
-                db.SaveChanges();
-                var PurchaseOrderDtlTemps = db.PurchaseOrderDtlTemp.Where(i => i.PurchaseOrderOID == model.PurchaseOrderOID);
-                db.PurchaseOrderDtlTemp.RemoveRange(PurchaseOrderDtlTemps);
-                var PurchaseOrderOld = db.PurchaseOrderTemp.Find(model.PurchaseOrderOID);
-                db.PurchaseOrderTemp.Remove(PurchaseOrderOld);
+                //清空Session
+                session.ResetAllItems();
             }
 
-            return RedirectToAction("Index");
+            return Json(new { message = "新增採購單成功", status = "success" });
         }
 
-        // GET: PurchaseOrders/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(id);
-            if (purchaseOrder == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseOrder.EmployeeID);
-            ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseOrder.SignFlowOID);
-            ViewBag.SupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseOrder.SupplierCode);
-            return View(purchaseOrder);
-        }
 
-        // POST: PurchaseOrders/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PurchaseOrderOID,PurchaseOrderID,SupplierCode,EmployeeID,ReceiverName,ReceiverTel,ReceiverMobile,ReceiptAddress,CreateDate,PurchaseOrderStatus,SignStatus,SignFlowOID")] PurchaseOrder purchaseOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(purchaseOrder).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseOrder.EmployeeID);
-            ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseOrder.SignFlowOID);
-            ViewBag.SupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseOrder.SupplierCode);
-            return View(purchaseOrder);
-        }
+        //// POST: PurchaseOrders/Create
+        //// 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        //// 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "PurchaseOrderOID,PurchaseRequisitionID,CheckedResultSetVM")] PurchaseOrderCreateViewModel model)
+        //{
+        //    if (model == null || model.CheckedResultSetVM.Count(s => s.Checked) == 0)
+        //    {
+        //        TempData["ErrorMessage"] = "採購細項請至少勾選一項";
+        //        return RedirectToAction("Create");
+        //    }
+
+        //    //從暫存新增至正式資料表
+        //    DateTime now = DateTime.Now;
+        //    using (PMSAEntities db = new PMSAEntities())
+        //    {
+        //        //新增採購單
+        //        PurchaseOrderTemp pot = db.PurchaseOrderTemp.Find(model.PurchaseOrderOID);
+        //        db.Entry(pot).State = EntityState.Detached;
+        //        string poId = $"PO-{now:yyyyMMdd}-";
+        //        int count = db.PurchaseOrder.Where(i => i.PurchaseOrderID.StartsWith(poId)).Count();
+        //        count++;
+        //        poId = $"{poId}{count:000}";
+        //        PurchaseOrder po = new PurchaseOrder
+        //        {
+        //            PurchaseOrderID = poId,
+        //            SupplierCode = pot.SupplierCode,
+        //            EmployeeID = pot.EmployeeID,
+        //            CreateDate = now,
+        //            PurchaseOrderStatus = "N"
+        //        };
+        //        db.PurchaseOrder.Add(po);
+        //        db.SaveChanges();
+        //        //新增採購單明細
+        //        int index = 0;
+        //        foreach (var item in model.CheckedResultSetVM)
+        //        {
+        //            if (!item.Checked)
+        //            {
+        //                continue;
+        //            }
+        //            var podt = db.PurchaseOrderDtlTemp.Find(item.PurchaseOrderDtlOID);
+        //            index++;
+        //            PurchaseOrderDtl pod = new PurchaseOrderDtl
+        //            {
+        //                PurchaseOrderDtlCode = $"{poId}-{index:000}",
+        //                PurchaseOrderID = poId,
+        //                PartNumber = podt.PartNumber,
+        //                PartName = podt.PartName,
+        //                PartSpec = podt.PartSpec,
+        //                QtyPerUnit = podt.QtyPerUnit,
+        //                TotalPartQty = podt.TotalPartQty,
+        //                OriginalUnitPrice = podt.OriginalUnitPrice,
+        //                Discount = podt.Discount,
+        //                PurchaseUnitPrice = podt.PurchaseUnitPrice,
+        //                Qty = podt.Qty,
+        //                PurchasedQty = podt.PurchasedQty,
+        //                GoodsInTransitQty = podt.GoodsInTransitQty,
+        //                Total = podt.Total,
+        //                DateRequired = podt.DateRequired,
+        //                CommittedArrivalDate = podt.CommittedArrivalDate,
+        //                ShipDate = podt.ShipDate,
+        //                ArrivedDate = podt.ArrivedDate,
+        //                SourceListID = podt.SourceListID
+        //            };
+        //            db.PurchaseOrderDtl.Add(pod);
+        //            db.SaveChanges();
+        //            //請購單與採購單關聯
+        //            //TODO: 應從暫存取出，目前暫以傳入方式處理
+        //            PRPORelation rel = new PRPORelation
+        //            {
+        //                PurchaseOrderID = poId,
+        //                PurchaseOrderDtlCode = pod.PurchaseOrderDtlCode,
+        //                PurchaseRequisitionID = model.PurchaseRequisitionID,
+        //                PurchaseRequisitionDtlCode = item.PurchaseRequisitionDtlCode,
+        //            };
+        //            db.PRPORelation.Add(rel);
+        //            db.SaveChanges();
+        //            //採購單異動總表
+        //            POChanged poc = new POChanged
+        //            {
+        //                PurchaseOrderID = poId,
+        //                POChangedCategoryCode = "N",
+        //                RequestDate = now,
+        //                RequesterRole = "P",
+        //                RequesterID = pot.EmployeeID
+        //            };
+        //            db.POChanged.Add(poc);
+        //            db.SaveChanges();
+        //            //更新PurchaseOrderDtl.POChangedOID
+        //            pod.POChangedOID = poc.POChangedOID;
+        //            db.Entry(pod).Property(podp => podp.POChangedOID).IsModified = true;
+        //            db.SaveChanges();
+        //        }
+        //        //刪除暫存資料
+        //        var PRPORelationTemps = db.PRPORelationTemp.Where(i => i.PurchaseOrderOID == model.PurchaseOrderOID);
+        //        db.PRPORelationTemp.RemoveRange(PRPORelationTemps);
+        //        db.SaveChanges();
+        //        var PurchaseOrderDtlTemps = db.PurchaseOrderDtlTemp.Where(i => i.PurchaseOrderOID == model.PurchaseOrderOID);
+        //        db.PurchaseOrderDtlTemp.RemoveRange(PurchaseOrderDtlTemps);
+        //        var PurchaseOrderOld = db.PurchaseOrderTemp.Find(model.PurchaseOrderOID);
+        //        db.PurchaseOrderTemp.Remove(PurchaseOrderOld);
+        //    }
+
+        //    return RedirectToAction("Index");
+        //}
+
+        //// GET: PurchaseOrders/Edit/5
+        //public ActionResult Edit(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(id);
+        //    if (purchaseOrder == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseOrder.EmployeeID);
+        //    ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseOrder.SignFlowOID);
+        //    ViewBag.SupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseOrder.SupplierCode);
+        //    return View(purchaseOrder);
+        //}
+
+        //// POST: PurchaseOrders/Edit/5
+        //// 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        //// 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "PurchaseOrderOID,PurchaseOrderID,SupplierCode,EmployeeID,ReceiverName,ReceiverTel,ReceiverMobile,ReceiptAddress,CreateDate,PurchaseOrderStatus,SignStatus,SignFlowOID")] PurchaseOrder purchaseOrder)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(purchaseOrder).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "Name", purchaseOrder.EmployeeID);
+        //    ViewBag.SignFlowOID = new SelectList(db.SignFlow, "SignFlowOID", "OriginatorID", purchaseOrder.SignFlowOID);
+        //    ViewBag.SupplierCode = new SelectList(db.SupplierInfo, "SupplierCode", "SupplierName", purchaseOrder.SupplierCode);
+        //    return View(purchaseOrder);
+        //}
 
         // GET: PurchaseOrders/Delete/5
         public ActionResult Delete(string id)

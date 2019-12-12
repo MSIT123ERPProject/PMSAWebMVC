@@ -1,47 +1,56 @@
-﻿@model IEnumerable<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderDtlItem>
+﻿@model IList<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderDtlItem>
 
-<table id="dataTablesPO" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
-    <thead>
-        <tr class="bg-primary text-white text-center">
-            <th>&nbsp;</th>
-            <th>@Html.DisplayNameFor(m => m.PartNumber)</th>
-            <th data-priority="1">@Html.DisplayNameFor(m => m.PartName)</th>
-            <th>@Html.DisplayNameFor(m => m.OriginalUnitPrice)</th>
-            <th>@Html.DisplayNameFor(m => m.Qty)</th>
-            <th>@Html.DisplayNameFor(m => m.Discount)</th>
-            <th>@Html.DisplayNameFor(m => m.Total)</th>
-            <th>@Html.DisplayNameFor(m => m.DateRequired)</th>
-            <th data-priority="1">功能</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td></td>
-                <td>@Html.DisplayFor(m => item.PartNumber)</td>
-                <td>@Html.DisplayFor(m => item.PartName)</td>
-                <td>@Html.DisplayFor(m => item.OriginalUnitPrice)</td>
-                <td>@Html.DisplayFor(m => item.Qty)</td>
-                <td>@Html.DisplayFor(m => item.Discount)</td>
-                <td>@Html.DisplayFor(m => item.Total)</td>
-                <td>@Html.DisplayFor(m => item.DateRequired)</td>
-                <td>
-                    <div class="table-data-feature">
-                        <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                            <i class="far fa-edit"></i>
-                        </button>
-                        <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
-                            <i class='far fa-trash-alt'></i>
-                        </button>
-                    </div>
-                </td>
+@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreatePurchaseOrders" }))
+{
+    @Html.AntiForgeryToken()
+
+    <table id="dataTablesPO" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
+        <thead>
+            <tr class="bg-primary text-white text-center">
+                <th>&nbsp;</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().PartNumber)</th>
+                <th data-priority="1">@Html.DisplayNameFor(m => m.FirstOrDefault().PartName)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().OriginalUnitPrice)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().Qty)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().Discount)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().Total)</th>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().DateRequired)</th>
+                <th data-priority="1">功能</th>
             </tr>
-        }
+        </thead>
+        <tbody>
 
-    </tbody>
-</table>
+            @for (int i = 0; i < Model.Count(); ++i)
+            {
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(m => m[i].PartNumber)
+                        @Html.HiddenFor(m => m[i].PartNumber)
+                    </td>
+                    <td>@Html.DisplayFor(m => m[i].PartName)</td>
+                    <td>@Html.DisplayFor(m => m[i].OriginalUnitPrice)</td>
+                    <td>@Html.DisplayFor(m => m[i].Qty)</td>
+                    <td>@Html.DisplayFor(m => m[i].Discount)</td>
+                    <td>@Html.DisplayFor(m => m[i].Total)</td>
+                    <td>@Html.DisplayFor(m => m[i].DateRequired)</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                                <i class='far fa-trash-alt'></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<div class="form-group">
-    <button id="btnSubmit" type="button" class="btn btn-primary btn-block" disabled><i class="far fa-paper-plane"></i> 送出申請</button>
-</div>    
+    <div class="form-group">
+        <button id="btnSubmit" type="button" class="btn btn-primary btn-block" disabled><i class="far fa-paper-plane"></i> 送出申請</button>
+    </div>
+
+}

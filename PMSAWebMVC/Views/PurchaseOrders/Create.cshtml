@@ -127,6 +127,7 @@
 
     @*採購明細內容*@
     <div class="tab-pane" id="podtl"></div>
+
 </div>
 
 @*加入採購單、編輯Modal*@
@@ -415,7 +416,22 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                setPRDtlInputUpdate("edit");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Create", "PurchaseOrders")",
+                    data: $("#formCreatePurchaseOrders").serialize()
+                }).done(function (result) {
+                    if (result.status == "warning") {
+                        toastr.warning(result.message);
+                    } else if (result.status == "success") {
+                        toastr.success(result.message);
+                        setTimeout(function () {
+                             location.href = '@Url.Action("Index", "PurchaseOrders")';
+                        }, 3000);
+                    }
+                }).fail(function (e) {
+                    toastr.error(e.responseText);
+                });
             });
 
             function chkQtyValue() {

@@ -272,15 +272,6 @@ namespace PMSAWebMVC.Controllers
             Repository rep = new Repository(User.Identity.GetEmployee());
             IList<PurchaseRequisitionItem> purchaseRequisitions = rep.GetPurchaseRequisitionList();
             model.PurchaseRequisitionList = new SelectList(purchaseRequisitions, "PurchaseRequisitionIdValue", "PurchaseRequisitionIdDisplay");
-            if (!string.IsNullOrEmpty(model.SelectedPurchaseRequisitionID))
-            {
-                IEnumerable<SupplierItem> suppliers = rep.GetSupplierList(model.SelectedPurchaseRequisitionID);
-                model.SupplierList = new SelectList(suppliers, "SupplierCode", "SupplierName");
-            }
-            else
-            {
-                model.SupplierList = new SelectList(Enumerable.Empty<SelectListItem>());
-            }
         }
 
         private string GetStatus(string purchaseOrderStatus)

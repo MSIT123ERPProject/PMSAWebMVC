@@ -37,6 +37,15 @@
             margin-bottom: 0.5rem;
         }
 
+        label[for="DateRequired"] {
+            transform: translateY(-14px) scale(0.8);
+            font-size: 1rem;
+            font-weight: 300;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
         @@media (min-width: 768px) and (max-width: 992px) {
             .modal-fluid .col-md-8, .modal-fluid .col-md-4 {
                 flex: 0 0 100%;
@@ -196,8 +205,15 @@
                                             </div>
 
                                             <div class="md-form col-md-4 col-6">
-                                                <input type="text" class="form-control datetimepicker-input" id="DateRequired" data-toggle="datetimepicker" data-target="#DateRequired" value=" " />
-                                                <label for="DateRequired">要求到貨日期 <span class="text-danger">*</span></label>
+                                                <div class="form-group">
+                                                    <label for="DateRequired">要求到貨日期 <span class="text-danger">*</span></label>
+                                                    <div class="input-group date" id="datetimepickerId" data-target-input="nearest">
+                                                        <input id="DateRequired" type="text" class="form-control datetimepicker-input" data-target="#datetimepickerId" data-toggle="datetimepicker" value="2019/01/01">
+                                                        <div class="input-group-append d-none" data-target="#datetimepickerId" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="md-form col-12 border-bottom-dashed pb-1">
@@ -324,7 +340,6 @@
                 await setSLDtlInfo(partnumber);
                 //設定採購明細
                 await setPRDtlInputInit(dtlcode);
-                $('#DateRequired').datetimepicker();
             }
 
             //Modal已顯示
@@ -380,6 +395,7 @@
                             sl.prop('checked', true);
                         }
                         $("#btnPODAdd").prop("disabled", false);
+                        $('#datetimepickerId').datetimepicker();
                     });
             }
 
@@ -391,6 +407,14 @@
             $("body").on('change', 'input[type=radio][name=sourceList]', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+                setPRDtlInputUpdate("edit");
+            });
+
+            //送出採購單
+            $("body").on('click', '#btnSubmit', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
                 setPRDtlInputUpdate("edit");
             });
 
@@ -461,7 +485,9 @@
                      //建立內容
                      $('#podtl').html(result);
                      initDataTablesPO();
-                     $('#podtlCount').text(dtPO.context[0].aoData.length);
+                     let rowcount = dtPO.context[0].aoData.length;
+                     $('#podtlCount').text(rowcount);
+                     $("#btnSubmit").prop("disabled", rowcount == 0);
                      //顯示內容
                      resizeDatatable();
                      console.log("showPODtlToTableViewModel");

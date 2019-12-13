@@ -284,12 +284,12 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <summary>
         /// 查詢請購明細資料
         /// </summary>
-        /// <param name="purchaseOrderDtlCode"></param>
+        /// <param name="purchaseRequisitionDtlCode"></param>
         /// <returns></returns>
-        public PRDtlTableViewModel GetPRDtlInfoViewModel(string purchaseOrderDtlCode)
+        public PRDtlTableViewModel GetPRDtlInfoViewModel(string purchaseRequisitionDtlCode)
         {
             var prdq = from prd in db.PurchaseRequisitionDtl
-                       where prd.PurchaseRequisitionDtlCode == purchaseOrderDtlCode
+                       where prd.PurchaseRequisitionDtlCode == purchaseRequisitionDtlCode
                        select new PRDtlTableViewModel
                        {
                            PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,
@@ -437,7 +437,28 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <returns></returns>
         public PurchaseOrderDtlItem GetPODtlUpdateItemViewModel(int qty, DateTime dateRequired, string sourceListID, string purchaseRequisitionDtlCode, string mode)
         {
-            PurchaseOrderDtlItem podedit = session.PODItemEditting;
+            PurchaseOrderDtlItem podedit = null;
+            bool updateMode = session.PODItems.Where(item => item.PurchaseRequisitionDtlCode == purchaseRequisitionDtlCode).Any();
+            if (updateMode)
+            {
+                //編輯
+                if (mode == "add")
+                {
+                    //參考
+                    podedit = session.PODItems.Where(item => item.PurchaseRequisitionDtlCode == purchaseRequisitionDtlCode).FirstOrDefault();
+                }
+                else
+                {
+                    //複製
+                    podedit = session.PODItems.Where(item => item.PurchaseRequisitionDtlCode == purchaseRequisitionDtlCode).ToList().FirstOrDefault();
+                }
+            }
+            else
+            {
+                //新增
+                podedit = session.PODItemEditting;
+            }
+
             //採購明細編輯中
             DateTime now = DateTime.Now;
             //排除時間
@@ -458,7 +479,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             podedit.SourceListID = sl.SourceListID;
 
             //計算折扣，需從已加入的相同貨源請購明細計算總數來得到折扣
-            int totalQty = session.PODItems.Where(item => item.SourceListID == sl.SourceListID).Sum(item => item.Qty) + qty;
+            int totalQty = session.PODItems.Where(item => item.SourceListID == sl.SourceListID &&
+            item.PurchaseRequisitionDtlCode != purchaseRequisitionDtlCode ).Sum(item => item.Qty) + qty;
             List<SourceListDtl> slds = db.SourceListDtl.Where(s =>
                     s.SourceListID == sl.SourceListID &&
                     s.DiscountBeginDate <= now &&
@@ -480,7 +502,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             podedit.Total = podedit.PurchaseUnitPrice * podedit.Qty;
 
             //已存在的(需正式加入採購單才做改變)
-            if (mode == "add")
+            if (mode == "add" || updateMode)
             {
                 foreach (var item in session.PODItems.Where(item => item.SourceListID == sl.SourceListID))
                 {
@@ -496,7 +518,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 }
             }
 
-            return session.PODItemEditting;
+            return podedit;
         }
 
         /// <summary>
@@ -559,7 +581,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public PurchaseOrderDtlItem GetPODtlItemInitViewModel(string purchaseRequisitionDtlCode)
         {
             //採購明細已加入
-            PurchaseOrderDtlItem pod = session.PODItems.Where(item => item.PurchaseOrderDtlCode == purchaseRequisitionDtlCode).FirstOrDefault();
+            PurchaseOrderDtlItem pod = session.PODItems.Where(item => item.PurchaseRequisitionDtlCode == purchaseRequisitionDtlCode).ToList().FirstOrDefault();
             if (pod != null)
             {
                 return pod;

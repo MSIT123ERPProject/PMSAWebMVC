@@ -9,7 +9,7 @@ namespace PMSAWebMVC.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(PMSAWebMVC.Models.ApplicationDbContext context)

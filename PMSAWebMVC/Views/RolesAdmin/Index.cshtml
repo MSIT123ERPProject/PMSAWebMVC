@@ -64,56 +64,6 @@
         #example_wrapper {
             /*display: none;*/
         }
-        /* +-collaspe =============*/
-        /*td.control {
-            margin: 0;
-            transition: 0.2s;
-            vertical-align: middle;
-            font-weight: 500;
-        }
-
-            td.control:hover, td.control:active {
-                color: white;
-                border-bottom: 0px !important;
-                background-color: #409EFF;
-                transition: 0.2s;
-            }
-
-        table.dataTable.dtr-column > tbody > tr > td.control::before, table.dataTable.dtr-column > tbody > tr > th.control::before {
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            display: block;
-            position: relative;
-            color: #409EFF;
-            border: 0;
-            border-radius: 0;
-            box-shadow: none;
-            box-sizing: content-box;
-            text-align: center;
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 14px;
-            content: '✚' !important;
-            background-color: transparent;
-        }
-
-        table.dataTable.dtr-column > tbody > tr > td.control:hover::before, table.dataTable.dtr-column > tbody > tr > th.control:hover::before {
-            color: white;
-        }
-
-        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
-        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
-            content: '▂' !important;
-            background-color: transparent;
-            transform: translateY(-5px)
-        }
-
-        table.dataTable.dtr-column > tbody > tr.parent td.control:before,
-        table.dataTable.dtr-column > tbody > tr.parent th.control:before {
-            background-color: transparent;
-        }*/
         /*===================sorting*/
         table.dataTable.order-column tbody tr > .sorting_1, table.dataTable.order-column tbody tr > .sorting_2, table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1, table.dataTable.display tbody tr > .sorting_2, table.dataTable.display tbody tr > .sorting_3 {
             background-color: transparent;
@@ -282,6 +232,9 @@
         .btn-outline-secondary {
             border-color: transparent !important;
         }
+        .table thead th {
+            border-bottom: 3px double #28A2FC;
+        }
     </style>
 }
 <div class="wrapall">
@@ -350,6 +303,7 @@
                 ordering: true,
                 //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
                 order: [],
+                "processing": true,
                 responsive: {
                     details: {
                         type: 'column',
@@ -399,7 +353,7 @@
                             return d;
                         },
                         "ordering": true
-                    }
+                    },
                 ]
                 },
             )
@@ -460,7 +414,7 @@
             $(this).addClass("tag");
             $("#All").removeClass("tag");
         })
-
+                
         $(document).ready(function () {
 
         //=============================================================

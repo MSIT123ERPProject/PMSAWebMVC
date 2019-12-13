@@ -4,22 +4,22 @@
     ViewBag.Title = "請購單";
 }
 
-<h2>採購單</h2>
+<h2>請購單</h2>
 
-<p>@Html.ActionLink("查詢請購單明細", "IndexDtl", null, new { @class = "btn btn-success" })</p>
+@*<p>@Html.ActionLink("查詢請購單明細", "IndexDtl", null, new { @class = "btn btn-success" })</p>*@
 <div class="card mb-3">
     <div class="card-header">
         <i class="fas fa-table"></i>
-        @Html.ActionLink("新增請購單", "Create", null, new { @class = "btn btn-info" })
+        @Html.ActionLink("新增請購單", "Createtest", null, new { @class = "btn btn-info" })
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary text-white text-left">
                         @*<th>
-            @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
-        </th>*@
+                                @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
+                            </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
                         </th>
@@ -36,19 +36,16 @@
                             @Html.DisplayNameFor(model => model.SignStatus)
                         </th>
                         @*<th>
-                            @Html.DisplayNameFor(model => model.Employee.Name)
-                        </th>*@
+                                @Html.DisplayNameFor(model => model.Employee.Name)
+                            </th>*@
                         @*<th>
-            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
-        </th>*@
+                                @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
+                            </th>*@
                         <th>動作</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        @*<th>
-            @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
-        </th>*@
+                @*<tfoot>
+                    <tr class="bg-primary text-white text-center">
                         <th>
                             @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
                         </th>
@@ -58,55 +55,63 @@
                         <th>
                             @Html.DisplayNameFor(model => model.PRBeginDate)
                         </th>
-                        <th>
+                        <th >
                             @Html.DisplayNameFor(model => model.ProcessStatus)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.SignStatus)
                         </th>
-                        @*<th>
-                            @Html.DisplayNameFor(model => model.Employee.Name)
-                        </th>*@
-                        @*<th>
-            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
-        </th>*@
                         <th>動作</th>
                     </tr>
-                </tfoot>
+                </tfoot>*@
                 @foreach (var item in Model)
                 {
-                <tr>
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.PurchaseRequisitionOID)
-        </td>*@
-                    <th>
-                        @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
-                    </th>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Product.ProductName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PRBeginDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProcessStatus)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SignStatus)
-                    </td>
-                    @*<td>
-                        @Html.DisplayFor(modelItem => item.Employee.Name)
-                    </td>*@
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)
-        </td>*@
-                    <td>
-                        @Html.ActionLink("新增明細", "CreateDtl2", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })
-                        @Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" }) |
-                        @Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" }) |
-                        <a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionID"><i class="fa fa-close"></i> 刪除</a>
-                    </td>
-                </tr>
+                    <tr>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.PurchaseRequisitionOID)
+                            </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PRBeginDate)
+                        </td>
+                        <td id="ps1">
+                            @Html.DisplayFor(modelItem => item.ProcessStatus)
+                        </td>
+                        <td id="ss1">
+                            @Html.DisplayFor(modelItem => item.SignStatus)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.Employee.Name)
+                            </td>*@
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)
+                            </td>*@
+                        <td>
+                            @*@Html.ActionLink("新增明細", "CreateDtl2", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
+
+                            @*@Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
+                            @*@Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
+                            @*<button name="click1" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+            <i class="far fa-edit"></i>
+        </button>*@
+                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
+                                <i class="far fa-eye"></i>
+                            </button>
+                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            @*<button name="click3" type="button" class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.PurchaseRequisitionID" onclick="'location.href='+@Url.Action("IndexDtl","PurchaseRequisitions")+'?PurchaseRequisitionID='+'@item.PurchaseRequisitionID'">
+                                <i class="far fa-file-alt"></i>
+                            </button>*@
+                            <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt" })</button>
+                           
+                        </td>
+                    </tr>
                 }
             </table>
         </div>
@@ -122,45 +127,195 @@
             $('#dataTable').DataTable();
 
         });
+
+        
+
+
+            //檢視
+            $(document).on('click', "button[name = 'click1']", function () {
+                document.getElementById("btnClose").innerHTML = "關閉";
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('#pn').text();
+            }
+            $.getJSON("@Url.Action("Detail", "PurchaseRequisitions")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視請購單資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                //$('*[id="btnUpdate"]').attr('display', false);
+                $('#btnSave').hide();
+                $('#btnUpdate').hide();
+                $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
+                $("#ProductNumber").val(datas[0].ProductNumber);
+                $("#EmployeeID").val(datas[0].EmployeeID);
+                //$("#ProcessStatus").val(JSON.stringify(datas[0].ProcessStatus));//轉字串
+                $("#ProcessStatus").val(datas[0].ProcessStatus);
+                $("#SignStatus").val(datas[0].SignStatus);
+                //$('#PRBeginDate').datetimepicker({
+                //    defaultDate: datas[0].PRBeginDate
+                //});
+                $('#PRBeginDate').children("input").val(datas[0].PRBeginDate);
+            })
+        });
+
+        ////檢視明細
+        //    $(document).on('click', "button[name = 'click3']", function () {
+        //    let id1 = this.dataset.dc;
+        //    if(id1 == undefined){
+        //        id1 = $(this).parents('tr').find('td:first-child').text();
+        //        }
+                
+           
+        //});
+
+            //修改檢視
+            $(document).on('click', "button[name = 'click2']", function () {
+                document.getElementById("btnClose").innerHTML = "取消";
+                let id1 = this.dataset.dc;
+                if (id1 == undefined) {
+                id1 = $(this).parents('tr').find('td:first-child').text();
+                }
+            $.getJSON("@Url.Action("Detail", "PurchaseRequisitions")/" + id1, function (datas) {
+                //document.getElementById("code2").innerHTML = '';
+                //document.getElementById("name2").innerHTML = '';
+                //document.getElementById("add2").innerHTML = '';
+                //document.getElementById("tel2").innerHTML = '';
+                $('#ModalTitle').text('檢視請購單資訊');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', false);
+                if (datas[0].EmployeeID != "CE00005") { $('#SignStatus').attr('disabled', true); }
+                //$('*[id="btnUpdate"]').attr('display', true);
+                $('#btnSave').hide();
+                $('#btnUpdate').show();
+                $("#PurchaseRequisitionID").val(datas[0].PurchaseRequisitionID);
+                $("#ProductNumber").val(datas[0].ProductNumber);
+                $("#EmployeeID").val(datas[0].EmployeeID);
+                $("#ProcessStatus").val(datas[0].ProcessStatus);
+                $("#SignStatus").val(datas[0].SignStatus);
+                $('#PRBeginDate').children("input").val(datas[0].PRBeginDate);
+            })
+            });
+
+
+            
+
+            //局部更新時取得欄位 位置
+            var sell; var  sell2;
+            $(document).on('click', "td", function () {
+
+                var table = $('#dataTable').DataTable();
+                var rowss = $(this).closest("tr");  //抓取列
+                var celss = $(this).siblings("#ps1"); //抓取欄
+                var celss2 = $(this).siblings("#ss1"); //抓取欄
+                sell = table.row(rowss).cell(celss);
+                sell2 = table.row(rowss).cell(celss2);
+
+            })
+
+
+        //修改更新
+            $('#btnUpdate').click(function () {
+            var table = $('#dataTable').DataTable();
+                if ($("#ProcessStatus").val() == ''){
+                toastr.error("'*' 為必填欄位","警告");
+                }else{
+                 var PurchaseRequisitionObj = {
+                    PurchaseRequisitionID: $("#PurchaseRequisitionID").val(),
+                    ProductNumber: $("#ProductNumber").val(),
+                    EmployeeID: $("#EmployeeID").val(),
+                    PRBeginDate: $("#PRBeginDate2").val(),
+                    ProcessStatus: $("#ProcessStatus").val(),
+                    SignStatus: $("#SignStatus").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Edit", "PurchaseRequisitions")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(PurchaseRequisitionObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        //sell.data($("#ProcessStatus").find('option:selected').val()).draw();//取得選取的值
+                        sell.data($("#ProcessStatus").find('option:selected').html()).draw();
+                        sell2.data($("#SignStatus").find('option:selected').html()).draw();
+                    }
+                }).fail(function(response){
+                    toastr.error(response.message, "警告");
+                })
+                    $('#purchaserequisitionModal').modal('hide');
+            }
+            })
+
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();
         });
-        function A() {
-            window.location.reload();
-        }
-        $("a[name = 'click01']").click(function () {
-            Swal.fire({
-                title: '確定要刪除 ?',
-                text: "刪除後你將沒有機會後悔 !",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: '取消',
-                confirmButtonText: '刪除'
-            }).then((result) => {
-                if (result.value) {
-                    let id1 = this.dataset.wc;
-                    $.ajax({
-                        url: `@Url.Action("Delete", "PurchaseRequisitions")`,
-                        type: 'POST',
-                        data: { id: id1 }
-                    }).done(function () {
-                        Swal.fire(
-                            '刪除成功 !',
-                            '此資料已被刪除',
-                            'success'
-                        )
-                    }).fail(function () {
-                        '刪除成功 !',
-                            '此資料已被刪除',
-                            'error'
-                        }).always(function () {
-                            setTimeout('A()', 2000);
-                        });
-                    }
-                })
-        });
+
+
+
     </script>
 
-}
+}<!--Model-->
+<div class="modal fade bd-example-modal-lg" id="purchaserequisitionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label class="required" for="PurchaseRequisitionID">@Html.DisplayNameFor(model => model.PurchaseRequisitionID)</label>
+                        <input type="text" class="form-control" id="PurchaseRequisitionID" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="ProductNumber">@Html.DisplayNameFor(model => model.ProductNumber)</label>
+                        <input type="text" class="form-control" id="ProductNumber" name="da">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="EmployeeID">@Html.DisplayNameFor(model => model.EmployeeID)</label>
+                        <input type="text" class="form-control" id="EmployeeID" name="da">
+                    </div>
+
+                   
+
+                    <div class="form-group">
+                        <label for="PRBeginDate">@Html.DisplayNameFor(model => model.PRBeginDate)</label>
+                        <div class="input-group date" id="PRBeginDate" data-target-input="nearest">
+                            <input type="text" id="PRBeginDate2" class="form-control datetimepicker-input" data-target="#PRBeginDate" data-toggle="datetimepicker" name="da"/>
+                            <div class="input-group-append" data-target="#PRBeginDate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ProcessStatus">處理狀態代碼</label>
+                        <br />
+                        <select class="form-control" id="ProcessStatus" name="dta">
+                            <option selected="selected" id="opt1" value="N">新增</option>
+                            <option id="opt2" value="O">請購中</option>
+                            <option id="opt3" value="C">結案</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SignStatus">簽核狀態代碼</label>
+                        <br />
+                        <select class="form-control" id="SignStatus" name="dta">
+                            <option selected="selected" id="opt4" value="S">簽核中</option>
+                            <option id="opt5" value="Y">同意</option>
+                            <option id="opt6" value="N">拒絕</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
+                <button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>
+                @*<button id="btnSave" type="button" class="btn btn-primary" data-dismiss="modal">新增</button>*@
+                
+            </div>
+        </div>
+    </div>
+</div>

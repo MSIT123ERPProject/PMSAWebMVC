@@ -130,8 +130,21 @@ namespace PMSAWebMVC.Controllers
         public ActionResult AddPODtlToTableViewModel()
         {
             Repository rep = new Repository(User.Identity.GetEmployee(), db);
-            rep.AddPODtlToTableViewModel();
-            return PartialView("_CreatePODItemPartial", session.PODItems);
+            var vm = rep.AddPODtlToTableViewModel();
+            return PartialView("_CreatePODItemPartial", vm);
+        }
+
+        /// <summary>
+        /// 刪除採購明細
+        /// </summary>
+        /// <param name="id">請購單明細編號</param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult DeletePODtlItem(string id)
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            rep.DeletePODtlItem(id);
+            return Json(new { message = "刪除成功" }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -155,7 +168,7 @@ namespace PMSAWebMVC.Controllers
             }
             else
             {
-                vm = session.PRDItems;
+                vm = session.PRDItems.ToList();
             }
             //已加入一個採購明細，整筆採購單只能是單一供應商的料件
             if (session.Supplier != null)

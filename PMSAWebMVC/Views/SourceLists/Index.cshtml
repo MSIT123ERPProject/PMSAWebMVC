@@ -5,7 +5,7 @@
 }
 
 <h2>貨源清單</h2>
-<p>@Html.ActionLink("查詢貨源清單明細", "IndexDtl", null, new { @class = "btn btn-success" })</p>
+@*<p>@Html.ActionLink("查詢貨源清單明細", "IndexDtl", null, new { @class = "btn btn-success" })</p>*@
 <!-- DataTables Example表格 -->
 <div class="card mb-3">
     <div class="card-header">
@@ -120,7 +120,7 @@
                         </td>
                         <td>
                             @*@Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" })*@
-                            @Html.ActionLink("新增明細", "CreateDtl2", new { id = item.SourceListID }, new { @class = "btn btn-info" })
+                            @*@Html.ActionLink("新增明細", "CreateDtl2", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
                             @*@Html.ActionLink("編輯", "Edit", new { id = item.SourceListID }, new { @class = "btn btn-info" })
         @Html.ActionLink("檢視", "Details", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
                             <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.SourceListID">

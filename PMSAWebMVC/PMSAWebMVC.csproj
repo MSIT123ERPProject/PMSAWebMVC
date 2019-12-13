@@ -1444,6 +1444,7 @@
     <Content Include="Scripts\highcharts\7.1.2\themes\skies.src.js" />
     <Content Include="Scripts\highcharts\7.1.2\themes\sunset.js" />
     <Content Include="Scripts\highcharts\highcharts-3d.js.map" />
+    <Content Include="Scripts\highcharts\highcharts-more.js" />
     <Content Include="Scripts\highcharts\highcharts-more.js.map" />
     <Content Include="Scripts\highcharts\highcharts.js.map" />
     <Content Include="Scripts\highcharts\modules\accessibility.js.map" />
@@ -1913,7 +1914,6 @@
     <Content Include="Scripts\highcharts\es-modules\themes\sunset.js" />
     <Content Include="Scripts\highcharts\highcharts-3d.js" />
     <Content Include="Scripts\highcharts\highcharts-3d.src.js" />
-    <Content Include="Scripts\highcharts\highcharts-more.js" />
     <Content Include="Scripts\highcharts\highcharts-more.src.js" />
     <Content Include="Scripts\highcharts\highcharts.js" />
     <Content Include="Scripts\highcharts\highcharts.src.js" />

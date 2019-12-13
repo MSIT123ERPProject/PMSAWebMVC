@@ -82,12 +82,13 @@
 @section scripts
         {
     <script>
-            $(document).ready(function () {
+        $(document).ready(function () {
                 dataTableDisplay();
                 ClickUpdateButton();
-                dataTablesId.on('responsive-resize', function (e, datatable, columns) {
+        
+                table.on('responsive-resize', function (e, datatable, columns) {
                     //修正縮放大小不正確的問題
-                    dataTablesId.columns.adjust().responsive.recalc();
+                    table.columns.adjust().responsive.recalc();
                 });
         });
         /////////////////////////////////////////////
@@ -174,9 +175,9 @@
                     },
                     "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
                     "order": [[1, "asc"]],
-                    "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
+                    //"sDom": '<"wraptop"<"top fl"fl><"top"p>>',
              "autoWidth": false,
-             dom: 'lfrtip',
+             //dom: 'lfrtip',
              //ordering: true,
              //order: [],
                 });

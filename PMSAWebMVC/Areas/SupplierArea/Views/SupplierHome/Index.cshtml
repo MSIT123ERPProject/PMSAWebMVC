@@ -376,11 +376,11 @@
                 });
             });
             }
-            // lineChart
+            // barChart
             function ShipQtyByStatus() {
                 $.getJSON(`@Url.Action("ShipQtyByStatus", "SupplierHome", new { Areas = "SupplierArea" })`, function (datas) {
                     let partname = [];
-                    
+
                     let qty = [];
                     let shipqty = [];
                     let unitsonorder = [];
@@ -433,7 +433,7 @@
                         ]
                     });
                 });
-               
+
             }
         </script>
     }

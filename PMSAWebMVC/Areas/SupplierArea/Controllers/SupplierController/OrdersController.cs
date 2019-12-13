@@ -155,18 +155,37 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             string supplierAccount = supplier.SupplierAccountID;
             string supplierCode = supplier.SupplierCode;
             ////////////////////////////////////////////////////
+            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
+
             //供應商答交程式碼
+
+            var q = from poc in db.POChanged
+                    //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
+                    //into s
+                    //from po in s.DefaultIfEmpty()
+                    where  poc.RequesterRole == "P" && poc.PurchaseOrderID == orderID
+                    select new
+                    {
+                        poc.PurchaseOrderID,
+                        poc.RequesterRole,
+                    };
+            var t = q.ToList();
+            if ( q.Count() ==0 || q.Count() == null ) {
+                 return Json("fail", JsonRequestBehavior.AllowGet);
+            }
             PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
                                    where po.PurchaseOrderID == orderID
                                    select po).SingleOrDefault();
-            order.PurchaseOrderStatus = "E";
-            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
-            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
             {
                 return Json("fail", JsonRequestBehavior.AllowGet);
             }
+            //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
+            order.PurchaseOrderStatus = "W";
+            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+            
             db.SaveChanges();
+            
             return Json("success", JsonRequestBehavior.AllowGet);
         }
     }

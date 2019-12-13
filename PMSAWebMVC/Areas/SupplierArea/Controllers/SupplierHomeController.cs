@@ -72,39 +72,40 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             ////////////////////////////////////////////////////
             DateTime dateStartD = Convert.ToDateTime(dateStart);
             DateTime dateEndD = Convert.ToDateTime(dateEnd);
-            if (dateStart == null || dateEnd ==null  ) {
+            if (dateStart == null || dateEnd == null)
+            {
                 dateStartD = DateTime.Now.AddMonths(-3);
                 dateEndD = DateTime.Now;
             }
             //計算計算選取區間已出貨的商品金額，如無選取預設為今日以前三個月
             var qpo = from po in db.PurchaseOrder
-                          join pod in db.PurchaseOrderDtl
-                          on po.PurchaseOrderID equals pod.PurchaseOrderID
-                          where po.CreateDate > dateStartD && po.CreateDate < dateEndD
-                                       //&& po.PurchaseOrderStatus == "E" || po.PurchaseOrderStatus == "S"
-                                            && po.SupplierCode == supplierCode
+                      join pod in db.PurchaseOrderDtl
+                      on po.PurchaseOrderID equals pod.PurchaseOrderID
+                      where po.CreateDate > dateStartD && po.CreateDate < dateEndD
+                                        //&& po.PurchaseOrderStatus == "E" || po.PurchaseOrderStatus == "S"
+                                        && po.SupplierCode == supplierCode
                       select new
-                          {
-                              pod.PartName,
-                              pod.PartNumber,
-                              pod.QtyPerUnit,
-                              pod.Qty,
-                              pod.PurchaseUnitPrice,
-                              pod.Discount,
-                              pod.SourceListID
-                          };
-                //計算百分比//搞錯了highChart會自動幫你計算百分比
-                List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
-                foreach (var data in qpo)
-                {
-                    partTotalPriceViewModel temp = new partTotalPriceViewModel();
-                    temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
-                    temp.PartNumber = data.PartNumber;
-                    temp.PartName = data.PartName;
-                    temp.SourceListID = data.SourceListID;
-                    list.Add(temp);
-                }
-                return Json(list, JsonRequestBehavior.AllowGet);
+                      {
+                          pod.PartName,
+                          pod.PartNumber,
+                          pod.QtyPerUnit,
+                          pod.Qty,
+                          pod.PurchaseUnitPrice,
+                          pod.Discount,
+                          pod.SourceListID
+                      };
+            //計算百分比//搞錯了highChart會自動幫你計算百分比
+            List<partTotalPriceViewModel> list = new List<partTotalPriceViewModel>();
+            foreach (var data in qpo)
+            {
+                partTotalPriceViewModel temp = new partTotalPriceViewModel();
+                temp.ToalPrice = data.Qty * data.PurchaseUnitPrice * data.QtyPerUnit * (1 - data.Discount);
+                temp.PartNumber = data.PartNumber;
+                temp.PartName = data.PartName;
+                temp.SourceListID = data.SourceListID;
+                list.Add(temp);
+            }
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
         //pieChart使用的ViewModel
         public class partTotalPriceViewModel
@@ -176,37 +177,31 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
         }
         public ActionResult ShipQtyByStatus()
         {
-            //var qpod = from pod in db.PurchaseOrderDtl
-            //           join po in db.PurchaseOrder on pod.PurchaseOrderID equals po.PurchaseOrderID
-            //           into res 
-            //           from  in res.DefaultIfEmpty()
-            //           join sl in db.SourceList on .SourceListID equals sl.SourceListID
-            //           join snd in db.ShipNoticeDtl on pod.PurchaseOrderDtlCode equals snd.PurchaseOrderDtlCode
-            //           where po.SupplierCode == supplierCode 
-            //           select new
-            //           {
-            //               pod.PartName,
-            //               pod.PartNumber,
-            //               pod.Qty,
-            //               sl.UnitsOnOrder,
-            //               snd.ShipQty
-            //           };
-            //var s = qpod.ToList();
-            using ( var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString)) {
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
+            using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
+            {
                 connection.Open();
-                using ( SqlCommand cmd = new SqlCommand(@"SELECT  pod.PartName, pod.PartNumber, pod.Qty, sl.UnitsOnOrder, snd.ShipQty FROM  PurchaseOrderDtl AS pod LEFT OUTER JOIN PurchaseOrder AS po ON pod.PurchaseOrderID = po.PurchaseOrderID LEFT OUTER JOIN SourceList AS sl ON pod.SourceListID = sl.SourceListID LEFT OUTER JOIN ShipNoticeDtl AS snd ON pod.PurchaseOrderDtlCode = snd.PurchaseOrderDtlCode  WHERE po.SupplierCode = 'S00002'", connection) ) {
+                using (SqlCommand cmd = new SqlCommand(@"SELECT  pod.PartName, pod.PartNumber, pod.Qty, sl.UnitsOnOrder, snd.ShipQty FROM  PurchaseOrderDtl AS pod LEFT OUTER JOIN PurchaseOrder AS po ON pod.PurchaseOrderID = po.PurchaseOrderID LEFT OUTER JOIN SourceList AS sl ON pod.SourceListID = sl.SourceListID LEFT OUTER JOIN ShipNoticeDtl AS snd ON pod.PurchaseOrderDtlCode = snd.PurchaseOrderDtlCode  WHERE po.SupplierCode = @supplier", connection))
+                {
+                    SqlParameter supParameter = new SqlParameter("@supplier", SqlDbType.VarChar);
+                    supParameter.Value = supplierCode;
+                    cmd.Parameters.Add(supParameter);
                     SqlDataReader Reader = cmd.ExecuteReader();
-                    var qpod = Reader.Cast<IDataRecord>().Select(x=>new {
-                        PartName = x["PartName"], 
+                    var qpod = Reader.Cast<IDataRecord>().Select(x => new
+                    {
+                        PartName = x["PartName"],
                         PartNumber = x["PartNumber"],
-                       Qty = x["Qty"],
-                       UnitsOnOrder= x["UnitsOnOrder"],
-                        ShipQty =x["ShipQty"]
+                        Qty = x["Qty"],
+                        UnitsOnOrder = x["UnitsOnOrder"],
+                        ShipQty = x["ShipQty"]
                     }).ToList();
                     return Json(qpod, JsonRequestBehavior.AllowGet);
                 }
             }
-             
         }
     }
 }

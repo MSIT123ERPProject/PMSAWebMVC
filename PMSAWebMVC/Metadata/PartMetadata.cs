@@ -23,5 +23,7 @@ namespace PMSAWebMVC.Models
         public string PictureAdress { get; set; }
         [Display(Name = "料件圖片說明")]
         public string PictureDescription { get; set; }
+        [Display(Name = "料件批量")]
+        public int QtyPerUnit { get; set; }
     }
 }

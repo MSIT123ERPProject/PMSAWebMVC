@@ -411,6 +411,64 @@
                 setPRDtlInputUpdate("edit");
             });
 
+            //刪除採購項目
+            async function delPODItem(dtlcode) {
+                await $.ajax({
+                    url: "@Url.Action("DeletePODtlItem", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: dtlcode
+                    },
+                }).done(function (result) {
+                    toastr.success(result.message);
+                    console.log("delPODItem");
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
+
+            //刪除按鈕觸發
+            async function delBtnClick(dtlcode) {
+                await delPODItem(dtlcode);
+                await showPODtlToTableViewModel();
+                await showPRDtlToTableViewModel();
+                let rowcount = dtPO.context[0].aoData.length;
+                if (rowcount == 0) {
+                    hideSupplierInfo();
+                }
+            }
+
+            function hideSupplierInfo() {
+                $("#supplierInfo").hide();
+                $("#collapse-supplierinfo").html("");
+            }
+
+            //刪除按鈕觸發
+            $("body").on('click', "span[data-model='del']", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                let span = $(this);
+                let dtlcode = span.parent().data('dtlcode');
+                //delBtnClick(dtlcode, partnumber);
+                Swal.fire({
+                    title: '刪除確認',
+                    text: "確定要刪除嗎？",
+                    type: 'warning',
+                    showCancelButton: true,
+                    customClass: {
+                        confirmButton: 'bg-primary',
+                        cancelButton: 'bg-danger',
+                    },
+                    cancelButtonText: '取消',
+                    confirmButtonText: '確定'
+                }).then((result) => {
+                    if (result.value) {
+                        delBtnClick(dtlcode);
+                    }
+                    })
+            });
+
             //送出採購單
             $("body").on('click', '#btnSubmit', function (e) {
                 e.preventDefault();
@@ -467,6 +525,7 @@
                //顯示表格
                await showPODtlToTableViewModel();
                await showPRDtlToTableViewModel();
+               console.log($("#collapse-supplierinfo").children());
                if ($("#collapse-supplierinfo").children().length == 0) {
                    showSUPInfoViewModel();
                }
@@ -481,8 +540,7 @@
                     type: "get",
                 }).done(function (result) {
                     if (result == "") {
-                        $("#supplierInfo").hide();
-                        $("#collapse-supplierinfo").html("");
+                        hideSupplierInfo();
                     } else {
                         $("#collapse-supplierinfo").html(result);
                         $("#supplierInfo").hide().removeClass("d-none").fadeIn(500);

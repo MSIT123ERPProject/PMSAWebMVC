@@ -2398,6 +2398,7 @@
     <Content Include="Views\PurchaseOrders\_CreateSUPInfoPartial.cshtml" />
     <Content Include="Views\SourceLists\Createtest.cshtml" />
     <Content Include="Views\SourceLists\_CreateSLItemPartial.cshtml" />
+    <Content Include="Views\Products\ProductDetilView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

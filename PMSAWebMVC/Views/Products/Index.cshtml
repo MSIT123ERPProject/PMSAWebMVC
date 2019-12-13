@@ -1,82 +1,154 @@
-﻿@model IEnumerable<PMSAWebMVC.Models.Product>
+﻿@using PMSAWebMVC.Models
+@model IEnumerable<PMSAWebMVC.Models.Product>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "產品首頁";
 }
+<style>
+    .productImg {
+        height: 300px;
+    }
 
-<h2>Index</h2>
+    .partImg {
+        height: 100px;
+        max-width: 150px;
+    }
 
+    .PP {
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    .qq {
+        width: 500px;
+    }
+
+    .modal-title {
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    h4 {
+        font-weight: bold;
+    }
+</style>
+<h2>產品總覽</h2>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<div class="container">
-    <div class="carousel slide" data-ride="carousel" id="carousel-demo">
-        <ol class="carousel-indicators">
-            <li data-target="#carousel-demo" data-slide-to="0" class="active"></li>
-            <li data-target="#carousel-demo" data-slide-to="1"></li>
-            <li data-target="#carousel-demo" data-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner">
-
-            <div class="carousel-item active">
-                <img class="d-block w-100" src="https://www.taiwan.net.tw/att/1/big_scenic_spots/pic_412_8.jpg" alt="">
-            </div>
-            <div class="carousel-item">
-            <img class="d-block w-100" src="~/imgs/products/P00002-TCR ADVANCED SL 2-KOM.jpg" alt="">
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="~/imgs/products/P00003-TCR ADVANCED SL 1 DISC-KOM.jpg" alt="">
-        </div>
-
-            <a href="#carousel-demo" class="carousel-control-prev" data-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </a>
-            <a href="#carousel-demo" class="carousel-control-next" data-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </a>
-        </div>
-    </div>
+<div class="jumbotron">
+    <h2>產品總覽</h2>
+    <h6><span></span></h6>
 </div>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ProductOID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProductName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PictureAdress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PictureDescription)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+<div class="row">
+    @foreach (var product in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductOID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                <div class="carousel-item active">
-                    <img class="d-block w-100" src="@Url.Content(item.PictureAdress)" alt="">
-                </div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PictureDescription)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ProductNumber }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ProductNumber }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ProductNumber })
-            </td>
-        </tr>
-    }
+        var modalId = "modal-" + product.ProductOID;
 
-</table>
+        <div class="col-sm-6">
+            <div class="img-thumbnail">
+                <h3>產品編號:@product.ProductNumber</h3>
+                <img class="productImg" src="@Url.Content(product.PictureAdress)" alt="商品圖片" />
+                <div class="caption">
+                    <p>產品名稱:@product.ProductName</p>
+                    <p>
+                        <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#@modalId">詳細資訊</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content qq">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">陸行鳥自行車</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>生產產品:</h4>
+                        <hr />
+                        <dl class="dl-horizontal">
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ProductNumber)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(p => product.ProductNumber)
+                            </dd>
+
+                            <dd>
+                                <img class="productImg" src="@Url.Content(product.PictureAdress)" alt="商品圖片" />
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.ProductName)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(p => product.ProductName)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.PictureDescription)
+                            </dt>
+
+                            <dt>
+                                產品使用料件:
+                            </dt>
+                        </dl>
+
+                        <div>
+
+                            @for (int i = 0; i < product.ProductPart.Count; i += 2)
+                            {
+                                var productPart1 = product.ProductPart.ToArray()[i];
+                                var productPart2 = new ProductPart();
+
+                                if (i + 1 < product.ProductPart.Count)
+                                {
+                                    productPart2 = product.ProductPart.ToArray()[i + 1];
+                                }
+
+                                <div class="row">
+                                    <div class="col-sm PP">
+                                        <div>
+                                            @productPart1.Part.PartName
+                                        </div>
+                                        <img class="partImg" src="@Url.Content(productPart1.Part.PictureAdress)" alt="商品圖片" />
+                                    </div>
+
+                                    @if (i + 1 < product.ProductPart.Count)
+                                    {
+                                        <div class="col-sm PP">
+                                            <div>
+                                                @productPart2.Part.PartName
+                                            </div>
+                                            <img class="partImg" src="@Url.Content(productPart2.Part.PictureAdress)" alt="商品圖片" />
+                                        </div>
+                                    }
+
+                                </div>
+                            }
+
+
+                            @*@foreach (var productPart in product.ProductPart)
+                                {
+                                    <span>@productPart.Part.PartName</span>
+                                    <img class="partImg" src="@Url.Content(productPart.Part.PictureAdress)" alt="商品圖片" />
+                                }*@
+                        </div>
+                    </div>
+                    @*<div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    }
+</div>

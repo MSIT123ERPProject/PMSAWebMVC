@@ -246,8 +246,8 @@
                                         <div class="row mt-0 mb-3">
 
                                             <div class="col-6">
-                                                <button id="btnPODAdd" class="btn btn-primary btn-block" type="submit"><i class="far fa-file"></i> 加入採購單</button>
-                                                <button id="btnPODUpdate" class="btn btn-primary btn-block" type="submit"><i class="far fa-edit"></i> 更新採購單</button>
+                                                <button id="btnPODAdd" class="btn btn-primary btn-block" type="button"><i class="far fa-file"></i> 加入採購單</button>
+                                                <button id="btnPODUpdate" class="btn btn-primary btn-block" type="button"><i class="far fa-edit"></i> 更新採購單</button>
                                             </div>
 
                                             <div class="col-6">
@@ -329,8 +329,22 @@
             //Modal顯示前
             $('#detailModal').on('show.bs.modal', function (event) {
                 let span = $(event.relatedTarget);
-                let dtlcode = span.data('dtlcode');
-                let partnumber = span.data('partnumber');
+                let dtlcode;
+                let partnumber;
+                if (span.data("model")) {
+                    dtlcode = span.parent().data('dtlcode');
+                    partnumber = span.parent().data('partnumber');
+                    $("#detailModalTitle").text("編輯採購項目");
+                    $("#btnPODAdd").hide();
+                    $("#btnPODUpdate").show();
+                    console.log($("#btnPODUpdate"));
+                } else {
+                    dtlcode = span.data('dtlcode');
+                    partnumber = span.data('partnumber');
+                    $("#detailModalTitle").text("新增採購項目");
+                    $("#btnPODAdd").show();
+                    $("#btnPODUpdate").hide();
+                }
                 detailModalShow(dtlcode, partnumber);
             });
 
@@ -382,20 +396,20 @@
                         if (!data) {
                             return;
                         }
-                        $("#btnPODAdd").prop("disabled", true);
+                        let btn = getModalButton();
+
+                        btn.prop("disabled", true);
                         $("#Qty").val(data.Qty);
                         $("#DateRequired").val(data.DateRequiredToShow);
                         $("#TotalSourceListQty").val(data.TotalSourceListQty);
                         $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
                         $("#Discount").val(data.DiscountToShow);
                         $("#Total").val(data.TotalToShow);
-                        $("#btnPODAdd").show();
-                        $("#btnPODUpdate").hide();
                         if (data.SourceListID) {
                             let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
                             sl.prop('checked', true);
                         }
-                        $("#btnPODAdd").prop("disabled", false);
+                        btn.prop("disabled", false);
                         $('#datetimepickerId').datetimepicker();
                     });
             }
@@ -409,6 +423,64 @@
                 e.preventDefault();
                 e.stopPropagation();
                 setPRDtlInputUpdate("edit");
+            });
+
+            //刪除採購項目
+            async function delPODItem(dtlcode) {
+                await $.ajax({
+                    url: "@Url.Action("DeletePODtlItem", "PurchaseOrders")",
+                    type: "get",
+                    data: {
+                        id: dtlcode
+                    },
+                }).done(function (result) {
+                    toastr.success(result.message);
+                    console.log("delPODItem");
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                    });
+            }
+
+            //刪除按鈕觸發
+            async function delBtnClick(dtlcode) {
+                await delPODItem(dtlcode);
+                await showPODtlToTableViewModel();
+                await showPRDtlToTableViewModel();
+                let rowcount = dtPO.context[0].aoData.length;
+                if (rowcount == 0) {
+                    hideSupplierInfo();
+                }
+            }
+
+            function hideSupplierInfo() {
+                $("#supplierInfo").hide();
+                $("#collapse-supplierinfo").html("");
+            }
+
+            //刪除按鈕觸發
+            $("body").on('click', "span[data-model='del']", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                let span = $(this);
+                let dtlcode = span.parent().data('dtlcode');
+                //delBtnClick(dtlcode, partnumber);
+                Swal.fire({
+                    title: '刪除確認',
+                    text: "確定要刪除嗎？",
+                    type: 'warning',
+                    showCancelButton: true,
+                    customClass: {
+                        confirmButton: 'bg-primary',
+                        cancelButton: 'bg-danger',
+                    },
+                    cancelButtonText: '取消',
+                    confirmButtonText: '確定'
+                }).then((result) => {
+                    if (result.value) {
+                        delBtnClick(dtlcode);
+                    }
+                    })
             });
 
             //送出採購單
@@ -427,7 +499,7 @@
                         toastr.success(result.message);
                         setTimeout(function () {
                              location.href = '@Url.Action("Index", "PurchaseOrders")';
-                        }, 3000);
+                        }, 2000);
                     }
                 }).fail(function (e) {
                     toastr.error(e.responseText);
@@ -454,7 +526,7 @@
             }
 
             //加入採購單
-            $("#btnPODAdd").on('click', function (e) {
+            $("#btnPODAdd, #btnPODUpdate").on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 $(this).prop("disabled", true);
@@ -467,6 +539,7 @@
                //顯示表格
                await showPODtlToTableViewModel();
                await showPRDtlToTableViewModel();
+               console.log($("#collapse-supplierinfo").children());
                if ($("#collapse-supplierinfo").children().length == 0) {
                    showSUPInfoViewModel();
                }
@@ -481,8 +554,7 @@
                     type: "get",
                 }).done(function (result) {
                     if (result == "") {
-                        $("#supplierInfo").hide();
-                        $("#collapse-supplierinfo").html("");
+                        hideSupplierInfo();
                     } else {
                         $("#collapse-supplierinfo").html(result);
                         $("#supplierInfo").hide().removeClass("d-none").fadeIn(500);
@@ -509,21 +581,32 @@
                      console.log("showPODtlToTableViewModel");
                     }).fail(function (e) {
                         toastr.error(e.responseText);
+                        console.log(e);
                     });
+            }
+
+            function getModalButton() {
+                let btn;
+                if ($("#btnPODAdd").is(":visible")) {
+                    btn = $("#btnPODAdd");
+                } else {
+                    btn = $("#btnPODUpdate");
+                }
+                return btn;
             }
 
             //設定採購單輸入內容更新
             async function setPRDtlInputUpdate(mode) {
+                let btn = getModalButton();
 
-                $("#btnPODAdd").prop("disabled", false);
                 let qty = $("#Qty").val();
                 let dateRequired = $("#DateRequired").val();
                 let sourceList = $("input[name=sourceList]:checked").val();
-                let modalPrdCode = $("#modalPrdCode").text();
-                $("#btnPODAdd").prop("disabled", true);
+                let modalPrdCode = $("#modalPrdCode").text();                
 
                 if (!chkQtyValue() | !chkDateRequiredValue()) {
                     //toastr.warning("請輸入必填欄位");
+                    btn.prop("disabled", true);
                     return;
                 }
 
@@ -543,18 +626,18 @@
                     $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
                     $("#Discount").val(data.DiscountToShow);
                     $("#Total").val(data.TotalToShow);
-                    $("#btnPODAdd").prop("disabled", false);
+                    btn.prop("disabled", false);
                     console.log('setPRDtlInputUpdate');
                 });
             }
 
            //設定Modal請購單資訊
-            async function setPRDtlInfo(purchaseOrderDtlCode) {
+            async function setPRDtlInfo(purchaseRequisitionDtlCode) {
                 await $.ajax({
                     url: "@Url.Action("GetPRDtlInfoViewModel", "PurchaseOrders")",
                     type: "get",
                     data: {
-                        id: purchaseOrderDtlCode
+                        id: purchaseRequisitionDtlCode
                     },
                 }).done(function (result) {
                     $("#modalPRDtlInfo").html(result);

@@ -145,7 +145,7 @@ namespace PMSAWebMVC.Controllers.AccSettingController
                     TempData["SuccessMsg"] = "修改成功!";
                     return RedirectToAction("Index");
                 }
-                TempData["ErrorMsg"] = "修改失敗，請檢查網路連線再試一次。";
+                TempData["ErrorMsg"] = "修改失敗， " + string.Join("、", r.Errors) + " 請檢查網路連線再試一次。";
                 return RedirectToAction("Index");
             }
             catch

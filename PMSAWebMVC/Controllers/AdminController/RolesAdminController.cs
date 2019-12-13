@@ -69,21 +69,21 @@ namespace PMSAWebMVC.Controllers
             var roles = RoleManager.Roles.ToList();
             var users = UserManager.Users.ToList();
             List<object> allRoles = new List<object>();
-            List<string> UsersFinal = new List<string>();
 
-            foreach (var r in roles)
+            foreach (var u in users)
             {
-                foreach (var u in users)
+                var allrolesinUser = u.Roles.Select(r => r.RoleId);
+                foreach(var a in allrolesinUser)
                 {
                     //每個 role 的 Id
-                    var role = RoleManager.FindById(r.Id);
+                    var role = RoleManager.FindById(a);
                     if (UserManager.IsInRole(u.Id, role.Name))
                     {
                         var user = new
                         {
-                            RoleId = r.Id,
-                            RoleEnName = r.Name,
-                            RoleChName = r.Description,
+                            RoleId = u.Id,
+                            RoleEnName = role.Name,
+                            RoleChName = role.Description,
                             usersAccId = u.UserName
                         };
                         allRoles.Add(user);
@@ -108,7 +108,7 @@ namespace PMSAWebMVC.Controllers
             var users = UserManager.Users.ToList();
             List<usersArray> allUsers = new List<usersArray>();
             List<object> obj = new List<object>();
-            var all = users.Join(roles, u => u.Roles.Select(x => x.RoleId), r => r.Users.Select(x => x.RoleId), (u, r) => new { u.UserName, r.Name });
+            //var all = users.Join(roles, u => u.Roles.Select(x => x.RoleId), r => r.Users.Select(x => x.RoleId), (u, r) => new { u.UserName, r.Name });
             foreach (var u in users)
             {
                 var RoleNameEnarr = roles.Where(y => (u.Roles.Select(x => x.RoleId)).Contains(y.Id)).Select(r => r.Name);

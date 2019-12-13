@@ -124,3 +124,55 @@ string pwd = generateFirstPwd();
 //寄信
 UserManager.SendEmail(userId, "請重設您的密碼", $"<p>您好,您的帳號是: {SupAccIDstr}</p> 密碼: {pwd} <a href="{callbackUrl}">點此確認您的信箱</a>");
 ```
+----
+# 限制登入 Controller/Action 的人
+## 多個
+```
+[Authorize(Roles="Buyer, Warehouse")]
+```
+## 供應商
+```
+[Authorize(Roles = "Supplier")]
+```
+## 採購
+```
+[Authorize(Roles = "Buyer")]
+```
+## 倉管
+```
+[Authorize(Roles = "Warehouse")]
+```
+## 採購主管
+```
+[Authorize(Roles = "Manager")]
+```
+## 生管
+```
+[Authorize(Roles = "ProductionControl")]
+```
+## 新進職員(可登入跟重設密碼但看不到其他功能)
+```
+[Authorize(Roles = "NewEmployee")]
+```
+## 系統管理員
+```
+[Authorize(Roles = "Admin")]
+```
+
+1. 加在Controller上
+```
+[Authorize(Roles = "Admin")]
+public class RolesAdminController : BaseController
+{
+	//...
+}
+```
+
+2. 加在Action上
+```
+[Authorize(Roles = "Admin")]
+public ActionResult getAllRolesToIndexAjax()
+{
+	//...
+}
+```

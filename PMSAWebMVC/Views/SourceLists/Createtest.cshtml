@@ -29,47 +29,42 @@
             </div>
 
             <div style="display:inline-flex">
-                <div class="form-group col-md-9" style="display:inline-flex;padding-left:0">
-                    @Html.LabelFor(model => model.MOQ, htmlAttributes: new { @class = "control-label col-md-5", @style = "padding-left:0" })
+                <div class="form-group col-md-6" style="display:inline-flex;padding-left:0">
+                    @Html.LabelFor(model => model.MOQ, htmlAttributes: new { @class = "control-label col-md-4", @style = "padding-left:0" })
                     @*<div class="col-md-10">*@
                     @Html.EditorFor(model => model.MOQ, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
                     @Html.ValidationMessageFor(model => model.MOQ, "", new { @class = "text-danger" })
                     @*</div>*@
                 </div>
-                <div class="form-group row col-md-7" style="display:inline-flex;padding:inherit">
-                    @Html.LabelFor(model => model.QtyPerUnit, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="form-group row col-md-6" style="display:inline-flex;padding:inherit;width:200px;">
+                    @Html.LabelFor(model => model.QtyPerUnit, htmlAttributes: new { @class = "control-label col-md-3" })
                     @*<div class="col-md-10">*@
                     @Html.EditorFor(model => model.QtyPerUnit, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
                     @Html.ValidationMessageFor(model => model.QtyPerUnit, "", new { @class = "text-danger" })
                     @*</div>*@
                 </div>
-
-            </div>
-            <div style="display:inline-flex">
-                <div class="form-group col-md-9" style="display:inline-flex;padding-left:0">
-                    @Html.LabelFor(model => model.SafetyQty, htmlAttributes: new { @class = "control-label col-md-5", @style = "padding-left:0" })
-                    @*<div class="col-md-10">*@
-                    @Html.EditorFor(model => model.SafetyQty, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
-                    @Html.ValidationMessageFor(model => model.SafetyQty, "", new { @class = "text-danger" })
-                    @*</div>*@
-                </div>
-                <div class="form-group row col-md-7" style="display:inline-flex;padding:inherit">
-                    @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-4" })
-                    @*<div class="col-md-10">*@
-                    @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
-                    @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
-                    @*</div>*@
-                </div>
-            </div>
-
-            <div>
                 <div class="form-group row">
-                    @Html.LabelFor(model => model.EXP, htmlAttributes: new { @class = "control-label col-md-2 ", @style = "padding-right:0" })
+                    @Html.LabelFor(model => model.EXP, htmlAttributes: new { @class = "control-label col-md-5 ", @style = "padding-right:0" })
                     <div class="col-md-5">
                         @Html.EditorFor(model => model.EXP, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
                         @Html.ValidationMessageFor(model => model.EXP, "", new { @class = "text-danger" })
                     </div>
                 </div>
+            </div>
+
+        </div>
+        <div style="display:inline-flex;width:600px;">
+            <div class="form-group col-md-8" style="display:inline-flex;padding-left:0">
+                @Html.LabelFor(model => model.SafetyQty, htmlAttributes: new { @class = "control-label col-md-5", @style = "padding-left:0;" })
+                @*<div class="col-md-10">*@
+                @Html.EditorFor(model => model.SafetyQty, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
+                @Html.ValidationMessageFor(model => model.SafetyQty, "", new { @class = "text-danger" })
+                @*</div>*@
+            </div>
+            <div class="form-group row col-md-7" style="display:inline-flex;padding:inherit">
+                @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-5" })
+                @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
+                @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
@@ -82,17 +77,13 @@
     <div class="card-body">
         <div class="form-horizontal">
             <div style="display:inline-flex">
-
-                <div class="form-group row col-md-7" style="display:inline-flex;">
-                    <label for="DiscountBeginDate">@Html.DisplayNameFor(model => model.DiscountBeginDate)</label>
-                    <div class="input-group date " id="DiscountBeginDate" data-target-input="nearest">
-                        <input type="text" id="DiscountBeginDate2" class="@*form-control*@ datetimepicker-input" data-target="#DiscountBeginDate" data-toggle="datetimepicker" name="da" />
-                        <div class="input-group-append" data-target="#DiscountBeginDate" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
+                <div class="form-group row col-md-7" style="display:inline-flex;padding:inherit">
+                    @Html.LabelFor(model => model.QtyDemanded, htmlAttributes: new { @class = "control-label col-md-4" })
+                    @*<div class="col-md-10">*@
+                    @Html.EditorFor(model => model.QtyDemanded, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
+                    @Html.ValidationMessageFor(model => model.QtyDemanded, "", new { @class = "text-danger" })
+                    @*</div>*@
                 </div>
-
                 <div class="form-group row col-md-7" style="display:inline-flex;padding:inherit">
                     @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-4" })
                     @*<div class="col-md-10">*@
@@ -100,13 +91,9 @@
                     @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
                     @*</div>*@
                 </div>
+
             </div>
             <div style="display:inline-flex">
-                @*<div class="form-group col-md-9" style="display:inline-flex;padding-left:0">
-                        @Html.LabelFor(model => model.DiscountEndDate, htmlAttributes: new { @class = "control-label col-md-5", @style = "padding-left:0" })
-                        @Html.EditorFor(model => model.DiscountEndDate, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
-                        @Html.ValidationMessageFor(model => model.DiscountEndDate, "", new { @class = "text-danger" })
-                    </div>*@
                 <div class="form-group row col-md-7" style="display:inline-flex;">
                     <label for="DiscountEndDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
                     <div class="input-group date " id="DiscountEndDate" data-target-input="nearest">
@@ -116,15 +103,14 @@
                         </div>
                     </div>
                 </div>
-
-
-
-                <div class="form-group row col-md-7" style="display:inline-flex;padding:inherit">
-                    @Html.LabelFor(model => model.QtyDemanded, htmlAttributes: new { @class = "control-label col-md-4" })
-                    @*<div class="col-md-10">*@
-                    @Html.EditorFor(model => model.QtyDemanded, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
-                    @Html.ValidationMessageFor(model => model.QtyDemanded, "", new { @class = "text-danger" })
-                    @*</div>*@
+                <div class="form-group row col-md-7" style="display:inline-flex;">
+                    <label for="DiscountBeginDate">@Html.DisplayNameFor(model => model.DiscountBeginDate)</label>
+                    <div class="input-group date " id="DiscountBeginDate" data-target-input="nearest">
+                        <input type="text" id="DiscountBeginDate2" class="@*form-control*@ datetimepicker-input" data-target="#DiscountBeginDate" data-toggle="datetimepicker" name="da" />
+                        <div class="input-group-append" data-target="#DiscountBeginDate" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

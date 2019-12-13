@@ -14,6 +14,7 @@ namespace PMSAWebMVC.Models
         public string PartNumber { get; set; }
         [Display(Name = "QtyPerUnit", ResourceType = typeof(AppResource))]
         public int QtyPerUnit { get; set; }
+        [Display(Name = "最小訂貨量")]
         public Nullable<int> MOQ { get; set; }
         [Display(Name = "UnitPrice", ResourceType = typeof(AppResource))]
         public int UnitPrice { get; set; }

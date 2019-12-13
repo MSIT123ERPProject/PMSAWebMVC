@@ -1,0 +1,64 @@
+﻿@model PMSAWebMVC.ViewModels.SourceLists.SourceListsCreateViewModel
+
+
+
+@Html.HiddenFor(m => m.SourceListID)
+@Html.HiddenFor(m => m.SupplierCode)
+
+<table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
+    <thead>
+        <tr>
+            <th id="sourceListDtlOID2">@Html.DisplayNameFor(model => model.SourceListDtlOID)</th>
+            <th>@Html.DisplayNameFor(model => model.SourceListID)</th>
+            <th>@Html.DisplayNameFor(model => model.PartName)</th>
+            <th>@Html.DisplayNameFor(model => model.SupplierName)</th>
+            <th>@Html.DisplayNameFor(model => model.QtyDemanded)</th>
+            <th>@Html.DisplayNameFor(model => model.Discount)</th>
+            <th>@Html.DisplayNameFor(model => model.DiscountBeginDate)</th>
+            <th>@Html.DisplayNameFor(model => model.DiscountEndDate)</th>
+            <th>動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.SourceListsDtlSetVM.Count(); i++)
+        {
+        <tr>
+            <td   id="sourceListDtlOID">
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).SourceListDtlOID)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).SourceListID)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).PartName)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).SupplierName)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).QtyDemanded)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).DiscountBeginDate)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.SourceListsDtlSetVM.ElementAt(i).DiscountEndDate)
+            </td>
+            <td>
+                @*@using
+            @Html.BeginForm("Deletetest", "PurchaseRequisitions",FormMethod.Post)*@
+                @*@Html.ActionLink("刪除", "Deletetest", "SourceLists", new { id = Model.SourceListsDtlSetVM.ElementAt(i).SourceListID }, new { @class = "btn btn-info" })*@
+                <button name="click01" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="刪除"  >
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </td>
+        </tr>
+        }
+
+    </tbody>
+</table>
+
+

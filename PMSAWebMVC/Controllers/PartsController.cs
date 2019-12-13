@@ -39,10 +39,6 @@ namespace PMSAWebMVC.Controllers
             {
                 return HttpNotFound();
             }
-          
-            //var datas = db.Part.Where(P => P.PartNumber == id).
-            //Select(g => new { g.PartOID, g.PartNumber, g.PartName, g.PartSpec, g.PictureAdress, g.PartUnit.PartUnitName, g.QtyPerUnit, g.CreatedDate});
-
             var datas = from p in db.Part.AsEnumerable()
                        join f in db.PartCategoryDtl
                        on p.PartNumber equals f.PartNumber
@@ -59,73 +55,45 @@ namespace PMSAWebMVC.Controllers
                            PartUnitName = p.PartUnit.PartUnitName,
                            QtyPerUnit = p.QtyPerUnit,
                            CreatedDate = p.CreatedDate.ToString("yyyy/MM/dd"),
-                           CategoryName = g.CategoryName
+                           CategoryName = g.CategoryName,
+                           PartCategoryOID=g.PartCategoryOID,
+                           PartUnitOID = p.PartUnitOID
                        };
-
-
+            
+            
             return Json(datas, JsonRequestBehavior.AllowGet);
         }
-    
-
-        // GET: Parts/Create
-        //public ActionResult Create()
-        //{
-        //    ViewBag.PartUnitOID = new SelectList(db.PartUnit, "PartUnitOID", "PartUnitName");
-            
-        //    return View();
-        //}
-
-        // POST: Parts/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
        // [ValidateAntiForgeryToken]
         public ActionResult Create(PartView part)
         {
-
-            /*
-                if (Request.Files["File1"].ContentLength != 0)
-                {
-                    byte[] data = null;
-                    using (BinaryReader br = new BinaryReader(Request.Files["File1"].InputStream))
-                    {
-                        data = br.ReadBytes(Request.Files["File1"].ContentLength);
-                        MemoryStream oMemoryStream = new MemoryStream(data);
-                        oMemoryStream.Position = 0;
-                        Image a = System.Drawing.Image.FromStream(oMemoryStream);
-                        Bitmap oBitmap = new Bitmap(a);
-                        string path = part.PartNumber + "-" + part.PartName + ".jpg";
-                        string pathqqq = Path.Combine(Server.MapPath("~/assets/parts/"), path);
-                        oBitmap.Save(pathqqq);
-                    }
-                }*/
+            //抓虛擬圖檔路徑，將檔案移動到正確資料夾並改名;
+                string VirtualFileName = "test1.jpg";
+                string VirtualPosition = Path.Combine(Server.MapPath("~/images/"), VirtualFileName);
+                string partname = $"{ part.PartNumber }-{ part.PartName}.jpg";
+                string RightPosition = Path.Combine(Server.MapPath("~/assets/parts/"), partname);
+                System.IO.File.Move(VirtualPosition, RightPosition);
+            //將Model帶進來的值存入資料庫
+                PartCategoryDtl PartCategoryDtl = new PartCategoryDtl();
+                Part part1 = new Part();
                 part.PictureAdress = "~/assets/parts/" + part.PartNumber + "-" + part.PartName + ".jpg";
                 part.CreatedDate = DateTime.Now;
-                PartCategoryDtl PartCategoryDtl = new PartCategoryDtl();
                 PartCategoryDtl.PartNumber = part.PartNumber;
                 PartCategoryDtl.PartCategoryOID = part.PartCategoryOID;
-                db.PartCategoryDtl.Add(PartCategoryDtl);
-                Part part1 = new Part();
                 part1.PictureAdress = part.PictureAdress;
                 part1.CreatedDate = part.CreatedDate;
                 part1.PartNumber = part.PartNumber;
                 part1.PartName = part.PartName;
-                //"PartSpec": PartSpec,
-                //    "PartUnitName": PartUnitName,
-                //    "QtyPerUnit": QtyPerUnit,
-                //    "PartCategoryOID": CategoryName
                 part1.PartSpec = part.PartSpec;
                 part1.PartUnitOID = part.PartUnitOID;
                 part1.QtyPerUnit = part.QtyPerUnit;
                 db.PartCategoryDtl.Add(PartCategoryDtl);
                 db.Part.Add(part1);
                 db.SaveChanges();
-                string path2 = Server.MapPath("~/assets/parts/");
+               
                 return Json("Index");
-                    
-            ViewBag.PartUnitOID = new SelectList(db.PartUnit, "PartUnitOID", "PartUnitName", part.PartUnitOID);
-            return View(part);
         }
+        //料件的ViewModel
         public class PartView
         {
             [Display(Name = "料件識別碼")]
@@ -137,7 +105,7 @@ namespace PMSAWebMVC.Controllers
             [Display(Name = "料件規格")]
             public string PartSpec { get; set; }
             [Display(Name = "料件單位識別碼")]
-            public Nullable<int> PartUnitOID { get; set; }
+            public int PartUnitOID { get; set; }
             [Display(Name = "料件新增時間")]
             [DataType(DataType.Date)]
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -150,63 +118,78 @@ namespace PMSAWebMVC.Controllers
             public int QtyPerUnit { get; set; }
             public int PartCategoryOID { get; set; }
             public string PartUnitName { get; set; }
+           
         }
-        // GET: Parts/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Part part = db.Part.Find(id);
-            if (part == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.PartUnitOID = new SelectList(db.PartUnit, "PartUnitOID", "PartUnitName", part.PartUnitOID);
-            return View(part);
-        }
-
-        // POST: Parts/Edit/5
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PartOID,PartNumber,PartName,PartSpec,PartUnitOID,CreatedDate,PictureAdress,PictureDescription")] Part part)
+        public ActionResult Up(HttpPostedFileBase PtImgFile)
         {
-
-            if (ModelState.IsValid)
+            if (PtImgFile.ContentLength > 0)
             {
-
-                if (Request.Files["File1"].ContentLength != 0)
+                var fileName = "test1.jpg";
+                var path = Path.Combine(Server.MapPath("~/images"), fileName);
+                PtImgFile.SaveAs(path);
+            }
+            return RedirectToAction("index");
+        }
+        [HttpPost]
+        public JsonResult UploadByAjax()
+        {
+                //取得目前 HTTP 要求的 HttpRequestBase 物件
+                foreach (string file in Request.Files)
+            {
+                var fileContent = Request.Files[file];
+                if (fileContent != null && fileContent.ContentLength > 0)
                 {
-                    FileInfo f = new FileInfo($@"~/assets/parts{part.PartNumber}-{part.PartName}.jpg");
-                    if (f.Exists)
+                    // 取得的檔案是stream
+                    var stream = fileContent.InputStream;
+                    var fileName ="test1.jpg";
+                    var path = Path.Combine(Server.MapPath("~/images/"), fileName);
+                    using (var fileStream = System.IO.File.Create(path))
                     {
-                        f.Delete();
-
-                    }
-                    byte[] data = null;
-                    using (BinaryReader br = new BinaryReader(Request.Files["File1"].InputStream))
-                    {
-                        data = br.ReadBytes(Request.Files["File1"].ContentLength);
-                        MemoryStream oMemoryStream = new MemoryStream(data);
-                        oMemoryStream.Position = 0;
-                        Image a = System.Drawing.Image.FromStream(oMemoryStream);
-                        Bitmap oBitmap = new Bitmap(a);
-                        string path = part.PartNumber + "-" + part.PartName + ".jpg";
-                        string pathqqq = Path.Combine(Server.MapPath("~/assets/parts/"), path);
-                        oBitmap.Save(pathqqq);
+                        stream.CopyTo(fileStream);
                     }
                 }
-                part.PictureAdress = "~/assets/parts/" + part.PartNumber + "-" + part.PartName + ".jpg";
-                db.Entry(part).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
             }
-            ViewBag.PartUnitOID = new SelectList(db.PartUnit, "PartUnitOID", "PartUnitName", part.PartUnitOID);
-            return View(part);
+
+            return Json("Successed");
         }
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Edit(PartView part)
+        {
+            //先刪除原圖檔案
+            string partname = $"{ part.PartNumber }-{ part.PartName}.jpg";
+            string path = Path.Combine(Server.MapPath("~/assets/parts/"), partname);
+            System.IO.File.Delete(path);
+            //抓虛擬圖檔路徑，將檔案移動到正確資料夾並改名;
+            string VirtualFileName = "test1.jpg";
+            string VirtualPosition = Path.Combine(Server.MapPath("~/images/"), VirtualFileName);
+            string RightPosition = Path.Combine(Server.MapPath("~/assets/parts/"), partname);
+            System.IO.File.Move(VirtualPosition, RightPosition);
+
+            //將Model帶進來的值存入資料庫
+            PartCategoryDtl PartCategoryDtl = new PartCategoryDtl();
+            Part part1 = new Part();
+            part.PictureAdress = "~/assets/parts/" + part.PartNumber + "-" + part.PartName + ".jpg";
+            part.CreatedDate = DateTime.Now;
+            PartCategoryDtl.PartNumber = part.PartNumber;
+            PartCategoryDtl.PartCategoryOID = part.PartCategoryOID;
+            part1.PictureAdress = part.PictureAdress;
+            part1.CreatedDate = part.CreatedDate;
+            part1.PartNumber = part.PartNumber;
+            part1.PartName = part.PartName;
+            part1.PartSpec = part.PartSpec;
+            part1.PartUnitOID = part.PartUnitOID;
+            part1.QtyPerUnit = part.QtyPerUnit;
+            db.Entry(part1).State = EntityState.Modified;
+            db.Entry(PartCategoryDtl).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return Json("Index");
+        }
+
+
+      
 
         // GET: Parts/Delete/5
         [HttpPost]
@@ -218,25 +201,27 @@ namespace PMSAWebMVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Part part = db.Part.Find(id);
+            
             if (part == null)
             {
                 return HttpNotFound();
             }
-            //return View(part);
             db.Part.Remove(part);
-            db.SaveChanges();
+          var PartCategoryDtlOID = db.PartCategoryDtl.Where(x=>x.PartNumber==id).SingleOrDefault();
+            db.PartCategoryDtl.Remove(PartCategoryDtlOID);
 
-            //FileInfo f = new FileInfo($@"C:\PMSAWebMVC\PMSAWebMVC\assets\parts\{part.PartNumber}-{part.PartName}.jpg");
+            db.SaveChanges();
             string partname = $"{ part.PartNumber }-{ part.PartName}.jpg";
             string path = Path.Combine(Server.MapPath("~/assets/parts/"), partname);
             FileInfo f = new FileInfo(path);
-           
-            //if (f.Exists)
-            //{
-            f.Delete();
+            if (f.Exists)
+            {
+                f.Delete();
 
-            //}
+            }
             return RedirectToAction("Index");
+
+
 
 
 

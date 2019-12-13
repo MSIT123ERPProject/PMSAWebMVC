@@ -434,8 +434,13 @@
                 await showPRDtlToTableViewModel();
                 let rowcount = dtPO.context[0].aoData.length;
                 if (rowcount == 0) {
-                    $("#supplierInfo").hide();
+                    hideSupplierInfo();
                 }
+            }
+
+            function hideSupplierInfo() {
+                $("#supplierInfo").hide();
+                $("#collapse-supplierinfo").html("");
             }
 
             //刪除按鈕觸發
@@ -445,7 +450,6 @@
 
                 let span = $(this);
                 let dtlcode = span.parent().data('dtlcode');
-                let partnumber = span.parent().data('partnumber');
                 //delBtnClick(dtlcode, partnumber);
                 Swal.fire({
                     title: '刪除確認',
@@ -521,6 +525,7 @@
                //顯示表格
                await showPODtlToTableViewModel();
                await showPRDtlToTableViewModel();
+               console.log($("#collapse-supplierinfo").children());
                if ($("#collapse-supplierinfo").children().length == 0) {
                    showSUPInfoViewModel();
                }
@@ -535,8 +540,7 @@
                     type: "get",
                 }).done(function (result) {
                     if (result == "") {
-                        $("#supplierInfo").hide();
-                        $("#collapse-supplierinfo").html("");
+                        hideSupplierInfo();
                     } else {
                         $("#collapse-supplierinfo").html(result);
                         $("#supplierInfo").hide().removeClass("d-none").fadeIn(500);

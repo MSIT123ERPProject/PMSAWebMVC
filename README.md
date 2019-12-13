@@ -126,6 +126,10 @@ UserManager.SendEmail(userId, "請重設您的密碼", $"<p>您好,您的帳號�
 ```
 ----
 # 限制登入 Controller/Action 的人
+## 多個
+```
+[Authorize(Roles="Buyer, Warehouse")]
+```
 ## 供應商
 ```
 [Authorize(Roles = "Supplier")]

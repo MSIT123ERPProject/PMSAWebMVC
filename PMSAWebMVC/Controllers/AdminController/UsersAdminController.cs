@@ -19,7 +19,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UsersAdminController : BaseController
     {
         private PMSAEntities db = new PMSAEntities();
@@ -360,6 +360,9 @@ namespace PMSAWebMVC.Controllers
                 UserId = user.Id
             };
             user.Roles.Add((IdentityUserRole)r);
+
+            //信箱驗證也要重置為0
+            user.EmailConfirmed = false;
 
             //更新此 user
             await UserManager.UpdateAsync(user);

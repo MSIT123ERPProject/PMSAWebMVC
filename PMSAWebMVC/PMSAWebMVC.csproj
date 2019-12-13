@@ -423,6 +423,8 @@
     <Compile Include="ViewModels\BuyerSupAccount\SupInfoViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionCreateViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionIndexViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
     <Compile Include="ViewModels\Setting\BuyerCompInfoViewModel.cs" />
     <Compile Include="ViewModels\Setting\BuyerSettingViewModel.cs" />
@@ -431,6 +433,7 @@
     <Compile Include="ViewModels\Setting\SupSettingViewModel.cs" />
     <Compile Include="ViewModels\Setting\Sup_parent.cs" />
     <Compile Include="ViewModels\ShipNotices\ShipNoticeViewModel.cs" />
+    <Compile Include="ViewModels\SourceLists\SourceListsCreateViewModel.cs" />
     <Compile Include="ViewModels\UsersAdmin\UsersAdminViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2349,13 +2352,6 @@
     <Content Include="Views\PurchaseOrders\Create.cshtml" />
     <Content Include="Views\PurchaseOrders\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreatePODItemPartial.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\Create.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\CreateDtl.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\CreateDtl2.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\Details.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\DetailsDtl.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\Edit.cshtml" />
-    <Content Include="Views\PurchaseRequisitions\EditDtl.cshtml" />
     <Content Include="Views\PurchaseRequisitions\Index.cshtml" />
     <Content Include="Views\PurchaseRequisitions\IndexDtl.cshtml" />
     <Content Include="Views\RolesAdmin\Create.cshtml" />
@@ -2366,7 +2362,6 @@
     <Content Include="Views\Shared\_LanguagePartial.cshtml" />
     <Content Include="Views\SourceLists\Create.cshtml" />
     <Content Include="Views\SourceLists\CreateDtl.cshtml" />
-    <Content Include="Views\SourceLists\CreateDtl2.cshtml" />
     <Content Include="Views\SourceLists\Details.cshtml" />
     <Content Include="Views\SourceLists\DetailsDtl.cshtml" />
     <Content Include="Views\SourceLists\Edit.cshtml" />
@@ -2382,6 +2377,9 @@
     <Content Include="Areas\SupplierArea\Views\ShipNotices\_GetPurchaseOrderDtlPatialView.cshtml" />
     <Content Include="Scripts\pickadate\translations\FORMATTING.md" />
     <Content Include="Scripts\pickadate\translations\NAMING.md" />
+    <Content Include="Views\PurchaseRequisitions\Createtest.cshtml" />
+    <Content Include="Views\PurchaseRequisitions\_CreatePRItemPartial.cshtml" />
+    <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
     <Content Include="Views\Account\ConfirmEmailError.cshtml" />
     <Content Include="Areas\SupplierArea\Views\Orders\Index.cshtml" />
     <Content Include="Views\BuyerSupAccount\Index.cshtml" />
@@ -2397,6 +2395,8 @@
     <Content Include="Areas\SupplierArea\Views\SupSetting\Index.cshtml" />
     <Content Include="Views\BuyerSetting\Index.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreateSUPInfoPartial.cshtml" />
+    <Content Include="Views\SourceLists\Createtest.cshtml" />
+    <Content Include="Views\SourceLists\_CreateSLItemPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

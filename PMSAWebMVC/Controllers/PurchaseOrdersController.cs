@@ -61,9 +61,10 @@ namespace PMSAWebMVC.Controllers
             return Json(new { data = povm }, JsonRequestBehavior.AllowGet);
         }
 
+        //取得供應商資料集
         [HttpGet]
         public JsonResult GetSupplierList(string id)
-        {
+        {//data的值=供應商編號 文字=供應商名稱
             Repository rep = new Repository(User.Identity.GetEmployee());
             var data = rep.GetSupplierList(id).Select(s => new { Value = s.SupplierCode, Text = s.SupplierName });
             return Json(data, JsonRequestBehavior.AllowGet);

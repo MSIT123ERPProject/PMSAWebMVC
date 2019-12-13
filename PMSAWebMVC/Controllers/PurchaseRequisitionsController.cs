@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize(Roles = "Buyer, Manager, ProductionControl")]
     public class PurchaseRequisitionsController : BaseController
     {
         private PMSAEntities db = new PMSAEntities();

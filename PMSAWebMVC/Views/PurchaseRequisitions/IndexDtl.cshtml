@@ -69,15 +69,14 @@
                             @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
                         </td>
                         <td>
-                            @*@Html.ActionLink("編輯", "EditDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" }) |
-                                @Html.ActionLink("檢視", "DetailsDtl", new { id = item.PurchaseRequisitionDtlCode }, new { @class = "btn btn-info" })*@
-                            @*<a name="click01" class="btn btn-danger" data-wc="@item.PurchaseRequisitionDtlCode"><i class="fa fa-close"></i> 刪除</a>*@
-                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionDtlCode">
-                                <i class="far fa-eye"></i>
-                            </button>
-                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionDtlCode">
-                                <i class="far fa-edit"></i>
-                            </button>
+                            <div class="table-data-feature">
+                                <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionDtlCode">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                                <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionDtlCode">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 }

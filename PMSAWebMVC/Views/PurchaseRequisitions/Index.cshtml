@@ -85,31 +85,17 @@
                         <td id="ss1">
                             @Html.DisplayFor(modelItem => item.SignStatus)
                         </td>
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.Employee.Name)
-                            </td>*@
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)
-                            </td>*@
                         <td>
-                            @*@Html.ActionLink("新增明細", "CreateDtl2", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
 
-                            @*@Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
-                            @*@Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
-                            @*<button name="click1" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-            <i class="far fa-edit"></i>
-        </button>*@
-                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
-                                <i class="far fa-eye"></i>
-                            </button>
-                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
-                                <i class="far fa-edit"></i>
-                            </button>
-                            @*<button name="click3" type="button" class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.PurchaseRequisitionID" onclick="'location.href='+@Url.Action("IndexDtl","PurchaseRequisitions")+'?PurchaseRequisitionID='+'@item.PurchaseRequisitionID'">
-                                <i class="far fa-file-alt"></i>
-                            </button>*@
-                            <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt" })</button>
-                           
+                            <div class="table-data-feature">
+                                <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                                <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt" })</button>
+                            </div>
                         </td>
                     </tr>
                 }

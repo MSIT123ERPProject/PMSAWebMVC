@@ -11,6 +11,7 @@ using PMSAWebMVC.ViewModels.SourceLists;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize(Roles = "Buyer, Manager, ProductionControl")]
     public class SourceListsController : BaseController
     {
         //Test//

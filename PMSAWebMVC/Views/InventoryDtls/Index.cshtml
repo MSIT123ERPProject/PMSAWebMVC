@@ -77,6 +77,10 @@
         content: '*';
         color: red;
     }
+
+    #bt {
+        border-style: none;
+    }
 </style>
 
 @section scripts
@@ -154,11 +158,12 @@
             $('#SourceListID')[0].selectedIndex = 0;
             $('#btnCreate').show();                       //顯示按鈕
             $('#btnUpdate').hide();                       //隱藏按鈕
+            loadSlidlist();
         })
 
         $(document).on('click', "#btnCreate", function () {
             var table = $('#dataTable').DataTable();
-            var cell4 = '<span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> <span data-toggle="modal" data-target=".bd-example-modal-lg"><button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span><button name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫"><i class="far fa-arrow-alt-circle-down"></i></button>'
+            var cell4 = '&nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> &nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span> &nbsp;<button id="bt" name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫"><i class="far fa-arrow-alt-circle-down"></i></button>'
 
             if ($("#UnitsInStock").val() < 0 || $("#SafetyQty").val() < 0) {
                 toastr.error("不能為負數","警告");

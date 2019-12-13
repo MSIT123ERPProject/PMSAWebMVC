@@ -1,25 +1,30 @@
-﻿@model PMSAWebMVC.Models.Employee
+﻿@model PMSAWebMVC.Areas.SupplierArea.Controllers.OrdersController.OrderInfoViewModel
 <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
     <div class="row">
-        <div class="col-md-3 col-6">
-            <small><strong>@Html.DisplayNameFor(model => Model.Name)</strong></small>
+        <div class="col-md-2 col-6">
+            <small><strong>@Html.DisplayNameFor(model => Model.EmployeeName)</strong></small>
             <br>
-            <p class="text-muted">@Html.DisplayFor(model => Model.Name)</p>
+            <p class="text-muted">@Html.DisplayFor(model => Model.EmployeeName)</p>
         </div>
-        <div class="col-md-3 col-6">
-            <small><strong>@Html.DisplayNameFor(model => Model.Mobile)</strong></small>
+        <div class="col-md-2 col-6">
+            <small><strong>@Html.DisplayNameFor(model => Model.EmployeeMobile)</strong></small>
             <br>
-            <p class="text-muted">@Html.DisplayFor(model => Model.Mobile)</p>
+            <p class="text-muted">@Html.DisplayFor(model => Model.EmployeeMobile)</p>
         </div>
-        <div class="col-md-3 col-6">
-            <small><strong>@Html.DisplayNameFor(model => Model.Email)</strong></small>
+        <div class="col-md-2 col-6">
+            <small><strong>@Html.DisplayNameFor(model => Model.EmployeeEmail)</strong></small>
             <br>
-            <p class="text-muted">@Html.DisplayFor(model => Model.Email)</p>
+            <p class="text-muted">@Html.DisplayFor(model => Model.EmployeeEmail)</p>
         </div>
-        <div class="col-md-3 col-6">
-            <small><strong>@Html.DisplayNameFor(model => Model.Tel)</strong></small>
+        <div class="col-md-2 col-6">
+            <small><strong>@Html.DisplayNameFor(model => Model.EmployeeTel)</strong></small>
             <br>
-            <p class="text-muted">@Html.DisplayFor(model => Model.Tel)</p>
+            <p class="text-muted">@Html.DisplayFor(model => Model.EmployeeTel)</p>
+        </div>
+        <div class="col-md-2 col-6">
+            <small><strong>@Html.DisplayNameFor(model =>Model.Total )</strong></small>
+            <br>
+            <p class="text-muted">@Html.DisplayFor(model => Model.Total)</p>
         </div>
     </div>
 </div>

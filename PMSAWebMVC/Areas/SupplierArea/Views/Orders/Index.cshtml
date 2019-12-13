@@ -9,14 +9,25 @@
 </nav>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <div class="input-group">
-            @Html.DropDownListFor(m => m.orderID, Model.orderList,"請選擇", htmlAttributes: new { @class = "form-control  col-md-8" })
-            <button class="btn btn-primary input-group-append" id="btnImportOrder" type="button">匯入</button>
+        <div class="form-horizontal">
+            <div class="row align-items-center">
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.orderID, Model.orderList, "請選擇", htmlAttributes: new { @class = "form-control  col-md-8" })
+                    <button class="btn btn-primary input-group-append" id="btnImportOrder" type="button">匯入</button>
+                </div>
+                <div class="w-100"></div>
+
+            </div>
         </div>
-        <div class="w-100"></div>
-        <div id="OrderInfoContainer" class="col-md-12"></div>
+        <div id="collapse-rpinfo" class="collapse show" aria-labelledby="heading-rpinfo">
+            <div class="form-horizontal">
+                <div id="OrderInfoContainer" class="col-md-12"></div>
+            </div>
+        </div>
+
     </div>
     <div class="card-body">
+
         <div class="table-responsive">
             <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTableOUA">
                 <thead>
@@ -31,24 +42,15 @@
                         @*<th data-priority="1">訂單明細</th>*@
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th>訂單編號</th>
-                        <th>訂單總金額</th>
-                        <th>收貨人名稱</th>
-                        <th>收貨人電話</th>
-                        <th>收貨人手機</th>
-                        <th>收貨人地址</th>
-                        @*<th>訂單明細</th>*@
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
     <div class="card-footer small text-muted">
         <div class="d-flex justify-content-center" id="divApply">
-            <button type="submit" id="btnApply" class="btn btn-success btn-block" value="答交"><i class="fas fa-pen-nib"></i>答交</button>
+            <button type="submit" id="btnApply" class="btn btn-primary btn-block" value="答交"><i class="fas fa-pen-nib"></i>答交</button>
+        </div>
+        <div class="d-flex justify-content-center" id="divApply">
+            <button type="submit" id="btnRefuse" class="btn btn-primary btn-block" value="拒絕"><i class="fas fa-pen-nib"></i>拒絕</button>
         </div>
     </div>
 </div>
@@ -57,6 +59,18 @@
     <script>
         $(document).ready(function () {
             $("#btnApply").hide();
+            $("#btnRefuse").hide();
+            //如果有訂單先找出來
+            $.ajax({
+                    url: `@Url.Action("GetOrderInfo","Orders",new { Area="SupplierArea"})`,
+                    type: "GET",
+                data: { orderID: $("#orderID option:selected").val()} ,
+                }).done(function (orderInfo) {
+                    $("#OrderInfoContainer").html(orderInfo).fadeIn(250);
+                    }).fail(function () {
+                        alert("Ajax of GetOrderInfo is fail");
+                });
+            //////////////////////////////////////
             //下拉式選單
             $("#btnImportOrder").prop("disable", true);
             $("#orderID").change(function () {
@@ -75,14 +89,14 @@
                         alert("Ajax of GetOrderInfo is fail");
                     });
             });
+           //下拉式選單///////////////////////////////////////
             //匯入按鈕
             $("#btnImportOrder").click(function () {
                 GetOrderDtl();
                 let orderID = $("#orderID option:selected").val();
-                //let apply = document.createElement("button");
-                //apply.append("class", "btn btn-success");
-                //apply.append("class", "btn btn-block");
                 $("#btnApply").show();
+                $("#btnRefuse").show();
+                //答交按鈕
                 $("#btnApply").click(function () {
                     $.ajax({
                         url: `@Url.Action("OrderApply","Orders")`,
@@ -95,15 +109,31 @@
                             toastr.Info("訂單已答交", "通知");
                         }
                         else {
-                            toastr.fail( "答交失敗，異動總表未儲存","通知" );
+                            toastr.fail("答交失敗，異動總表未儲存", "通知");
                         }
                         $("#btnImportOrder").prop("disable", true);
-                        }).fail(function () {
-                            alert("OrderApply ajax fail");
-                        });
+                    }).fail(function () {
+                        alert("OrderApply ajax fail");
+                    });
                 });
-               
+                //答交按鈕結束//////////////////////////////////////
+                //拒絕按鈕
+                $("#btnRefuse").click(function () {
+                    $.ajax({
+                        url: `@Url.Action("OrderRefuse","Orders")`,
+                        type: "POST",
+                        data: { orderID: orderID }
+                    }).done(function (result) {
+                        toastr.success("訂單已拒絕", "通知");
+                        window.location.reload();
+                    }).fail(function (result) {
+                        alert("OrderRefuse Ajax fail");
+                        });
+                    //拒絕按鈕結束////////////////////
             });
+                $("#btnImportOrder").prop("disable", true);
+            });
+            //匯入按鈕 結束//////////////////////////////
             //ready finish here
         });
 

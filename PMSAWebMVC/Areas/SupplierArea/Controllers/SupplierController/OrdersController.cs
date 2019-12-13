@@ -6,6 +6,7 @@ using PMSAWebMVC.Utilities.TingHuan;
 using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -43,7 +44,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //})).AsEnumerable();
             var qpoP = from po in db.PurchaseOrder
                        where po.PurchaseOrderStatus == "P" && po.SupplierCode == supplierCode
-                       select new 
+                       select new
                        {
                            PurchaseOrderID = po.PurchaseOrderID
                        };
@@ -62,7 +63,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             OrderSendedToSupplierViewModel orderModel;
             if (orderList.Count() != 0)
             {
-                 orderModel = new OrderSendedToSupplierViewModel()
+                orderModel = new OrderSendedToSupplierViewModel()
                 {
                     SupplierCode = supplierCode,
                     orderID = orderList[0].Value,
@@ -74,7 +75,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             orderModel = new OrderSendedToSupplierViewModel()
             {
                 SupplierCode = supplierCode,
-                orderID="orderID",
+                orderID = "orderID",
                 orderList = orderList
             };
             return View(orderModel);
@@ -100,7 +101,32 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                            Email = emp.Email,
                        }
                        ).SingleOrDefault();
-            return PartialView("_IndexOrderInfoPartialView", qpo);
+            var qSumpod = db.PurchaseOrderDtl.Where(x => x.PurchaseOrderID == orderID).Sum(x => x.Total);
+
+            OrderInfoViewModel qTotal = new OrderInfoViewModel
+            {
+                EmployeeName = qpo.Name,
+                EmployeeMobile = qpo.Mobile,
+                EmployeeTel = qpo.Tel,
+                EmployeeEmail = qpo.Email,
+                Total = (decimal)qSumpod
+            };
+           
+            return PartialView("_IndexOrderInfoPartialView", qTotal);
+        }
+        //the OrderInfo's ViewModel
+        public class OrderInfoViewModel
+        {
+            [Display(Name="採購員")]
+            public string EmployeeName { get; set; }
+            [Display(Name = "手機")]
+            public string EmployeeMobile { get; set; }
+            [Display(Name = "市話")]
+            public string EmployeeTel { get; set; }
+            [Display(Name = "電子郵件")]
+            public string EmployeeEmail { get; set; }
+            [Display(Name = "總金額")]
+            public decimal Total { get; set; }
         }
         //GetOrderDtl
         public ActionResult GetOrderDtl(string orderID)
@@ -160,18 +186,19 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //供應商答交程式碼
 
             var q = from poc in db.POChanged
-                    //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
-                    //into s
-                    //from po in s.DefaultIfEmpty()
-                    where  poc.RequesterRole == "P" && poc.PurchaseOrderID == orderID
+                        //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
+                        //into s
+                        //from po in s.DefaultIfEmpty()
+                    where poc.RequesterRole == "P" && poc.PurchaseOrderID == orderID
                     select new
                     {
                         poc.PurchaseOrderID,
                         poc.RequesterRole,
                     };
             var t = q.ToList();
-            if ( q.Count() ==0 || q.Count() == null ) {
-                 return Json("fail", JsonRequestBehavior.AllowGet);
+            if (q.Count() == 0 || q.Count() == null)
+            {
+                return Json("fail", JsonRequestBehavior.AllowGet);
             }
             PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
                                    where po.PurchaseOrderID == orderID
@@ -183,10 +210,27 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
             order.PurchaseOrderStatus = "W";
             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
-            
+
             db.SaveChanges();
-            
+
             return Json("success", JsonRequestBehavior.AllowGet);
+        }
+        //拒絕按鈕
+        public ActionResult OrderRefuse(string orderID) {
+            ///////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            string supplierAccount = supplier.SupplierAccountID;
+            string supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
+            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
+            PurchaseOrder purchaseOrder= db.PurchaseOrder.Find(orderID);
+            //狀態異動中=C
+            purchaseOrder.PurchaseOrderStatus = "C";
+            utilities.AddAPOChanged(purchaseOrder,supplierAccount,supplierCode);
+            db.Entry(purchaseOrder).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return Json("success",JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿@using PMSAWebMVC.Models
-@*@model IEnumerable<PMSAWebMVC.Models.Product>*@
-@model IEnumerable<PMSAWebMVC.Controllers.ProductsController.ProductsView> 
+@model IEnumerable<PMSAWebMVC.Models.Product>
+
 @{
     ViewBag.Title = "產品首頁";
 }
@@ -48,11 +48,11 @@
         <div class="col-sm-6">
             <div class="img-thumbnail">
                 <h3>產品編號:@product.ProductNumber</h3>
-                <img class="productImg" src="@Url.Content(product.ProductPictureAdress)" alt="商品圖片" />
+                <img class="productImg" src="@Url.Content(product.PictureAdress)" alt="商品圖片" />
                 <div class="caption">
                     <p>產品名稱:@product.ProductName</p>
                     <p>
-                        <a href="#" id="DetailsBtn" class="btn btn-primary" role="button" data-toggle="modal" data-target="#@modalId" data-dc="@product.ProductNumber">詳細資訊</a>
+                        <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#@modalId">詳細資訊</a>
                     </p>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                             </dd>
 
                             <dd>
-                                <img class="productImg" src="@Url.Content(product.ProductPictureAdress)" alt="商品圖片" />
+                                <img class="productImg" src="@Url.Content(product.PictureAdress)" alt="商品圖片" />
                             </dd>
 
                             <dt>
@@ -93,46 +93,16 @@
                                 @Html.DisplayFor(p => product.ProductName)
                             </dd>
 
-                            @*<dt>
+                            <dt>
                                 @Html.DisplayNameFor(model => model.PictureDescription)
-                            </dt>*@
+                            </dt>
 
                             <dt>
                                 產品使用料件:
                             </dt>
-
                         </dl>
-                        <div class="form-group">
-                            <label class="required" for="CategoryName1">輪組</label>
-                           
-                                <img style="height:200px; width:200px;" id="partImg1" src="@Url.Content(product.ProductPartPictureDescription)" alt="" />
-                            
 
-
-
-
-                        </div>
-                        <div class="form-group">
-                            <label class="required" for="PartSpec">傳動系統</label>
-                            <img style="height:200px; width:200px;" id="partImg2" src="" alt="" />
-
-                        </div>
-                        <div class="form-group">
-                            <label class="required" for="PartSpec">煞車系統</label>
-                            <img style="height:200px; width:200px;" id="partImg2" src="" alt="" />
-
-                        </div>
-                        <div class="form-group">
-                            <label class="required" for="PartSpec">配件裝置</label>
-                            <img style="height:200px; width:200px;" id="partImg2" src="" alt="" />
-
-                        </div>
-                        <div class="form-group">
-                            <label class="required" for="PartSpec">車體裝置</label>
-                            <img style="height:200px; width:200px;" id="partImg2" src="" alt="" />
-
-                        </div>
-                        @*<div>
+                        <div>
 
                             @for (int i = 0; i < product.ProductPart.Count; i += 2)
                             {
@@ -162,56 +132,23 @@
                                         </div>
                                     }
 
-                                </div>*@
-                        }
+                                </div>
+                            }
 
 
-                        @*@foreach (var productPart in product.ProductPart)
-                            {
-                                <span>@productPart.Part.PartName</span>
-                                <img class="partImg" src="@Url.Content(productPart.Part.PictureAdress)" alt="商品圖片" />
-                            }*@
+                            @*@foreach (var productPart in product.ProductPart)
+                                {
+                                    <span>@productPart.Part.PartName</span>
+                                    <img class="partImg" src="@Url.Content(productPart.Part.PictureAdress)" alt="商品圖片" />
+                                }*@
+                        </div>
                     </div>
+                    @*<div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>*@
                 </div>
-
             </div>
         </div>
-        @*</div>*@
     }
 </div>
-
-@section scripts
-{
-    //檢視
-    $("#DetailsBtn").on("click" , function ()
-    {
-    let id1 = this.dataset.dc;
-    @*if (id1 == undefined)
-        {
-        id1 = $(this).parents('tr').find('td:first-child').text();
-        }*@
-    $.getJSON("@Url.Action("Details", "Products")/" + id1, function (datas) {
-    $('#ModalTitle').text('檢視料件資訊');
-    $('*[name="da"]').attr('disabled', true);
-    $('*[name="dta"]').attr('disabled', true);
-    $('#btnSave').hide();
-    $('#btnUpdate').hide();
-    $("#partImg2Div").hide();
-    $("#partImg1").show();
-    $('#PartUnitName').show();
-    $('#CategoryName').show();
-    $("#CreatedDateDiv").show();
-    $("#PartNumber").val(datas[0].PartNumber);
-    $("#PartName").val(datas[0].PartName);
-    $("#PartSpec").val(datas[0].PartSpec);
-    $("#partImg1").attr("src", `/assets/parts/${datas[0].PartNumber}-${datas[0].PartName}.jpg`);
-    $("#PartUnitName").val(datas[0].PartUnitName);
-    $("#QtyPerUnit").val(datas[0].QtyPerUnit);
-    $("#CategoryName").val(datas[0].CategoryName).text();
-    $("#CreatedDate2").val(datas[0].CreatedDate);
-    });
-    $('.modal').modal('show');
-    });
-
-
-}

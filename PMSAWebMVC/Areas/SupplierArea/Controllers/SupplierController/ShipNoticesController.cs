@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
 using PMSAWebMVC.Controllers;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.Services;
 using PMSAWebMVC.Utilities.TingHuan;
 using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
@@ -178,7 +179,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //檢查是否至少一個被勾選，如沒有則跳回去UnshipOrderDtl頁面
             if (orderDtls.Count() == 0)
             {
-                TempData["message"] = "<script>toastr.error('請選擇欲出貨商品!','通知')'</script>";
+                TempData["message"] = "<script>toastr.error('請選擇欲出貨商品!','通知')</script>";
                 message = "請選擇欲出貨商品!";
                 return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
             }
@@ -488,32 +489,51 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
         //SendEmail
         public async Task SendMailToBuyer(List<OrderDtlForMail> shipNotice)
         {
+            ///////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            string supplierAccount = supplier.SupplierAccountID;
+            string supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             string supAccID = supplierAccount;
-            string borderColor = "border-color:black";
-            string borderLine = "1";
-            string shipDtlMail = $"<h2>出貨單號:{shipNotice.FirstOrDefault().ShipNoticeID}</h2>";
-            shipDtlMail += $"<table style={borderColor} border={borderLine}><thead><tr><th>出貨商品明細流水號</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
+            //string borderColor = "border-color:black";
+            //string borderLine = "1";
+            //string shipDtlMail = $"<h2>出貨單號:{shipNotice.FirstOrDefault().ShipNoticeID}</h2>";
+            //shipDtlMail += $"<table style={borderColor} border={borderLine}><thead><tr><th>出貨商品明細流水號</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
+            //foreach (var snd in shipNotice)
+            //{
+            //    DateTime shipDate = (DateTime)snd.ShipDate;
+            //    shipDtlMail += "<tr>";
+            //    shipDtlMail += $"<td>{snd.ShipNoticeOID}</td><td>{snd.PartNumber}</td><td>{snd.PartName}</td><td>{snd.ShipQty}</td><td>{shipDate.ToString("yyyy/MM/dd")}</td>";
+            //    shipDtlMail += "</tr>";
+            //}
+            //shipDtlMail += "</tbody></table>";  
+            string snId = shipNotice[0].ShipNoticeID;
+            PurchaseOrder order = db.PurchaseOrder.Find(db.ShipNotice.Find(snId).PurchaseOrderID); 
+            string OrderID = order.PurchaseOrderID;
+            string OrderApply = "已出貨";
+            string borderSize = "1";
+            string borderColor = "font - family:'microsoft jhenghei',";
+            borderColor += "sans-serif;margin: 20px auto; background-color: #eee; padding-bottom: 20px;";
+            string OrderDtl = $"<h2>出貨明細</h2></br><h2>出貨單號:{snId}</h2><table style='{borderColor}'>";
             foreach (var snd in shipNotice)
             {
                 DateTime shipDate = (DateTime)snd.ShipDate;
-                shipDtlMail += "<tr>";
-                shipDtlMail += $"<td>{snd.ShipNoticeOID}</td><td>{snd.PartNumber}</td><td>{snd.PartName}</td><td>{snd.ShipQty}</td><td>{shipDate.ToString("yyyy/MM/dd")}</td>";
-                shipDtlMail += "</tr>";
+                OrderDtl += $"<tr>";
+                OrderDtl += $"<td>{snd.ShipNoticeOID}</td><td>{snd.PartNumber}</td><td>{snd.PartName}</td><td>{snd.ShipQty}</td><td>{shipDate.ToString("yyyy/MM/dd")}</td>";
+                OrderDtl += "</tr>";
             }
-            shipDtlMail += "</tbody></table>";
-            string snId = shipNotice[0].ShipNoticeID;
+            string SupplierName = db.SupplierInfo.Where(x => x.SupplierCode == supplierCode).SingleOrDefault().SupplierName;
+            string BuyerID = db.Employee.Where(x => x.EmployeeID == order.EmployeeID).SingleOrDefault().EmployeeID;
+          
             string emp = db.PurchaseOrder.Find(db.ShipNotice.Find(snId).PurchaseOrderID).EmployeeID;
-            //先找到你要寄信的人(這邊用供應商帳號找)，並儲存 user.Id
-            //這裡的值在資料庫的 dbo.AppUsers table
+            string EmployeeName = db.Employee.Find(emp).Name;
             var user = UserManager.Users.Where(x => x.UserName == emp).SingleOrDefault();
-            //user.Id 等等寄信方法第一個參數會用到
             var userId = user.Id;
-            //string shipDtlMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\ShipNotices\..."));
-            //信裡要用的變數
-            //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            //string SupAccID = user.UserName;
+            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Areas\SupplierArea\Views\Shared\SendMailToBuyer.html"));
+            string MailBody = MembersDBService.getMailBody(tempMail, OrderID, OrderApply, EmployeeName, OrderDtl, SupplierName);
             //寄信
-            await UserManager.SendEmailAsync(userId, "商品出貨通知", shipDtlMail);
+            await UserManager.SendEmailAsync(userId, "商品出貨通知", MailBody);
             //  bool a =    UserManager.SendEmailAsync(userId, "商品出貨通知", shipDtlMail).IsCompleted;
         }
 

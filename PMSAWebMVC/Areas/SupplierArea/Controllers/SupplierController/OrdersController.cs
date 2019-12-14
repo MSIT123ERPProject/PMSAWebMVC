@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using PMSAWebMVC.Models;
+using PMSAWebMVC.Services;
 using PMSAWebMVC.Utilities.TingHuan;
 using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
@@ -239,7 +240,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
             db.SaveChanges();
-            await SendMailToBuyer(order, "訂單已答交");
+            await SendMailToBuyer(order, "已答交",null);
             return Json("success", JsonRequestBehavior.AllowGet);
         }
 
@@ -259,25 +260,47 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             utilities.AddAPOChanged(purchaseOrder, supplierAccount, supplierCode);
             db.Entry(purchaseOrder).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
-            await SendMailToBuyer(purchaseOrder, "訂單已拒絕");
+            await SendMailToBuyer(purchaseOrder, "已拒絕",null);
             return Json("success", JsonRequestBehavior.AllowGet);
         }
         //寄信
-        public async Task SendMailToBuyer(PurchaseOrder order, string Reply)
+        public async Task SendMailToBuyer(PurchaseOrder order, string Reply,string OrderDtl)
         {
-            string borderColor = "border-color:black";
-            string borderLine = "1";
-            string BuyerName = db.Employee.Find(order.EmployeeID).Name;
-            string shipDtlMail = $"<table style='{borderColor}' border='{borderLine}'>";
-            shipDtlMail += $"<thead><tr><th>{BuyerName}，你好</th></tr></thead>";
-            shipDtlMail += $"<tr><td>訂單編號:{order.PurchaseOrderID}{Reply}</td></tr>";
-            shipDtlMail += "</table>";
+            ///////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            string supplierAccount = supplier.SupplierAccountID;
+            string supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
+            //string borderColor = "border-color:black";
+            //string borderLine = "1";
+            //string BuyerName = db.Employee.Find(order.EmployeeID).Name;
+            //string shipDtlMail = $"<table style='{borderColor}' border='{borderLine}'>";
+            //shipDtlMail += $"<thead><tr><th>{BuyerName}，你好</th></tr></thead>";
+            //shipDtlMail += $"<tr><td>訂單編號:{order.PurchaseOrderID}{Reply}</td></tr>";
+            //shipDtlMail += "</table>";
+            string OrderID = order.PurchaseOrderID;
+            string OrderApply = Reply;
+            if (OrderDtl == null) {
+                OrderDtl = "";
+            }
+            string SupplierName = db.SupplierInfo.Where(x=>x.SupplierCode==supplierCode).SingleOrDefault().SupplierName;
             string BuyerID = db.Employee.Where(x => x.EmployeeID == order.EmployeeID).SingleOrDefault().EmployeeID;
+            string EmployeeName = db.Employee.Find(BuyerID).Name;
             var user = UserManager.Users.Where(x => x.UserName == BuyerID).SingleOrDefault();
             var userId = user.Id;
-
+            // 如需如何進行帳戶確認及密碼重設的詳細資訊，請前往 https://go.microsoft.com/fwlink/?LinkID=320771
+            // 傳送包含此連結的電子郵件
+            //var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("PMSAWebMVC");
+            //更改密碼要在code之前不然他是拿UpdateSecurityStampAsync 來生code的
+            //string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Areas\SupplierArea\Views\Shared\SendMailToBuyer.html"));
+            // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
+            //string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
+            string MailBody = MembersDBService.getMailBody(tempMail, OrderID,OrderApply, EmployeeName, OrderDtl, SupplierName);
             //寄信
-            await UserManager.SendEmailAsync(userId, "供應商訂單答交通知", shipDtlMail);
+            await UserManager.SendEmailAsync(userId, "供應商訂單答交通知", MailBody);
         }
     }
 }

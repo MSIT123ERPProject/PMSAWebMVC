@@ -67,18 +67,19 @@
                 data: { orderID: $("#orderID option:selected").val()} ,
                 }).done(function (orderInfo) {
                     $("#OrderInfoContainer").html(orderInfo).fadeIn(250);
+                    $("#btnImportOrder").prop("disabled", false);
                     }).fail(function () {
                         alert("Ajax of GetOrderInfo is fail");
                 });
             //////////////////////////////////////
             //下拉式選單
-            $("#btnImportOrder").prop("disable", true);
+            //$("#btnImportOrder").prop("disable", true);
             $("#orderID").change(function () {
                 if (this.selectedIndex == 0) {
-                    $("#btnImportOrder").prop("disable", true);
+                    $("#btnImportOrder").prop("disabled", true);
                     return;
                 }
-                $("#btnImportOrder").prop("disable", false);
+                $("#btnImportOrder").prop("disabled", false);
                 $.ajax({
                     url: `@Url.Action("GetOrderInfo","Orders",new { Area="SupplierArea"})`,
                     type: "GET",
@@ -91,7 +92,8 @@
             });
            //下拉式選單///////////////////////////////////////
             //匯入按鈕
-            $("#btnImportOrder").click(function () {
+           
+  $("#btnImportOrder").click(function () {
                 GetOrderDtl();
                 let orderID = $("#orderID option:selected").val();
                 $("#btnApply").show();
@@ -111,7 +113,6 @@
                         else {
                             toastr.fail("答交失敗，異動總表未儲存", "通知");
                         }
-                        $("#btnImportOrder").prop("disable", true);
                     }).fail(function () {
                         alert("OrderApply ajax fail");
                     });
@@ -131,9 +132,11 @@
                         });
                     //拒絕按鈕結束////////////////////
             });
-                $("#btnImportOrder").prop("disable", true);
+                $("#btnImportOrder").prop("disabled", true);
             });
             //匯入按鈕 結束//////////////////////////////
+            
+          
             //ready finish here
         });
 

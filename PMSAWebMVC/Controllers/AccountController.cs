@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PMSAWebMVC;
+using PMSAWebMVC.Filter;
 using PMSAWebMVC.Models;
 using PMSAWebMVC.Services;
 using System;
@@ -15,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace PMSAWebMVC.Controllers
 {
@@ -72,8 +74,14 @@ namespace PMSAWebMVC.Controllers
         // 採購系統 ====================================================================================================================
         // GET: /Account/Login
         [AllowAnonymous]
+        [MyExceptionFilter]
         public ActionResult Login(string returnUrl)
         {
+            //若已經登入過就導到首頁
+            if (User.Identity.IsAuthenticated)
+            {
+                return View("Index", "Home");
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -82,6 +90,7 @@ namespace PMSAWebMVC.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [MyExceptionFilter]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -637,6 +646,7 @@ namespace PMSAWebMVC.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.TwoFactorCookie);
             return RedirectToAction("Login", "Account");
         }
 

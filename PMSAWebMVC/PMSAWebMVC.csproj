@@ -226,6 +226,7 @@
     <Compile Include="Areas\SupplierArea\Controllers\SupplierHomeController.cs" />
     <Compile Include="Areas\SupplierArea\Controllers\SupplierController\SupplierStocksController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
+    <Compile Include="Filter\MyExceptionFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -11,8 +11,12 @@
         入庫總表
     </div>
     <div class="card-body">
-        <button type="button" class="btn btn-warning" id="btnAdd" ><i class="fa fa-plus"></i></button>
-
+        <div>
+            <div style="float:left">
+                <button type="button" class="btn btn-warning" id="btnAdd"><i class="fa fa-plus"></i></button>
+            </div>
+            <div style="float:right" id="dabtn"></div>
+        </div>
         <div class="table-responsive">
             <br />
             <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
@@ -95,8 +99,16 @@
 
 @section scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script>
-        $('#dataTable').DataTable();
+        $(document).ready(function () {
+            var table = $('#dataTable').DataTable({
+                buttons: [
+                    'excel', 'pdf'
+                ]
+            });
+            table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
+        });
 
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();

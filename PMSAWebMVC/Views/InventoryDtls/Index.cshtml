@@ -9,7 +9,12 @@
         庫存明細
     </div>
     <div class="card-body">
-        <button type="button" class="btn btn-warning" id="inventorydtladd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-plus"></i></button>
+        <div>
+            <div style="float:left">
+                <button type="button" class="btn btn-warning" id="inventorydtladd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-plus"></i></button>
+            </div>
+            <div style="float:right" id="dabtn"></div>
+        </div>
         <div class="table-responsive">
             <br />
             <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
@@ -85,10 +90,17 @@
 
 @section scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script>
-        $('#dataTable').DataTable({
-            ordering: true,
-            order: []
+        $(document).ready(function () {
+            var table = $('#dataTable').DataTable({
+                buttons: [
+                    'excel', 'pdf'
+                ],
+                ordering: true,
+                order: []
+            });
+            table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
         });
 
         $('#myInput').on('keyup', function () {
@@ -352,7 +364,7 @@
                     }
                 })
             }
-            
+
         });
     </script>
 }
@@ -393,9 +405,9 @@
                         <input type="text" class="form-control" id="PartName" name="dta">
                     </div>
                     @*<div class="form-group">
-                        <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.UnitsOnStockOutOrder)</label>
-                        <input type="text" class="form-control" id="UnitsOnStockOutOrder" name="dta">
-                    </div>*@
+                            <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.UnitsOnStockOutOrder)</label>
+                            <input type="text" class="form-control" id="UnitsOnStockOutOrder" name="dta">
+                        </div>*@
                     <div class="form-group">
                         <label for="InventoryCode" name="dta">@Html.DisplayNameFor(model => model.UnitsOnStockInOrder)</label>
                         <input type="text" class="form-control" id="UnitsOnStockInOrder" name="dta">

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -29,6 +30,29 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             POChangedCategoryCodeShipped = "S";
             RequesterRoleSupplier = "S";
         }
+        /// <summary>
+        /// 登入者資料
+        /// </summary>
+        /// <returns></returns>
+        ///  //建構子多載
+        public OrdersController(ApplicationUserManager userManager)
+        {
+            UserManager = userManager;
+        }
+        // 屬性
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+        /// ///////////////////////////
         // GET: Orders
         public ActionResult Index()
         {
@@ -102,7 +126,10 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                        }
                        ).SingleOrDefault();
             var qSumpod = db.PurchaseOrderDtl.Where(x => x.PurchaseOrderID == orderID).Sum(x => x.Total);
-
+            if (qpo == null)
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
             OrderInfoViewModel qTotal = new OrderInfoViewModel
             {
                 EmployeeName = qpo.Name,
@@ -111,13 +138,13 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                 EmployeeEmail = qpo.Email,
                 Total = (decimal)qSumpod
             };
-           
+
             return PartialView("_IndexOrderInfoPartialView", qTotal);
         }
         //the OrderInfo's ViewModel
         public class OrderInfoViewModel
         {
-            [Display(Name="採購員")]
+            [Display(Name = "採購員")]
             public string EmployeeName { get; set; }
             [Display(Name = "手機")]
             public string EmployeeMobile { get; set; }
@@ -145,7 +172,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                          };
             return Json(new { data = qorder }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult GetPurchaseOrderS(string supplierCode)
+        public async Task<JsonResult> GetPurchaseOrderS(string supplierCode)
         {
             var qpo = (from po in db.PurchaseOrder
                        where po.PurchaseOrderStatus == "P" && po.SupplierCode == supplierCode
@@ -173,7 +200,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
         //此方法為答交按鈕的方法，此功能為辰哥負責
-        public ActionResult OrderApply(string orderID)
+        public async Task<JsonResult> OrderApply(string orderID)
         {
             ///////////////////////////////////////////////////
             //取得供應商帳號資料
@@ -212,11 +239,13 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
             db.SaveChanges();
-
+            await SendMailToBuyer(order, "訂單已答交");
             return Json("success", JsonRequestBehavior.AllowGet);
         }
+
         //拒絕按鈕
-        public ActionResult OrderRefuse(string orderID) {
+        public async Task<JsonResult> OrderRefuse(string orderID)
+        {
             ///////////////////////////////////////////////////
             //取得供應商帳號資料
             SupplierAccount supplier = User.Identity.GetSupplierAccount();
@@ -224,13 +253,31 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             string supplierCode = supplier.SupplierCode;
             ////////////////////////////////////////////////////
             ShipNoticesUtilities utilities = new ShipNoticesUtilities();
-            PurchaseOrder purchaseOrder= db.PurchaseOrder.Find(orderID);
+            PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(orderID);
             //狀態異動中=C
             purchaseOrder.PurchaseOrderStatus = "C";
-            utilities.AddAPOChanged(purchaseOrder,supplierAccount,supplierCode);
+            utilities.AddAPOChanged(purchaseOrder, supplierAccount, supplierCode);
             db.Entry(purchaseOrder).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
-            return Json("success",JsonRequestBehavior.AllowGet);
+            await SendMailToBuyer(purchaseOrder, "訂單已拒絕");
+            return Json("success", JsonRequestBehavior.AllowGet);
+        }
+        //寄信
+        public async Task SendMailToBuyer(PurchaseOrder order, string Reply)
+        {
+            string borderColor = "border-color:black";
+            string borderLine = "1";
+            string BuyerName = db.Employee.Find(order.EmployeeID).Name;
+            string shipDtlMail = $"<table style='{borderColor}' border='{borderLine}'>";
+            shipDtlMail += $"<thead><tr><th>{BuyerName}，你好</th></tr></thead>";
+            shipDtlMail += $"<tr><td>訂單編號:{order.PurchaseOrderID}{Reply}</td></tr>";
+            shipDtlMail += "</table>";
+            string BuyerID = db.Employee.Where(x => x.EmployeeID == order.EmployeeID).SingleOrDefault().EmployeeID;
+            var user = UserManager.Users.Where(x => x.UserName == BuyerID).SingleOrDefault();
+            var userId = user.Id;
+
+            //寄信
+            await UserManager.SendEmailAsync(userId, "供應商訂單答交通知", shipDtlMail);
         }
     }
 }

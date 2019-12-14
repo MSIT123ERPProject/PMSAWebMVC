@@ -15,22 +15,7 @@ namespace PMSAWebMVC.Utilities.TingHuan
 {
     public class ShipNoticesUtilities : BaseController/*, IIdentityMessageService*/
     {
-        //public ShipNoticesUtilities(ApplicationUserManager userManager)
-        //{
-        //    UserManager = userManager;
-        //}
-        //private ApplicationUserManager _userManager;
-        //public ApplicationUserManager UserManager
-        //{
-        //    get
-        //    {
-        //        return _userManager;//?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-        //    }
-        //    private set
-        //    {
-        //        _userManager = value;
-        //    }
-        //}
+        
         private PMSAEntities db = new PMSAEntities();
         /// <summary>
         /// 寄信功能想寫在這失敗了
@@ -65,7 +50,10 @@ namespace PMSAWebMVC.Utilities.TingHuan
         public async Task SendMailToBuyer(List<OrderDtlForMail> shipNotice)
         {
             //出貨明細通知的TABLE要改一下
-            string shipDtlMail = $"<table style='border: 1em'><tr><td>{shipNotice.FirstOrDefault().ShipNoticeID}</td></tr>";
+            string borderColor = "border-color:black";
+            string borderLine ="1";
+            string shipDtlMail = "<table" + $" style={borderColor}" +$" border={borderLine}" +">";
+             shipDtlMail += $"<tr><td>{shipNotice.FirstOrDefault().ShipNoticeID}</td></tr>";
             foreach (var snd in shipNotice)
             {
                 DateTime shipdate = (DateTime)snd.ShipDate;
@@ -86,6 +74,27 @@ namespace PMSAWebMVC.Utilities.TingHuan
 
             //寄信
             await UserManager.SendEmailAsync(userId, "商品出貨通知", shipDtlMail);
+        }
+        public async Task SendMailToBuyer(PurchaseOrder order)
+        {
+            string borderColor = "border-color:black";
+            string borderLine = "1";
+            string shipDtlMail = "<table" + $" style={borderColor}" + $" border={borderLine}" + ">";
+            shipDtlMail += $"<thead><tr><th>{order.Employee}，你好</th></tr></thead>";
+            shipDtlMail += $"<tr><td>訂單編號:{order.PurchaseOrderID}已出貨</td></tr>";
+            shipDtlMail += "</table>";
+            //先找到你要寄信的人(這邊用供應商帳號找)，並儲存 user.Id
+            //這裡的值在資料庫的 dbo.AppUsers table
+            var user = UserManager.Users.Where(x => x.UserName == "SE00001").SingleOrDefault();
+            //user.Id 等等寄信方法第一個參數會用到
+            var userId = user.Id;
+            //string shipDtlMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Views\ShipNotices\..."));
+            //信裡要用的變數
+            //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            //string SupAccID = user.UserName;
+
+            //寄信
+            await UserManager.SendEmailAsync(userId, "供應商訂單答交通知", shipDtlMail);
         }
 
         public bool AddAPOChanged(PurchaseOrder purchaseOrder, string supplierAccount, string supplierCode)

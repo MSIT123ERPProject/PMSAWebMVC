@@ -489,8 +489,10 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
         public async Task SendMailToBuyer(List<OrderDtlForMail> shipNotice)
         {
             string supAccID = supplierAccount;
+            string borderColor = "border-color:black";
+            string borderLine = "1";
             string shipDtlMail = $"<h2>出貨單號:{shipNotice.FirstOrDefault().ShipNoticeID}</h2>";
-            shipDtlMail += $"<table><thead><tr><th>出貨商品明細流水號</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
+            shipDtlMail += $"<table style={borderColor} border={borderLine}><thead><tr><th>出貨商品明細流水號</th><th>料件編號</th><th>料件名稱</th><th>出貨數量</th><th>出貨日期</th></tr><thead><tbody>";
             foreach (var snd in shipNotice)
             {
                 DateTime shipDate = (DateTime)snd.ShipDate;

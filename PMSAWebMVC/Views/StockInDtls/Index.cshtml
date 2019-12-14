@@ -11,6 +11,7 @@
         入庫明細
     </div>
     <div class="card-body">
+        <div id="dabtn"></div>
         <div class="table-responsive">
             <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
@@ -91,8 +92,16 @@
 
 @section scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script>
-        $('#dataTable').DataTable();
+        $(document).ready(function () {
+            var table = $('#dataTable').DataTable({
+                buttons: [
+                    'excel', 'pdf'
+                ]
+            });
+            table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
+        });
 
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();

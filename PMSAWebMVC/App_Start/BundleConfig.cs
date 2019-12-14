@@ -100,12 +100,17 @@ namespace PMSAWebMVC
             //DataTables
             bundles.Add(new StyleBundle("~/Content/DataTables").Include(
                 "~/Content/DataTables/css/datatables.css",
-                "~/Content/DataTables/css/dataTables.site.css"
+                "~/Content/DataTables/css/dataTables.site.css",
+                "~/Content/DataTables/css/buttons.dataTables.min.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
                 "~/Scripts/DataTables/datatables.js",
-                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js"
+                "~/Scripts/DataTables/i18n/jquery.dataTables.zh-TW.js",
+                "~/Content/DataTables/css/buttons.flash.min.js",
+                "~/Content/DataTables/css/dataTables.buttons.min.js",
+                "~/Content/DataTables/css/buttons.html5.min.js",
+                "~/Content/DataTables/css/buttons.print.min.js"
                 ));
 
             //HighCharts

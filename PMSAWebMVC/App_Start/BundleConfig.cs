@@ -115,7 +115,10 @@ namespace PMSAWebMVC
 
             //HighCharts
             bundles.Add(new ScriptBundle("~/bundles/HighCharts").Include(
-                "~/Scripts/highcharts/highcharts.js"
+                "~/Scripts/highcharts/highcharts.js",
+                "~/Scripts/highcharts/highcharts-more.js",
+                "~/Scripts/highcharts/modules/exporting.js",
+                "~/Scripts/highcharts/modules/accessibility.js"
                 ));
 
             //Slick

@@ -38,18 +38,19 @@
             @*<h2><i class="fas fa-chart-bar"></i>料件庫存數量</h2>*@
             <div class="card" id="container2"></div>
         </div>
-        @*<div class="col-md-4">
-            <h2><i class="fas fa-boxes"></i>料件出貨數量</h2>
-            <div class="card" id="container3"></div>
-        </div>*@
         <div class="col-md-4">
-            @*<h2><i class="fas fa-boxes"></i>料件出貨數量</h2>*@
-            <div class="card" id="ShipQtyByStatus"></div>
+            <div class="card" id="container3"></div>
         </div>
+        @*<div class="col-md-4">
+            <div class="card" id="ShipQtyByStatus"></div>
+        </div>*@
     </div>
     @section scripts{
         @*bubbleChart還是需要引用此CDN*@
+        @*<script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/highcharts-more.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
         @*//////////////////////////////////////////*@
         @*引用highchart主題*@
         <script src="~/scripts/highcharts/themes/sunset.js"></script>

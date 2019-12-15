@@ -203,5 +203,12 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                 }
             }
         }
+        public class ShipQtyByStatusViewModel {
+            public string PartName { set; get; }
+            public string PartNumber { set; get; }
+            public int Qty { set; get; }
+            public int UnitsOnOrder { set; get; }
+            public int ShipQty { set; get; }
+        }
     }
 }

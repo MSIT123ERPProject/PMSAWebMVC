@@ -513,9 +513,9 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             string OrderID = order.PurchaseOrderID;
             string OrderApply = "已出貨";
             string borderSize = "1";
-            string borderColor = "font - family:'microsoft jhenghei',";
-            borderColor += "sans-serif;margin: 20px auto; background-color: #eee; padding-bottom: 20px;";
-            string OrderDtl = $"<h2>出貨明細</h2></br><h2>出貨單號:{snId}</h2><table style='{borderColor}'>";
+            // borderColor = "border:'1'";
+            //borderColor += "sans-serif;margin: 20px auto; background-color: #eee; padding-bottom: 20px;";
+            string OrderDtl = $"<h2>出貨明細</h2></br><h2>出貨單號:{snId}</h2>";
             foreach (var snd in shipNotice)
             {
                 DateTime shipDate = (DateTime)snd.ShipDate;

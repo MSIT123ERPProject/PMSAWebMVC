@@ -562,7 +562,8 @@
                     data: $("#formCreatePurchaseOrders").serialize(),
                 }).done(function (result) {
                     if (result.status == "warning") {
-                        toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+                        //錯誤訊息延長顯示
+                        toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'), { timeOut: 6000 });
                     } else if (result.status == "success") {
                         toastr.success(result.message);
                         setTimeout(function () {

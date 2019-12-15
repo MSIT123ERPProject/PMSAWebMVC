@@ -32,10 +32,23 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <returns></returns>
         public IEnumerable<PurchaseOrderIndexViewModel> GetPurchaseOrderListViewModel()
         {
+            //採購主管可以查屬下的採購單
+            List<string> empid = null;
+            if (emp.Title == "採購主管")
+            {
+                empid = db.Employee.Where(e => e.ManagerID == emp.EmployeeID).Select(e => e.EmployeeID).ToList();
+            }
+            else
+            {
+                empid = new List<string> { emp.EmployeeID };
+            }
             //請購單可能會無關聯
-            var povm = from po in db.PurchaseOrder.AsEnumerable()
+            var povm = from po in (from poin in db.PurchaseOrder
+                                   where empid.Contains(poin.EmployeeID)
+                                   select poin
+                                    ).AsEnumerable()
                        join si in db.SupplierInfo
-                       on new { po.SupplierCode, po.EmployeeID } equals new { si.SupplierCode, emp.EmployeeID }
+                       on new { po.SupplierCode } equals new { si.SupplierCode }
                        join rel in db.PRPORelation
                        on po.PurchaseOrderID equals rel.PurchaseOrderID into rels
                        from rel in rels.DefaultIfEmpty()

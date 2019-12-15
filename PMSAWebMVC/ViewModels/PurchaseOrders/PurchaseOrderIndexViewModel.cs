@@ -59,7 +59,6 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             return povm;
         }
 
-
         private string GetStatus(string purchaseOrderStatus)
         {
             //N = 新增,P = 送出,C = 異動中,E = 答交,D = 整筆訂單取消,S = 出貨,R = 點交,O = 逾期,Z = 結案

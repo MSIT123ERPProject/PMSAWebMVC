@@ -422,6 +422,7 @@
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAcc_Parent.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\SupInfoViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderCreateViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderSendToSupplierViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionIndexViewModel.cs" />
@@ -2399,6 +2400,7 @@
     <Content Include="Views\SourceLists\_CreateSLItemPartial.cshtml" />
     <Content Include="Views\Products\ProductDetilView.cshtml" />
     <Content Include="Views\PurchaseOrders\_IndexPODItemPartial.cshtml" />
+    <Content Include="Views\PurchaseOrders\SendToSupplier.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -37,9 +37,29 @@ namespace PMSAWebMVC.Controllers
         /// <returns></returns>
         public ActionResult GetPurchaseOrderListViewModel()
         {
-            Repository rep = new Repository(User.Identity.GetEmployee(),db);
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
             var vm = rep.GetPurchaseOrderListViewModel();
             return PartialView("_IndexPODItemPartial", vm);
+        }
+
+        /// <summary>
+        /// 送出至供應商畫面
+        /// </summary>
+        /// <param name="id">採購單編號 PurchaseOrderID</param>
+        /// <returns></returns>
+        public ActionResult SendToSupplier(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            POSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+            if (vm == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vm);
         }
 
         //取得供應商資料集

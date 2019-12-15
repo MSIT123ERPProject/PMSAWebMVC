@@ -184,11 +184,26 @@ table.dataTable.dtr-column > tbody > tr.parent th.control:before {
 .table-data-feature input[type='button'] {
     cursor: pointer;
 }
+
 /*功能按鈕 coolAdmin/css/theme.css 70 */
 .table-data-feature button {
     border: none;
     background: none;
 }
+
+.table-data-feature a[role='button'],
+.table-data-feature a[class*='btn'] {
+    border: none;
+    color: #a0b7bc;
+    background: none;
+}
+
+    .table-data-feature a[role='button']:hover,
+    .table-data-feature a[class*='btn']:hover {
+        color: #212529;
+        background-color: #a0b7bc;
+    }
+
 /*功能按鈕 coolAdmin/css/theme.css 4609 */
 .table-data-feature {
     display: -ms-flexbox;

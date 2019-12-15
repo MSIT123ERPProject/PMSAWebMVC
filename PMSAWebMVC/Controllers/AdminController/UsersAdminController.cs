@@ -436,5 +436,55 @@ namespace PMSAWebMVC.Controllers
             db.Entry(emp).State = EntityState.Modified;
             await db.SaveChangesAsync();
         }
+
+        //private class UserOfJson
+        //{
+        //    public string EmployeeID { get; set; }
+        //    public string Name { get; set; }
+        //    public string Role { get; set; }
+        //    public string Email { get; set; }
+        //    public string Mobile { get; set; }
+        //    public string Tel { get; set; }
+        //    public string AccountStatus { get; set; } //D
+        //    public DateTime ModifiedDate { get; set; }
+        //    public string ManagerID { get; set; }
+        //    public DateTime CreateDate { get; set; }
+        //    public DateTime SendLetterDate { get; set; }
+        //    public DateTime LastPasswordChangedDate { get; set; }
+        //    public bool EmailConfirm { get; set; }
+        //}
+
+        //private class Users
+        //{
+        //    public List<UserOfJson> Sheet1 { get; set; }
+        //}
+
+        //[HttpPost]
+        //public ActionResult getExcelJson(string ExcelJson)
+        //{
+        //    Users users = JsonConvert.DeserializeObject<Users>(ExcelJson);
+        //    foreach (var item in users.Sheet1)
+        //    {
+        //        Console.WriteLine("id: {0}, name: {1}", item.EmployeeID, item.Name);
+        //    }
+
+        //    //var user = new
+        //    //{
+        //    //    EmployeeID = x.UserName,
+        //    //    Name = x.RealName,
+        //    //    Role = await UserManager.GetRolesAsync(x.Id),
+        //    //    Email = x.Email,
+        //    //    Mobile = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Mobile).FirstOrDefaultAsync(),
+        //    //    Tel = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.Tel).FirstOrDefaultAsync(),
+        //    //    AccountStatus = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.AccountStatus).FirstOrDefaultAsync(),
+        //    //    ModifiedDate = JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ModifiedDate).FirstOrDefaultAsync(), js),
+        //    //    ManagerID = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.ManagerID).FirstOrDefaultAsync(),
+        //    //    CreateDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.CreateDate).FirstOrDefaultAsync(), js),
+        //    //    SendLetterDate = await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await db.Employee.Where(e => e.EmployeeID == x.UserName).Select(e => e.SendLetterDate).FirstOrDefaultAsync(), js),
+        //    //    LastPasswordChangedDate = await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync() == null ? null : JsonConvert.SerializeObject(await UserManager.Users.Where(e => e.UserName == x.UserName).Select(e => e.LastPasswordChangedDate).FirstOrDefaultAsync(), js),
+        //    //    EmailConfirm = x.EmailConfirmed
+        //    //};
+        //    return Content($"alert({ExcelJson})");
+        //}
     }
 }

@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers.AccSettingController
 {
+    [Authorize]
     public class BuyerSettingController : BaseController
     {
         private readonly PMSAEntities db = new PMSAEntities();

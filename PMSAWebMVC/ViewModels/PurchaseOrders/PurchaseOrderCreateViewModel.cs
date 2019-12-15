@@ -215,18 +215,18 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string LastModifiedAccountID { get; set; }
     }
 
-    public class Repository
+    public partial class Repository
     {
-        PurchaseOrderCreateSession session;
+        private Employee emp;
+        private PMSAEntities db;
+        private PurchaseOrderCreateSession session;
 
         private Repository() { }
-        Employee emp;
         public Repository(Employee emp)
         {
             this.emp = emp;
             this.session = PurchaseOrderCreateSession.Current;
         }
-        private PMSAEntities db;
         public Repository(Employee emp, PMSAEntities ent)
         {
             this.emp = emp;
@@ -360,6 +360,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 return infoq.FirstOrDefault();
             }
         }
+
         /// <summary>
         /// 取得請購單選單
         /// </summary>
@@ -380,6 +381,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 return prq.ToList();
             }
         }
+
         /// <summary>
         /// 取得供應商選單
         /// </summary>

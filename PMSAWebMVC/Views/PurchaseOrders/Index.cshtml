@@ -1,124 +1,130 @@
 ﻿@model IEnumerable<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderIndexViewModel>
 
+@section styles{
+    <style>
+        /*內容分隔線*/
+        .border-top-dashed {
+            border-top: 1px dashed #3C4055;
+        }
+
+        .border-bottom-dashed {
+            border-bottom: 1px dashed #3C4055;
+        }
+        /*連結無底線*/
+        .nounderline {
+            text-decoration: none !important
+        }
+        /*收合內容*/
+        .card-header .fa {
+            transition: .3s transform ease-in-out;
+        }
+
+        .card-header .collapsed .fa-chevron-down {
+            transform: rotate(90deg);
+        }
+        /*表格欄位內容對齊*/
+        #dataTablesPO tbody tr td:nth-child(3) {
+            text-align: right;
+        }
+    </style>
+}
+
 @{
-    ViewBag.Title = "採購單管理";
+    ViewBag.Title = "採購單";
 }
 
 <h2>@ViewBag.Title</h2>
 
 <p>
-    <a href="@Url.Action( "Create","PurchaseOrders")" class="btn btn-success"><i class="fas fa-plus"></i> 新增採購單</a>
+    <a href="@Url.Action( "Create","PurchaseOrders")" class="btn btn-primary"><i class="fas fa-plus"></i> 新增採購單</a>
 </p>
-@*<table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PurchaseOrderID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SupplierName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PurchaseOrderStatus)
-            </th>
-            <th></th>
-        </tr>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PurchaseOrderID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SupplierName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PurchaseOrderStatus)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.PurchaseOrderID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.PurchaseOrderID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.PurchaseOrderID })
-                </td>
-            </tr>
-        }
-
-    </table>*@
-
-
-
-<!-- DataTables Example -->
 <div class="card mb-3">
-    <div class="card-header">
-        <i class="fas fa-table"></i>
-        採購單
+    <div class="card-header text-primary">
+        <i class="fab fa-wpforms"></i> 採購單資訊
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table" data-tablesaw-mode="stack" id="dataTablePO" cellspacing="0" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>採購單號</th>
-                        <th>採購日期</th>
-                        <th>供應商名稱</th>
-                        <th>來自請購號</th>
-                        <th>狀態</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>採購單號</th>
-                        <th>採購日期</th>
-                        <th>供應商名稱</th>
-                        <th>來自請購號</th>
-                        <th>狀態</th>
-                    </tr>
-                </tfoot>
-            </table>
+        <div id="poContainer">
+
         </div>
     </div>
     <div class="card-footer small text-muted"></div>
 </div>
 @section scripts
 {
-<script>
+    <script>
         $(document).ready(function () {
-            $('#dataTablePO').DataTable(
-                {
-                    ajax: {
-                        url: "@Url.Action("GetPurchaseOrderList", "PurchaseOrders")",
-                        type: "get",
-                        datatype: "json"
+            //==$(document).ready begin==
+
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            }
+
+            swal.options = {
+                title: '刪除確認',
+                text: "確定要刪除嗎？",
+                type: 'warning',
+                showCancelButton: true,
+                customClass: {
+                    confirmButton: 'bg-primary',
+                    cancelButton: 'bg-danger',
+                },
+                cancelButtonText: '取消',
+                confirmButtonText: '確定'
+            }
+
+            showPOToTableViewModel();
+
+            //顯示採購明細表
+            async function showPOToTableViewModel() {
+                await $.ajax({
+                    url: "@Url.Action("GetPurchaseOrderListViewModel", "PurchaseOrders")",
+                    type: "get",
+                }).done(function (result) {
+                     //建立內容
+                     $('#poContainer').html(result);
+                     initDataTablesPO();
+                     //顯示內容
+                     resizeDatatable();
+                     console.log("showPOToTableViewModel");
+                    }).fail(function (e) {
+                        toastr.error(e.responseText);
+                        console.log(e);
+                    });
+            }
+
+            //採購主表
+            var dtPO;
+            function initDataTablesPO() {
+                dtPO = $('#dataTablesPO').DataTable({
+                    ordering: true,
+                    fixedHeader: false,
+                    paging: true,
+                    //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                    order: [[1, 'desc']],
+                    //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                    responsive: {
+                        details: {
+                            type: 'column',
+                            target: 0
+                        }
                     },
-                    language: {
-                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                    columnDefs: [{
+                        targets: 0,
+                        className: 'control',
+                        searchable: false
                     },
-                    columns: [
-                        { data: "PurchaseOrderID" },
-                        {
-                            data: "CreateDate", render: function (data, type, full, meta) {
-                                return moment(data).format("YYYY/MM/DD");
-                            }
-                        },
-                        { data: "SupplierName" },
-                        { data: "PurchaseRequisitionID" },
-                        { data: "PurchaseOrderStatus" }
+                        { orderable: false, targets: [0, 1, -1] },
                     ],
-                    order: [[1, "desc"]],
-                }
-            );
+                });
+                dtPO.on('responsive-resize', function (e, datatable, columns) {
+                    //修正縮放大小不正確的問題
+                    dtPO.columns.adjust().responsive.recalc();
+                });
+            }
+
+            //==$(document).ready end==
         });
-</script>
+    </script>
 }

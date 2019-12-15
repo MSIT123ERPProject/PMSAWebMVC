@@ -2398,6 +2398,7 @@
     <Content Include="Views\SourceLists\Createtest.cshtml" />
     <Content Include="Views\SourceLists\_CreateSLItemPartial.cshtml" />
     <Content Include="Views\Products\ProductDetilView.cshtml" />
+    <Content Include="Views\PurchaseOrders\_IndexPODItemPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

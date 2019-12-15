@@ -31,34 +31,15 @@ namespace PMSAWebMVC.Controllers
             return View();
         }
 
-        public JsonResult GetPurchaseOrderList()
+        /// <summary>
+        /// 主畫面採購單資料
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetPurchaseOrderListViewModel()
         {
-            //請購單可能會無關聯
-            Employee emp = User.Identity.GetEmployee();
-            var povm = from po in db.PurchaseOrder.AsEnumerable()
-                       join si in db.SupplierInfo
-                       on new { po.SupplierCode, po.EmployeeID } equals new { si.SupplierCode, emp.EmployeeID }
-                       join rel in db.PRPORelation
-                       on po.PurchaseOrderID equals rel.PurchaseOrderID into rels
-                       from rel in rels.DefaultIfEmpty()
-                       group new { po, si, rel } by new
-                       {
-                           po.PurchaseOrderID,
-                           po.CreateDate,
-                           si.SupplierName,
-                           rel.PurchaseRequisitionID,
-                           po.PurchaseOrderStatus
-                       } into gp
-                       orderby gp.Key.PurchaseOrderID descending
-                       select new PurchaseOrderIndexViewModel
-                       {
-                           PurchaseOrderID = gp.Key.PurchaseOrderID,
-                           CreateDate = gp.Key.CreateDate,
-                           SupplierName = gp.Key.SupplierName,
-                           PurchaseRequisitionID = gp.Key.PurchaseRequisitionID,
-                           PurchaseOrderStatus = GetStatus(gp.Key.PurchaseOrderStatus)
-                       };
-            return Json(new { data = povm }, JsonRequestBehavior.AllowGet);
+            Repository rep = new Repository(User.Identity.GetEmployee(),db);
+            var vm = rep.GetPurchaseOrderListViewModel();
+            return PartialView("_IndexPODItemPartial", vm);
         }
 
         //取得供應商資料集
@@ -276,7 +257,7 @@ namespace PMSAWebMVC.Controllers
             return PartialView("_CreatePODItemPartial", vm);
         }
 
-        private void ConfigureViewModel(PurchaseOrderCreateViewModel model)
+        private void ConfigureCreateViewModel(PurchaseOrderCreateViewModel model)
         {
             //將先前Session中的內容先清空
             if (this.session.PRDItems.Count() > 0)
@@ -288,35 +269,6 @@ namespace PMSAWebMVC.Controllers
             Repository rep = new Repository(User.Identity.GetEmployee());
             IList<PurchaseRequisitionItem> purchaseRequisitions = rep.GetPurchaseRequisitionList();
             model.PurchaseRequisitionList = new SelectList(purchaseRequisitions, "PurchaseRequisitionIdValue", "PurchaseRequisitionIdDisplay");
-        }
-
-        private string GetStatus(string purchaseOrderStatus)
-        {
-            //N = 新增,P = 送出,C = 異動中,E = 答交,D = 整筆訂單取消,S = 出貨,R = 點交,O = 逾期,Z = 結案
-            switch (purchaseOrderStatus)
-            {
-                case "N":
-                    return "新增";
-                case "P":
-                    return "送出";
-                case "C":
-                    return "異動中";
-                case "E":
-                    return "答交";
-                case "D":
-                    return "取消";
-                case "S":
-                    return "出貨";
-                case "R":
-                    return "點交";
-                case "O":
-                    return "逾期";
-                case "Z":
-                    return "結案";
-                default:
-                    return "";
-            }
-
         }
 
         // GET: PurchaseOrders/Details/5
@@ -338,7 +290,7 @@ namespace PMSAWebMVC.Controllers
         public ActionResult Create()
         {
             PurchaseOrderCreateViewModel model = new PurchaseOrderCreateViewModel();
-            ConfigureViewModel(model);
+            ConfigureCreateViewModel(model);
             return View(model);
         }
 

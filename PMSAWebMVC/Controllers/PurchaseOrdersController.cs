@@ -132,6 +132,8 @@ namespace PMSAWebMVC.Controllers
         {
             Repository rep = new Repository(User.Identity.GetEmployee(), db);
             var vm = rep.AddPODtlToTableViewModel();
+            //計算金額總計
+            ViewBag.Aggregate = vm.Sum(item => item.Total).ToString("C0");
             return PartialView("_CreatePODItemPartial", vm);
         }
 

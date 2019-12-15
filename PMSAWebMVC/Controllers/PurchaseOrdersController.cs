@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -76,7 +77,8 @@ namespace PMSAWebMVC.Controllers
         public JsonResult GetWarehouseInfoList()
         {
             Repository rep = new Repository(User.Identity.GetEmployee(), db);
-            var data = db.WarehouseInfo.Select(item =>new {
+            var data = db.WarehouseInfo.Select(item => new
+            {
                 item.WarehouseCode,
                 item.Employee.Name,
                 item.Address,
@@ -335,12 +337,30 @@ namespace PMSAWebMVC.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IList<PurchaseOrderDtlItem> model)
+        public ActionResult Create([Bind(Include = "POInfoItem")] PurchaseOrderCreateViewModel model)
         {
-            if (model?.Count() == 0)
+            StringBuilder sb = new StringBuilder();
+            if (session.PODItems.Count == 0)
             {
-                return Json(new { message = "採購明細為必填", status = "warning" });
+                sb.Append("採購明細為必填").Append(Environment.NewLine);
             }
+            if (string.IsNullOrWhiteSpace(model.POInfoItem.ReceiverName))
+            {
+                sb.Append("收貨人姓名 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(model.POInfoItem.ReceiptAddress))
+            {
+                sb.Append("收貨地址 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(model.POInfoItem.ReceiverTel) && string.IsNullOrWhiteSpace(model.POInfoItem.ReceiverMobile))
+            {
+                sb.Append("收貨人市話 及 收貨人手機 需擇一填寫").Append(Environment.NewLine);
+            }
+            if (sb.Length > 0)
+            {
+                return Json(new { message = sb.ToString(), status = "warning" });
+            }
+
             //建立設定資料
             IList<PurchaseOrderDtlItem> pods = session.PODItems;
             Employee emp = User.Identity.GetEmployee();
@@ -362,7 +382,11 @@ namespace PMSAWebMVC.Controllers
                     SupplierCode = sa.SupplierCode,
                     EmployeeID = emp.EmployeeID,
                     CreateDate = now,
-                    PurchaseOrderStatus = "N"
+                    PurchaseOrderStatus = "N",
+                    ReceiverName = model.POInfoItem.ReceiverName,
+                    ReceiptAddress = model.POInfoItem.ReceiptAddress,
+                    ReceiverMobile = model.POInfoItem.ReceiverMobile,
+                    ReceiverTel = model.POInfoItem.ReceiverTel
                 };
                 db.PurchaseOrder.Add(po);
                 db.SaveChanges();

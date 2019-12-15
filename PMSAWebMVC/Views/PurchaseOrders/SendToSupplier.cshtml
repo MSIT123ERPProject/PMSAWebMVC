@@ -202,16 +202,34 @@
                 <div class="col-md-3 col-6">
                     <small><strong>@Html.DisplayNameFor(m => m.POItem.ReceiverTel)</strong></small>
                     <br>
-                    <p class="text-muted">@Html.DisplayFor(m => m.POItem.ReceiverTel)</p>
+                    <p class="text-muted">
+                        @if (String.IsNullOrEmpty(Model.POItem.ReceiverTel))
+                        {
+                            @:無
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(m => m.POItem.ReceiverTel)
+                        }
+                    </p>
                 </div>
                 <div class="col-md-3 col-6">
                     <small><strong>@Html.DisplayNameFor(m => m.POItem.ReceiverMobile)</strong></small>
                     <br>
-                    <p class="text-muted">@Html.DisplayFor(m => m.POItem.ReceiverMobile)</p>
+                    <p class="text-muted">
+                        @if (String.IsNullOrEmpty(Model.POItem.ReceiverMobile))
+                        {
+                            @:無
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(m => m.POItem.ReceiverMobile)
+                        }
+                    </p>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 </div>
 
 <div class="form-group">

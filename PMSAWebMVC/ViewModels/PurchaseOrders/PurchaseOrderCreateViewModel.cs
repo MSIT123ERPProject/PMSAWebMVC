@@ -885,5 +885,6 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// 交貨資訊
         /// </summary>
         public PurchaseOrder POInfoItem { get; set; }
+        public IList<PurchaseOrderDtlItem> PODItems { get; set; }
     }
 }

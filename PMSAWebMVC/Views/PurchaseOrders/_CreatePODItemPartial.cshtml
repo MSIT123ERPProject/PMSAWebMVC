@@ -1,9 +1,7 @@
 ﻿@model IList<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderDtlItem>
-
-@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreatePurchaseOrders" }))
+@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreateTablePurchaseOrders" }))
 {
     @Html.AntiForgeryToken()
-
     <table id="dataTablesPO" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
         <thead>
             <tr class="bg-primary text-white text-center">
@@ -24,10 +22,7 @@
             {
                 <tr>
                     <td></td>
-                    <td>
-                        @Html.DisplayFor(m => m[i].PartNumber)
-                        @Html.HiddenFor(m => m[i].PartNumber)
-                    </td>
+                    <td>@Html.DisplayFor(m => m[i].PartNumber)</td>
                     <td>@Html.DisplayFor(m => m[i].PartName)</td>
                     <td>@Html.DisplayFor(m => m[i].OriginalUnitPrice)</td>
                     <td>@Html.DisplayFor(m => m[i].Qty)</td>

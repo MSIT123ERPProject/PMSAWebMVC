@@ -141,7 +141,7 @@
 
 
 @*交貨資訊*@
-<div class="card mb-3">
+<div class="card mb-3 d-none" id="receiverinfo">
     <div class="card-header">
         <a data-toggle="collapse" href="#collapse-receiverinfo" aria-expanded="true" aria-controls="collapse-receiverinfo" id="heading-receiverinfo" class="d-block nounderline">
             <i class="fas fa-truck-moving"></i> 交貨資訊 <i class="fa fa-chevron-down"></i>
@@ -160,40 +160,47 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="md-form col-md-3 col-6">
-                    <i class="far fa-user prefix"></i>
-                    @Html.TextBoxFor(m => m.POInfoItem.ReceiverName, new { @class = "form-control" })
-                    @Html.LabelFor(m => m.POInfoItem.ReceiverName)
-                    @Html.ValidationMessageFor(m => m.POInfoItem.ReceiverName, "", new { @class = "text-danger" })
-                </div>
-                <div class="md-form col-md-6 col-6">
-                    <i class="far fa-map prefix"></i>
-                    @Html.TextBoxFor(m => m.POInfoItem.ReceiptAddress, new { @class = "form-control" })
-                    @Html.LabelFor(m => m.POInfoItem.ReceiptAddress)
-                    @Html.ValidationMessageFor(m => m.POInfoItem.ReceiptAddress, "", new { @class = "text-danger" })
-                </div>
+            @using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreatePurchaseOrders" }))
+            {
+                @Html.AntiForgeryToken()
 
-                <div class="w-100"></div>
+                <div class="row">
+                    <div class="md-form col-md-3 col-6">
+                        <i class="far fa-user prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiverName, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiverName)
+                        @Html.ValidationMessageFor(m => m.POInfoItem.ReceiverName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="md-form col-md-6 col-6">
+                        <i class="far fa-map prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiptAddress, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiptAddress)
+                        @Html.ValidationMessageFor(m => m.POInfoItem.ReceiptAddress, "", new { @class = "text-danger" })
+                    </div>
 
-                <div class="md-form col-md-3 col-6">
-                    <i class="fas fa-phone prefix"></i>
-                    @Html.TextBoxFor(m => m.POInfoItem.ReceiverTel, new { @class = "form-control" })
-                    @Html.LabelFor(m => m.POInfoItem.ReceiverTel)
+                    <div class="w-100"></div>
+
+                    <div class="md-form col-md-3 col-6">
+                        <i class="fas fa-phone prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiverTel, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiverTel)
+                    </div>
+                    <div class="md-form col-md-3 col-6">
+                        <i class="fas fa-mobile-alt prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiverMobile, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiverMobile)
+                    </div>
                 </div>
-                <div class="md-form col-md-3 col-6">
-                    <i class="fas fa-mobile-alt prefix"></i>
-                    @Html.TextBoxFor(m => m.POInfoItem.ReceiverMobile, new { @class = "form-control" })
-                    @Html.LabelFor(m => m.POInfoItem.ReceiverMobile)
-                </div>
+            }
             </div>
-        </div>
     </div>
 </div>
 
 <div class="form-group">
     <button id="btnSubmit" type="button" class="btn btn-primary btn-block" disabled><i class="far fa-paper-plane"></i> 送出申請</button>
 </div>
+
+
 
 @*加入採購單、編輯Modal*@
 <!-- Central Modal Fluid Success-->
@@ -458,12 +465,12 @@
                         }
                         let btn = $("#btnPODAdd");
                         btn.prop("disabled", true);
-                        $("#Qty").val(data.Qty);
-                        $("#DateRequired").val(data.DateRequiredToShow);
-                        $("#TotalSourceListQty").val(data.TotalSourceListQty);
-                        $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
-                        $("#Discount").val(data.DiscountToShow);
-                        $("#Total").val(data.TotalToShow);
+                        $("#Qty").trigger("focus").val(data.Qty);
+                        $("#DateRequired").trigger("focus").val(data.DateRequiredToShow);
+                        $("#TotalSourceListQty").trigger("focus").val(data.TotalSourceListQty);
+                        $("#OriginalUnitPrice").trigger("focus").val(data.OriginalUnitPriceToShow);
+                        $("#Discount").trigger("focus").val(data.DiscountToShow);
+                        $("#Total").trigger("focus").val(data.TotalToShow);
                         if (data.SourceListID) {
                             let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
                             sl.prop('checked', true);
@@ -514,6 +521,7 @@
             function hideSupplierInfo() {
                 $("#supplierInfo").hide();
                 $("#collapse-supplierinfo").html("");
+                $("#receiverinfo").hide();   
             }
 
             //刪除按鈕觸發
@@ -550,10 +558,10 @@
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("Create", "PurchaseOrders")",
-                    data: $("#formCreatePurchaseOrders").serialize()
+                    data: $("#formCreatePurchaseOrders").serialize(),
                 }).done(function (result) {
                     if (result.status == "warning") {
-                        toastr.warning(result.message);
+                        toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
                     } else if (result.status == "success") {
                         toastr.success(result.message);
                         setTimeout(function () {
@@ -617,6 +625,7 @@
                     } else {
                         $("#collapse-supplierinfo").html(result);
                         $("#supplierInfo").hide().removeClass("d-none").fadeIn(500);
+                        $("#receiverinfo").hide().removeClass("d-none").fadeIn(500);                        
                     }
                     }).fail(function (e) {
                         toastr.error(e.responseText);

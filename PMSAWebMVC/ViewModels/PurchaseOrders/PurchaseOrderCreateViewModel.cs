@@ -845,6 +845,35 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
 
             return pods;
         }
+
+        /// <summary>
+        /// 更新採購單狀態
+        /// </summary>
+        /// <param name=purchaseOrderID"></param>
+        /// <param name="status"></param>
+        public void UpdatePOStatus(string purchaseOrderID, string status)
+        {
+            PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
+            po.PurchaseOrderStatus = status;
+            db.Entry(po).Property(pop => pop.PurchaseOrderStatus).IsModified = true;
+            db.SaveChanges();
+
+            //採購單異動總表 
+            DateTime now = DateTime.Now;
+            POChanged poc = new POChanged
+            {
+                PurchaseOrderID = purchaseOrderID,
+                POChangedCategoryCode = status,
+                RequestDate = now,
+                RequesterRole = "P",
+                RequesterID = emp.EmployeeID,
+                PurchaseOrderDtlCode = null,
+                Qty = null,
+                DateRequired = null
+            };
+            db.POChanged.Add(poc);
+            db.SaveChanges();
+        }
     }
 
     public class PurchaseRequisitionItem

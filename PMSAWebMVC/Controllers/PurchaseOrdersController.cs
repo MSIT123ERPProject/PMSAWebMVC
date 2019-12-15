@@ -63,6 +63,24 @@ namespace PMSAWebMVC.Controllers
             return View(vm);
         }
 
+        /// <summary>
+        /// 送出至供應商畫面
+        /// </summary>
+        /// <param name="id">採購單編號 PurchaseOrderID</param>
+        /// <returns></returns>
+        [HttpPost, ActionName("SendToSupplier")]
+        [ValidateAntiForgeryToken]
+        public ActionResult SendToSupplierPost([Bind(Include = "POItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        {
+            if (model == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            rep.UpdatePOStatus(model.POItem.PurchaseOrderID, "P");
+            return Json(new { message = "送出至供應商成功", status = "success" });
+        }
+
         //取得供應商資料集
         [HttpGet]
         public JsonResult GetSupplierList(string id)

@@ -16,6 +16,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public class SendToSupplierViewModel
         {
             public POInfoViewModel POItem { get; set; }
+            public SUPInfoViewModel SUPItem { get; set; }
         }
 
         public class POInfoViewModel
@@ -60,9 +61,22 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public SendToSupplierViewModel GetPOSendToSupplierViewModel(string purchaseOrderID)
         {
             var poitem = GetPOInfoViewModel(purchaseOrderID);
+            var si = db.SupplierInfo.Find(poitem.SupplierCode);
+            var supacc = si.SupplierAccount.FirstOrDefault();
+
+            var supitem = new SUPInfoViewModel
+            {
+                SupplierName = si.SupplierName,
+                ContactName = supacc.ContactName,
+                Email = si.Email,
+                Tel = si.Tel
+            };
+
             SendToSupplierViewModel po = new SendToSupplierViewModel
             {
-                POItem = poitem
+                POItem = poitem,
+                SUPItem = supitem
+
             };
             return po;
         }

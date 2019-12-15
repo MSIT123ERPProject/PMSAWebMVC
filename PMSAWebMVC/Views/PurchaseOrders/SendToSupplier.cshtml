@@ -185,16 +185,39 @@
 
     <div id="collapse-receiverinfo" class="collapse show" aria-labelledby="heading-receiverinfo">
         <div class="card-body pb-0 pt-2">
+            <div class="card-body pt-2 pb-0">
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.POItem.ReceiverName)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.POItem.ReceiverName)</p>
+                    </div>
+                    <div class="col-md-6 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.POItem.ReceiptAddress)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.POItem.ReceiptAddress)</p>
+                    </div>
 
-            @using (Html.BeginForm("SendToSupplier", "PurchaseOrders", FormMethod.Post, new { @id = "formSendToSupplierPurchaseOrders" }))
-            {
-                @Html.AntiForgeryToken()
+                    <div class="w-100"></div>
 
-
-            }
-
+                    <div class="col-md-3 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.POItem.ReceiverTel)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.POItem.ReceiverTel)</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <small><strong>@Html.DisplayNameFor(m => m.POItem.ReceiverMobile)</strong></small>
+                        <br>
+                        <p class="text-muted">@Html.DisplayFor(m => m.POItem.ReceiverMobile)</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+
+<div class="form-group">
+    <button id="btnSubmit" type="button" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出至供應商</button>
 </div>
 
 @section scripts{

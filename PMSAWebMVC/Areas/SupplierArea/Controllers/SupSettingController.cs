@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
+    [Authorize]
     public class SupSettingController : BaseController
     {
         private readonly PMSAEntities db = new PMSAEntities();

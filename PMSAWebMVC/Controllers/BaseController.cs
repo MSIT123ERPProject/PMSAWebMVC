@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMSAWebMVC.Filter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,6 +23,8 @@ namespace PMSAWebMVC.Controllers
 
         protected string cookieName = "PMSAWebMVC";
         protected string cookieKey = "CultureInfo";
+
+        [MyExceptionFilter]
         protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
         {
             string cultureName = "";

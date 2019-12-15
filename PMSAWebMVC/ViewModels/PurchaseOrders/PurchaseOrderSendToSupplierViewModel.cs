@@ -15,8 +15,22 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
     {
         public class SendToSupplierViewModel
         {
+            /// <summary>
+            /// 採購單主表
+            /// </summary>
             public POInfoViewModel POItem { get; set; }
+            /// <summary>
+            /// 供應商資訊
+            /// </summary>
             public SUPInfoViewModel SUPItem { get; set; }
+            /// <summary>
+            /// 採購單明細
+            /// </summary>
+            public IEnumerable<PurchaseOrderDtlItem> PODItems { get; set; }
+            [DisplayFormat(DataFormatString = "{0:C0}")]
+            [DataType(DataType.Currency)]
+            [Display(Name = "合計金額")]
+            public int PODItemsAggregate { get; set; }
         }
 
         public class POInfoViewModel
@@ -72,12 +86,16 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 Tel = si.Tel
             };
 
+            var poditems = GetPODItemsViewModel(purchaseOrderID);
+
             SendToSupplierViewModel po = new SendToSupplierViewModel
             {
                 POItem = poitem,
-                SUPItem = supitem
-
+                SUPItem = supitem,
+                PODItems = poditems,
+                PODItemsAggregate = poditems.Sum(item => item.Total)
             };
+
             return po;
         }
 
@@ -107,6 +125,46 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 SignFlowOID = po.SignFlowOID
             };
             return povm;
+        }
+
+        /// <summary>
+        /// 採購明細
+        /// </summary>
+        /// <param name="purchaseOrderID"></param>
+        /// <returns></returns>
+        public IEnumerable<PurchaseOrderDtlItem> GetPODItemsViewModel(string purchaseOrderID)
+        {
+            var pods = db.PurchaseOrderDtl.
+                Where(item => item.PurchaseOrderID == purchaseOrderID).
+                Select(item => new PurchaseOrderDtlItem
+                {
+                    PartNumber = item.PartNumber,
+                    PartName = item.PartName,
+                    OriginalUnitPrice = item.OriginalUnitPrice,
+                    TotalSourceListQty = item.TotalSourceListQty,
+                    Qty = item.Qty,
+                    Discount = item.Discount,
+                    Total = item.Total.Value,
+                    DateRequired = item.DateRequired.Value,
+                    SourceListID = item.SourceListID,
+                    //PurchaseOrderOID = item.PurchaseOrderOID,
+                    PartSpec = item.PartSpec,
+                    QtyPerUnit = item.QtyPerUnit,
+                    TotalPartQty = item.TotalPartQty,
+                    PurchaseUnitPrice = item.PurchaseUnitPrice,
+                    PurchasedQty = item.PurchasedQty,
+                    GoodsInTransitQty = item.GoodsInTransitQty,
+                    CommittedArrivalDate = item.CommittedArrivalDate,
+                    ShipDate = item.ShipDate,
+                    ArrivedDate = item.ArrivedDate,
+                    POChangedOID = item.POChangedOID,
+                    //PurchaseRequisitionDtlCode = item.PurchaseRequisitionDtlCode,
+                    PurchaseOrderDtlOID = item.PurchaseOrderDtlOID,
+                    PurchaseOrderDtlCode = item.PurchaseOrderDtlCode,
+                    PurchaseOrderID = purchaseOrderID,
+                    LastModifiedAccountID = item.LastModifiedAccountID
+                });
+            return pods;
         }
 
     }

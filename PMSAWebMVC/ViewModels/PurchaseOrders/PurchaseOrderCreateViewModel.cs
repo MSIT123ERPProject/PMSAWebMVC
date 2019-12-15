@@ -209,7 +209,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public Nullable<int> POChangedOID { get; set; }
         public string PurchaseRequisitionDtlCode { get; set; }
         public int PurchaseOrderDtlOID { get; set; }
-
+        [Display(Name = "採購明細編號")]
         public string PurchaseOrderDtlCode { get; set; }
         public string PurchaseOrderID { get; set; }
         public string LastModifiedAccountID { get; set; }

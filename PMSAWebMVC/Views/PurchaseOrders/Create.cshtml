@@ -247,7 +247,6 @@
 
                                             <div class="col-6">
                                                 <button id="btnPODAdd" class="btn btn-primary btn-block" type="button"><i class="far fa-file"></i> 加入採購單</button>
-                                                <button id="btnPODUpdate" class="btn btn-primary btn-block" type="button"><i class="far fa-edit"></i> 更新採購單</button>
                                             </div>
 
                                             <div class="col-6">
@@ -328,22 +327,18 @@
 
             //Modal顯示前
             $('#detailModal').on('show.bs.modal', function (event) {
-                let span = $(event.relatedTarget);
-                let dtlcode;
-                let partnumber;
-                if (span.data("model")) {
-                    dtlcode = span.parent().data('dtlcode');
-                    partnumber = span.parent().data('partnumber');
-                    $("#detailModalTitle").text("編輯採購項目");
-                    $("#btnPODAdd").hide();
-                    $("#btnPODUpdate").show();
-                    console.log($("#btnPODUpdate"));
+                let td = $(event.relatedTarget).parents("td");
+                let dtlcode = td.data('dtlcode');;
+                let partnumber = td.data('partnumber');
+
+                let title = $("#detailModalTitle");
+                let btn = $("#btnPODAdd");
+                if (td.data("mode") == "edit") {
+                    title.text("編輯採購項目");
+                    btn.text("更新採購單");
                 } else {
-                    dtlcode = span.data('dtlcode');
-                    partnumber = span.data('partnumber');
-                    $("#detailModalTitle").text("新增採購項目");
-                    $("#btnPODAdd").show();
-                    $("#btnPODUpdate").hide();
+                    title.text("新增採購項目");
+                    btn.text("加入採購單");
                 }
                 detailModalShow(dtlcode, partnumber);
             });
@@ -396,8 +391,7 @@
                         if (!data) {
                             return;
                         }
-                        let btn = getModalButton();
-
+                        let btn = $("#btnPODAdd");
                         btn.prop("disabled", true);
                         $("#Qty").val(data.Qty);
                         $("#DateRequired").val(data.DateRequiredToShow);
@@ -463,7 +457,7 @@
                 e.stopPropagation();
 
                 let span = $(this);
-                let dtlcode = span.parent().data('dtlcode');
+                let dtlcode = span.parent("td").data('dtlcode');
                 //delBtnClick(dtlcode, partnumber);
                 Swal.fire({
                     title: '刪除確認',
@@ -526,7 +520,7 @@
             }
 
             //加入採購單
-            $("#btnPODAdd, #btnPODUpdate").on('click', function (e) {
+            $("#btnPODAdd").on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 $(this).prop("disabled", true);
@@ -585,24 +579,13 @@
                     });
             }
 
-            function getModalButton() {
-                let btn;
-                if ($("#btnPODAdd").is(":visible")) {
-                    btn = $("#btnPODAdd");
-                } else {
-                    btn = $("#btnPODUpdate");
-                }
-                return btn;
-            }
-
             //設定採購單輸入內容更新
             async function setPRDtlInputUpdate(mode) {
-                let btn = getModalButton();
-
+                let btn = $("#btnPODAdd");
                 let qty = $("#Qty").val();
                 let dateRequired = $("#DateRequired").val();
                 let sourceList = $("input[name=sourceList]:checked").val();
-                let modalPrdCode = $("#modalPrdCode").text();                
+                let modalPrdCode = $("#modalPrdCode").text();
 
                 if (!chkQtyValue() | !chkDateRequiredValue()) {
                     //toastr.warning("請輸入必填欄位");

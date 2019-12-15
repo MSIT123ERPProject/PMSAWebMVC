@@ -34,10 +34,11 @@
                     <td>@Html.DisplayFor(m => m[i].Discount)</td>
                     <td>@Html.DisplayFor(m => m[i].Total)</td>
                     <td>@Html.DisplayFor(m => m[i].DateRequired)</td>
-                    <td>
-                        <div class="table-data-feature" data-dtlcode="@Model[i].PurchaseRequisitionDtlCode"
-                                  data-partnumber="@Model[i].PartNumber">
-                            <span data-toggle="modal" data-target="#detailModal" data-model="edit">
+                    <td data-dtlcode="@Model[i].PurchaseRequisitionDtlCode"
+                        data-partnumber="@Model[i].PartNumber"
+                        data-mode="edit">
+                        <div class="table-data-feature">
+                            <span data-toggle="modal" data-target="#detailModal">
                                 <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
                                     <i class="far fa-edit"></i>
                                 </button>
@@ -46,7 +47,7 @@
                                 <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
                                     <i class='far fa-trash-alt'></i>
                                 </button>
-                            </span>            
+                            </span>
                         </div>
                     </td>
                 </tr>

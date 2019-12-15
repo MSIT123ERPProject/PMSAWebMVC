@@ -71,6 +71,20 @@ namespace PMSAWebMVC.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        //取得倉庫資料集
+        [HttpGet]
+        public JsonResult GetWarehouseInfoList()
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var data = db.WarehouseInfo.Select(item =>new {
+                item.WarehouseCode,
+                item.Employee.Name,
+                item.Address,
+                item.Tel
+            });
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// 取得請購單基本資料
         /// </summary>
@@ -287,8 +301,10 @@ namespace PMSAWebMVC.Controllers
             //取得請購單資料
             //參考資料：https://dotnetfiddle.net/PBi075
             Repository rep = new Repository(User.Identity.GetEmployee());
-            IList<PurchaseRequisitionItem> purchaseRequisitions = rep.GetPurchaseRequisitionList();
-            model.PurchaseRequisitionList = new SelectList(purchaseRequisitions, "PurchaseRequisitionIdValue", "PurchaseRequisitionIdDisplay");
+            IList<ViewModels.PurchaseOrders.SelectListItem> purchaseRequisitions = rep.GetPurchaseRequisitionList();
+            model.PurchaseRequisitionList = new SelectList(purchaseRequisitions, "Value", "Display");
+            IList<System.Web.Mvc.SelectListItem> warehouseInfos = rep.GetWarehouseInfoList();
+            model.WarehouseInfoList = new SelectList(warehouseInfos, "Value", "Text");
         }
 
         // GET: PurchaseOrders/Details/5

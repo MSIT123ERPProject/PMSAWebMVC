@@ -58,24 +58,34 @@
                     <p class="text-muted">@Html.DisplayFor(model => Model.POItem.PurchaseOrderID)</p>
                 </div>
                 <div class="col-md-3 col-6">
-                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.CreateDate)</strong></small>
-                    <br>
-                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.CreateDate)</p>
-                </div>
-                <div class="col-md-3 col-6">
                     <small><strong>@Html.DisplayNameFor(model => Model.POItem.Buyer)</strong></small>
                     <br>
                     <p class="text-muted">@Html.DisplayFor(model => Model.POItem.Buyer)</p>
                 </div>
                 <div class="col-md-3 col-6">
-                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.PurchaseOrderStatus)</strong></small>
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.Email)</strong></small>
                     <br>
-                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.PurchaseOrderStatus)</p>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.Email)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.Tel)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.Tel)</p>
                 </div>
                 <div class="col-md-3 col-6">
                     <small><strong>@Html.DisplayNameFor(model => Model.POItem.PurchaseRequisitionID)</strong></small>
                     <br>
                     <p class="text-muted">@Html.DisplayFor(model => Model.POItem.PurchaseRequisitionID)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.CreateDate)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.CreateDate)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.PurchaseOrderStatus)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.PurchaseOrderStatus)</p>
                 </div>
             </div>
         </div>
@@ -122,7 +132,7 @@
 <div class="card mb-3">
     <div class="card-header">
         <a data-toggle="collapse" href="#collapse-podsinfo" aria-expanded="true" aria-controls="collapse-podsinfo" id="heading-podsinfo" class="d-block nounderline">
-            <i class="far fa-building"></i> 採購明細 <i class="fa fa-chevron-down"></i>
+            <i class="fas fa-file-invoice-dollar"></i> 採購明細 <i class="fa fa-chevron-down"></i>
         </a>
     </div>
 
@@ -159,8 +169,30 @@
             </table>
 
             <div class="d-flex justify-content-between align-items-center border-top-dashed col-12 p-2">
-                <p>@Html.DisplayNameFor(m => Model.PODItemsAggregate)</p><p>@Html.DisplayFor(m => Model.PODItemsAggregate)</p>
+                <p class="mb-1">@Html.DisplayNameFor(m => Model.PODItemsAggregate)</p><p class="mb-1">@Html.DisplayFor(m => Model.PODItemsAggregate)</p>
             </div>
+        </div>
+    </div>
+</div>
+
+@*交貨資訊*@
+<div class="card mb-3">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#collapse-receiverinfo" aria-expanded="true" aria-controls="collapse-receiverinfo" id="heading-receiverinfo" class="d-block nounderline">
+            <i class="fas fa-truck-moving"></i> 交貨資訊 <i class="fa fa-chevron-down"></i>
+        </a>
+    </div>
+
+    <div id="collapse-receiverinfo" class="collapse show" aria-labelledby="heading-receiverinfo">
+        <div class="card-body pb-0 pt-2">
+
+            @using (Html.BeginForm("SendToSupplier", "PurchaseOrders", FormMethod.Post, new { @id = "formSendToSupplierPurchaseOrders" }))
+            {
+                @Html.AntiForgeryToken()
+
+
+            }
+
         </div>
     </div>
 </div>
@@ -205,24 +237,3 @@
     </script>
 
 }
-
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>PurchaseOrderDetailViewModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

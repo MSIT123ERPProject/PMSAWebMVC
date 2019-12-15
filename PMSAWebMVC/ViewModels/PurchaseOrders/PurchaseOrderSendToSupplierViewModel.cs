@@ -61,6 +61,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             [Display(Name = "簽核狀態")]
             public string SignStatus { get; set; }
             public Nullable<int> SignFlowOID { get; set; }
+            [Display(Name = "電子信箱")]
+            public string Email { get; set; }
+            [Display(Name = "聯絡電話")]
+            public string Tel { get; set; }
         }
     }
 
@@ -108,6 +112,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         {
             PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
             PRPORelation rel = po.PRPORelation.Where(item => item.PurchaseOrderID == purchaseOrderID).FirstOrDefault();
+            Employee emp = po.Employee;
             var povm = new POInfoViewModel
             {
                 PurchaseOrderID = po.PurchaseOrderID,
@@ -122,7 +127,9 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 ReceiverMobile = po.ReceiverMobile,
                 ReceiptAddress = po.ReceiptAddress,
                 SignStatus = po.SignStatus,
-                SignFlowOID = po.SignFlowOID
+                SignFlowOID = po.SignFlowOID,
+                Tel = emp.Tel,
+                Email = emp.Email
             };
             return povm;
         }

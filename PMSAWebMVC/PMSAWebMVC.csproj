@@ -2280,6 +2280,8 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Content\Views\_PurchaseOrdersDetailsPartial.css" />
+    <Content Include="Scripts\Views\_PurchaseOrdersDetailsPartial.js" />
     <Content Include="Views\Shared\ResetPwdSupEmailTemplate.html" />
     <Content Include="Views\Shared\ResetPwdEmailTemplate.html" />
     <Content Include="Areas\SupplierArea\Views\ShipNotices\ShipNoticeDisplay.cshtml" />
@@ -2408,6 +2410,8 @@
     <Content Include="Views\Products\ProductDetilView.cshtml" />
     <Content Include="Views\PurchaseOrders\_IndexPODItemPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\SendToSupplier.cshtml" />
+    <Content Include="Views\PurchaseOrders\_DetailsPartial.cshtml" />
+    <Content Include="Views\PurchaseOrders\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

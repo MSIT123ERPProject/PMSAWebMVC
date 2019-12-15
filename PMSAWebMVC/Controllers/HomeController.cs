@@ -11,13 +11,13 @@ using System.Web.Routing;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize]
     public class HomeController : BaseController
     {
         //你原本的建構子不要刪掉
         public HomeController()
         {
         }
-
         //建構子多載
         public HomeController(ApplicationUserManager userManager)
         {

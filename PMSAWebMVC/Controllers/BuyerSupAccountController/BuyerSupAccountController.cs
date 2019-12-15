@@ -630,6 +630,9 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
             };
             user.Roles.Add((IdentityUserRole)r);
 
+            //信箱驗證也要重置為0
+            user.EmailConfirmed = false;
+
             //更新此 user
             var result = await UserManager.UpdateAsync(user);
 

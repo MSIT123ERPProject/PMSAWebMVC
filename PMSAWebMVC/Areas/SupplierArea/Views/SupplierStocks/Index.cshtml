@@ -10,12 +10,10 @@
 </nav>
 <div class="card mb-3">
     <div class="card-header">
-            @*<i class="fas fa-table"></i>
-            <h6 class="m-0 font-weight-bold text-primary">庫存管理</h6>*@
-        </div>
+    </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
+            <table class="table table-striped hover order-column nowrap text-left" cellspacing="0" style="width:100%" id="dataTable">
                 <thead>
                     <tr class="bg-primary text-white text-center">
                         <th data-priority="1"></th>
@@ -84,9 +82,14 @@
 @section scripts
         {
     <script>
-            $(document).ready(function () {
+        $(document).ready(function () {
                 dataTableDisplay();
-                ClickUpdateButton()
+                ClickUpdateButton();
+        
+                table.on('responsive-resize', function (e, datatable, columns) {
+                    //修正縮放大小不正確的問題
+                    table.columns.adjust().responsive.recalc();
+                });
         });
         /////////////////////////////////////////////
         let table;
@@ -120,9 +123,6 @@
                  className: 'control'
              },
                  { orderable: false, targets: [0, 1, -1] },
-                 { orderable: true, targets: [2, 3, 4] },
-                 { ordering: true, targets: [2, 3, 4] },
-                 
                  //{ targets: [4, 5, 6, 7, 8], className: 'dt-body-right' },
                  { className: 'text-left', targets: [3] },
                  { className: 'text-center', targets: [1,2,4,5,6,7,8] },
@@ -175,11 +175,35 @@
                     },
                     "lengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
                     "order": [[1, "asc"]],
-                    "sDom": '<"wraptop"<"top fl"fl><"top"p>>',
+                    //"sDom": '<"wraptop"<"top fl"fl><"top"p>>',
              "autoWidth": false,
-             dom: 'lfrtip',
+             //dom: 'lfrtip',
+             //ordering: true,
+             //order: [],
+             dom: "<'row'<'col-sm-12 col-md-5 mb-2 mt-2'B>><'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'f>><t><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'print',
+                    // {
+                    //        text: '匯入 Excel',
+                    //        attr:  {
+                    //            "data-toggle": 'modal',
+                    //            "data-target": '#importModal'
+                    //        }
+                    //}
+                ],
+                language: {
+                    buttons: {
+                        copy: "複製",
+                        print: "列印",
+                        copyTitle: '已複製到剪貼簿',
+                        copySuccess: {
+                            _: '%d 行已複製',
+                            1: '1 行已複製'
+                        }
+                    },
+                 url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                },
                 });
-              
         }
         /////////////////////////////////////////////////////
         //調整庫存按鈕

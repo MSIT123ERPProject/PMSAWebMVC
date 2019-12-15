@@ -226,6 +226,7 @@
     <Compile Include="Areas\SupplierArea\Controllers\SupplierHomeController.cs" />
     <Compile Include="Areas\SupplierArea\Controllers\SupplierController\SupplierStocksController.cs" />
     <Compile Include="Controllers\WarehouseInfoesController.cs" />
+    <Compile Include="Filter\MyExceptionFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -438,6 +439,7 @@
     <Compile Include="ViewModels\UsersAdmin\UsersAdminViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\SupplierArea\Views\Shared\SendMailToBuyer.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -836,6 +838,8 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\161buttons.flash.min.js" />
+    <Content Include="Scripts\DataTables\161dataTables.buttons.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -907,6 +911,8 @@
     <Content Include="Scripts\DataTables\i18n\jquery.dataTables.zh-TW.js" />
     <Content Include="Scripts\DataTables\jquery.dataTables.js" />
     <Content Include="Scripts\DataTables\jquery.dataTables.min.js" />
+    <Content Include="Scripts\DataTables\jszip.min.js" />
+    <Content Include="Scripts\DataTables\pdfmake.min.js" />
     <Content Include="Scripts\DataTables\responsive.bootstrap.js" />
     <Content Include="Scripts\DataTables\responsive.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\responsive.bootstrap4.js" />
@@ -917,6 +923,7 @@
     <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
+    <Content Include="Scripts\DataTables\vfs_fonts.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -1448,6 +1455,7 @@
     <Content Include="Scripts\highcharts\7.1.2\themes\skies.src.js" />
     <Content Include="Scripts\highcharts\7.1.2\themes\sunset.js" />
     <Content Include="Scripts\highcharts\highcharts-3d.js.map" />
+    <Content Include="Scripts\highcharts\highcharts-more.js" />
     <Content Include="Scripts\highcharts\highcharts-more.js.map" />
     <Content Include="Scripts\highcharts\highcharts.js.map" />
     <Content Include="Scripts\highcharts\modules\accessibility.js.map" />
@@ -1917,7 +1925,6 @@
     <Content Include="Scripts\highcharts\es-modules\themes\sunset.js" />
     <Content Include="Scripts\highcharts\highcharts-3d.js" />
     <Content Include="Scripts\highcharts\highcharts-3d.src.js" />
-    <Content Include="Scripts\highcharts\highcharts-more.js" />
     <Content Include="Scripts\highcharts\highcharts-more.src.js" />
     <Content Include="Scripts\highcharts\highcharts.js" />
     <Content Include="Scripts\highcharts\highcharts.src.js" />
@@ -2276,7 +2283,6 @@
     <Content Include="Views\Shared\ResetPwdSupEmailTemplate.html" />
     <Content Include="Views\Shared\ResetPwdEmailTemplate.html" />
     <Content Include="Areas\SupplierArea\Views\ShipNotices\ShipNoticeDisplay.cshtml" />
-    <Content Include="Areas\SupplierArea\Views\ShipNotices\ShipNoticesDtlTemplate.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2395,6 +2401,7 @@
     <Content Include="Views\SupInfoCompany\Create.cshtml" />
     <Content Include="Areas\SupplierArea\Views\SupSetting\Index.cshtml" />
     <Content Include="Views\BuyerSetting\Index.cshtml" />
+    <Content Include="Views\SupplierHomePage\SupplierHomePage.cshtml" />
     <Content Include="Views\PurchaseOrders\_CreateSUPInfoPartial.cshtml" />
     <Content Include="Views\SourceLists\Createtest.cshtml" />
     <Content Include="Views\SourceLists\_CreateSLItemPartial.cshtml" />
@@ -2405,7 +2412,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\SupplierArea\Models\" />
-    <Folder Include="Areas\SupplierArea\Views\Shared\" />
     <Folder Include="assets\parts\" />
     <Folder Include="assets\products\" />
     <Folder Include="Utilities\ChengHao\" />

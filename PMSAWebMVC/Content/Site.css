@@ -4,6 +4,10 @@
     background-color: #f4f8f9;
 }
 
+/* input 將 bootstrap 翻成中文 =================*/
+.custom-file-label::after {
+    content: "瀏覽";
+}
 
 /* sidebar =================*/
 .sidebar {

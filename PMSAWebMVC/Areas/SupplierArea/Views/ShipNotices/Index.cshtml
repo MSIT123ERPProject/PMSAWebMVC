@@ -25,7 +25,7 @@
     <div class="card-header">
             @Html.DropDownList("selectlist", new SelectList(new[]
          {
-            new SelectListItem { Text = "未出貨", Value = "E",Selected=true },
+            new SelectListItem { Text = "未出貨", Value = "W",Selected=true },
             //new SelectListItem { Text = "未答交",Value="P",Selected=false },
             new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
             }, "Value", "Text"),
@@ -165,9 +165,29 @@
                         }
                     }
                 ],
-                   language: {
-                        url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                dom: "<'row'<'col-sm-12 col-md-5 mb-2 mt-2'B>><'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'f>><t><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'print',
+                    // {
+                    //        text: '匯入 Excel',
+                    //        attr:  {
+                    //            "data-toggle": 'modal',
+                    //            "data-target": '#importModal'
+                    //        }
+                    //}
+                ],
+                language: {
+                    buttons: {
+                        copy: "複製",
+                        print: "列印",
+                        copyTitle: '已複製到剪貼簿',
+                        copySuccess: {
+                            _: '%d 行已複製',
+                            1: '1 行已複製'
+                        }
                     },
+                 url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                },
                  "lengthMenu":[[10,25,50,75,100,-1],[10,25,50,75,100,"All"]],
                 "order": [[1,"desc"]],
             });

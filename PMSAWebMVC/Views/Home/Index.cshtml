@@ -57,6 +57,7 @@
                 partTotalPrice();
                 SplitBubbleChart();
             });
+
             //時間選擇器
             $('#datetimepickerIdStart').datetimepicker(
                 {
@@ -71,8 +72,6 @@
             let dateTimeStart ;
             let dateTimeEnd ;
             $('#datetimepickerIdStart').on('change.datetimepicker', function (e) {
-                //console.log(e);
-                //console.log(this);
                 dateTimeStart = $(this).find("input").val();
             });
             $('#datetimepickerIdEnd').on('change.datetimepicker', function (e) {

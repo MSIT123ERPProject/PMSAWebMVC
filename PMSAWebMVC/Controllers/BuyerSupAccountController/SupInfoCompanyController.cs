@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers.BuyerSupAccountController
 {
+    [Authorize(Roles = "Buyer, Manager")]
     public class SupInfoCompanyController : BaseController
     {
         private PMSAEntities db = new PMSAEntities();

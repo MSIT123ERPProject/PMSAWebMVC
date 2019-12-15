@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-
+using System.Web.Mvc;
 
 namespace PMSAWebMVC.ViewModels.ShipNotices
 {
@@ -33,6 +33,7 @@ namespace PMSAWebMVC.ViewModels.ShipNotices
         //此屬性是要給訂單管理頁面查詢未答交訂單使用，
         [Display(Name ="採購單總金額")]
         public decimal PurchaseOrderTotalAmount { get; set; }
+        public SelectList OrderList { get; set; }
     }
     public class OrderDtlItem
     {

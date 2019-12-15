@@ -72,7 +72,12 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             {
                 ViewBag.message = "你好";
             }
-            return View();
+            SelectList selectLists = new SelectList(new[] { new SelectListItem { Text = "請選擇", Value = "0" } });
+            IList<shipOrderViewModel> es = new List<shipOrderViewModel>();
+            shipOrderViewModel ship = new shipOrderViewModel();
+            ship.OrderList = selectLists;
+            es.Add(ship);
+            return View(es);
         }
         //此方法為幫助INDEX的DATATABLE查訂單資料
         public JsonResult GetPurchaseOrderList(string PurchaseOrderStatus)
@@ -107,7 +112,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             return Json(new { data = qlist }, JsonRequestBehavior.AllowGet);
         }
         //檢視未出貨訂單明細，並要可以勾選要出貨的明細，檢視該採購單所有的產品，並可以選擇出貨那些產品
-        public async Task<ActionResult> UnshipOrderDtl([Bind(Include = "PurchaseOrderID")]shipOrderViewModel purchaseOrder)
+        public async Task<ActionResult> UnshipOrderDtl([Bind(Include = "PurchaseOrderID,PurchaseOrderStatus")]shipOrderViewModel purchaseOrder)
         {
             var q = from po in db.PurchaseOrder
                     where po.PurchaseOrderID == purchaseOrder.PurchaseOrderID
@@ -535,6 +540,23 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //寄信
             await UserManager.SendEmailAsync(userId, "商品出貨通知", MailBody);
             //  bool a =    UserManager.SendEmailAsync(userId, "商品出貨通知", shipDtlMail).IsCompleted;
+        }
+
+        /// <summary>
+        /// //改寫2層中
+        /// </summary>
+        /// <param name="purchaseOrder"></param>
+        public async Task<ActionResult> GetOrderIDByStatus([Bind(Include = "PurchaseOrderID,PurchaseOrderStatus")]shipOrderViewModel purchaseOrder)
+        {
+            var q = from po in db.PurchaseOrder
+                    where po.PurchaseOrderStatus == purchaseOrder.PurchaseOrderStatus
+                    select new shipOrderViewModel
+                    {
+                        PurchaseOrderID = po.PurchaseOrderID,
+                        PurchaseOrderStatus = po.PurchaseOrderStatus
+                    };
+            var query = q.First();
+            return View(q);
         }
 
         //按下檢視後進入此方法

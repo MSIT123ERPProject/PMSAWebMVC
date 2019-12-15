@@ -10,12 +10,6 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
-    @*=================================================================*@
-    @*這裡想加一個採購單編號的下拉式選單還沒成功*@
-    @*<div id="idOrder" class="col-sm-auto">
-            @Html.DropDownListFor(model=>model.Where(x=>x.PurchaseOrderStatus=="E"), new { id = "idStatus", @class = "form-control" })
-        </div>*@
-    @*=============================================================================================*@
 </nav>
 @*dropdownlist取得值得方法*@
 @*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
@@ -23,90 +17,120 @@
 <!-- DataTables Example -->
 <div class="card mb-3">
     <div class="card-header">
-            @Html.DropDownList("selectlist", new SelectList(new[]
-         {
-            new SelectListItem { Text = "未出貨", Value = "W",Selected=true },
-            //new SelectListItem { Text = "未答交",Value="P",Selected=false },
-            new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
-            }, "Value", "Text"),
-         new { id = "idStatus", @class = "form-control" }
-         ) 
+        @Html.DropDownList("selectlist", new SelectList(new[]
+     {
+        new SelectListItem { Text = "未出貨", Value = "W",Selected=true },
+        //new SelectListItem { Text = "未答交",Value="P",Selected=false },
+        new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
+        }, "Value", "Text"),
+     new { id = "idStatus", @class = "form-control" }
+     )
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
-                <thead>
-                    <tr class="bg-primary text-white text-center">
-                        <th data-priority="1"></th>
-                        <th>採購單狀態</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
-                        <th data-priority="1">採購單編號</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>*@
-                        <th>收貨人名稱</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverName)</th>*@
-                        <th>收貨人電話</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>*@
-                        <th>收貨人手機</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>*@
-                        <th>收貨人地址</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
-                        <th data-priority="1">出貨明細</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th>訂單狀態</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
-                        <th>訂單編號</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>*@
-                        <th>收貨人名稱</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverName)</th>*@
-                        <th>收貨人電話</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>*@
-                        <th>收貨人手機</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>*@
-                        <th>收貨人地址</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
-                        <th>出貨明細</th>
-                    </tr>
-                </tfoot>
-            </table>
+    @*=================================================================*@
+    @*這裡想加一個採購單編號的下拉式選單還沒成功*@
+    <div id="idOrderdiv" class="col-sm-auto">
+        @Html.DropDownList("idOrder",new SelectList(new[] { new SelectListItem { Text="",Value=""} },"Value","Text"),"請選擇" , new { id = "idOrder", @class = "form-control" })
+    </div>
+    @*=============================================================================================*@
+    @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
+    {
+        <div class="card-body">
+            <div class="table-responsive" id="divTable"></div>
         </div>
-    </div>
+
+            <div class="form-group">
+                <div class="d-flex justify-content-center">
+                    <button type="submit" id="idbutton" class="btn btn-primary btn-block" value="出貨"><i class="fas fa-shipping-fast"></i>出貨</button>
+                </div>
+            </div>
+    }
     <div class="card-footer small text-muted"></div>
 </div>
 
 @section scripts{
-    
+
     <script>
         $(document).ready(function () {
           let message=  `@ViewBag.message`;
             if (message != null) {
                 toastr.success(message, "通知");
             }
-            shipDatatable();
-            $("#idStatus").change(function () {
-                shipDatatable();
+          
+            $("#idStatus").change(function (e) {
+                GetidOrder(e.value);
             });
         });
-
-        //用來取得下拉式選單所選取的採購單編號
-        @*function idOrder() {
+         //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面 partialView方法
+        function purchaseOrderDtlForPartialView() {
+            let id = $("#idOrder option:selected").val();
+            let queryId = `@Url.Action("GetPurchaseOrderDtlPatialView","ShipNotices")` + "?PurchaseOrderID=" + id;
             $.ajax({
-                url: `@Url.Action("unshipOrderDtl","ShipNotices")`,
+                url: `@Url.Action("GetPurchaseOrderDtlPatialView","ShipNotices")`,
                 type: "GET",
-                data: { id: $("#idStatus option:selected").val() }
+                data: { PurchaseOrderID :id },
+            }).done(function (result) {
+                //alert("訂單明細載入成功");
+                //toastr.success("訂單明細載入成功","通知");
+                $("#divTable").html('');
+                $("#divTable").html(result);
+                //全選、全勾消
+                $("input[name=chkAll]").change(function () {
+                    let checked = $(this).prop("checked");
+                    $("#dataTableUOD>tbody input:checkbox").prop("checked", checked);
+                });
+                $("#dataTableUOD").DataTable(
+                    {
+                        ordering: false,
+                        //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                        order: [[2, 'desc']],
+                        //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                        responsive: {
+                            details: {
+                                type: 'column',
+                                target: 0
+                            }
+                        },
+                        columnDefs: [{
+                            targets: 0,
+                            className: 'control'
+                        },
+                        { orderable: false, targets: [0, 1, -1] },
+                        { className: 'text-center', targets: [5, 6, 7, 8, 9, 10, 11] },
+                        ],
+                        language: {
+                            url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                        },
+                    }
+                );
+                }).fail(function () {
+                    toastr.error("訂單明細載入失敗","通知");
+                //Swal.fire({
+                //    icon: 'error',
+                //    title: 'Oops...',
+                //    text: '訂單明細載入失敗',
+                //    footer: '<a href>Why do I have this issue?</a>'
+                //})
+            });
+        //用來取得下拉式選單所選取的採購單編號
+        function GetidOrder(value) {
+            $.ajax({
+                url: `@Url.Action("GetOrderIDByStatus", "ShipNotices")`,
+                type: "GET",
+                data: { PurchaseOrderStatus: value }
             }).done(function (result) {
                 $("#idOrder").empty();
                 $("#idOrder").append($(`<option></option>`).val('').text('請選擇'));
                 $.each(result, function (index, item) {
-                    $("#idOrder").append($(`<option></option>`).val(item.value).text(item.text));
+                    $("#idOrder").append($(`<option></option>`).val(item.PurchaseOrderID).text(item.PurchaseOrderID));
+                });
+                $("#idOrder").change(function () {
+
                 });
                 }).fail(function () {
                     alert("idOrder ajax is fail");
                 });
-        }*@
+        }
+
         //顯示選取的採購單狀態的所有採購單
         function shipDatatable() {
             if ($.fn.dataTable.isDataTable("#dataTable")) {
@@ -114,7 +138,7 @@
             }
             $("#dataTable").DataTable({
                 "ajax": {
-                    "url": `@Url.Action("GetPurchaseOrderList","ShipNotices")`,
+                    "url": `@Url.Action("GetPurchaseOrderList", "ShipNotices")`,
                     "type": "get",
                     "dataType": "json",
                     "data": { "PurchaseOrderStatus": $('#idStatus option:selected').val() },
@@ -156,11 +180,11 @@
                              }*@
                             if (row.PurchaseOrderStatus == "E") {
                                 /*未出貨按鈕 檢視該採購單所有的產品，並可以選擇出貨那些產品*/
-                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯" onclick="location.href='@Url.Action( "UnshipOrderDtl","ShipNotices")?PurchaseOrderID=${data}'"><i class="far fa-edit"></i></button> </div>`;
+                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯" onclick="location.href='@Url.Action("UnshipOrderDtl", "ShipNotices")?PurchaseOrderID=${data}'"><i class="far fa-edit"></i></button> </div>`;
                             }
                             else {
                                 /*已出貨*/
-                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯" name="shipped" id="${data}" onclick="location.href='@Url.Action( "UnshipOrderDtl","ShipNotices")?PurchaseOrderID=${data}'"><i class="far fa-file-alt"></i></button> </div>`;
+                                return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon"  data-toggle="tooltip" title="編輯" name="shipped" id="${data}" onclick="location.href='@Url.Action("UnshipOrderDtl", "ShipNotices")?PurchaseOrderID=${data}'"><i class="far fa-file-alt"></i></button> </div>`;
                             }
                         }
                     }
@@ -219,7 +243,7 @@
         //        '</tr>' +
         //        '</table>';
         //}
-     
+
     </script>
 
 }

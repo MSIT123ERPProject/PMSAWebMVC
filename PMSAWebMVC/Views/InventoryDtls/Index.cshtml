@@ -282,13 +282,13 @@
         });
 
         $(document).on('click', "#btnUpdate", function () {
-            if ($("#UnitsInStock").val() <= 0 || $("#SafetyQty").val() < 0){
-                toastr.error("必需大於零，且不能為負數","警告");
+            if ($("#UnitsInStock").val() < 0 || $("#SafetyQty").val() < 0) {
+                toastr.error("不能為負數", "警告");
             }else{
                 var inventorydtlObj = {
                     WarehouseCode: $("#WarehouseName").val(),
                     InventoryCategoryCode: $("#InventoryCategoryCode").val(),
-                    SourceListID: $("#SourceListID").val(),
+                    SourceListID: $("#SourceListID01").val(),
                     PartNumber: $("#PartName").val(),
                     InventoryCode: $("#InventoryCode").val(),
                     CreateEmployeeID: $("#Name").val(),

@@ -4,6 +4,7 @@
     ViewBag.Title = "Index";
 }
 
+
 <h2>料件總覽</h2>
 
 <p>
@@ -20,76 +21,76 @@
     <div class="card-body">
         <div class="table-responsive">
             @*<table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">*@
-                <table id="dataTablesId" class="table table-striped hover order-column nowrap text-left" style="width:100%">
-                    <thead>
-                        @*<tr>*@
-                        <tr class="bg-primary text-white">
-                            @*<th>*@
-                            <th data-priority="1">料件編號</th>
-                            <th>料件名稱</th>
-                            <th>料件規格</th>
-                            <th>料件圖片</th>
-                            <th>料件單位</th>
-                            <th>料件批量</th>
-                            <th>料件分類</th>
-                            <th>料件新增時間</th>
-                            <th data-priority="1">功能</th>
+            <table id="dataTablesId" class="table table-striped hover order-column nowrap text-left" style="width:100%">
+                <thead>
+                    @*<tr>*@
+                    <tr class="bg-primary text-white">
+                        @*<th>*@
+                        <th data-priority="1">料件編號</th>
+                        <th>料件名稱</th>
+                        <th>料件規格</th>
+                        <th>料件圖片</th>
+                        <th>料件單位</th>
+                        <th>料件批量</th>
+                        <th>料件分類</th>
+                        <th>料件新增時間</th>
+                        <th data-priority="1">功能</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var modalId = "modal-" + item.PartNumber;
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartSpec)
+                            </td>
+                            <td>
+                                <img style="height:200px; width:200px;" src='@Url.Content(item.PictureAdress)' alt="" />
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartUnit.PartUnitName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.QtyPerUnit)
+                            </td>
+                            <td>
+                                @foreach (var gg in item.PartCategoryDtl)
+                                {
+                                    @Html.DisplayFor(hh => gg.PartCategory.CategoryName)
+                                }
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            </td>
+
+                            <td>
+                                <div class="table-data-feature">
+                                    <button class="btn btn-outline-secondary btn-icon" id="DetailsBtn" data-toggle="tooltip" data-dc="@item.PartNumber" title="檢視">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-icon" id="EditBtn" data-toggle="tooltip" data-dc="@item.PartNumber" title="編輯">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-icon" id="DeleteBtn" data-toggle="tooltip" data-dc="@item.PartNumber" title="刪除">
+                                        <i class='far fa-trash-alt'></i>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            var modalId = "modal-" + item.PartNumber;
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PartNumber)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PartName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PartSpec)
-                                </td>
-                                <td>
-                                    <img style="height:200px; width:200px;" src='@Url.Content(item.PictureAdress)' alt="" />
-                                </td>
-
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PartUnit.PartUnitName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.QtyPerUnit)
-                                </td>
-                                <td>
-                                    @foreach (var gg in item.PartCategoryDtl)
-                                    {
-                                        @Html.DisplayFor(hh => gg.PartCategory.CategoryName)
-                                    }
-
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                                </td>
-
-                                <td>
-                                    <div class="table-data-feature">
-                                        <button class="btn btn-outline-secondary btn-icon" id="DetailsBtn" data-toggle="tooltip" data-dc="@item.PartNumber" title="檢視">
-                                            <i class="far fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-outline-secondary btn-icon" id="EditBtn" data-toggle="tooltip" data-dc="@item.PartNumber" title="編輯">
-                                            <i class="far fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-outline-secondary btn-icon" id="DeleteBtn" data-toggle="tooltip" data-dc="@item.PartNumber" title="刪除">
-                                            <i class='far fa-trash-alt'></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-</div>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
 </div>
@@ -182,7 +183,7 @@
                             @*<input type="file"name="PtImgFile" id="PtImgFile" />*@
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroupFileAddon01">上傳</span>
+                                    <span class="input-group-text" id="inputGroupFileAddon01">檔案</span>
                                 </div>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" name="PtImgFile" id="PtImgFile"
@@ -209,15 +210,32 @@
                         </div>
 
                     </form>
-</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+@section styles
+{
+    <style>
+
+        .custom-file-input:lang(en) ~ .custom-file-label::after {
+            content: "上傳";
+        }
+
+        .custom-file-label::after {
+            content: "上傳";
+        }
+    </style>
+
+
+}
+
+
 @section scripts
 {
-    
+
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     <script>
         //套用DATATABLE
@@ -286,7 +304,7 @@
               $('#PartUnitName').hide();
               $('#CategoryName').hide();
              $('.modal').modal('show');
-        }); 
+        });
         //儲存資料
         $("#btnSave").click(function ()
         {
@@ -313,7 +331,7 @@
                   url: `@Url.Action("Create","Parts")`,
                   type: "POST",
                   data: Jsondata,
-                  dataType: 'json', 
+                  dataType: 'json',
                   contentType: 'application/json; charset=utf-8'
                 }
             ).done(function (data) {
@@ -338,7 +356,6 @@
                 $('#ModalTitle').text('檢視料件資訊');
                 $('*[name="da"]').attr('disabled', false);
                 $('*[name="dta"]').attr('disabled', false);
-                
                 $('#CategoryName1').show();
                 $('#btnSave').hide();
                 $('#btnUpdate').show();
@@ -346,11 +363,12 @@
                 $("#PartUnitName1").show();
                 $("#CreatedDateDiv").hide();
                 $("#partImg1").hide();
-                $('#PartUnitName').hide()
+                $('#PartUnitName').hide();
                 $('#CategoryName').hide();
                 $("#PartNumber").val(datas[0].PartNumber);
                 $("#PartNumber").attr('disabled', true);
                 $("#PartName").val(datas[0].PartName);
+                $("#PartName").attr('disabled', true);
                 $("#PartSpec").val(datas[0].PartSpec);
                 $("#partImg2").attr("src", `/assets/parts/${datas[0].PartNumber}-${datas[0].PartName}.jpg`);
                 $("#PartUnitName2").val(datas[0].PartUnitOID);
@@ -388,7 +406,7 @@
                   url: `@Url.Action("Edit", "Parts")`,
                   type: "POST",
                   data: Jsondata,
-                  dataType: 'json', 
+                  dataType: 'json',
                   contentType: 'application/json; charset=utf-8'
                 }
             ).done(function (data) {
@@ -432,7 +450,7 @@
                     }
                 }
             });
-      
+
 
         //圖片切換
         $("#PtImgFile").change(function () {
@@ -468,7 +486,7 @@
                 }).fail(function () { alert("刪除失敗") });
 
         });
-        
+
 
 
 

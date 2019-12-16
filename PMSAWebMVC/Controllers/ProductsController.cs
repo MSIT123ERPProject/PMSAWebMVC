@@ -22,24 +22,25 @@ namespace PMSAWebMVC.Controllers
             //var datas = from p in db.Product.AsEnumerable()
             //            join f in db.ProductPart
             //            on p.ProductNumber equals f.ProductNumber
-            //            join g in db.Part
-            //            on f.PartNumber equals g.PartNumber
             //            join h in db.PartCategoryDtl
-            //            on g.PartNumber equals h.PartNumber
+            //            on f.PartNumber equals h.PartNumber
             //            join k in db.PartCategory
             //            on h.PartCategoryOID equals k.PartCategoryOID
-            //            select new ProductsView
+
+            //            select  new ProductsView
             //            {
             //                ProductNumber = p.ProductNumber,
             //                ProductName = p.ProductName,
             //                ProductPictureAdress = p.PictureAdress,
             //                ProductPictureDescription = p.PictureDescription,
-            //                PartNumber = g.PartNumber,
-            //                PartName = g.PartName,
-            //                ProductPartPictureAdress = g.PictureAdress,
+            //                PartNumber = f.Part.PartNumber,
+            //                PartName = f.Part.PartName,
+            //                ProductPartPictureAdress = f.Part.PictureAdress,
             //                CategoryName = k.CategoryName,
             //            };
-            //return View(datas);
+            //var aa = datas.ToList();
+
+            //return View(datas.ToList());
         }
 
         // GET: Products/Details/5
@@ -181,7 +182,8 @@ namespace PMSAWebMVC.Controllers
             public string PartUnitName { get; set; }
             [Display(Name = "料件分類名稱")]
             public string CategoryName { get; set; }
-            
+          
+
         }
 
         // POST: Products/Delete/5

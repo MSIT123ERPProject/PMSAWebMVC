@@ -31,17 +31,17 @@
             <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
                 <div class="row">
                     <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.MOQ, htmlAttributes: new { @class = "control-label col-md-4" })
+                        @Html.LabelFor(model => model.MOQ, htmlAttributes: new { @class = "control-label " })
                         @Html.EditorFor(model => model.MOQ, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.MOQ, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.QtyPerUnit, htmlAttributes: new { @class = "control-label col-md-4" })
+                        @Html.LabelFor(model => model.QtyPerUnit, htmlAttributes: new { @class = "control-label " })
                         @Html.EditorFor(model => model.QtyPerUnit, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.QtyPerUnit, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.EXP, htmlAttributes: new { @class = "control-label col-md-4" })
+                        @Html.LabelFor(model => model.EXP, htmlAttributes: new { @class = "control-label" })
                         @Html.EditorFor(model => model.EXP, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.EXP, "", new { @class = "text-danger" })
                     </div>
@@ -50,12 +50,12 @@
             <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
                 <div class="row">
                     <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.SafetyQty, htmlAttributes: new { @class = "control-label col-md-4" })
+                        @Html.LabelFor(model => model.SafetyQty, htmlAttributes: new { @class = "control-label " })
                         @Html.EditorFor(model => model.SafetyQty, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.SafetyQty, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label col-md-4" })
+                        @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label " })
                         @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
                     </div>
@@ -81,18 +81,18 @@
         <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
             <div class="row">
                 <div class="col-md-3 col-6">
-                    @Html.LabelFor(model => model.QtyDemanded, htmlAttributes: new { @class = "control-label col-md-4" })
+                    @Html.LabelFor(model => model.QtyDemanded, htmlAttributes: new { @class = "control-label " })
                     @Html.EditorFor(model => model.QtyDemanded, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.QtyDemanded, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-3 col-6">
-                    @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-4" })
+                    @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label " })
                     @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="form-group">
-                        <label class="control-label col-md-5" for="DiscountEndDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
+                        <label class="control-label " for="DiscountEndDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
                         <div class="input-group date" id="DiscountEndDate" data-target-input="nearest">
                             <input type="text" id="DiscountEndDate2" class="form-control datetimepicker-input" data-target="#DiscountEndDate" data-toggle="datetimepicker" name="da"/>
                             <div class="input-group-append" data-target="#DiscountEndDate" data-toggle="datetimepicker">
@@ -105,7 +105,7 @@
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="form-group">
-                        <label class="control-label col-md-5" for="DiscountBeginDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
+                        <label class="control-label " for="DiscountBeginDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
                         <div class="input-group date" id="DiscountBeginDate" data-target-input="nearest">
                             <input type="text" id="DiscountBeginDate2" class="form-control datetimepicker-input" data-target="#DiscountBeginDate" data-toggle="datetimepicker" name="da"/>
                             <div class="input-group-append" data-target="#DiscountBeginDate" data-toggle="datetimepicker">

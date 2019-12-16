@@ -277,7 +277,7 @@ namespace PMSAWebMVC.Controllers
                 inventoryDtl.LastModifiedEmployeeID = use.EmployeeID;
                 inventoryDtl.CreateDate = Convert.ToDateTime(inventoryDtl.CreateDate.ToShortDateString());
                 inventoryDtl.LastModifiedDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-
+                var s = inventoryDtl.SourceListID;
                 db.Entry(inventoryDtl).State = EntityState.Modified;
                 db.SaveChanges();
                 return Json(new { status = status, message = message, id = db.InventoryDtl.Max(x => x.InventoryDtlOID), qty }, JsonRequestBehavior.AllowGet);

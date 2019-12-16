@@ -1,8 +1,10 @@
 ﻿using PMSAWebMVC.Models;
+using PMSAWebMVC.Utilities.YaChen;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Web;
 using static PMSAWebMVC.ViewModels.PurchaseOrders.POSendToSupplierViewModel;
 
@@ -13,6 +15,71 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
     /// </summary>
     public class POSendToSupplierViewModel
     {
+        /// <summary>
+        /// 交易記錄
+        /// </summary>
+        public class POChangedRecordViewModel
+        {
+            public int POChangedOID { get; set; }
+            public string PurchaseOrderID { get; set; }
+            /// <summary>
+            /// 異動分類代碼
+            /// </summary>
+            public string POChangedCategoryCode { get; set; }
+            public string POChangedCategoryCodeToShow
+            {
+                get
+                {
+                    return RepositoryUtils.GetStatus(POChangedCategoryCode);
+                }
+                private set { }
+            }
+            /// <summary>
+            /// 異動提出日期
+            /// </summary>
+            [DataType(DataType.DateTime)]
+            [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm:ss}")]
+            public System.DateTime RequestDate { get; set; }
+            /// <summary>
+            /// 提出角色
+            /// </summary>
+            public string RequesterRole { get; set; }
+            public string RequesterRoleToShow
+            {
+                get
+                {
+                    switch (this.RequesterRole)
+                    {
+                        case "P":
+                            return "採購方";
+                        case "S":
+                            return "供應方";
+                        case "A":
+                            return "系統";
+                        default:
+                            break;
+                    }
+                    return "";
+                }
+                private set { }
+            }
+            /// <summary>
+            /// 角色帳號
+            /// </summary>
+            public string RequesterID { get; set; }
+            public string RequesterName { get; set; }
+            /// <summary>
+            /// 採購單明細編號
+            /// </summary>
+            public string PurchaseOrderDtlCode { get; set; }
+            public Nullable<int> Qty { get; set; }
+            public Nullable<System.DateTime> DateRequired { get; set; }
+            /// <summary>
+            /// 交易記錄字串，需人工組合
+            /// </summary>
+            public string Record { get; set; }
+        }
+
         public class SendToSupplierViewModel
         {
             /// <summary>
@@ -31,6 +98,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             [DataType(DataType.Currency)]
             [Display(Name = "合計金額")]
             public int PODItemsAggregate { get; set; }
+            /// <summary>
+            /// 交易記錄：檢視使用          
+            /// </summary>
+            public IList<POChangedRecordViewModel> POChangedItems { get; set; }
         }
 
         public class POInfoViewModel
@@ -81,6 +152,40 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             var poitem = GetPOInfoViewModel(purchaseOrderID);
             var si = db.SupplierInfo.Find(poitem.SupplierCode);
             var supacc = si.SupplierAccount.FirstOrDefault();
+            var pocs = db.POChanged.Where(item => item.PurchaseOrderID == purchaseOrderID)
+                .OrderByDescending(item => item.RequestDate).ToList();
+            var POChangedItems = new List<POChangedRecordViewModel>();
+
+            foreach (var item in pocs)
+            {
+                var poc = new POChangedRecordViewModel
+                {
+                    POChangedCategoryCode = item.POChangedCategoryCode,
+                    RequestDate = item.RequestDate,
+                    RequesterRole = item.RequesterRole,
+                    RequesterID = item.RequesterID,
+                    RequesterName = item.RequesterID == emp.EmployeeID ? emp.Name :
+                    RepositoryUtils.GetAccountName(item.RequesterID, item.RequesterRole, db),
+                    PurchaseOrderDtlCode = item.PurchaseOrderDtlCode,
+                    Qty = item.Qty,
+                    DateRequired = item.DateRequired
+                };
+                POChangedItems.Add(poc);
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = POChangedItems.Count - 1; i >= 0; i--)
+            {
+                sb.Clear();
+                sb.Append(POChangedItems[i].POChangedCategoryCodeToShow);
+                if (POChangedItems[i].PurchaseOrderDtlCode != null)
+                {
+                    sb.Append("<br/>").Append("明細編號：").Append(POChangedItems[i].PurchaseOrderDtlCode).Append("<br/>")
+                        .Append("數量：").Append(POChangedItems[i].Qty).Append("<br/>")
+                         .Append("要求到貨日期：").Append(POChangedItems[i].DateRequired.Value
+                         .ToString("yyyy/MM/dd")).Append("<br/>");
+                }
+                POChangedItems[i].Record = sb.ToString();
+            }
 
             var supitem = new SUPInfoViewModel
             {
@@ -97,7 +202,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 POItem = poitem,
                 SUPItem = supitem,
                 PODItems = poditems,
-                PODItemsAggregate = poditems.Sum(item => item.Total)
+                PODItemsAggregate = poditems.Sum(item => item.Total),
+                POChangedItems = POChangedItems
             };
 
             return po;
@@ -118,7 +224,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 PurchaseOrderID = po.PurchaseOrderID,
                 CreateDate = po.CreateDate,
                 PurchaseRequisitionID = rel.PurchaseRequisitionID,
-                PurchaseOrderStatus = GetStatus(po.PurchaseOrderStatus),
+                PurchaseOrderStatus = RepositoryUtils.GetStatus(po.PurchaseOrderStatus),
                 Buyer = po.Employee.Name,
                 EmployeeID = po.EmployeeID,
                 SupplierCode = po.SupplierCode,

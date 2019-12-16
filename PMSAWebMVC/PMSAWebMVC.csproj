@@ -417,6 +417,7 @@
     <Compile Include="Services\MembersDBService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\TingHuan\ShipNoticesClass.cs" />
+    <Compile Include="Utilities\YaChen\RepositoryUtils.cs" />
     <Compile Include="Utilities\YaChen\PurchaseOrderCreateSession.cs" />
     <Compile Include="Utilities\YangTing\checkPwd.cs" />
     <Compile Include="ViewModels\BuyerSupAccount\BuyerSupAccountViewModel.cs" />

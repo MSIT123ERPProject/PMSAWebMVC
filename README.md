@@ -176,3 +176,47 @@ public ActionResult getAllRolesToIndexAjax()
 	//...
 }
 ```
+
+## 確定密碼是否正確
+1.在要用方法的 controller 內加上這個
+```
+//原本建構子不要刪
+public 你的tController()
+{
+
+}
+ 
+public 你的Controller(ApplicationSignInManager signInManager)
+{
+    SignInManager = signInManager;
+}
+
+//屬性
+private ApplicationSignInManager _signInManager;
+public ApplicationSignInManager SignInManager
+{
+    get
+    {
+        return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+    }
+    private set
+    {
+        _signInManager = value;
+    }
+}
+```
+2.在 Action 裡使用
+```
+[HttpPost]
+public ActionResult LoginTest(string pwd)
+{
+    //取得目前登入者帳號(採購方)
+    var LoginId = User.Identity.GetUserName();
+    
+    //結果回傳 true/false
+    bool result = Utilities.YangTing.checkPwd.isCorrectPwd(SignInManager, LoginId, pwd);
+    
+    //...
+    return View();
+}
+```

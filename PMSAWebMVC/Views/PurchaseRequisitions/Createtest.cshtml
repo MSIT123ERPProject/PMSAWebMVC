@@ -59,13 +59,13 @@
             <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
                 <div class="row">
                     <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.Qty, htmlAttributes: new { @class = "control-label col-md-4" })
+                        @Html.LabelFor(model => model.Qty, htmlAttributes: new { @class = "control-label " })
                         @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3 col-sm-6">
                         <div class="form-group">
-                            <label class="control-label col-md-5" for="DateRequired">@Html.DisplayNameFor(model => model.DateRequired)</label>
+                            <label class="control-label " for="DateRequired">@Html.DisplayNameFor(model => model.DateRequired)</label>
                             <div class="input-group date" id="DateRequired" data-target-input="nearest">
                                 <input type="text" id="DateRequired2" class="form-control datetimepicker-input" data-target="#DateRequired" data-toggle="datetimepicker" name="da" />
                                 <div class="input-group-append" data-target="#DateRequired" data-toggle="datetimepicker">

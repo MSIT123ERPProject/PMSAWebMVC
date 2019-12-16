@@ -153,7 +153,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             var si = db.SupplierInfo.Find(poitem.SupplierCode);
             var supacc = si.SupplierAccount.FirstOrDefault();
             var pocs = db.POChanged.Where(item => item.PurchaseOrderID == purchaseOrderID)
-                .OrderByDescending(item => item.RequestDate).ToList();
+                .OrderByDescending(item => item.POChangedOID).ToList();
             var POChangedItems = new List<POChangedRecordViewModel>();
 
             foreach (var item in pocs)

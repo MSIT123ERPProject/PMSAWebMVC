@@ -16,6 +16,11 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         public string ProductNameDisplay { get; set; }//產品名稱顯示
         public string ProductNameValue { get; set; }//產品名稱值
     }
+    public class PurchaseRequisitionItem//簽核請購單模型模型
+    {
+        public string PurchaseRequisitionIDDisplay { get; set; }//請購單編號顯示
+        public string PurchaseRequisitionIDValue { get; set; }//請購單編號值
+    }
 
     public class PartItem//料件模型
     {
@@ -44,12 +49,16 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
     {
         [Display(Name = "請購單暫存識別碼")]
         public int PurchaseRequisitionOID { get; set; }//請購單識別碼
+        [Display(Name = "請購單編號")]
+        public string PurchaseRequisitionID { get; set; }//請購單識別碼
         [Display(Name = "產品編號")]
         public string ProductNumber { get; set; }//產品料件編號
         [Display(Name = "產品名稱")]
         public string ProductName { get; set; }
         [Display(Name = "員工編號")]
         public string EmployeeID { get; set; }
+        [Display(Name = "員工姓名")]
+        public string EmployeeName { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [DataType(DataType.Date)]
         [Display(Name = "產生日期")]
@@ -112,6 +121,24 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
                               ProductNameValue=pr.ProductName
                           };
                 return prq.ToList(); //將資料裝在陣列
+            }
+        }
+
+        //取得待簽核請購單
+        public static IList<PurchaseRequisitionItem> GetPurchaseRequisitionList()
+        {
+
+            using (PMSAEntities db = new PMSAEntities())
+            {
+                var prq = from pr in db.PurchaseRequisition
+                          where pr.SignStatus.ToString()=="S"
+                          select new PurchaseRequisitionItem
+                          {
+                              PurchaseRequisitionIDDisplay = pr.PurchaseRequisitionID,
+                              PurchaseRequisitionIDValue = pr.PurchaseRequisitionID
+                          };
+
+                return prq.ToList(); 
             }
         }
 
@@ -374,6 +401,59 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         public string ProductName { get; set; }
         [Display(Name = "料件名稱")]
         public string PartName { get; set; }
+        public string PurchaseRequisitionDtlOID { get; set; }
+        //TODO: 應是多筆的狀況，之後需作修正
+        public string ProductNumber { get; set; }
+        //public string ProductName { get; set; }
+        public int PurchaseRequisitionOID { get; set; }
+        /// <summary>
+        /// 顯示內容
+        /// </summary>
+        public IEnumerable<PurchaseRequisitionDtlItem> PurchaseRequisitionDtlSetVM { get; set; }
+        /// <summary>
+        /// 表單內容
+        /// </summary>
+        public IList<PurchaseRequisitionDtlItemChecked> CheckedResultSetVM { get; set; }
+    }
+    //謙和用
+    public class PurchaseRequisitionConfirmViewModel
+    {
+        [Required(ErrorMessage = "請選擇請購單")]
+        [Display(Name = "待簽核請購單")]
+        public string SelectedPurchaseRequisitions { get; set; }
+
+
+        public SelectList PurchaseRequisitionList { get; set; }
+        [Display(Name = "請購單編號")]
+        public string PurchaseRequisitionID { get; set; }//請購單識別碼
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "需求日期")]
+        public System.DateTime DateRequired { get; set; }
+        [Display(Name = "請購數量")]
+        public int Qty { get; set; }
+        [Display(Name = "建議供應商")]
+        public string SupplierName { get; set; }
+        [Display(Name = "產品名稱")]
+        public string ProductName { get; set; }
+        [Display(Name = "料件編號")]
+        public string PartNumber { get; set; }
+        [Display(Name = "料件名稱")]
+        public string PartName { get; set; }
+        [Display(Name = "員工編號")]
+        public string EmployeeID { get; set; }
+        [Display(Name = "員工姓名")]
+        public string EmployeeName { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        [Display(Name = "產生日期")]
+        public DateTime PRBeginDate { get; set; }
+        [Display(Name = "處理狀態")]
+        public string ProcessStatus { get; set; }
+        [Display(Name = "簽核狀態")]
+        public string SignStatus { get; set; }
+        [Display(Name = "簽核流程表識別碼")]
+        public string SignFlowOID { get; set; }
         public string PurchaseRequisitionDtlOID { get; set; }
         //TODO: 應是多筆的狀況，之後需作修正
         public string ProductNumber { get; set; }

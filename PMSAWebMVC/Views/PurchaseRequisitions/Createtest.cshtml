@@ -56,44 +56,37 @@
                     @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </div>
-        <div style="display:inline-flex">
-            <div class="form-group col-md-9" style="display:inline-flex;padding-left:0">
-                @Html.LabelFor(model => model.Qty, htmlAttributes: new { @class = "control-label col-md-5", @style = "padding-left:0" })
-                @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
-                @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group row col-md-7" style="display:inline-flex;padding:inherit">
-                @Html.LabelFor(model => model.DateRequired, htmlAttributes: new { @class = "control-label col-md-4" })
-                @*<div class="col-md-10">*@
-                @Html.EditorFor(model => model.DateRequired, new { htmlAttributes = new { @class = "form-control", @style = "width:200px" } })
-                @Html.ValidationMessageFor(model => model.DateRequired, "", new { @class = "text-danger" })
-                @*</div>*@
-            </div>
-        </div>
-
-        @*@using (Html.BeginForm("GetPurchaseRequisitionsDtlTab", "PurchaseRequisitions", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <div class="card mb-3">
-                        @if (TempData["ErrorMessage"] != null)
-                        {
-                            <div class="alert alert-warning" id="warning">
-                                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                                @TempData["ErrorMessage"]
+            <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        @Html.LabelFor(model => model.Qty, htmlAttributes: new { @class = "control-label col-md-4" })
+                        @Html.EditorFor(model => model.Qty, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-5" for="DateRequired">@Html.DisplayNameFor(model => model.DateRequired)</label>
+                            <div class="input-group date" id="DateRequired" data-target-input="nearest">
+                                <input type="text" id="DateRequired2" class="form-control datetimepicker-input" data-target="#DateRequired" data-toggle="datetimepicker" name="da" />
+                                <div class="input-group-append" data-target="#DateRequired" data-toggle="datetimepicker">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
                             </div>
-                        }
-                        <div class="table-responsive" id="dataTablesContainer"></div>
-                </div>*@
-        <div class="form-group">
-            <div class="d-flex justify-content-center">
-                <button id="btnSubmit1" type="submit" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>新增</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        @*}*@
+        
     </div>
 </div>
-
+<div class="form-group">
+    <div class="d-flex justify-content-center">
+        <button id="btnSubmit1" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i>新增</button>
+    </div>
+</div>
 
 
 @using (Html.BeginForm("Createtest", "PurchaseRequisitions", FormMethod.Post))
@@ -117,18 +110,18 @@
 
     <div class="form-group">
         <div class="d-flex justify-content-center">
-            @Html.ActionLink("送出申請", "CreatePR", null, new { @class = "btn btn-success btn-block" })
+            @Html.ActionLink("送出申請", "CreatePR", null, new { @class = "btn btn-primary btn-block" })
             @*<button id="btnSubmit2" type="button" class="btn btn-success btn-block"><i class="far fa-paper-plane"></i>送出申請</button>*@
         </div>
     </div>
-   
+
 }
 
 @section scripts
 {
     <script>
         $(document).ready(function () {
-
+            getday() 
             load();
 
             let PartListUrl = '@Url.Action("GetPartList", "PurchaseRequisitions")';
@@ -174,7 +167,7 @@
                     url: "@Url.Action("GetPurchaseRequisitionsDtlTab", "PurchaseRequisitions")",//取得請購單明細資料集,請購單
                     type: "get",
                     data: {
-                        DateRequired: $("#DateRequired").val(),//傳回需求日期
+                        DateRequired: $("#DateRequired2").val(),//傳回需求日期
                         Qty: $("#Qty").val(),//傳回請購數量
                         SupplierCode: $("#SelectedSupplierName").val(),
                         productName: $("#SelectedProductName").val(),
@@ -214,7 +207,7 @@
                     url: "@Url.Action("load", "PurchaseRequisitions")",//取得請購單明細資料集,請購單
                     type: "get",
             }).done(function (result) {
-                
+
                     $("#dataTablesContainer").html(result);
                     //$("#warning").remove();
                     //$("#ProductNume").val($("#SelectedProductName").val());//產品名稱(ID),查詢產品名稱
@@ -228,6 +221,24 @@
                 }).fail(function (e) {
                     alert(e.responseText);
                 });
+        }
+        function getday() { //取日期
+            var d = new Date();
+            var day = d.getDate();
+            var month = d.getMonth() + 1;
+            var year = d.getFullYear();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            if (month < 10) {
+                month = "0" + month;
+            }
+            var date = year + "/" + month + "/" + day;
+
+            var mydate = new Date();
+            var t = mydate.toLocaleString();
+            $('#DateRequired').children("input").val(date);
+
         }
     </script>
 }

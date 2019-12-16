@@ -308,6 +308,7 @@
         //儲存資料
         $("#btnSave").click(function ()
         {
+            $("#CategoryName2").attr('disabled', true);
             var PartNumber = $("#PartNumber").val();
             var PartName = $("#PartName").val();
             var PartSpec = $("#PartSpec").val();
@@ -325,7 +326,45 @@
                     "PartCategoryOID": PartCategoryOID,
                     "PtImgFile": PtImgFile
                 });
-            $.ajax
+               Swal.fire(
+                {
+                title: '確定要新增資料嗎?',
+                text: "確認後將儲存資料",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor:'#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '儲存',
+                }
+            ).then((result) => {
+                if (result.value)
+                {
+                    $.ajax({
+                        url: `@Url.Action("Create", "Parts")`,
+                        type: "POST",
+                        data: Jsondata,
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+
+                    }).done(function () {
+                        Swal.fire(
+                                '儲存成功 !',
+                                '此資料已成功新增',
+                                'success')
+
+                        }).fail(function () {
+                            Swal.fire(
+                                '儲存失敗 !',
+                                '請確認資料格式是否正確',
+                                'error')
+                        }).always(function () {
+                            setTimeout('A()', 2000);
+
+                        });
+                    }
+                })
+            @*$.ajax
             (
                 {
                   url: `@Url.Action("Create","Parts")`,
@@ -335,13 +374,13 @@
                   contentType: 'application/json; charset=utf-8'
                 }
             ).done(function (data) {
-                  console.log(data)
-                  alert("成功");
+
+                toastr.success("新增成功", "提示");
                   window.location.reload()
-                  }).fail(function (err) {
-                      alert("失敗")
-                      console.log(err);
-                  })
+                }).fail(function (err) {
+                toastr.success("新增失敗，請輸入正確格式", "警告");
+                    
+                  })*@
 
         })
         //修改
@@ -364,7 +403,8 @@
                 $("#CreatedDateDiv").hide();
                 $("#partImg1").hide();
                 $('#PartUnitName').hide();
-                $('#CategoryName').hide();
+                $('#CategoryName').show();
+                $('#CategoryName1').hide();
                 $("#PartNumber").val(datas[0].PartNumber);
                 $("#PartNumber").attr('disabled', true);
                 $("#PartName").val(datas[0].PartName);
@@ -373,21 +413,21 @@
                 $("#partImg2").attr("src", `/assets/parts/${datas[0].PartNumber}-${datas[0].PartName}.jpg`);
                 $("#PartUnitName2").val(datas[0].PartUnitOID);
                 $("#QtyPerUnit").val(datas[0].QtyPerUnit);
-                $("#CategoryName2").val(datas[0].PartCategoryOID);
+                $("#CategoryName").val(datas[0].CategoryName).text();
+                $("#CategoryName").attr('disabled', true);
                 $("#CreatedDate2").val(datas[0].CreatedDate);
             });
 
              $('.modal').modal('show');
         });
          //修改資料
-        $("#btnUpdate").click(function ()
-        {
+        $("#btnUpdate").click(function () {
             var PartNumber = $("#PartNumber").val();
             var PartName = $("#PartName").val();
             var PartSpec = $("#PartSpec").val();
             var PartUnitOID = $("#PartUnitName2").val();
             var QtyPerUnit = $("#QtyPerUnit").val();
-            var PartCategoryOID = $("#CategoryName2").val();
+            var PartCategoryOID = $("#CategoryName").val();
             var PtImgFile = $("#PtImgFile")[0].files[0];
             var Jsondata = JSON.stringify(
                 {
@@ -399,26 +439,62 @@
                     "PartCategoryOID": PartCategoryOID,
                     "PtImgFile": PtImgFile
                 });
-
-            $.ajax
-            (
+            Swal.fire(
                 {
-                  url: `@Url.Action("Edit", "Parts")`,
-                  type: "POST",
-                  data: Jsondata,
-                  dataType: 'json',
-                  contentType: 'application/json; charset=utf-8'
+                title: '確定修改資料嗎?',
+                text: "修改後舊資料將被覆蓋",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor:'#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '修改',
                 }
-            ).done(function (data) {
-                  console.log(data)
-                  alert("成功");
-                  window.location.reload()
-                  }).fail(function (err) {
-                      alert("失敗")
-                      console.log(err);
-                  })
+            ).then((result) => {
+                if (result.value)
+                {
+                    $.ajax({
+                        url: `@Url.Action("Edit", "Parts")`,
+                        type: "POST",
+                        data: Jsondata,
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
 
-        })
+                    }).done(function () {
+                        Swal.fire(
+                                '修改成功 !',
+                                '此資料已完成修改',
+                                'success')
+
+                        }).fail(function () {
+                            Swal.fire(
+                                '修改失敗 !',
+                                '請確認資料格式是否正確',
+                                'error')
+                        }).always(function () {
+                            setTimeout('A()', 2000);
+
+                        });
+                    }
+                })
+            @*$.ajax(
+                {
+                    url: `@Url.Action("Edit", "Parts")`,
+                    type: "POST",
+                    data: Jsondata,
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8'
+                }
+                ).done(function (data) {
+                    console.log(data)
+                    alert("成功");
+                    window.location.reload()
+                }).fail(function (err) {
+                    alert("失敗")
+                    console.log(err);
+                })*@
+
+        });
         //圖片上傳
         $('#PtImgFile').on('change', function (e) {
                 //取得檔案
@@ -474,23 +550,55 @@
             if (id1 == undefined) {
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
+               Swal.fire({
+                title: '確定要刪除 ?',
+                text: "刪除後資料將會消失 !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor:'#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: '取消',
+                confirmButtonText: '刪除',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: `@Url.Action("Delete", "Parts")`,
+                        type: 'POST',
+                        data: { id:id1 }
 
-            $.ajax(
+                    }).done(function () {
+                        Swal.fire(
+                                '刪除成功 !',
+                                '此資料已被刪除',
+                                'success')
+
+                        }).fail(function () {
+                            Swal.fire(
+                                '刪除失敗 !',
+                                '此料件已被使用',
+                                'error')
+                        }).always(function () {
+                            setTimeout('A()', 2000);
+
+                        });
+
+
+
+                }
+            })
+
+            @*$.ajax(
                 {
                     type: "POST",
                     url: '@Url.Action("Delete", "Parts")',
                     data: { id: id1 },
                 }).done(function () {
-                    alert("刪除成功")
+                    toastr.success("刪除成功", "提示");
                     window.location.reload();
-                }).fail(function () { alert("刪除失敗") });
+                }).fail(function () { toastr.error("此料件已新增為貨源清單無法刪除!!", "警告");});*@
 
         });
-
-
-
-
-
+        
         $(document).ready(function () {
             $('#dataTable').DataTable();
         });

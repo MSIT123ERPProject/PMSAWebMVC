@@ -157,18 +157,25 @@ namespace PMSAWebMVC.Controllers
         //[ValidateAntiForgeryToken]
         public ActionResult Edit(PartView part)
         {
-            //先刪除原圖檔案
+            string VirtualFileName = "test1.jpg";
             string partname = $"{ part.PartNumber }-{ part.PartName}.jpg";
             string path = Path.Combine(Server.MapPath("~/assets/parts/"), partname);
-            System.IO.File.Delete(path);
-            //抓虛擬圖檔路徑，將檔案移動到正確資料夾並改名;
-            string VirtualFileName = "test1.jpg";
             string VirtualPosition = Path.Combine(Server.MapPath("~/images/"), VirtualFileName);
             string RightPosition = Path.Combine(Server.MapPath("~/assets/parts/"), partname);
-            System.IO.File.Move(VirtualPosition, RightPosition);
 
+            FileInfo f = new FileInfo(VirtualPosition);
+            if (f.Exists)
+            {
+                //先刪除原圖檔案
+                System.IO.File.Delete(path);
+                //抓虛擬圖檔路徑，將檔案移動到正確資料夾並改名;
+                System.IO.File.Move(VirtualPosition, RightPosition);
+            }
+               
+            
             //將Model帶進來的值存入資料庫
             PartCategoryDtl PartCategoryDtl = new PartCategoryDtl();
+            PartCategoryDtl PartCategoryDtl2 = new PartCategoryDtl();
             Part part1 = new Part();
             part.PictureAdress = "~/assets/parts/" + part.PartNumber + "-" + part.PartName + ".jpg";
             part.CreatedDate = DateTime.Now;
@@ -182,9 +189,11 @@ namespace PMSAWebMVC.Controllers
             part1.PartUnitOID = part.PartUnitOID;
             part1.QtyPerUnit = part.QtyPerUnit;
             db.Entry(part1).State = EntityState.Modified;
-            db.Entry(PartCategoryDtl).State = EntityState.Modified;
             db.SaveChanges();
-
+            //var PartCategoryDtlOID = db.PartCategoryDtl.Where(x => x.PartNumber == PartCategoryDtl.PartNumber).SingleOrDefault();
+            //PartCategoryDtlOID.PartCategoryOID = PartCategoryDtl.PartCategoryOID;
+            //db.Entry(PartCategoryDtlOID).State = EntityState.Modified;
+            //db.SaveChanges();
             return Json("Index");
         }
 

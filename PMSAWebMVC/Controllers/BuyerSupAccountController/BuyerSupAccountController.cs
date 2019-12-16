@@ -104,7 +104,7 @@ namespace PMSAWebMVC.Controllers.BuyerSupAccountController
                     supinfo.Tel = SupInfoModel.Tel;
                     supinfo.Email = SupInfoModel.Email;
                     supinfo.Address = SupInfoModel.Address;
-                    supinfo.SupplierRatingOID = null;
+                    supinfo.SupplierRatingOID = 1;
 
                     db.SupplierInfo.Add(supinfo);
                     var r1 = db.SaveChanges();

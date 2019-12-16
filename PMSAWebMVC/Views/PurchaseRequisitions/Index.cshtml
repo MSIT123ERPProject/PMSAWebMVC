@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "請購單";
+    
 }
 
 <h2>請購單</h2>
@@ -11,16 +12,14 @@
     <div class="card-header">
         <i class="fas fa-table"></i>
         @Html.ActionLink("新增請購單", "Createtest", null, new { @class = "btn btn-info" })
+        @Html.ActionLink("請購單簽核", "Confirm", null, new { @class = "btn btn-info" ,@id="con",@style= "visibility:hidden " })
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
                     <tr class="bg-primary text-white text-left">
-                        @*<th>
-                                @Html.DisplayNameFor(model => model.PurchaseRequisitionOID)
-                            </th>*@
-                        <th>
+                        <th data-priority="1">
                             @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
                         </th>
                         <th>
@@ -35,41 +34,15 @@
                         <th>
                             @Html.DisplayNameFor(model => model.SignStatus)
                         </th>
-                        @*<th>
-                                @Html.DisplayNameFor(model => model.Employee.Name)
-                            </th>*@
-                        @*<th>
-                                @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
-                            </th>*@
-                        <th>動作</th>
+
+                        <th data-priority="1">動作</th>
                     </tr>
                 </thead>
-                @*<tfoot>
-                    <tr class="bg-primary text-white text-center">
-                        <th>
-                            @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Product.ProductName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PRBeginDate)
-                        </th>
-                        <th >
-                            @Html.DisplayNameFor(model => model.ProcessStatus)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.SignStatus)
-                        </th>
-                        <th>動作</th>
-                    </tr>
-                </tfoot>*@
+              
                 @foreach (var item in Model)
                 {
                     <tr>
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.PurchaseRequisitionOID)
-                            </td>*@
+
                         <td>
                             @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
                         </td>
@@ -85,38 +58,24 @@
                         <td id="ss1">
                             @Html.DisplayFor(modelItem => item.SignStatus)
                         </td>
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.Employee.Name)
-                            </td>*@
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)
-                            </td>*@
                         <td>
-                            @*@Html.ActionLink("新增明細", "CreateDtl2", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
 
-                            @*@Html.ActionLink("編輯", "Edit", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
-                            @*@Html.ActionLink("檢視", "Details", new { id = item.PurchaseRequisitionID }, new { @class = "btn btn-info" })*@
-                            @*<button name="click1" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-            <i class="far fa-edit"></i>
-        </button>*@
-                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
-                                <i class="far fa-eye"></i>
-                            </button>
-                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
-                                <i class="far fa-edit"></i>
-                            </button>
-                            @*<button name="click3" type="button" class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.PurchaseRequisitionID" onclick="'location.href='+@Url.Action("IndexDtl","PurchaseRequisitions")+'?PurchaseRequisitionID='+'@item.PurchaseRequisitionID'">
-                                <i class="far fa-file-alt"></i>
-                            </button>*@
-                            <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt" })</button>
-                           
+                            <div class="table-data-feature">
+                                <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                                <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)" })</button>
+                            </div>
                         </td>
                     </tr>
                 }
             </table>
         </div>
     </div>
-    <div class="card-footer small text-muted">Updated at 10/23</div>
+    @*<div class="card-footer small text-muted">Updated at 10/23</div>*@
 </div>
 @section scripts
 {
@@ -125,11 +84,9 @@
     <script>
         $(document).ready(function () {
             $('#dataTable').DataTable();
-
+            var emp = $('#empid').text();
+            if (emp == "CE00005") { $("#con").css("visibility", "visible"); }
         });
-
-        
-
 
             //檢視
             $(document).on('click', "button[name = 'click1']", function () {
@@ -183,7 +140,8 @@
                 $('#ModalTitle').text('檢視請購單資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', false);
-                if (datas[0].EmployeeID != "CE00005") { $('#SignStatus').attr('disabled', true); }
+                if (datas[0].UserEmployeeID != "CE00005") { $('#SignStatus').attr('disabled', true); }
+                if (datas[0].UserEmployeeID == "CE00005") { $('#ProcessStatus').attr('disabled', true); }
                 //$('*[id="btnUpdate"]').attr('display', true);
                 $('#btnSave').hide();
                 $('#btnUpdate').show();
@@ -319,3 +277,4 @@
         </div>
     </div>
 </div>
+<h6 id="empid" style="visibility:hidden">@ViewBag.userEmployeeID</h6> @*隱藏劇情*@

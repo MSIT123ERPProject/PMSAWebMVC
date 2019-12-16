@@ -2413,6 +2413,8 @@
     <Content Include="Views\PurchaseOrders\SendToSupplier.cshtml" />
     <Content Include="Views\PurchaseOrders\_DetailsPartial.cshtml" />
     <Content Include="Views\PurchaseOrders\Details.cshtml" />
+    <Content Include="Views\PurchaseRequisitions\Confirm.cshtml" />
+    <Content Include="Views\PurchaseRequisitions\_Confirm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

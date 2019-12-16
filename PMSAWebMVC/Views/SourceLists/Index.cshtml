@@ -17,7 +17,7 @@
             <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
                     <tr class="bg-primary text-white text-left">
-                        <th>
+                        <th data-priority="1">
                             @Html.DisplayNameFor(model => model.SourceListID)
                         </th>
                         <th>
@@ -47,44 +47,44 @@
                         <th>
                             @Html.DisplayNameFor(model => model.EXP)
                         </th>
-                        <th>動作</th>
+                        <th data-priority="1">動作</th>
                     </tr>
                 </thead>
                 @*<tfoot>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.SourceListID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Part.PartName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.QtyPerUnit)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.MOQ)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitPrice)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitsInStock)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UnitsOnOrder)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.SafetyQty)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.EXP)
-                        </th>
-                        <th>動作</th>
-                    </tr>
-                </tfoot>*@
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SourceListID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Part.PartName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.QtyPerUnit)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MOQ)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UnitPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UnitsInStock)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UnitsOnOrder)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SafetyQty)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EXP)
+                            </th>
+                            <th>動作</th>
+                        </tr>
+                    </tfoot>*@
                 @foreach (var item in Model)
                 {
                     <tr>
@@ -119,18 +119,19 @@
                             @Html.DisplayFor(modelItem => item.EXP)
                         </td>
                         <td>
-                            @*@Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" })*@
-                            @*@Html.ActionLink("新增明細", "CreateDtl2", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
-                            @*@Html.ActionLink("編輯", "Edit", new { id = item.SourceListID }, new { @class = "btn btn-info" })
-        @Html.ActionLink("檢視", "Details", new { id = item.SourceListID }, new { @class = "btn btn-info" })*@
-                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.SourceListID">
-                                <i class="far fa-eye"></i>
-                            </button>
-                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.SourceListID">
-                                <i class="far fa-edit"></i>
-                            </button>
-                            @*<a name="click01" class="btn btn-outline-secondary btn-icon" data-wc="@item.SourceListID"><i class="far fa-trash-alt"></i></a>*@
-                            <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.SourceListID }, new { @class = "far fa-file-alt" })</button>
+                            <div class="table-data-feature">
+                                <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.SourceListID">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                                <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.SourceListID">
+                                    <i class="far fa-edit" ></i>
+                                </button>
+
+                                @*<button name="click3" type="button"   class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.SourceListID">
+                                        <i class="far fa-file-alt"></i>
+                                    </button>*@
+                                <button type="button" class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.SourceListID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)", @title = "明細" })</button>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -186,15 +187,32 @@
                 })
         });
 
-        //貨源清單檢視
-            $(document).on('click', "button[name = 'click1']", function () {
+        //$(document).on('click', "button[name = 'click3']", function () {
+        //    document.getElementById("btnClose").innerHTML = "關閉";
+        //    let id1 = this.dataset.dc;
+        //    if (id1 == undefined) {
+        //        id1 = $(this).parents('tr').find('td:first-child').text();
+        //    }
+        //    var actionUrl = "IndexDtl?id=" + id1;
+        //    $.post(actionUrl, function (data) {
+        //        alert(data);
+
+        //    })
+        //        .fail(function () {
+        //            alert("something wrong...");
+        //        })
+        //});
+
+
+//貨源清單檢視
+        $(document).on('click', "button[name = 'click1']", function () {
                 document.getElementById("btnClose").innerHTML = "關閉";
             let id1 = this.dataset.dc;
             if(id1 == undefined){
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("Detail", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', true);
                 //$('*[id="btnUpdate"]').attr('display', false);
@@ -220,7 +238,7 @@
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("Detail", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', false);
                 //$('*[id="btnUpdate"]').attr('display', false);

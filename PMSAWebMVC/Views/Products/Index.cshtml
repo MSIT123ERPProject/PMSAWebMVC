@@ -4,38 +4,210 @@
 @{
     ViewBag.Title = "產品首頁";
 }
+@section styles
+{
 <style>
-    .productImg {
-        height: 300px;
+    div 
+    {
+        margin:0;
+        padding:0;
+    }
+    .row 
+    {
+        margin: auto;
+        width: 80vw;
+        height: 70vh;
+        padding-bottom:20px;
+    }
+    h3
+    {
+        margin:5px;
+        padding:5px;
+
+    }
+    p 
+    {
+        font-size:large;
+        margin: 5px;
+        padding: 5px;
+    }
+    .productImg1 
+    {
+        width: 90%;
+        height:70%;
+        border: solid 1px #666;
+        padding: 8px;
+        margin: 8px;
+        background-color: #fff;
+        
+    }
+    .productImg2 
+    {
+        width: 95%;
+        height: 90%;
+        border: solid 1px #666;
+        padding: 10px;
+        margin: 10px;
+        background-color: #fff;
+    }
+    .col-sm-6
+    {
+        border: solid 1px #666;
+        padding: 10px;
+    }   
+    .categorytitle 
+    {
+        font-size: 30px;
+    }
+    #categoryImg
+    {
+        width:312px;
+        height:212px;
+    }
+    .icon
+    {
+        width: 20px;
+        height: 20px;
     }
 
-    .partImg {
-        height: 100px;
-        max-width: 150px;
-    }
-
-    .PP {
+    .PP 
+    {
         border: 1px solid black;
         text-align: center;
     }
 
-    .qq {
+    .qq
+    {
         width: 500px;
     }
 
-    .modal-title {
+    .modal-title
+    {
         font-size: x-large;
         font-weight: bold;
     }
 
-    h4 {
+
+    h4 
+    {
         font-weight: bold;
     }
+    #pt1 {
+        width: 200%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        border: 1px solid black;
+    }
+    .category 
+    {
+       
+    }
+  
+
 </style>
-<h2>產品總覽</h2>
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+}
+@section scripts
+{
+<script>
+    function ChangeImgAndDivShow1() {
+        var divObj = document.getElementsByName("category1")
+        var imgObj = document.getElementsByName("icon1")
+       
+
+        for (var i = 0; i < divObj.length; i++)
+        {
+            if (divObj[i].style.display == "none")
+            {
+                divObj[i].style.display = "block";
+                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
+            }
+            else
+            {
+                divObj[i].style.display = "none";
+                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
+            }
+        }
+       
+
+    }
+    function ChangeImgAndDivShow2() {
+
+        var divObj = document.getElementsByName("category2")
+        var imgObj = document.getElementsByName("icon2")
+
+
+        for (var i = 0; i < divObj.length; i++) {
+            if (divObj[i].style.display == "none")
+            {
+                divObj[i].style.display = "block";
+                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
+            }
+            else {
+                divObj[i].style.display = "none";
+                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
+            }
+        }
+
+
+    }
+    function ChangeImgAndDivShow3() {
+        var divObj = document.getElementsByName("category3")
+        var imgObj = document.getElementsByName("icon3")
+
+
+        for (var i = 0; i < divObj.length; i++) {
+            if (divObj[i].style.display == "none") {
+                divObj[i].style.display = "block";
+                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
+            }
+            else {
+                divObj[i].style.display = "none";
+                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
+            }
+        }
+
+    }
+    function ChangeImgAndDivShow4() {
+        var divObj = document.getElementsByName("category4")
+        var imgObj = document.getElementsByName("icon4")
+
+
+        for (var i = 0; i < divObj.length; i++) {
+            if (divObj[i].style.display == "none") {
+                divObj[i].style.display = "block";
+                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
+            }
+            else {
+                divObj[i].style.display = "none";
+                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
+            }
+        }
+
+
+    }
+    function ChangeImgAndDivShow5() {
+        var divObj = document.getElementsByName("category5")
+        var imgObj = document.getElementsByName("icon5")
+
+
+        for (var i = 0; i < divObj.length; i++) {
+            if (divObj[i].style.display == "none") {
+                divObj[i].style.display = "block";
+                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
+            }
+            else {
+                divObj[i].style.display = "none";
+                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
+            }
+        }
+
+
+    }
+</script>
+}
+<h2>陸行鳥自行車</h2>
+
 <div class="jumbotron">
     <h2>產品總覽</h2>
     <h6><span></span></h6>
@@ -46,18 +218,18 @@
         var modalId = "modal-" + product.ProductOID;
 
         <div class="col-sm-6">
-            <div class="img-thumbnail">
+            <div id="pt1" class="img-thumbnail">
                 <h3>產品編號:@product.ProductNumber</h3>
-                <img class="productImg" src="@Url.Content(product.PictureAdress)" alt="商品圖片" />
+                <img class="productImg1" src="@Url.Content(product.PictureAdress)" alt="產品圖片" />
                 <div class="caption">
                     <p>產品名稱:@product.ProductName</p>
-                    <p>
-                        <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#@modalId">詳細資訊</a>
+                    <p class=" deti">
+                        <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#@modalId" >詳細資訊</a>
                     </p>
+                    <br />
                 </div>
             </div>
         </div>
-
         <!-- Modal -->
         <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -81,8 +253,8 @@
                                 @Html.DisplayFor(p => product.ProductNumber)
                             </dd>
 
-                            <dd>
-                                <img class="productImg" src="@Url.Content(product.PictureAdress)" alt="商品圖片" />
+                            <dd class="img-thumbnail">
+                                <img class="productImg2" src="@Url.Content(product.PictureAdress)" alt="產品圖片" />
                             </dd>
 
                             <dt>
@@ -92,63 +264,131 @@
                             <dd>
                                 @Html.DisplayFor(p => product.ProductName)
                             </dd>
-
-                            <dt>
-                                @Html.DisplayNameFor(model => model.PictureDescription)
-                            </dt>
-
-                            <dt>
-                                產品使用料件:
-                            </dt>
                         </dl>
-
+                        <hr />
                         <div>
-
-                            @for (int i = 0; i < product.ProductPart.Count; i += 2)
-                            {
-                                var productPart1 = product.ProductPart.ToArray()[i];
-                                var productPart2 = new ProductPart();
-
-                                if (i + 1 < product.ProductPart.Count)
-                                {
-                                    productPart2 = product.ProductPart.ToArray()[i + 1];
-                                }
-
-                                <div class="row">
-                                    <div class="col-sm PP">
-                                        <div>
-                                            @productPart1.Part.PartName
-                                        </div>
-                                        <img class="partImg" src="@Url.Content(productPart1.Part.PictureAdress)" alt="商品圖片" />
+                            <div>
+                                <div>
+                                    <div class="categorytitle">
+                                        <img class="icon" id="icon1" name="icon1" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow1()" />
+                                        輪組
                                     </div>
+                                    <div class="category" id="category1" name="category1" style="display:none" >
+                                        @foreach (var x in product.ProductPart)
+                                        {
 
-                                    @if (i + 1 < product.ProductPart.Count)
-                                    {
-                                        <div class="col-sm PP">
-                                            <div>
-                                                @productPart2.Part.PartName
-                                            </div>
-                                            <img class="partImg" src="@Url.Content(productPart2.Part.PictureAdress)" alt="商品圖片" />
-                                        </div>
-                                    }
+                                            foreach (var y in x.Part.PartCategoryDtl)
+                                            {
 
+                                                if (y.PartCategoryOID == 1)
+                                                {
+                                                    <div>@x.Part.PartName</div>
+                                                    <div class="img-thumbnail"id="categoryImg"><img class="PartImg" id="PartImg"  src="@Url.Content(x.Part.PictureAdress)"  width="300" height="200" alt="產品料件圖片" /></div>
+                                                    <br />
+                                                }
+                                            }
+
+                                        }
+                                    </div>
                                 </div>
-                            }
+                                <hr />
+                                <div>
+                                    <div class="categorytitle"><img class="icon" name="icon2" id="icon2" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow2()" />
+                                    傳動系統
+                                    </div>
+                                    <div class="category" id="category2" name="category2" style="display:none">
+                                        @foreach (var x in product.ProductPart)
+                                        {
 
+                                            foreach (var y in x.Part.PartCategoryDtl)
+                                            {
 
-                            @*@foreach (var productPart in product.ProductPart)
-                                {
-                                    <span>@productPart.Part.PartName</span>
-                                    <img class="partImg" src="@Url.Content(productPart.Part.PictureAdress)" alt="商品圖片" />
-                                }*@
+                                                if (y.PartCategoryOID == 2)
+                                                {
+                                                    <div>@x.Part.PartName</div>
+                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
+                                                    <br />
+                                                }
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                                <hr />
+                                <div>
+                                    <div class="categorytitle"><img class="icon" name="icon3" id="icon3" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow3()" />
+                                    煞車系統
+                                    </div>
+                                    <div class="category" id="category3" name="category3" style="display:none">
+                                        @foreach (var x in product.ProductPart)
+                                        {
+
+                                            foreach (var y in x.Part.PartCategoryDtl)
+                                            {
+
+                                                if (y.PartCategoryOID == 3)
+                                                {
+                                                    <div>@x.Part.PartName</div>
+                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
+                                                    <br />
+                                                }
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                                <hr />
+                                <div>
+                                    <div class="categorytitle"><img class="icon" name="icon4" id="icon4" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow4()" />
+                                    配件裝置
+                                    </div>
+                                    <div class="category" id="category4" name="category4" style="display:none">
+                                        @foreach (var x in product.ProductPart)
+                                        {
+
+                                            foreach (var y in x.Part.PartCategoryDtl)
+                                            {
+
+                                                if (y.PartCategoryOID == 4)
+                                                {
+                                                    <div>@x.Part.PartName</div>
+                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
+                                                    <br />
+                                                }
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                                <hr />
+                                <div>
+                                    <div class="categorytitle"><img class="icon" name="icon5" id="icon5" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow5()" />
+                                    車體裝置
+                                    </div>
+                                    <div class="category" id="category5" name="category5" style="display:none">
+                                        @foreach (var x in product.ProductPart)
+                                        {
+
+                                            foreach (var y in x.Part.PartCategoryDtl)
+                                            {
+
+                                                if (y.PartCategoryOID == 5)
+                                                {
+                                                    <div>@x.Part.PartName</div>
+                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img id="PartImg" class="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
+                                                    <br />
+                                                }
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    @*<div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>*@
                 </div>
             </div>
         </div>
     }
 </div>
+

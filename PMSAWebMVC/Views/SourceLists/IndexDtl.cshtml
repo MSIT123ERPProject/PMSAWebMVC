@@ -15,7 +15,7 @@
             <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
                 <thead>
                     <tr class="bg-primary text-white text-left">
-                        <th>
+                        <th data-priority="1">
                             @Html.DisplayNameFor(model => model.SourceList.SourceListID)
                         </th>
                         <th>
@@ -40,7 +40,7 @@
                         <th>
                             @Html.DisplayNameFor(model => model.CreateDate)
                         </th>
-                        <th>動作</th>
+                        <th data-priority="1">動作</th>
                     </tr>
                 </thead>
                 @*<tfoot>
@@ -107,17 +107,19 @@
                             @Html.DisplayFor(modelItem => item.CreateDate)
                         </td>
                         <td>
-                            @*@Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" }) |
-                                @Html.ActionLink("檢視", "DetailsDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" }) |*@
-                            @*<a name="click01" class="btn btn-danger" data-wc="@item.SourceListDtlOID"><i class="fa fa-close"></i> 刪除</a>*@
-                            <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.SourceListDtlOID">
-                                <i class="far fa-eye"></i>
-                            </button>
-                            <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.SourceListDtlOID">
-                                <i class="far fa-edit"></i>
-                            </button>
-                            <a name="click01" class="btn btn-outline-secondary btn-icon" data-wc="@item.SourceListDtlOID"><i class="far fa-trash-alt"></i></a>
-                        </td>
+                            <div class="table-data-feature">
+                                @*@Html.ActionLink("編輯", "EditDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" }) |
+        @Html.ActionLink("檢視", "DetailsDtl", new { id = item.SourceListDtlOID }, new { @class = "btn btn-info" }) |*@
+                                @*<a name="click01" class="btn btn-danger" data-wc="@item.SourceListDtlOID"><i class="fa fa-close"></i> 刪除</a>*@
+                                <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.SourceListDtlOID">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                                <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.SourceListDtlOID">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                                @*<a name="click01" class="btn btn-outline-secondary btn-icon" data-wc="@item.SourceListDtlOID"><i class="far fa-trash-alt"></i></a>*@
+                            </div>
+                                </td>
                     </tr>
                 }
             </table>
@@ -182,7 +184,7 @@
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("DetailDtl", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單明細資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', true);
                 //$('*[id="btnUpdate"]').attr('display', false);
@@ -214,7 +216,7 @@
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("DetailDtl", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單明細資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', false);
                 //$('*[id="btnUpdate"]').attr('display', false);

@@ -4,45 +4,47 @@
 
 @Html.HiddenFor(m => m.PurchaseRequisitionOID)
 @Html.HiddenFor(m => m.ProductNumber)
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                    <th>@Html.DisplayNameFor(model => model.PartName)</th>
+                    <th>@Html.DisplayNameFor(model => model.SupplierName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Qty)</th>
+                    <th>@Html.DisplayNameFor(model => model.DateRequired)</th>
+                    <th>動作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.PurchaseRequisitionDtlSetVM.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PartName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).SupplierName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).Qty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).DateRequired)
+                        </td>
+                        <td>
+                            @*@using
+                                @Html.BeginForm("Deletetest", "PurchaseRequisitions",FormMethod.Post)*@
+                            @Html.ActionLink("刪除", "Deletetest", "PurchaseRequisitions", new { id = Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PurchaseRequisitionDtlOID }, new { @class = "btn btn-info" })
+                        </td>
+                    </tr>
+                }
 
-<table class="table table-striped table-bordered" id="dataTable" cellspacing="0" style="width:100%">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.ProductName)</th>
-            <th>@Html.DisplayNameFor(model => model.PartName)</th>
-            <th>@Html.DisplayNameFor(model => model.SupplierName)</th>
-            <th>@Html.DisplayNameFor(model => model.Qty)</th>
-            <th>@Html.DisplayNameFor(model => model.DateRequired)</th>
-            <th>動作</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.PurchaseRequisitionDtlSetVM.Count(); i++)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PartName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).SupplierName)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).Qty)
-                </td>
-                <td>
-                    @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).DateRequired)
-                </td>
-                <td>
-                    @*@using
-                    @Html.BeginForm("Deletetest", "PurchaseRequisitions",FormMethod.Post)*@
-                    @Html.ActionLink("刪除", "Deletetest", "PurchaseRequisitions", new { id = Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PurchaseRequisitionDtlOID }, new { @class = "btn btn-info" })
-                </td>
-            </tr>
-        }
-
-    </tbody>
-</table>
-
+            </tbody>
+        </table>
+    </div>
+</div>

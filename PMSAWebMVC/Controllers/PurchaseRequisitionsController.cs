@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize(Roles = "Buyer, Manager, ProductionControl")]
     public class PurchaseRequisitionsController : BaseController
     {
         private PMSAEntities db = new PMSAEntities();
@@ -72,6 +73,7 @@ namespace PMSAWebMVC.Controllers
             if (user.EmployeeID == "CE00005")
             {
                  purchaseRequisition = db.PurchaseRequisition.Include(p => p.Employee).Include(p => p.Product).Include(p => p.SignFlow);
+                
             }
             else
             {
@@ -83,6 +85,7 @@ namespace PMSAWebMVC.Controllers
                 data.ProcessStatus = GetProcessStatus(data.ProcessStatus);
                 data.SignStatus = GetSignStatus(data.SignStatus);
             }
+            ViewBag.userEmployeeID = user.EmployeeID;
             return View(purchaseRequisition.ToList());
         }
 
@@ -100,24 +103,20 @@ namespace PMSAWebMVC.Controllers
             {
                 return HttpNotFound();
             }
-            // p.PRBeginDate, p.ProcessStatus, p.SignStatus
-            //, ProcessStatus= GetProcessStatus(p.ProcessStatus), SignStatus = GetSignStatus(p.SignStatus)
-            //var datas = db.PurchaseRequisition.Where(p => (p.EmployeeID == user.EmployeeID && p.PurchaseRequisitionID == id))
-            //    .Select(p => new { p.PurchaseRequisitionID, p.ProductNumber, p.EmployeeID, p.PRBeginDate,
-            //        p.ProcessStatus,p.SignStatus
-            //    });
+
             var datas = from p in db.PurchaseRequisition.AsEnumerable()
-                        where p.EmployeeID == user.EmployeeID && p.PurchaseRequisitionID==id
+                        where p.PurchaseRequisitionID == id
                         select new /*PurchaseRequisitionIndexViewModel*/
                         {
-                            PurchaseRequisitionID=p.PurchaseRequisitionID,
-                            ProductNumber=p.ProductNumber,
-                            EmployeeID=p.EmployeeID,
-                            PRBeginDate=p.PRBeginDate.ToString("yyyy/MM/dd"),
+                            PurchaseRequisitionID = p.PurchaseRequisitionID,
+                            ProductNumber = p.ProductNumber,
+                            EmployeeID = p.EmployeeID,
+                            PRBeginDate = p.PRBeginDate.ToString("yyyy/MM/dd"),
                             //ProcessStatus = GetProcessStatus(p.ProcessStatus),
                             //SignStatus = GetSignStatus(p.SignStatus)
                             ProcessStatus = p.ProcessStatus,
-                            SignStatus = p.SignStatus
+                            SignStatus = p.SignStatus,
+                            UserEmployeeID = user.EmployeeID
                         };
             var da=datas.ToList();
             return Json(datas, JsonRequestBehavior.AllowGet);
@@ -155,6 +154,81 @@ namespace PMSAWebMVC.Controllers
                            SignStatus = GetSignStatus(gp.Key.SignStatus)//翻譯蒟蒻
                        };
             return Json(new { data = povm }, JsonRequestBehavior.AllowGet); //傳回資料
+        }
+        
+        //簽核用 取得請購單資料
+        [HttpGet]
+        public ActionResult GetPurchaseRequisitionsConfirm(string purchaseRequisitionID)
+        {
+            IEnumerable<PurchaseRequisitionDtlItem> data = null;
+            var prConfirm = from pr in db.PurchaseRequisition
+                            join prd in db.PurchaseRequisitionDtl
+                            on pr.PurchaseRequisitionID equals prd.PurchaseRequisitionID
+
+                            where pr.PurchaseRequisitionID == purchaseRequisitionID
+                            select new PurchaseRequisitionDtlItem
+                            {
+                                PurchaseRequisitionOID = pr.PurchaseRequisitionOID,
+
+                                EmployeeID = pr.EmployeeID,
+                                PRBeginDate = pr.PRBeginDate,
+                                PartNumber = prd.PartNumber,
+                                PartName = prd.Part.PartName,
+                                PurchaseRequisitionID = pr.PurchaseRequisitionID,
+                                EmployeeName = pr.Employee.Name,
+                                ProcessStatus=pr.ProcessStatus,
+
+                               Qty = prd.Qty,
+                               SupplierName = prd.SupplierInfo.SupplierName,
+                               DateRequired = prd.DateRequired,
+                               ProductNumber = pr.ProductNumber,
+                               ProductName = pr.Product.ProductName,
+                               PurchaseRequisitionDtlOID = prd.PurchaseRequisitionDtlOID
+                           };
+            data = prConfirm.ToList();
+
+            PurchaseRequisitionConfirmViewModel vm = new PurchaseRequisitionConfirmViewModel
+            {
+                PurchaseRequisitionDtlSetVM = data, //採購單明細設定模型
+
+            };
+            vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;//採購單識別碼
+            ViewBag.ProductName = data.First().ProductName; ViewBag.PRBeginDate = data.First().PRBeginDate.ToString("yyyy/MM/dd"); ViewBag.EmployeeName = data.First().EmployeeName;
+            ViewBag.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID; ViewBag.ProcessStatus = GetProcessStatus(data.First().ProcessStatus); ViewBag.PurchaseRequisitionID = data.First().PurchaseRequisitionID;
+
+            return PartialView("_Confirm", vm);//注意
+        }
+
+
+        //簽核用 同意
+        [HttpGet]
+        public ActionResult ConfirmY(string purchaseRequisitionID)
+        {
+            PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(purchaseRequisitionID);
+           purchaseRequisition.SignStatus = "Y";
+            if (ModelState.IsValid)//丟資料庫
+            {
+                db.Entry(purchaseRequisition).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            PurchaseRequisitionConfirmViewModel model = new PurchaseRequisitionConfirmViewModel();
+            ConfirmModel(model);
+            return View("Confirm", model);
+        }
+        //簽核用 拒絕
+        [HttpGet]
+        public ActionResult ConfirmN(string purchaseRequisitionID)
+        {
+            PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(purchaseRequisitionID);
+            purchaseRequisition.SignStatus = "N";
+            if (ModelState.IsValid)//丟資料庫
+            {
+                db.Entry(purchaseRequisition).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            PurchaseRequisitionConfirmViewModel model = new PurchaseRequisitionConfirmViewModel();
+            ConfirmModel(model);
+            return View("Confirm", model);
         }
 
         //取得料件資料集
@@ -241,6 +315,7 @@ namespace PMSAWebMVC.Controllers
             var prtdata = from prtt in db.PurchaseRequisitionTemp   //取得全部暫存表
                           select prtt;
             var find4 = prtdata.Where(f => f.EmployeeID == purchaseRequisitionTemp.EmployeeID);//判斷採購人員
+            var x=find4.ToList();
             OID = find4.Max(f=>f.PurchaseRequisitionOID); //取得最新請購單暫存識別碼
             purchaseRequisitionDtlTemp.PurchaseRequisitionOID = OID;
             purchaseRequisitionDtlTemp.PartNumber = partNumber;
@@ -271,11 +346,13 @@ namespace PMSAWebMVC.Controllers
         {
             
             var user = User.Identity.GetEmployee();
-
+            
             var prtdata = from prt in db.PurchaseRequisitionTemp   //取得暫存表
                           where prt.EmployeeID == user.EmployeeID
                           select prt;
             var prtdata2 = prtdata.ToList();
+            var depr = prtdata2.First().PurchaseRequisitionOID;
+            PurchaseRequisitionTemp de = db.PurchaseRequisitionTemp.Find(depr);
             if (prtdata2.Count() > 0)
             {
                 PurchaseRequisition purchaseRequisition = new PurchaseRequisition();//請購單
@@ -364,8 +441,10 @@ namespace PMSAWebMVC.Controllers
                     foreach (var p in purchaseRequisitionDtllist)
                     {
                         db.PurchaseRequisitionDtl.Add(p);
+                       
                     }
-                db.SaveChanges();
+                    db.PurchaseRequisitionTemp.Remove(de);
+                    db.SaveChanges();
                 }
 
                 return RedirectToAction("Index");
@@ -455,10 +534,17 @@ namespace PMSAWebMVC.Controllers
                 model.PartList = new SelectList(Enumerable.Empty<SelectListItem>());
             }
         }
+        private void ConfirmModel(PurchaseRequisitionConfirmViewModel model)
+        {
+            //參考資料：https://dotnetfiddle.net/PBi075
+            IList<PurchaseRequisitionItem> purchaseRequisition = Repository.GetPurchaseRequisitionList();
+            model.PurchaseRequisitionList = new SelectList(purchaseRequisition, "PurchaseRequisitionIDDisplay", "PurchaseRequisitionIDValue");
+            
+        }
 
         //修改請購單
         [HttpPost]
-        [AuthorizeDeny(Roles = "Manager")]
+        //[AuthorizeDeny(Roles = "Manager")]
         public ActionResult Edit(PurchaseRequisition purchaseRequisition)
         {
             string message = "修改成功!!";
@@ -478,7 +564,7 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
-
+        //請購單新增畫面
         public ActionResult Createtest()
         {
             PurchaseRequisitionCreateViewModel model = new PurchaseRequisitionCreateViewModel();
@@ -486,6 +572,15 @@ namespace PMSAWebMVC.Controllers
             ConfigureViewModel(model);
             return View(model);
         }
+
+        //請購單簽核畫面
+        public ActionResult Confirm()
+        {
+            PurchaseRequisitionConfirmViewModel model = new PurchaseRequisitionConfirmViewModel();
+            ConfirmModel(model);
+            return View(model);
+        }
+
         //請購明細顯示
         public ActionResult IndexDtl(string id)
         {

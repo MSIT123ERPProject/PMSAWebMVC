@@ -1,0 +1,75 @@
+﻿@model PMSAWebMVC.ViewModels.PurchaseRequisitions.PurchaseRequisitionConfirmViewModel
+@{
+    ViewBag.Title = "請購單簽核";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fab fa-wpforms"></i> 請購單簽核
+    </div>
+    <div class="card-body">
+        <div class="form-horizontal">
+            <div class="form-group row">
+                @Html.LabelFor(m => m.SelectedPurchaseRequisitions, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.DropDownListFor(m => m.SelectedPurchaseRequisitions, Model.PurchaseRequisitionList, "請選擇請購單", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.SelectedPurchaseRequisitions, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="far fa-building"></i> 請購單資訊
+    </div>
+    <div class="card-body">
+        <div class="form-horizontal">
+
+            <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
+                <div class="table-responsive" id="dataTablesContainer"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $('#SelectedPurchaseRequisitions').change(function () {
+                $.ajax({
+                    url: "@Url.Action("GetPurchaseRequisitionsConfirm", "PurchaseRequisitions")",
+                    type: "get",
+                    data: {
+                        purchaseRequisitionid: $("#SelectedPurchaseRequisitions").val(),//傳回請購單ID
+                    },
+                }).done(function (result) {
+                    $("#dataTablesContainer").html(result);
+                    $("#warning").remove();
+                    //$("#ProductNume").val($("#SelectedProductName").val());//產品名稱(ID),查詢產品名稱
+
+                    $("#btnSubmit").prop("disabled", false);
+                }).fail(function (e) {
+                    alert(e.responseText);
+                });
+
+                $.fn.dataTable.ext.errMode = 'throw';
+
+                $('#dataTable').DataTable(
+                    {
+                        paging: false,
+                        ordering: false,
+                        searching: false,
+                        language: {
+                            url: "@Url.Content("~/Scripts/dataTables_js / i18n / Chinese - traditional.json")",
+                                  },
+                    });
+            })
+    </script>
+}

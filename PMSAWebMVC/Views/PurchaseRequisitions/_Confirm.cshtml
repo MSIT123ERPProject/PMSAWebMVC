@@ -1,0 +1,108 @@
+﻿@model PMSAWebMVC.ViewModels.PurchaseRequisitions.PurchaseRequisitionConfirmViewModel
+
+
+@Html.HiddenFor(m => m.PurchaseRequisitionOID)
+@Html.HiddenFor(m => m.ProductNumber)
+<div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3" style="border:double;border-bottom:none;">
+    <div class="row">
+        <div class="col-md-3 col-6">
+            @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-4" }):
+            <h6>&nbsp&nbsp @ViewBag.ProductName</h6>
+            @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3 col-6">
+            @Html.LabelFor(model => model.EmployeeName, htmlAttributes: new { @class = "control-label col-md-4" }):
+            <h6>&nbsp&nbsp @ViewBag.EmployeeName</h6>
+            @*@Html.EditorFor(model => model.EmployeeID, new { htmlAttributes = new { @class = "form-control" } })*@
+            @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3 col-6">
+            @Html.LabelFor(model => model.PRBeginDate, htmlAttributes: new { @class = "control-label col-md-4" }):
+            <h6>&nbsp&nbsp @ViewBag.PRBeginDate</h6>
+            @Html.ValidationMessageFor(model => model.PRBeginDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-3 col-6">
+            @Html.LabelFor(model => model.ProcessStatus, htmlAttributes: new { @class = "control-label col-md-4" }):
+            <h6>&nbsp&nbsp @ViewBag.ProcessStatus</h6>
+            @Html.ValidationMessageFor(model => model.ProcessStatus, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+<div class="card-body" style="border:double">
+    <div class="table-responsive">
+        <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%" >
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                    <th>@Html.DisplayNameFor(model => model.PartName)</th>
+                    <th>@Html.DisplayNameFor(model => model.SupplierName)</th>
+                    <th>@Html.DisplayNameFor(model => model.Qty)</th>
+                    <th>@Html.DisplayNameFor(model => model.DateRequired)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.PurchaseRequisitionDtlSetVM.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PartName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).SupplierName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).Qty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.PurchaseRequisitionDtlSetVM.ElementAt(i).DateRequired)
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success">@Html.ActionLink("同意", "ConfirmY", new { purchaseRequisitionID = ViewBag.PurchaseRequisitionID }, new {@style = "color:rgb(255, 255, 255)" })</button>
+    <button class="btn btn-danger">@Html.ActionLink("拒絕", "ConfirmN", new { purchaseRequisitionID = ViewBag.PurchaseRequisitionID }, new { @style = "color:rgb(255, 255, 255)" })</button>
+
+</div>
+
+@*@section scripts
+    {
+        <script>
+            $('#btnUpdate').click(function () {
+                    $.ajax({
+                        url: "@Url.Action("ConfirmY", "PurchaseRequisitions")",
+                        type: "get",
+                        data: {
+                            purchaseRequisitionid: $("#SelectedPurchaseRequisitions").val(),//傳回請購單ID
+                        },
+                    }).done(function (result) {
+                        $("#dataTablesContainer").html(result);
+                        $("#warning").remove();
+                        //$("#ProductNume").val($("#SelectedProductName").val());//產品名稱(ID),查詢產品名稱
+
+                        $("#btnSubmit").prop("disabled", false);
+                    }).fail(function (e) {
+                        alert(e.responseText);
+                    });
+
+                    $.fn.dataTable.ext.errMode = 'throw';
+
+                    $('#dataTable').DataTable(
+                        {
+                            paging: false,
+                            ordering: false,
+                            searching: false,
+                            language: {
+                                url: "@Url.Content("~/Scripts/dataTables_js / i18n / Chinese - traditional.json")",
+                                      },
+                        });
+                })
+        </script>
+    }*@

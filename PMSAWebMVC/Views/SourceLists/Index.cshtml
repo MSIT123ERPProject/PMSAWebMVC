@@ -130,7 +130,7 @@
                                 @*<button name="click3" type="button"   class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.SourceListID">
                                         <i class="far fa-file-alt"></i>
                                     </button>*@
-                                <button type="button" class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.SourceListID }, new { @class = "far fa-file-alt", @style = "color:#B0E0E6", @title = "明細" })</button>
+                                <button type="button" class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.SourceListID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)", @title = "明細" })</button>
                             </div>
                         </td>
                     </tr>
@@ -212,7 +212,7 @@
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("Detail", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', true);
                 //$('*[id="btnUpdate"]').attr('display', false);
@@ -238,7 +238,7 @@
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("Detail", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', false);
                 //$('*[id="btnUpdate"]').attr('display', false);

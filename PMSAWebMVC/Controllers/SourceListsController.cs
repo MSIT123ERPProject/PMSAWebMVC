@@ -391,7 +391,7 @@ namespace PMSAWebMVC.Controllers
         public ActionResult Creat(string partNumber, int qtyPerUnit, int? mOQ, int unitPrice, string supplierCode, int? safetyQty, int? eXP, int qtyDemanded, decimal discount, System.DateTime? discountBeginDate, System.DateTime? discountEndDate)
         {
             SourceList sourceList = new SourceList(); //取得貨源清單資料
-            sourceList.SourceListID = partNumber + supplierCode;
+            sourceList.SourceListID = partNumber +"-"+ supplierCode;
             sourceList.PartNumber = partNumber;
             sourceList.QtyPerUnit = qtyPerUnit;
             sourceList.MOQ = mOQ;

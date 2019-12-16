@@ -184,7 +184,7 @@
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("DetailDtl", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單明細資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', true);
                 //$('*[id="btnUpdate"]').attr('display', false);
@@ -216,7 +216,7 @@
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("DetailDtl", "SourceLists")/" + id1, function (datas) {
-                $('#ModalTitle').text('檢視請購單資訊');
+                $('#ModalTitle').text('檢視貨源清單明細資訊');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', false);
                 //$('*[id="btnUpdate"]').attr('display', false);

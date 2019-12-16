@@ -172,9 +172,9 @@
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupInfoModel.SupplierRatingOID)
-                                @Html.DropDownListFor(model => model.SupInfoModel.SupplierRatingOID,new List<SelectListItem>() { new SelectListItem() { Text = "1", Value = "1", Selected = true },
-                                                                                                                                 new SelectListItem() { Text = "2", Value = "2", Selected = false },
-                                                                                                                                 new SelectListItem() { Text = "3", Value = "3", Selected = false },
+                                @Html.DropDownListFor(model => model.SupInfoModel.SupplierRatingOID,new List<SelectListItem>() { new SelectListItem() { Text = "未設定", Value = "1", Selected = true },
+                                                                                                                                 new SelectListItem() { Text = "不佳", Value = "2", Selected = false },
+                                                                                                                                 new SelectListItem() { Text = "優良", Value = "3", Selected = false },
                                                                                                                                         }, new { @class = "form-control col-lg-12" })
                             </div>
                             <button id="btnNoCompany" type="submit" class="btn btn-primary fade">確認新增公司</button>
@@ -242,6 +242,8 @@
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">確認新增</button>
+                            <button type="button" class="btn btn-success" onclick="$('#BuyerSupAccount_CreateViewModel_ContactName').val('嗨先生');$('#BuyerSupAccount_CreateViewModel_Email').val('fan54735473@gmail.com');$('#BuyerSupAccount_CreateViewModel_Mobile').val('0912345678');$('#BuyerSupAccount_CreateViewModel_Tel').val('0266316666');">Demo1</button>
+                            <button type="button" class="btn btn-success" onclick="$('#BuyerSupAccount_CreateViewModel_ContactName').val('無小姐');$('#BuyerSupAccount_CreateViewModel_Email').val('idontusethisemail5473@gmail.com');$('#BuyerSupAccount_CreateViewModel_Mobile').val('0912345678');$('#BuyerSupAccount_CreateViewModel_Tel').val('0266316666');">Demo2</button>
                         </form>
                     </div>
                 </div>

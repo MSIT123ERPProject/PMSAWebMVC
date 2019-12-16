@@ -169,9 +169,10 @@
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.SupplierRatingOID)
-                                @Html.DropDownListFor(m => m.SupplierRatingOID, new List<SelectListItem> { new SelectListItem { Text = "1", Value = "1" }, new SelectListItem { Text = "2", Value = "2" }, new SelectListItem { Text = "3", Value = "3" } }, new { @class = "form-control" })
+                                @Html.DropDownListFor(m => m.SupplierRatingOID, new List<SelectListItem> { new SelectListItem { Text = "未設定", Value = "1" }, new SelectListItem { Text = "不佳", Value = "2" }, new SelectListItem { Text = "優良", Value = "3" } }, new { @class = "form-control" })
                             </div>
                             <button id="btnNoCompany" type="submit" class="btn btn-primary">確認新增公司</button>
+                            <button type="button" class="btn btn-success" onclick="$('#SupplierName').val('嗨嗨嗨公司');$('#TaxID').val('11112222');$('#Address').val('106台北市大安區復興南路一段390號');$('#Email').val('contactus@iii.org.tw');$('#Tel').val('0266316666');">Demo</button>
                         </form>
                     </div>
                 </div>

@@ -2,6 +2,19 @@
 @{
     ViewBag.Title = "Index";
 }
+@section styles
+{
+    <style>
+        .card {
+            transition: 0.5s;
+        }
+
+            .card:hover {
+                transform: translate(10px,10px);
+                transition: 0.5s;
+            }
+    </style>
+}
 
 @*供應商倉管人員首頁圖表*@
 @if (User.IsInRole("Supplier"))
@@ -42,15 +55,15 @@
             <div class="card" id="container3"></div>
         </div>
         @*<div class="col-md-4">
-            <div class="card" id="ShipQtyByStatus"></div>
-        </div>*@
+                <div class="card" id="ShipQtyByStatus"></div>
+            </div>*@
     </div>
     @section scripts{
         @*bubbleChart還是需要引用此CDN*@
         @*<script src="https://code.highcharts.com/highcharts.js"></script>
-        <script src="https://code.highcharts.com/highcharts-more.js"></script>
-        <script src="https://code.highcharts.com/modules/exporting.js"></script>
-        <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
+            <script src="https://code.highcharts.com/highcharts-more.js"></script>
+            <script src="https://code.highcharts.com/modules/exporting.js"></script>
+            <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
         @*//////////////////////////////////////////*@
         @*引用highchart主題*@
         <script src="~/scripts/highcharts/themes/sunset.js"></script>

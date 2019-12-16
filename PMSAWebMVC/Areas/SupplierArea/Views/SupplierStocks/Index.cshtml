@@ -147,14 +147,15 @@
                          if (row.UnitsInStock > row.SafetyQty) {
                              color = 'blue';
                              icon = `<i class="fas fa-thumbs-up"></i>`;
+                             return `<span class="badge badge-primary">${data}</span>`; 
                          }
                          else {
                              color = 'red';
                              icon = `<i class="fas fa-radiation"></i>`;
+                             return `<span class="badge badge-danger">${data}</span>`;
                          }
-                         
-                        // <span class="badge badge-danger">停用</span>
-                         return `<div style="color:${color}">${icon}${data}</div>`;
+                         return `<span class="badge badge-danger">${data}</span>`; 
+                        // return `<div style="color:${color}">${icon}${data}</div>`;
                      }
                  },
                         {

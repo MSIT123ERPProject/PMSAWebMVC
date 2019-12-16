@@ -87,18 +87,35 @@
                         </li>
                         @if (User.IsInRole("Supplier"))
                         {
-                            <li class="sidebar-dropdown nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-fw fa-folder"></i>
-                                    <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "Orders", new { Area = "SupplierArea" })">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>訂單管理</span>
                                 </a>
-                                <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
-                                    @Html.ActionLink("訂單管理", "Index", "Orders", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-                                    @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-                                    @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-                                    @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
-                                </div>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "ShipNotices", new { Area = "SupplierArea" })">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.ShipNotice</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "SupplierStocks", new { Area = "SupplierArea" })">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier</span>
+                                </a>
+                            </li>
+                            @*<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
+            </a>*@
+                            @*<div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
+                                @Html.ActionLink("訂單管理", "Index", "Orders", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                                @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
+                           @* </div>*@
+
                         }
                         @if (User.IsInRole("Warehouse"))
                         {

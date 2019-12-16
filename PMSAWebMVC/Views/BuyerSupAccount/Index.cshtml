@@ -219,7 +219,7 @@
     </style>
 }
 <div class="wrapall">
-    <h2>管理供應商帳號</h2>
+    <h2>供應商帳號管理</h2>
     <h6>查詢、啟用供應商帳號、重寄密碼</h6>
 
     <a class="btn btn-warning mb-3" href="@Url.Action("Create","BuyerSupAccount")"><i class="fas fa-user-plus"></i> 新增帳號</a>
@@ -762,7 +762,8 @@
                   showCancelButton: true,
                   confirmButtonColor: '#28A2FC',
                   cancelButtonColor: '#E8296C',
-                  confirmButtonText: '確定發送'
+                    confirmButtonText: '確定發送',
+                    cancelButtonText: '取消'
                 }).then((result) => {
                   if (result.value) {  $.ajax({
                     type: "POST",
@@ -1038,6 +1039,28 @@
                 }
             ];
             var oTable = $('#Table').DataTable({
+                dom: "<'row'<'col-sm-12 col-md-5 mb-2 mt-2'B>><'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'f>><t><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'print',
+                    // {
+                    //        text: '匯入 Excel',
+                    //        attr:  {
+                    //            "data-toggle": 'modal',
+                    //            "data-target": '#importModal'
+                    //        }
+                    //}
+                ],
+                language: {
+                    buttons: {
+                        copy: "複製",
+                        print: "列印",
+                        copyTitle: '已複製到剪貼簿',
+                        copySuccess: {
+                            _: '%d 行已複製',
+                            1: '1 行已複製'
+                        }
+                    }
+                },
                 ordering: true,
                 //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
                 order: [],

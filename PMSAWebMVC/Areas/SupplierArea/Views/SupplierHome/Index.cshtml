@@ -39,13 +39,18 @@
             <div class="card" id="container2"></div>
         </div>
         <div class="col-md-4">
-            @*<h2><i class="fas fa-boxes"></i>料件出貨數量</h2>*@
             <div class="card" id="container3"></div>
         </div>
+        @*<div class="col-md-4">
+            <div class="card" id="ShipQtyByStatus"></div>
+        </div>*@
     </div>
     @section scripts{
         @*bubbleChart還是需要引用此CDN*@
+        @*<script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/highcharts-more.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
         @*//////////////////////////////////////////*@
         @*引用highchart主題*@
         <script src="~/scripts/highcharts/themes/sunset.js"></script>
@@ -55,6 +60,7 @@
                 unitsInStockChart();
                 partTotalPrice();
                 SplitBubbleChart();
+                ShipQtyByStatus();
             });
             //時間選擇器
             $('#datetimepickerIdStart').datetimepicker(
@@ -267,7 +273,7 @@
                         type: 'pie'
                     },
                     title: {
-                        text: '各料件已出貨金額百分比',
+                        text: '各料件銷售金額百分比',
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -300,7 +306,7 @@
                             height:434,
                         },
                         title: {
-                            text: '各料件已出貨金額百分比',
+                            text: '各料件銷售金額百分比',
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -318,7 +324,6 @@
 
                         },
                     });
-
                     chart.addSeries({
                         type: 'pie',
                         name: '商品金額比例',
@@ -371,7 +376,66 @@
                     series: datas
                 });
             });
-        }
+            }
+            // barChart
+            function ShipQtyByStatus() {
+                $.getJSON(`@Url.Action("ShipQtyByStatus", "SupplierHome", new { Areas = "SupplierArea" })`, function (datas) {
+                    let partname = [];
+
+                    let qty = [];
+                    let shipqty = [];
+                    let unitsonorder = [];
+                    console.log(datas);
+                    for (let i = 0; i < datas.length; i++) {
+                        partname.push(datas[i].PartName);
+                        qty.push(datas[i].Qty);
+                        shipqty.push(datas[i].ShipQty);
+                        unitsonorder.push(datas[i].UnitsOnOrder);
+                    }
+                    console.log(partname);
+                    Highcharts.chart('ShipQtyByStatus', {
+                        chart: {
+                            type: 'bar',
+                            height: '100%'
+                        },
+                        title: {
+                            text: 'Stacked bar chart'
+                        },
+                        xAxis: {
+                            categories: partname,
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Total fruit consumption'
+                            }
+                        },
+                        legend: {
+                            reversed: true
+                        },
+                        plotOptions: {
+                            series: {
+                                stacking: 'normal'
+                            }
+                        },
+                        series: [
+                            {
+                                name: "採購數量",
+                                data: qty
+                            },
+                            {
+                                name: "已出貨數量",
+                                data: shipqty
+                            },
+                            {
+                                name: "訂單數量",
+                                data: unitsonorder
+                            }
+                        ]
+                    });
+                });
+
+            }
         </script>
     }
 

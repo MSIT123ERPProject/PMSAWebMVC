@@ -731,6 +731,14 @@
     transition: all 0.5s ease-in-out;
 }
 
+.table-data-feature a[role='button']:hover,
+.table-data-feature a[class*='btn']:hover {
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
 .btn-icon, .btn-icon-md {
     width: 30px;
     height: 30px;

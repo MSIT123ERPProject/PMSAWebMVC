@@ -187,7 +187,7 @@
     <value>供應商帳號</value>
   </data>
   <data name="ReceiverName" xml:space="preserve">
-    <value>收貨人</value>
+    <value>收貨人姓名</value>
   </data>
   <data name="ReceiverTel" xml:space="preserve">
     <value>收貨人市話</value>

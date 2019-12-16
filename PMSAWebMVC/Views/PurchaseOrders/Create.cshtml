@@ -1,9 +1,5 @@
 ﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderCreateViewModel
 
-@{
-    ViewBag.Title = "新增採購單";
-}
-
 @section styles{
     <style>
         /*內容分隔線*/
@@ -37,7 +33,16 @@
             margin-bottom: 0.5rem;
         }
 
-        label[for="DateRequired"] {
+        #collapse-receiverinfo .md-form .prefix ~ label {
+            margin-left: 3.4rem;
+        }
+
+        #collapse-receiverinfo .md-form input[data-val-required] + label:before {
+            content: '*';
+            color: #dc3545;
+        }
+
+        #collapse-prdtlInput label[for="DateRequired"] {
             transform: translateY(-14px) scale(0.8);
             font-size: 1rem;
             font-weight: 300;
@@ -58,6 +63,10 @@
             }
         }
     </style>
+}
+
+@{
+    ViewBag.Title = "新增採購單";
 }
 
 <h2 class="text-dark">@ViewBag.Title</h2>
@@ -129,6 +138,69 @@
     <div class="tab-pane" id="podtl"></div>
 
 </div>
+
+
+@*交貨資訊*@
+<div class="card mb-3 d-none" id="receiverinfo">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#collapse-receiverinfo" aria-expanded="true" aria-controls="collapse-receiverinfo" id="heading-receiverinfo" class="d-block nounderline">
+            <i class="fas fa-truck-moving"></i> 交貨資訊 <i class="fa fa-chevron-down"></i>
+        </a>
+    </div>
+
+    <div id="collapse-receiverinfo" class="collapse show" aria-labelledby="heading-receiverinfo">
+        <div class="card-body pb-0 pt-2">
+            <div class="row">
+                @Html.LabelFor(m => m.SelectedWarehouseCode, htmlAttributes: new { @class = "control-label col-md-3 font-weight-bold" })
+                <div class="col-md-6 mb-3">
+                    <div class="input-group">
+                        @Html.DropDownListFor(m => m.SelectedWarehouseCode, Model.WarehouseInfoList, "請選擇", htmlAttributes: new { @class = "form-control  col-md-8" })
+                        <button class="btn btn-primary input-group-append" id="btnAddWHInfo" type="button">帶入交貨資訊</button>
+                    </div>
+                </div>
+            </div>
+
+            @using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreatePurchaseOrders" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="md-form col-md-3 col-6">
+                        <i class="far fa-user prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiverName, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiverName)
+                        @Html.ValidationMessageFor(m => m.POInfoItem.ReceiverName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="md-form col-md-6 col-6">
+                        <i class="far fa-map prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiptAddress, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiptAddress)
+                        @Html.ValidationMessageFor(m => m.POInfoItem.ReceiptAddress, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="w-100"></div>
+
+                    <div class="md-form col-md-3 col-6">
+                        <i class="fas fa-phone prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiverTel, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiverTel)
+                    </div>
+                    <div class="md-form col-md-3 col-6">
+                        <i class="fas fa-mobile-alt prefix"></i>
+                        @Html.TextBoxFor(m => m.POInfoItem.ReceiverMobile, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.POInfoItem.ReceiverMobile)
+                    </div>
+                </div>
+            }
+            </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <button id="btnSubmit" type="button" class="btn btn-primary btn-block d-none" disabled><i class="far fa-paper-plane"></i> 送出申請</button>
+</div>
+
+
 
 @*加入採購單、編輯Modal*@
 <!-- Central Modal Fluid Success-->
@@ -247,7 +319,6 @@
 
                                             <div class="col-6">
                                                 <button id="btnPODAdd" class="btn btn-primary btn-block" type="button"><i class="far fa-file"></i> 加入採購單</button>
-                                                <button id="btnPODUpdate" class="btn btn-primary btn-block" type="button"><i class="far fa-edit"></i> 更新採購單</button>
                                             </div>
 
                                             <div class="col-6">
@@ -328,22 +399,18 @@
 
             //Modal顯示前
             $('#detailModal').on('show.bs.modal', function (event) {
-                let span = $(event.relatedTarget);
-                let dtlcode;
-                let partnumber;
-                if (span.data("model")) {
-                    dtlcode = span.parent().data('dtlcode');
-                    partnumber = span.parent().data('partnumber');
-                    $("#detailModalTitle").text("編輯採購項目");
-                    $("#btnPODAdd").hide();
-                    $("#btnPODUpdate").show();
-                    console.log($("#btnPODUpdate"));
+                let td = $(event.relatedTarget).parents("td");
+                let dtlcode = td.data('dtlcode');;
+                let partnumber = td.data('partnumber');
+
+                let title = $("#detailModalTitle");
+                let btn = $("#btnPODAdd");
+                if (td.data("mode") == "edit") {
+                    title.text("編輯採購項目");
+                    btn.text("更新採購單");
                 } else {
-                    dtlcode = span.data('dtlcode');
-                    partnumber = span.data('partnumber');
-                    $("#detailModalTitle").text("新增採購項目");
-                    $("#btnPODAdd").show();
-                    $("#btnPODUpdate").hide();
+                    title.text("新增採購項目");
+                    btn.text("加入採購單");
                 }
                 detailModalShow(dtlcode, partnumber);
             });
@@ -396,15 +463,14 @@
                         if (!data) {
                             return;
                         }
-                        let btn = getModalButton();
-
+                        let btn = $("#btnPODAdd");
                         btn.prop("disabled", true);
-                        $("#Qty").val(data.Qty);
-                        $("#DateRequired").val(data.DateRequiredToShow);
-                        $("#TotalSourceListQty").val(data.TotalSourceListQty);
-                        $("#OriginalUnitPrice").val(data.OriginalUnitPriceToShow);
-                        $("#Discount").val(data.DiscountToShow);
-                        $("#Total").val(data.TotalToShow);
+                        $("#Qty").trigger("focus").val(data.Qty);
+                        $("#DateRequired").trigger("focus").val(data.DateRequiredToShow);
+                        $("#TotalSourceListQty").trigger("focus").val(data.TotalSourceListQty);
+                        $("#OriginalUnitPrice").trigger("focus").val(data.OriginalUnitPriceToShow);
+                        $("#Discount").trigger("focus").val(data.DiscountToShow);
+                        $("#Total").trigger("focus").val(data.TotalToShow);
                         if (data.SourceListID) {
                             let sl = $(`input[name=sourceList][value='${data.SourceListID}']`);
                             sl.prop('checked', true);
@@ -455,6 +521,8 @@
             function hideSupplierInfo() {
                 $("#supplierInfo").hide();
                 $("#collapse-supplierinfo").html("");
+                $("#receiverinfo").hide();   
+                $("#btnSubmit").hide(); 
             }
 
             //刪除按鈕觸發
@@ -463,7 +531,7 @@
                 e.stopPropagation();
 
                 let span = $(this);
-                let dtlcode = span.parent().data('dtlcode');
+                let dtlcode = span.parent("td").data('dtlcode');
                 //delBtnClick(dtlcode, partnumber);
                 Swal.fire({
                     title: '刪除確認',
@@ -491,10 +559,10 @@
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("Create", "PurchaseOrders")",
-                    data: $("#formCreatePurchaseOrders").serialize()
+                    data: $("#formCreatePurchaseOrders").serialize(),
                 }).done(function (result) {
                     if (result.status == "warning") {
-                        toastr.warning(result.message);
+                        toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'));
                     } else if (result.status == "success") {
                         toastr.success(result.message);
                         setTimeout(function () {
@@ -526,7 +594,7 @@
             }
 
             //加入採購單
-            $("#btnPODAdd, #btnPODUpdate").on('click', function (e) {
+            $("#btnPODAdd").on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 $(this).prop("disabled", true);
@@ -558,6 +626,8 @@
                     } else {
                         $("#collapse-supplierinfo").html(result);
                         $("#supplierInfo").hide().removeClass("d-none").fadeIn(500);
+                        $("#receiverinfo").hide().removeClass("d-none").fadeIn(500);      
+                        $("#btnSubmit").hide().removeClass("d-none").fadeIn(500); 
                     }
                     }).fail(function (e) {
                         toastr.error(e.responseText);
@@ -585,24 +655,13 @@
                     });
             }
 
-            function getModalButton() {
-                let btn;
-                if ($("#btnPODAdd").is(":visible")) {
-                    btn = $("#btnPODAdd");
-                } else {
-                    btn = $("#btnPODUpdate");
-                }
-                return btn;
-            }
-
             //設定採購單輸入內容更新
             async function setPRDtlInputUpdate(mode) {
-                let btn = getModalButton();
-
+                let btn = $("#btnPODAdd");
                 let qty = $("#Qty").val();
                 let dateRequired = $("#DateRequired").val();
                 let sourceList = $("input[name=sourceList]:checked").val();
-                let modalPrdCode = $("#modalPrdCode").text();                
+                let modalPrdCode = $("#modalPrdCode").text();
 
                 if (!chkQtyValue() | !chkDateRequiredValue()) {
                     //toastr.warning("請輸入必填欄位");
@@ -679,6 +738,51 @@
                      console.log("showPRDtlToTableViewModel");
                     }).fail(function (e) {
                         toastr.error(e.responseText);
+                    });
+            }
+
+            //倉庫資訊改變
+            $("#btnAddWHInfo").prop("disabled", true);
+            $('#SelectedWarehouseCode').change(function () {
+                if (this.selectedIndex == 0) {
+                    $("#btnAddWHInfo").prop("disabled", true);
+                    return;
+                }
+                GetWHInfoToReceiverViewModel($(this).val());
+                $("#btnAddWHInfo").prop("disabled", false);
+            });
+
+            $("#btnAddWHInfo").click(function () {
+                if ($(this).prop("disabled")) {
+                    return;
+                }
+                let wi = WHInfo.filter(function (item) {
+                    return item.WarehouseCode == $('#SelectedWarehouseCode').val();
+                });
+                $("#POInfoItem_ReceiverName").trigger("focus").val(wi[0].Name);
+                $("#POInfoItem_ReceiptAddress").trigger("focus").val(wi[0].Address);
+                $("#POInfoItem_ReceiverTel").trigger("focus").val(wi[0].Tel);
+            });
+
+            async function GetWHInfoToReceiverViewModel(warehouseCode) {
+                await GetWHInfo();
+            }
+
+             //將倉庫資訊加入交貨資訊
+            var WHInfo = [];
+            async function GetWHInfo() {
+                if (WHInfo.length > 0) {
+                    return;
+                }
+                await $.getJSON('@Url.Action("GetWarehouseInfoList", "PurchaseOrders")',
+                    function (data) {
+                        if (!data) {
+                            return;
+                        }
+                        console.log(data);
+                        WHInfo = data;
+                    }).fail(function (e) {
+                        console.log(e);
                     });
             }
 

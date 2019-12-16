@@ -1,5 +1,5 @@
 ﻿@*@model PMSAWebMVC.Models.PurchaseOrder*@
-    @model PMSAWebMVC.Areas.SupplierArea.Controllers.OrdersController.OrderSendedToSupplierViewModel
+@model PMSAWebMVC.Areas.SupplierArea.Controllers.OrdersController.OrderSendedToSupplierViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -9,56 +9,77 @@
 </nav>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <div class="input-group">
-            @Html.DropDownListFor(m => m.orderID, Model.orderList, "請選擇", htmlAttributes: new { @class = "form-control  col-md-8" })
-            <button class="btn btn-primary input-group-append" id="btnImportOrder" type="button">匯入</button>
-        </div>
-        <div class="w-100"></div>
-        <div id="OrderInfoContainer" class="col-md-12"></div>
-    </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTableOUA">
-                    <thead>
-                        <tr class="bg-primary text-white text-center">
-                            <th data-priority="1"></th>
-                            <th data-priority="1">訂單編號</th>
-                            <th>訂單總金額</th>
-                            <th>收貨人名稱</th>
-                            <th>收貨人電話</th>
-                            <th>收貨人手機</th>
-                            <th>收貨人地址</th>
-                            <th data-priority="1">訂單明細</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th></th>
-                            <th>訂單編號</th>
-                            <th>訂單總金額</th>
-                            <th>收貨人名稱</th>
-                            <th>收貨人電話</th>
-                            <th>收貨人手機</th>
-                            <th>收貨人地址</th>
-                            <th>訂單明細</th>
-                        </tr>
-                    </tfoot>
-                </table>
+        <div class="form-horizontal">
+            <div class="row align-items-center">
+                <div class="input-group">
+                    @Html.DropDownListFor(m => m.orderID, Model.orderList, "請選擇", htmlAttributes: new { @class = "form-control  col-md-8" })
+                    <button class="btn btn-primary input-group-append" id="btnImportOrder" type="button">匯入</button>
+                </div>
+                <div class="w-100"></div>
+
             </div>
         </div>
-        <div class="card-footer small text-muted"></div>
+        <div id="collapse-rpinfo" class="collapse show" aria-labelledby="heading-rpinfo">
+            <div class="form-horizontal">
+                <div id="OrderInfoContainer" class="col-md-12"></div>
+            </div>
+        </div>
+
     </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTableOUA">
+                <thead>
+                    <tr class="bg-primary text-white text-center">
+                        <th data-priority="1"></th>
+                        <th data-priority="1">訂單明細編號</th>
+                        <th>商品名稱</th>
+                        <th>料件編號</th>
+                        <th>採購數量</th>
+                        <th>批量</th>
+                        <th>規格</th>
+                        @*<th data-priority="1">訂單明細</th>*@
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">
+        <div class="d-flex justify-content-center" id="divApply">
+            <button type="submit" id="btnApply" class="btn btn-primary btn-block" value="答交"><i class="fas fa-pen-nib"></i>答交</button>
+        </div>
+        <div class="d-flex justify-content-center" id="divApply">
+            <button type="submit" id="btnRefuse" class="btn btn-primary btn-block" value="拒絕"><i class="fas fa-pen-nib"></i>拒絕</button>
+        </div>
+    </div>
+</div>
 
 @section scripts{
     <script>
         $(document).ready(function () {
+            $("#btnApply").hide();
+            $("#btnRefuse").hide();
+            //如果有訂單先找出來
+            $.ajax({
+                    url: `@Url.Action("GetOrderInfo","Orders",new { Area="SupplierArea"})`,
+                    type: "GET",
+                data: { orderID: $("#orderID option:selected").val()} ,
+                }).done(function (orderInfo) {
+                    $("#OrderInfoContainer").html(orderInfo).fadeIn(250);
+                    $("#btnImportOrder").prop("disabled", false);
+                    }).fail(function () {
+                        alert("Ajax of GetOrderInfo is fail");
+                });
+            //////////////////////////////////////
             //下拉式選單
-            $("#btnImportOrder").prop("disable", true);
+            //$("#btnImportOrder").prop("disable", true);
             $("#orderID").change(function () {
                 if (this.selectedIndex == 0) {
-                    $("#btnImportOrder").prop("disable", true);
+                    $("#btnImportOrder").prop("disabled", true);
                     return;
                 }
+                $("#btnImportOrder").prop("disabled", false);
                 $.ajax({
                     url: `@Url.Action("GetOrderInfo","Orders",new { Area="SupplierArea"})`,
                     type: "GET",
@@ -69,14 +90,140 @@
                         alert("Ajax of GetOrderInfo is fail");
                     });
             });
-            //GetPurchaseOrderS();
+           //下拉式選單///////////////////////////////////////
+            //匯入按鈕
+           
+  $("#btnImportOrder").click(function () {
+                GetOrderDtl();
+                let orderID = $("#orderID option:selected").val();
+                $("#btnApply").show();
+                $("#btnRefuse").show();
+                //答交按鈕
+                $("#btnApply").click(function () {
+                    $.ajax({
+                        url: `@Url.Action("OrderApply","Orders")`,
+                        type: "POST",
+                        data: { orderID: orderID },
+                    }).done(function (data) {
+                        if (data = "success") {
+                            $("#divApply").show();
+                            window.location.reload();
+                            toastr.Info("訂單已答交", "通知");
+                        }
+                        else {
+                            toastr.fail("答交失敗，異動總表未儲存", "通知");
+                        }
+                    }).fail(function () {
+                        alert("OrderApply ajax fail");
+                    });
+                });
+                //答交按鈕結束//////////////////////////////////////
+                //拒絕按鈕
+                $("#btnRefuse").click(function () {
+                    $.ajax({
+                        url: `@Url.Action("OrderRefuse","Orders")`,
+                        type: "POST",
+                        data: { orderID: orderID }
+                    }).done(function (result) {
+                        toastr.success("訂單已拒絕", "通知");
+                        window.location.reload();
+                    }).fail(function (result) {
+                        alert("OrderRefuse Ajax fail");
+                        });
+                    //拒絕按鈕結束////////////////////
+            });
+                $("#btnImportOrder").prop("disabled", true);
+            });
+            //匯入按鈕 結束//////////////////////////////
+            
+          
+            //ready finish here
         });
-       
+
+        //呼叫GetOrderDtl 以取得該筆訂單明細
+        function GetOrderDtl() {
+            if ($.fn.dataTable.isDataTable("#dataTable")) {
+                $("#dataTable").DataTable().destroy();
+            }
+                 let supplierCode = "@Model.SupplierCode";
+                  let orderID = $("#orderID").val();
+            $("#dataTableOUA").DataTable({
+               ajax: {
+                    url: `@Url.Action("GetOrderDtl", "Orders")`,
+                    type: "GET",
+                    data: {  orderID :orderID },
+                    "dataType": "json",
+                        },
+                ordering: false,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [[2, 'desc']],
+                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                columnDefs: [{
+                    targets: 0,
+                    className: 'control'
+                },
+                { orderable: false, targets: [0, 1, -1] },
+                { className: 'text-center', targets: [1, 2, 3, 4, 5] }
+                ],
+                columns: [
+                    { data: "PurchaseOrderDtlCode", render: function (d) { return ""; } },
+                    { data: "PurchaseOrderDtlCode" },
+                    { data: "PartName", render: $.fn.dataTable.render.number(',', '.', 0, '$') },
+                    { data: "PartNumber" },
+                    { data: "PurchasedQty" },
+                    { data: "Qty" },
+                    { data: "QtyPerUnit" },
+                    @*{
+                        data: "PurchaseOrderID",
+                        render: function (data, type, row, meta) {
+                            //OrderApply方法還沒寫，此按鈕為供應商答交按鈕//此按鈕為辰哥負責
+                            return `<div class="table-data-feature"><button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視">
+                                         <i class="far fa-eye"></i>
+                                         </button>
+                                         <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" onclick="location.href='@Url.Action("OrderApply", "Orders")?id=${data}'">
+                                         <i class="fas fa-pen-nib"></i>
+                                         </button>
+                                         </div>`;
+                        }
+                    }*@
+                ],
+                dom: "<'row'<'col-sm-12 col-md-5 mb-2 mt-2'B>><'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'f>><t><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'print',
+                    // {
+                    //        text: '匯入 Excel',
+                    //        attr:  {
+                    //            "data-toggle": 'modal',
+                    //            "data-target": '#importModal'
+                    //        }
+                    //}
+                ],
+                language: {
+                    buttons: {
+                        copy: "複製",
+                        print: "列印",
+                        copyTitle: '已複製到剪貼簿',
+                        copySuccess: {
+                            _: '%d 行已複製',
+                            1: '1 行已複製'
+                        }
+                    },
+                 url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                },
+            });
+        }
+
         //呼叫GetPurchaseOrderS ( )方法用來取得dataTable的資料
         function GetPurchaseOrderS ( ) {
             let supplierCode = "@Model.SupplierCode";
             let orderID = $("#btnImportOrder").val();
-        $("#dataTableOUA").DataTable({        
+        $("#dataTableOUA").DataTable({
         ajax: {
                     url: `@Url.Action("GetPurchaseOrderS", "Orders")`,
             type: "GET",
@@ -121,7 +268,30 @@
                                          </div>`;
                         }
                     }
-                ]
+            ],
+                dom: "<'row'<'col-sm-12 col-md-5 mb-2 mt-2'B>><'row'<'col-sm-12 col-md-5'l><'col-sm-12 col-md-7'f>><t><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'print',
+                    // {
+                    //        text: '匯入 Excel',
+                    //        attr:  {
+                    //            "data-toggle": 'modal',
+                    //            "data-target": '#importModal'
+                    //        }
+                    //}
+                ],
+                language: {
+                    buttons: {
+                        copy: "複製",
+                        print: "列印",
+                        copyTitle: '已複製到剪貼簿',
+                        copySuccess: {
+                            _: '%d 行已複製',
+                            1: '1 行已複製'
+                        }
+                    },
+                 url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                },
             });
         }
     </script>

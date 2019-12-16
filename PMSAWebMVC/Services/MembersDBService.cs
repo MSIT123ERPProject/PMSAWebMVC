@@ -51,5 +51,16 @@ namespace PMSAWebMVC.Services
             tempStr = tempStr.Replace("{pwd}", pwd);
             return tempStr;
         }
+
+        public static string getMailBody(string tempStr, string OrderID, string OrderApply, string EmployeeName, string OrderDtl,string SupplierName)
+        {
+            //tempStr = tempStr.Replace("{tempStr}", tempStr);
+            tempStr = tempStr.Replace("{OrderID}", OrderID);
+            tempStr = tempStr.Replace("{EmployeeName}", EmployeeName);
+            tempStr = tempStr.Replace("{OrderApply}", OrderApply);
+            tempStr = tempStr.Replace("{OrderDtl}", OrderDtl);
+            tempStr = tempStr.Replace("{SupplierName}", SupplierName);
+            return tempStr;
+        }
     }
 }

@@ -1,9 +1,7 @@
 ﻿@model IList<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderDtlItem>
-
-@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreatePurchaseOrders" }))
+@using (Html.BeginForm("Create", "PurchaseOrders", FormMethod.Post, new { @id = "formCreateTablePurchaseOrders" }))
 {
     @Html.AntiForgeryToken()
-
     <table id="dataTablesPO" class="display table table-striped hover order-column nowrap text-left" style="width:100%">
         <thead>
             <tr class="bg-primary text-white text-center">
@@ -24,20 +22,18 @@
             {
                 <tr>
                     <td></td>
-                    <td>
-                        @Html.DisplayFor(m => m[i].PartNumber)
-                        @Html.HiddenFor(m => m[i].PartNumber)
-                    </td>
+                    <td>@Html.DisplayFor(m => m[i].PartNumber)</td>
                     <td>@Html.DisplayFor(m => m[i].PartName)</td>
                     <td>@Html.DisplayFor(m => m[i].OriginalUnitPrice)</td>
                     <td>@Html.DisplayFor(m => m[i].Qty)</td>
                     <td>@Html.DisplayFor(m => m[i].Discount)</td>
                     <td>@Html.DisplayFor(m => m[i].Total)</td>
                     <td>@Html.DisplayFor(m => m[i].DateRequired)</td>
-                    <td>
-                        <div class="table-data-feature" data-dtlcode="@Model[i].PurchaseRequisitionDtlCode"
-                                  data-partnumber="@Model[i].PartNumber">
-                            <span data-toggle="modal" data-target="#detailModal" data-model="edit">
+                    <td data-dtlcode="@Model[i].PurchaseRequisitionDtlCode"
+                        data-partnumber="@Model[i].PartNumber"
+                        data-mode="edit">
+                        <div class="table-data-feature">
+                            <span data-toggle="modal" data-target="#detailModal">
                                 <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
                                     <i class="far fa-edit"></i>
                                 </button>
@@ -46,7 +42,7 @@
                                 <button class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
                                     <i class='far fa-trash-alt'></i>
                                 </button>
-                            </span>            
+                            </span>
                         </div>
                     </td>
                 </tr>
@@ -54,8 +50,8 @@
         </tbody>
     </table>
 
-    <div class="form-group">
-        <button id="btnSubmit" type="button" class="btn btn-primary btn-block" disabled><i class="far fa-paper-plane"></i> 送出申請</button>
+    <div class="d-flex justify-content-around align-items-center border-top-dashed offset-4 col-4 pt-2">
+        <p class="text-muted">合計金額</p><p class="text-muted">@ViewBag.Aggregate</p>
     </div>
 
 }

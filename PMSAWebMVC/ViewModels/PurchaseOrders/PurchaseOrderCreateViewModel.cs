@@ -209,24 +209,24 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public Nullable<int> POChangedOID { get; set; }
         public string PurchaseRequisitionDtlCode { get; set; }
         public int PurchaseOrderDtlOID { get; set; }
-
+        [Display(Name = "採購明細編號")]
         public string PurchaseOrderDtlCode { get; set; }
         public string PurchaseOrderID { get; set; }
         public string LastModifiedAccountID { get; set; }
     }
 
-    public class Repository
+    public partial class Repository
     {
-        PurchaseOrderCreateSession session;
+        private Employee emp;
+        private PMSAEntities db;
+        private PurchaseOrderCreateSession session;
 
         private Repository() { }
-        Employee emp;
         public Repository(Employee emp)
         {
             this.emp = emp;
             this.session = PurchaseOrderCreateSession.Current;
         }
-        private PMSAEntities db;
         public Repository(Employee emp, PMSAEntities ent)
         {
             this.emp = emp;
@@ -360,11 +360,12 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 return infoq.FirstOrDefault();
             }
         }
+
         /// <summary>
         /// 取得請購單選單
         /// </summary>
         /// <returns></returns>
-        public IList<PurchaseRequisitionItem> GetPurchaseRequisitionList()
+        public IList<SelectListItem> GetPurchaseRequisitionList()
         {
             using (PMSAEntities db = new PMSAEntities())
             {
@@ -372,14 +373,35 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 var prq = from pr in db.PurchaseRequisition
                           where pr.ProcessStatus == "N"
                           //where pr.ProcessStatus == "N" && pr.EmployeeID == emp.EmployeeID
-                          select new PurchaseRequisitionItem
+                          select new SelectListItem
                           {
-                              PurchaseRequisitionIdDisplay = pr.PurchaseRequisitionID,
-                              PurchaseRequisitionIdValue = pr.PurchaseRequisitionID
+                              Display = pr.PurchaseRequisitionID,
+                              Value = pr.PurchaseRequisitionID
                           };
                 return prq.ToList();
             }
         }
+
+        /// <summary>
+        /// 取得倉庫資訊選單
+        /// </summary>
+        /// <returns></returns>
+        public IList<System.Web.Mvc.SelectListItem> GetWarehouseInfoList()
+        {
+            using (PMSAEntities db = new PMSAEntities())
+            {
+                //有可能是不同來源
+                var wiq = from wi in db.WarehouseInfo
+                          orderby wi.WarehouseInfoOID ascending
+                          select new System.Web.Mvc.SelectListItem
+                          {
+                              Text = wi.WarehouseName,
+                              Value = wi.WarehouseCode
+                          };
+                return wiq.ToList();
+            }
+        }
+
         /// <summary>
         /// 取得供應商選單
         /// </summary>
@@ -480,7 +502,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
 
             //計算折扣，需從已加入的相同貨源請購明細計算總數來得到折扣
             int totalQty = session.PODItems.Where(item => item.SourceListID == sl.SourceListID &&
-            item.PurchaseRequisitionDtlCode != purchaseRequisitionDtlCode ).Sum(item => item.Qty) + qty;
+            item.PurchaseRequisitionDtlCode != purchaseRequisitionDtlCode).Sum(item => item.Qty) + qty;
             List<SourceListDtl> slds = db.SourceListDtl.Where(s =>
                     s.SourceListID == sl.SourceListID &&
                     s.DiscountBeginDate <= now &&
@@ -823,6 +845,35 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
 
             return pods;
         }
+
+        /// <summary>
+        /// 更新採購單狀態
+        /// </summary>
+        /// <param name=purchaseOrderID"></param>
+        /// <param name="status"></param>
+        public void UpdatePOStatus(string purchaseOrderID, string status)
+        {
+            PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
+            po.PurchaseOrderStatus = status;
+            db.Entry(po).Property(pop => pop.PurchaseOrderStatus).IsModified = true;
+            db.SaveChanges();
+
+            //採購單異動總表 
+            DateTime now = DateTime.Now;
+            POChanged poc = new POChanged
+            {
+                PurchaseOrderID = purchaseOrderID,
+                POChangedCategoryCode = status,
+                RequestDate = now,
+                RequesterRole = "P",
+                RequesterID = emp.EmployeeID,
+                PurchaseOrderDtlCode = null,
+                Qty = null,
+                DateRequired = null
+            };
+            db.POChanged.Add(poc);
+            db.SaveChanges();
+        }
     }
 
     public class PurchaseRequisitionItem
@@ -831,17 +882,22 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string PurchaseRequisitionIdValue { get; set; }
     }
 
+    public class SelectListItem
+    {
+        public string Display { get; set; }
+        public string Value { get; set; }
+    }
+
     public class PurchaseOrderCreateViewModel
     {
         [Required(ErrorMessage = "請選擇一個請購單號")]
         [Display(Name = "請購單號")]
         public string SelectedPurchaseRequisitionID { get; set; }
-        [Required(ErrorMessage = "請選擇一個供應商")]
-        [Display(Name = "供應商名稱")]
-        public string SelectedSupplierName { get; set; }
+        [Display(Name = "倉庫資訊")]
+        public string SelectedWarehouseCode { get; set; }
 
         public SelectList PurchaseRequisitionList { get; set; }
-        public SelectList SupplierList { get; set; }
+        public SelectList WarehouseInfoList { get; set; }
 
         //TODO: 應是多筆的狀況，之後需作修正
         public string PurchaseRequisitionID { get; set; }
@@ -854,5 +910,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// 表單內容
         /// </summary>
         public IList<PurchaseOrderDtlItemChecked> CheckedResultSetVM { get; set; }
+        /// <summary>
+        /// 交貨資訊
+        /// </summary>
+        public PurchaseOrder POInfoItem { get; set; }
+        public IList<PurchaseOrderDtlItem> PODItems { get; set; }
     }
 }

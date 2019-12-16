@@ -3,10 +3,6 @@
     ViewBag.Title = "UnshipOrderDtl";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (TempData["message"] != null)
-{
-    @Html.Raw(TempData["message"])
-}
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>出貨商品明細管理</h2>
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
@@ -25,14 +21,17 @@
     </div>
     if (Model.PurchaseOrderStatus != "S")
     {
-    <div class="form-group">
-        <div class="d-flex justify-content-center">
-            <button type="submit" id="idbutton" class="btn btn-success btn-block" value="出貨"><i class="fas fa-shipping-fast"></i>出貨</button>
+        <div class="form-group">
+            <div class="d-flex justify-content-center">
+                <button type="submit" id="idbutton" class="btn btn-primary btn-block" value="出貨"><i class="fas fa-shipping-fast"></i>出貨</button>
+            </div>
         </div>
-    </div>
     }
 }
 @section scripts{
+
+        @Html.Raw(TempData["message"]);
+  
     <script>
         $(document).ready(function () {
             //想要用DataTable的AJAX方法，但是資料無法POST到CONTROLLER
@@ -52,7 +51,7 @@
                 data: { PurchaseOrderID :id },
             }).done(function (result) {
                 //alert("訂單明細載入成功");
-                toastr.success("訂單明細載入成功","通知");
+                //toastr.success("訂單明細載入成功","通知");
                 $("#divTable").html('');
                 $("#divTable").html(result);
                 //全選、全勾消

@@ -1,0 +1,75 @@
+﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.POSendToSupplierViewModel.SendToSupplierViewModel
+
+@section styles{
+    <link href="~/Content/Views/_PurchaseOrdersDetailsPartial.css" rel="stylesheet" />
+    <style>
+    </style>
+}
+
+@{
+    ViewBag.Title = "送出至供應商";
+}
+
+@Html.Partial("_DetailsPartial")
+
+@using (Html.BeginForm("SendToSupplier", "PurchaseOrders", FormMethod.Post, new { @id = "formSendToSupplierPurchaseOrders" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.POItem.PurchaseOrderID)
+
+    <div class="form-group">
+        <button id="btnSubmit" type="button" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出至供應商</button>
+    </div>
+}
+
+@section scripts{
+    <script src="~/Scripts/Views/_PurchaseOrdersDetailsPartial.js"></script>
+    <script>
+         toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+            }
+
+            //送出採購單
+            $("body").on('click', '#btnSubmit', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                Swal.fire({
+                    title: '送出確認',
+                    text: "確定內容填寫正確並將採購單送至供應商嗎？",
+                    type: 'warning',
+                    showCancelButton: true,
+                    customClass: {
+                        confirmButton: 'bg-primary',
+                        cancelButton: 'bg-danger',
+                    },
+                    cancelButtonText: '取消',
+                    confirmButtonText: '確定'
+                }).then((result) => {
+                    if (result.value) {
+                        updatePOStatus();
+                        }
+                    })
+            });
+
+            async function updatePOStatus() {
+              await  $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("SendToSupplier", "PurchaseOrders")",
+                    data: $("#formSendToSupplierPurchaseOrders").serialize(),
+                }).done(function (result) {
+                  if (result.status == "success") {
+                        toastr.success(result.message);
+                        setTimeout(function () {
+                             location.href = '@Url.Action("Index", "PurchaseOrders")';
+                        }, 2000);
+                    }
+                }).fail(function (e) {
+                    toastr.error(e.responseText);
+                });
+            }
+    </script>
+}
+

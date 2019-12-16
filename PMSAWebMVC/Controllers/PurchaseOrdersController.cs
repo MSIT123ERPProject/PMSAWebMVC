@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -31,34 +32,54 @@ namespace PMSAWebMVC.Controllers
             return View();
         }
 
-        public JsonResult GetPurchaseOrderList()
+        /// <summary>
+        /// 主畫面採購單資料
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetPurchaseOrderListViewModel()
         {
-            //請購單可能會無關聯
-            Employee emp = User.Identity.GetEmployee();
-            var povm = from po in db.PurchaseOrder.AsEnumerable()
-                       join si in db.SupplierInfo
-                       on new { po.SupplierCode, po.EmployeeID } equals new { si.SupplierCode, emp.EmployeeID }
-                       join rel in db.PRPORelation
-                       on po.PurchaseOrderID equals rel.PurchaseOrderID into rels
-                       from rel in rels.DefaultIfEmpty()
-                       group new { po, si, rel } by new
-                       {
-                           po.PurchaseOrderID,
-                           po.CreateDate,
-                           si.SupplierName,
-                           rel.PurchaseRequisitionID,
-                           po.PurchaseOrderStatus
-                       } into gp
-                       orderby gp.Key.PurchaseOrderID descending
-                       select new PurchaseOrderIndexViewModel
-                       {
-                           PurchaseOrderID = gp.Key.PurchaseOrderID,
-                           CreateDate = gp.Key.CreateDate,
-                           SupplierName = gp.Key.SupplierName,
-                           PurchaseRequisitionID = gp.Key.PurchaseRequisitionID,
-                           PurchaseOrderStatus = GetStatus(gp.Key.PurchaseOrderStatus)
-                       };
-            return Json(new { data = povm }, JsonRequestBehavior.AllowGet);
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var vm = rep.GetPurchaseOrderListViewModel();
+            return PartialView("_IndexPODItemPartial", vm);
+        }
+
+        /// <summary>
+        /// 送出至供應商畫面
+        /// </summary>
+        /// <param name="id">採購單編號 PurchaseOrderID</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult SendToSupplier(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            POSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+            if (vm == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vm);
+        }
+
+        /// <summary>
+        /// 送出至供應商畫面
+        /// </summary>
+        /// <param name="id">採購單編號 PurchaseOrderID</param>
+        /// <returns></returns>
+        [HttpPost, ActionName("SendToSupplier")]
+        [ValidateAntiForgeryToken]
+        public ActionResult SendToSupplierPost([Bind(Include = "POItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        {
+            if (model == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            rep.UpdatePOStatus(model.POItem.PurchaseOrderID, "P");
+            return Json(new { message = "送出至供應商成功", status = "success" });
         }
 
         //取得供應商資料集
@@ -67,6 +88,21 @@ namespace PMSAWebMVC.Controllers
         {//data的值=供應商編號 文字=供應商名稱
             Repository rep = new Repository(User.Identity.GetEmployee());
             var data = rep.GetSupplierList(id).Select(s => new { Value = s.SupplierCode, Text = s.SupplierName });
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        //取得倉庫資料集
+        [HttpGet]
+        public JsonResult GetWarehouseInfoList()
+        {
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            var data = db.WarehouseInfo.Select(item => new
+            {
+                item.WarehouseCode,
+                item.Employee.Name,
+                item.Address,
+                item.Tel
+            });
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
@@ -132,6 +168,8 @@ namespace PMSAWebMVC.Controllers
         {
             Repository rep = new Repository(User.Identity.GetEmployee(), db);
             var vm = rep.AddPODtlToTableViewModel();
+            //計算金額總計
+            ViewBag.Aggregate = vm.Sum(item => item.Total).ToString("C0");
             return PartialView("_CreatePODItemPartial", vm);
         }
 
@@ -274,7 +312,7 @@ namespace PMSAWebMVC.Controllers
             return PartialView("_CreatePODItemPartial", vm);
         }
 
-        private void ConfigureViewModel(PurchaseOrderCreateViewModel model)
+        private void ConfigureCreateViewModel(PurchaseOrderCreateViewModel model)
         {
             //將先前Session中的內容先清空
             if (this.session.PRDItems.Count() > 0)
@@ -284,37 +322,10 @@ namespace PMSAWebMVC.Controllers
             //取得請購單資料
             //參考資料：https://dotnetfiddle.net/PBi075
             Repository rep = new Repository(User.Identity.GetEmployee());
-            IList<PurchaseRequisitionItem> purchaseRequisitions = rep.GetPurchaseRequisitionList();
-            model.PurchaseRequisitionList = new SelectList(purchaseRequisitions, "PurchaseRequisitionIdValue", "PurchaseRequisitionIdDisplay");
-        }
-
-        private string GetStatus(string purchaseOrderStatus)
-        {
-            //N = 新增,P = 送出,C = 異動中,E = 答交,D = 整筆訂單取消,S = 出貨,R = 點交,O = 逾期,Z = 結案
-            switch (purchaseOrderStatus)
-            {
-                case "N":
-                    return "新增";
-                case "P":
-                    return "送出";
-                case "C":
-                    return "異動中";
-                case "E":
-                    return "答交";
-                case "D":
-                    return "取消";
-                case "S":
-                    return "出貨";
-                case "R":
-                    return "點交";
-                case "O":
-                    return "逾期";
-                case "Z":
-                    return "結案";
-                default:
-                    return "";
-            }
-
+            IList<ViewModels.PurchaseOrders.SelectListItem> purchaseRequisitions = rep.GetPurchaseRequisitionList();
+            model.PurchaseRequisitionList = new SelectList(purchaseRequisitions, "Value", "Display");
+            IList<System.Web.Mvc.SelectListItem> warehouseInfos = rep.GetWarehouseInfoList();
+            model.WarehouseInfoList = new SelectList(warehouseInfos, "Value", "Text");
         }
 
         // GET: PurchaseOrders/Details/5
@@ -324,19 +335,20 @@ namespace PMSAWebMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(id);
-            if (purchaseOrder == null)
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            POSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+            if (vm == null)
             {
                 return HttpNotFound();
             }
-            return View(purchaseOrder);
+            return View(vm);
         }
 
         // GET: PurchaseOrders/Create
         public ActionResult Create()
         {
             PurchaseOrderCreateViewModel model = new PurchaseOrderCreateViewModel();
-            ConfigureViewModel(model);
+            ConfigureCreateViewModel(model);
             return View(model);
         }
 
@@ -345,12 +357,30 @@ namespace PMSAWebMVC.Controllers
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IList<PurchaseOrderDtlItem> model)
+        public ActionResult Create([Bind(Include = "POInfoItem")] PurchaseOrderCreateViewModel model)
         {
-            if (model?.Count() == 0)
+            StringBuilder sb = new StringBuilder();
+            if (session.PODItems.Count == 0)
             {
-                return Json(new { message = "採購明細為必填", status = "warning" });
+                sb.Append("採購明細為必填").Append(Environment.NewLine);
             }
+            if (string.IsNullOrWhiteSpace(model.POInfoItem.ReceiverName))
+            {
+                sb.Append("收貨人姓名 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(model.POInfoItem.ReceiptAddress))
+            {
+                sb.Append("收貨地址 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(model.POInfoItem.ReceiverTel) && string.IsNullOrWhiteSpace(model.POInfoItem.ReceiverMobile))
+            {
+                sb.Append("收貨人市話 及 收貨人手機 需擇一填寫").Append(Environment.NewLine);
+            }
+            if (sb.Length > 0)
+            {
+                return Json(new { message = sb.ToString(), status = "warning" });
+            }
+
             //建立設定資料
             IList<PurchaseOrderDtlItem> pods = session.PODItems;
             Employee emp = User.Identity.GetEmployee();
@@ -372,7 +402,11 @@ namespace PMSAWebMVC.Controllers
                     SupplierCode = sa.SupplierCode,
                     EmployeeID = emp.EmployeeID,
                     CreateDate = now,
-                    PurchaseOrderStatus = "N"
+                    PurchaseOrderStatus = "N",
+                    ReceiverName = model.POInfoItem.ReceiverName,
+                    ReceiptAddress = model.POInfoItem.ReceiptAddress,
+                    ReceiverMobile = model.POInfoItem.ReceiverMobile,
+                    ReceiverTel = model.POInfoItem.ReceiverTel
                 };
                 db.PurchaseOrder.Add(po);
                 db.SaveChanges();
@@ -446,115 +480,6 @@ namespace PMSAWebMVC.Controllers
 
             return Json(new { message = "新增採購單成功", status = "success" });
         }
-
-
-        //// POST: PurchaseOrders/Create
-        //// 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        //// 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "PurchaseOrderOID,PurchaseRequisitionID,CheckedResultSetVM")] PurchaseOrderCreateViewModel model)
-        //{
-        //    if (model == null || model.CheckedResultSetVM.Count(s => s.Checked) == 0)
-        //    {
-        //        TempData["ErrorMessage"] = "採購細項請至少勾選一項";
-        //        return RedirectToAction("Create");
-        //    }
-
-        //    //從暫存新增至正式資料表
-        //    DateTime now = DateTime.Now;
-        //    using (PMSAEntities db = new PMSAEntities())
-        //    {
-        //        //新增採購單
-        //        PurchaseOrderTemp pot = db.PurchaseOrderTemp.Find(model.PurchaseOrderOID);
-        //        db.Entry(pot).State = EntityState.Detached;
-        //        string poId = $"PO-{now:yyyyMMdd}-";
-        //        int count = db.PurchaseOrder.Where(i => i.PurchaseOrderID.StartsWith(poId)).Count();
-        //        count++;
-        //        poId = $"{poId}{count:000}";
-        //        PurchaseOrder po = new PurchaseOrder
-        //        {
-        //            PurchaseOrderID = poId,
-        //            SupplierCode = pot.SupplierCode,
-        //            EmployeeID = pot.EmployeeID,
-        //            CreateDate = now,
-        //            PurchaseOrderStatus = "N"
-        //        };
-        //        db.PurchaseOrder.Add(po);
-        //        db.SaveChanges();
-        //        //新增採購單明細
-        //        int index = 0;
-        //        foreach (var item in model.CheckedResultSetVM)
-        //        {
-        //            if (!item.Checked)
-        //            {
-        //                continue;
-        //            }
-        //            var podt = db.PurchaseOrderDtlTemp.Find(item.PurchaseOrderDtlOID);
-        //            index++;
-        //            PurchaseOrderDtl pod = new PurchaseOrderDtl
-        //            {
-        //                PurchaseOrderDtlCode = $"{poId}-{index:000}",
-        //                PurchaseOrderID = poId,
-        //                PartNumber = podt.PartNumber,
-        //                PartName = podt.PartName,
-        //                PartSpec = podt.PartSpec,
-        //                QtyPerUnit = podt.QtyPerUnit,
-        //                TotalPartQty = podt.TotalPartQty,
-        //                OriginalUnitPrice = podt.OriginalUnitPrice,
-        //                Discount = podt.Discount,
-        //                PurchaseUnitPrice = podt.PurchaseUnitPrice,
-        //                Qty = podt.Qty,
-        //                PurchasedQty = podt.PurchasedQty,
-        //                GoodsInTransitQty = podt.GoodsInTransitQty,
-        //                Total = podt.Total,
-        //                DateRequired = podt.DateRequired,
-        //                CommittedArrivalDate = podt.CommittedArrivalDate,
-        //                ShipDate = podt.ShipDate,
-        //                ArrivedDate = podt.ArrivedDate,
-        //                SourceListID = podt.SourceListID
-        //            };
-        //            db.PurchaseOrderDtl.Add(pod);
-        //            db.SaveChanges();
-        //            //請購單與採購單關聯
-        //            //TODO: 應從暫存取出，目前暫以傳入方式處理
-        //            PRPORelation rel = new PRPORelation
-        //            {
-        //                PurchaseOrderID = poId,
-        //                PurchaseOrderDtlCode = pod.PurchaseOrderDtlCode,
-        //                PurchaseRequisitionID = model.PurchaseRequisitionID,
-        //                PurchaseRequisitionDtlCode = item.PurchaseRequisitionDtlCode,
-        //            };
-        //            db.PRPORelation.Add(rel);
-        //            db.SaveChanges();
-        //            //採購單異動總表
-        //            POChanged poc = new POChanged
-        //            {
-        //                PurchaseOrderID = poId,
-        //                POChangedCategoryCode = "N",
-        //                RequestDate = now,
-        //                RequesterRole = "P",
-        //                RequesterID = pot.EmployeeID
-        //            };
-        //            db.POChanged.Add(poc);
-        //            db.SaveChanges();
-        //            //更新PurchaseOrderDtl.POChangedOID
-        //            pod.POChangedOID = poc.POChangedOID;
-        //            db.Entry(pod).Property(podp => podp.POChangedOID).IsModified = true;
-        //            db.SaveChanges();
-        //        }
-        //        //刪除暫存資料
-        //        var PRPORelationTemps = db.PRPORelationTemp.Where(i => i.PurchaseOrderOID == model.PurchaseOrderOID);
-        //        db.PRPORelationTemp.RemoveRange(PRPORelationTemps);
-        //        db.SaveChanges();
-        //        var PurchaseOrderDtlTemps = db.PurchaseOrderDtlTemp.Where(i => i.PurchaseOrderOID == model.PurchaseOrderOID);
-        //        db.PurchaseOrderDtlTemp.RemoveRange(PurchaseOrderDtlTemps);
-        //        var PurchaseOrderOld = db.PurchaseOrderTemp.Find(model.PurchaseOrderOID);
-        //        db.PurchaseOrderTemp.Remove(PurchaseOrderOld);
-        //    }
-
-        //    return RedirectToAction("Index");
-        //}
 
         //// GET: PurchaseOrders/Edit/5
         //public ActionResult Edit(string id)

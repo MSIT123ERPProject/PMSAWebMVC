@@ -44,7 +44,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             }
             //請購單可能會無關聯
             var povm = from po in (from poin in db.PurchaseOrder
-                                   where empid.Contains(poin.EmployeeID)
+                                   where empid.Any(id => id == poin.EmployeeID)
                                    select poin
                                     ).AsEnumerable()
                        join si in db.SupplierInfo

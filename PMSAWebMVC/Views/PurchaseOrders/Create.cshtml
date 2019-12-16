@@ -190,9 +190,10 @@
                         @Html.TextBoxFor(m => m.POInfoItem.ReceiverMobile, new { @class = "form-control" })
                         @Html.LabelFor(m => m.POInfoItem.ReceiverMobile)
                     </div>
+                    <h6 class="col-12 small text-danger">* @Html.DisplayNameFor(m => m.POInfoItem.ReceiverTel) 與 @Html.DisplayNameFor(m => m.POInfoItem.ReceiverMobile) 至少需輸入一個</h6>
                 </div>
             }
-            </div>
+        </div>
     </div>
 </div>
 
@@ -521,8 +522,8 @@
             function hideSupplierInfo() {
                 $("#supplierInfo").hide();
                 $("#collapse-supplierinfo").html("");
-                $("#receiverinfo").hide();   
-                $("#btnSubmit").hide(); 
+                $("#receiverinfo").hide();
+                $("#btnSubmit").hide();
             }
 
             //刪除按鈕觸發
@@ -627,8 +628,8 @@
                     } else {
                         $("#collapse-supplierinfo").html(result);
                         $("#supplierInfo").hide().removeClass("d-none").fadeIn(500);
-                        $("#receiverinfo").hide().removeClass("d-none").fadeIn(500);      
-                        $("#btnSubmit").hide().removeClass("d-none").fadeIn(500); 
+                        $("#receiverinfo").hide().removeClass("d-none").fadeIn(500);
+                        $("#btnSubmit").hide().removeClass("d-none").fadeIn(500);
                     }
                     }).fail(function (e) {
                         toastr.error(e.responseText);

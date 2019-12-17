@@ -425,9 +425,10 @@
                     style: {
                         fontWeight: 'bold',
                         fontFamily: "微軟正黑體",
-                        fontsize: "30px"
+                        fontsize: "30px",
                     },
-                    width: 650,
+                    backgroundColor: '#A5DEE4',
+                    reflow: true,
                 },
                 title: {
                     useHTML: true,
@@ -727,9 +728,10 @@
                     style: {
                         fontWeight: 'bold',
                         fontFamily: "微軟正黑體",
-                        fontsize: "30px"
+                        fontsize: "30px",
                     },
-                    width: 650,
+                    backgroundColor: '#A5DEE4',
+                    reflow: true,
                 },
                 title: {
                     useHTML: true,
@@ -915,7 +917,7 @@
             <div class="card" id="sindtl"></div>
         </div>
     </div>
-    
+
     @section scripts{
         @*<script src="https://code.highcharts.com/highcharts.js"></script>
             <script src="https://code.highcharts.com/modules/series-label.js"></script>
@@ -924,6 +926,7 @@
             <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
         @*bubbleChart還是需要引用此CDN*@
         <script src="https://code.highcharts.com/highcharts-more.js"></script>
+        <script src="~/scripts/highcharts/themes/sunset.js"></script>
         @*//////////////////////////////////////////*@
         <script>
             $(document).ready(function () {
@@ -937,9 +940,10 @@
                     style: {
                         fontWeight: 'bold',
                         fontFamily: "微軟正黑體",
-                        fontsize: "30px"
+                        fontsize: "30px",
                     },
-                    width: 650,
+                    backgroundColor: '#A5DEE4',
+                    reflow: true,
                 },
                 title: {
                     useHTML: true,
@@ -1100,7 +1104,7 @@
             }
 
             function GetSInDtl() {
-                $.getJSON('@Url.Action("GetSInDtl", "WSReports")', function (data) {
+                @*$.getJSON('@Url.Action("GetSInDtl", "WSReports")', function (data) {
                     var Names = [];
                     var os = [];
                     for (var i = 0; i < data.length; i++) {
@@ -1144,10 +1148,10 @@
                             data: os
                         }]
                     });
-                });
-                
+                });*@
+
                 //泡沫
-                @*$.getJSON('@Url.Action("GetSInDtl", "WSReports")', function (datas) {
+                $.getJSON('@Url.Action("GetSInDtl", "WSReports")', function (datas) {
 
                     //泡沫圖引用的 script跟其他的有差 所以要改變
                     Highcharts.chart('sindtl', {
@@ -1188,9 +1192,12 @@
                                 }
                             }
                         },
-                        series: datas
+                        series: [{
+                            name: '即將過期品',
+                            data: datas
+                        }]
                     });
-                })*@
+                })
             }
         </script>
     }

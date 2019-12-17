@@ -11,7 +11,7 @@
     <div class="card-body">
         <div>
             <div style="float:left">
-                <button type="button" class="btn btn-warning" id="inventorydtladd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-plus"></i></button>
+                <button type="button" class="btn btn-primary" id="inventorydtladd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fas fa-plus"></i></button>
             </div>
             <div style="float:right" id="dabtn"></div>
         </div>
@@ -98,7 +98,8 @@
                     'excel', 'pdf'
                 ],
                 ordering: true,
-                order: []
+                order: [],
+                aoColumnDefs: [ { "bSortable": false, "aTargets": [ 6 ] }] //控制哪行不可排序
             });
             table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
         });

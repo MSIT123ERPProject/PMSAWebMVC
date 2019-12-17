@@ -344,6 +344,25 @@ namespace PMSAWebMVC.Controllers
             return View(vm);
         }
 
+        /// <summary>
+        /// 採購單簽核
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Sign(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            POSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+            if (vm == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vm);
+        }
+
         // GET: PurchaseOrders/Create
         public ActionResult Create()
         {
@@ -473,6 +492,15 @@ namespace PMSAWebMVC.Controllers
                     pod.POChangedOID = poc.POChangedOID;
                     db.Entry(pod).Property(podp => podp.POChangedOID).IsModified = true;
                     db.SaveChanges();
+
+                    //將請購單的狀態更新為O(採購中)
+                    //if (db.Entry(pr).State == EntityState.Detached) {
+                    //    db.PurchaseRequisition.Attach(pr);
+                    //}
+                    pr.ProcessStatus = "O";
+                    db.Entry(pr).State= EntityState.Modified;                    
+                    db.SaveChanges();
+                    db.Entry(pr).State = EntityState.Detached;
                 }
                 //清空Session
                 session.ResetAllItems();

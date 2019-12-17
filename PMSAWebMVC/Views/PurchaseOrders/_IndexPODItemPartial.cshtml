@@ -35,16 +35,23 @@
                             <i class="far fa-eye"></i>
                         </a>
 
+                        @if (User.IsInRole("Buyer") && User.IsInRole("Manager") && (item.PurchaseOrderStatus == "新增" || item.PurchaseOrderStatus == "異動中"))
+                        {
+                            <a href="@Url.Action("Sign","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="審核">
+                                <i class="fas fa-clipboard-check"></i>
+                            </a>
+                        }
+
                         @*<span data-toggle="modal" data-target="#detailModal">
-                                <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                                    <i class="far fa-edit"></i>
-                                </button>
-                            </span>
-                            <span data-model="del">
-                                <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
-                                    <i class='far fa-trash-alt'></i>
-                                </button>
-                            </span>*@
+            <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                <i class="far fa-edit"></i>
+            </button>
+        </span>
+        <span data-model="del">
+            <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                <i class='far fa-trash-alt'></i>
+            </button>
+        </span>*@
                     </div>
                 </td>
             </tr>

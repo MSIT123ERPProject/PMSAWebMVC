@@ -492,16 +492,16 @@ namespace PMSAWebMVC.Controllers
                     pod.POChangedOID = poc.POChangedOID;
                     db.Entry(pod).Property(podp => podp.POChangedOID).IsModified = true;
                     db.SaveChanges();
-
-                    //將請購單的狀態更新為O(採購中)
-                    //if (db.Entry(pr).State == EntityState.Detached) {
-                    //    db.PurchaseRequisition.Attach(pr);
-                    //}
-                    pr.ProcessStatus = "O";
-                    db.Entry(pr).State= EntityState.Modified;                    
-                    db.SaveChanges();
-                    db.Entry(pr).State = EntityState.Detached;
                 }
+                //將請購單的狀態更新為O(採購中)
+                //if (db.Entry(pr).State == EntityState.Detached) {
+                //    db.PurchaseRequisition.Attach(pr);
+                //}
+                pr.ProcessStatus = "O";
+                db.Entry(pr).State = EntityState.Modified;
+                db.SaveChanges();
+                db.Entry(pr).State = EntityState.Detached;
+
                 //清空Session
                 session.ResetAllItems();
             }

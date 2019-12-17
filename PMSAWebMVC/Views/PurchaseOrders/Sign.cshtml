@@ -10,12 +10,97 @@
     ViewBag.Title = "審核採購單";
 }
 
-@Html.Partial("_DetailsPartial")
+@*採購單資訊*@
+<div class="card mb-3">
+    <div class="card-header">
+        <a data-toggle="collapse" href="#collapse-sign" aria-expanded="true" aria-controls="collapse-sign" id="heading-sign" class="d-block nounderline">
+            <i class="fas fa-clipboard-check"></i> 採購單簽核 <i class="fa fa-chevron-down"></i>
+        </a>
+    </div>
 
+    <div id="collapse-sign" class="collapse show" aria-labelledby="heading-sign">
+        <div class="card-body pt-2 pb-0">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <small><strong>簽核人</strong></small>
+                    <br>
+                    <p class="text-muted">劉淑君</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>簽核狀態</strong></small>
+                    <br>
+
+                    <div id="tab" class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+
+                        <a href="#" class="btn btn-outline-primary" data-toggle="tab">
+                            <input type="radio" name="statusCode" value="Y" autocomplete="off">
+                            同意
+                        </a>
+                        <a href="#" class="btn btn-outline-primary" data-toggle="tab">
+                            <input type="radio" name="statusCode" value="N" autocomplete="off">
+                            拒絕
+                        </a>
+
+                    </div>
+
+ 
+                    <div class="md-form">
+                        <i class="fas fa-pencil-alt prefix"></i>
+                        <textarea id="form10" class="md-textarea form-control" rows="3"></textarea>
+                        <label for="form10">簽核意見</label>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.Email)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.Email)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.Tel)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.Tel)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.PurchaseRequisitionID)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.PurchaseRequisitionID)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.CreateDate)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.CreateDate)</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <small><strong>@Html.DisplayNameFor(model => Model.POItem.PurchaseOrderStatus)</strong></small>
+                    <br>
+                    <p class="text-muted">@Html.DisplayFor(model => Model.POItem.PurchaseOrderStatus)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_DetailsPartial")
 
 @section scripts{
     <script src="~/Scripts/Views/_PurchaseOrdersDetailsPartial.js"></script>
     <script>
+        var statusCode = "";
+
+        $(document).ready(function () {
+            CheckClass();
+        });
+
+        function CheckClass() {
+            console.log($(".btn-group-toggle a[data-toggle='tab']").hasClass("active"));
+            console.log(statusCode);
+        }        
+
+        $(".btn-group-toggle a[data-toggle='tab']").click(function () {
+            $(this).addClass("active").siblings().removeClass("active");            
+            statusCode = $(this).children("input[type=radio]").val();
+            CheckClass();
+        });
     </script>
 
 }

@@ -12,13 +12,17 @@
     </div>
     <div class="card-body">
         <div id="dabtn"></div>
+        <div style="float:right">
+            <div style="float:left;height:40px;text-align:center;line-height:40px;"><p>請選擇入庫單號 : &nbsp;&nbsp;</p></div>
+            <div style="float:right"><select class="form-control" id="btnsel"></select></div>
+        </div>
         <div class="table-responsive">
             <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
                 <thead>
                     <tr class="bg-primary text-white text-center">
-                        <th id="hiden">@Html.DisplayNameFor(model => model.StockInDtlOID)</th>
+                        <th>@Html.DisplayNameFor(model => model.StockInDtlOID)</th>
                         <th>@Html.DisplayNameFor(model => model.InventoryDtl.WarehouseCode)</th>
-                        <th>@Html.DisplayNameFor(model => model.StockIn.PurchaseOrderReceiveID)</th>
+                        <th>@Html.DisplayNameFor(model => model.StockIn.StockInID)</th>
                         <th>@Html.DisplayNameFor(model => model.Part.PartName)</th>
                         <th>@Html.DisplayNameFor(model => model.EXP)</th>
                         <th>@Html.DisplayNameFor(model => model.StockInQty)</th>
@@ -32,9 +36,9 @@
                         string date1 = String.Format("{0:yyyy/MM/dd}", item.EXP);
 
                         <tr>
-                            <td id="hiden">@Html.DisplayFor(modelItem => item.StockInDtlOID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StockInDtlOID)</td>
                             <td>@Html.DisplayFor(modelItem => item.InventoryDtl.WarehouseCode)</td>
-                            <td>@Html.DisplayFor(modelItem => item.StockIn.PurchaseOrderReceiveID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StockIn.StockInID)</td>
                             <td>@Html.DisplayFor(modelItem => item.Part.PartName)</td>
                             <td>@Html.DisplayFor(modelItem => date1)</td>
                             <td id="cel">@Html.DisplayFor(modelItem => item.StockInQty)</td>
@@ -93,18 +97,45 @@
 {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script>
+        var table = $('#dataTable').DataTable({
+            buttons: [
+                'excel', 'pdf'
+            ]
+        });
         $(document).ready(function () {
-            var table = $('#dataTable').DataTable({
-                buttons: [
-                    'excel', 'pdf'
-                ]
-            });
             table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
         });
 
         $('#myInput').on('keyup', function () {
             table.search(this.value).draw();
         });
+
+        //搜尋
+        selectstockin();
+
+        async function selectstockin() {
+            var response = await fetch('@Url.Action("selectstockinid", "StockInDtls")');
+            var datas = await response.json();
+            var opt1 = new Option("全部", "");
+            $('#btnsel').append(opt1)
+            for (var i = 0, max = datas.length; i < max; i++) {
+                var whvalue = datas[i].StockInID
+                var whtext = datas[i].StockInID
+                var opt = new Option(whtext, whvalue);
+                $('#btnsel').append(opt)
+            }
+        }
+
+        $('#btnsel').change(selectall);
+        function selectall() {
+            var vvl = $("#btnsel").val();
+            if (vvl == null) {
+                table.search("").draw();
+            } else {
+                table.search(vvl).draw();
+            }
+
+        }
 
         //檢視
         $(document).on('click', "button[name = 'click03']", function () {
@@ -195,7 +226,6 @@
         //入庫
         var sell;
         $(document).on('click', "td", function () {
-            var table = $('#dataTable').DataTable();
             var rowss = $(this).closest("tr");  //抓取列
             var celss = $(this).siblings("#cel"); //抓取欄
             sell = table.row(rowss).cell(celss);
@@ -232,7 +262,6 @@
         });
 
         $('#btnStockIn').click(function () {
-            var table = $('#dataTable').DataTable();
             let sinqty = $("#StockInQty").val(); //已入庫數量
             let inqty = $("#InQty").val();       //本次入庫數量
             let sen = $("#senInQty").val();      //剩餘可入庫數量

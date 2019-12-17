@@ -11,9 +11,13 @@
     <div class="card-body">
         <div>
             <div style="float:left">
-                <button type="button" class="btn btn-primary" id="inventorydtladd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fas fa-plus"></i></button>
+                <button type="button" class="btn btn-primary" id="inventorydtladd" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fas fa-plus"></i></button>&nbsp;&nbsp;
             </div>
-            <div style="float:right" id="dabtn"></div>
+            <div id="dabtn"></div>
+            <div style="float:right">
+                <div style="float:left;height:40px;text-align:center;line-height:40px;" ><p>請選擇倉庫 : &nbsp;&nbsp;</p></div>
+                <div style="float:right"><select class="form-control" id="btnsel"></select></div>
+            </div>
         </div>
         <div class="table-responsive">
             <br />
@@ -91,15 +95,15 @@
 {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script>
+        var table = $('#dataTable').DataTable({
+            buttons: [
+                'excel', 'pdf'
+            ],
+            ordering: true,
+            order: [],
+            aoColumnDefs: [{ "bSortable": false, "aTargets": [6] }] //控制哪行不可排序
+        });
         $(document).ready(function () {
-            var table = $('#dataTable').DataTable({
-                buttons: [
-                    'excel', 'pdf'
-                ],
-                ordering: true,
-                order: [],
-                aoColumnDefs: [ { "bSortable": false, "aTargets": [ 6 ] }] //控制哪行不可排序
-            });
             table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
         });
 
@@ -113,6 +117,21 @@
         loadWarehouselist();
         loadIccodelist();
         loadSlidlist();
+        selectwarehouse();
+        selectall();
+
+        async function selectwarehouse() {
+            var response = await fetch('@Url.Action("whousecodelist", "InventoryDtls")');
+            var datas = await response.json();
+            var opt1 = new Option("全部", "");
+            $('#btnsel').append(opt1)
+            for (var i = 0, max = datas.length; i < max; i++) {
+                var whvalue = datas[i].WarehouseCode
+                var whtext = datas[i].WarehouseName
+                var opt = new Option(whtext, whvalue);
+                $('#btnsel').append(opt)
+            }
+        }
 
         async function loadWarehouselist() {
             var response = await fetch('@Url.Action("whousecodelist", "InventoryDtls")');
@@ -151,6 +170,17 @@
                 $('#SourceListID').append(docFrag);
            })
         }
+
+        $('#btnsel').change(selectall);
+        function selectall() {
+            var vvl = $("#btnsel").val();
+            if (vvl == null) {
+                table.search("").draw();
+            } else {
+                table.search(vvl).draw();
+            }
+            
+        }
         //-----------------------------------------------------------------------------------------------
 
         function A() {
@@ -174,7 +204,6 @@
         })
 
         $(document).on('click', "#btnCreate", function () {
-            var table = $('#dataTable').DataTable();
             var cell4 = '&nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> &nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span> &nbsp;<button id="bt" name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫"><i class="far fa-arrow-alt-circle-down"></i></button>'
 
             if ($("#UnitsInStock").val() < 0 || $("#SafetyQty").val() < 0) {
@@ -317,13 +346,11 @@
         //入庫
         var sein;
         $(document).on('click', "td", function () {
-            var table = $('#dataTable').DataTable();
             var rowss = $(this).closest("tr");  //抓取列
             var celss = $(this).siblings("#cel01"); //抓取欄
             sein = table.row(rowss).cell(celss);
         })
         $(document).on('click', "button[name = 'click05']", function () {
-            var table = $('#dataTable').DataTable();
             let id1 = this.dataset.dc;
             let sto = this.dataset.stocin;
             console.log(sto);

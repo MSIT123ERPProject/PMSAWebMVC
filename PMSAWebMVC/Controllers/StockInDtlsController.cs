@@ -21,6 +21,13 @@ namespace PMSAWebMVC.Controllers
             return View(stockInDtl.ToList());
         }
 
+        //select
+        public ActionResult selectstockinid()
+        {
+            var datas = db.StockIn.Select(s => new { s.StockInID });
+            return Json(datas, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: StockInDtls/Details/5
         public ActionResult Detail(int? id)
         {

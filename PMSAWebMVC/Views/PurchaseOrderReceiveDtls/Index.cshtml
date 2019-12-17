@@ -1,0 +1,81 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseOrderReceiveDtl>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseOrderReceiveDtlOID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RejectQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AcceptQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RejectReason)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseOrderDtl.PurchaseOrderID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PurchaseOrderReceive.PurchaseOrderID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseOrderReceiveDtlOID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RejectQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AcceptQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RejectReason)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseOrderDtl.PurchaseOrderID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PurchaseOrderReceive.PurchaseOrderID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PurchaseOrderReceiveDtlCode }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PurchaseOrderReceiveDtlCode }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PurchaseOrderReceiveDtlCode })
+        </td>
+    </tr>
+}
+
+</table>

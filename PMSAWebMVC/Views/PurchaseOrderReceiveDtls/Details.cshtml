@@ -1,0 +1,90 @@
+﻿@model PMSAWebMVC.Models.PurchaseOrderReceiveDtl
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PurchaseOrderReceiveDtl</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderReceiveDtlOID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderReceiveDtlOID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RejectQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RejectQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AcceptQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AcceptQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RejectReason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RejectReason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderDtl.PurchaseOrderID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderDtl.PurchaseOrderID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderReceive.PurchaseOrderID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderReceive.PurchaseOrderID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PurchaseOrderReceiveDtlCode }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

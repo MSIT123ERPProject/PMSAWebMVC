@@ -112,7 +112,8 @@
                         fontsize: "30px",
                     },
                     backgroundColor: '#A5DEE4',
-                    width: 510,
+                    //width: 510,
+                    reflow: true,
                 },
                 title: {
                     useHTML: true,
@@ -351,7 +352,7 @@
                 let chart3 = new Highcharts.chart('container3',{
                     chart: {
                        type: 'packedbubble',
-                        height:'100%'
+                        height:510,
                     },
                     title: {
                         text:'出貨數量'

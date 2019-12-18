@@ -227,15 +227,12 @@
                         </li>
                     </ul>
                 </div>
-@*<<<<<<< HEAD
-=======*@
                 <ul id="bottomUl">
                     <li class="bottomLi">
-                        @Html.Partial("_LanguagePartial")
                         <form action="@Url.Action( "LogOff", "Account",new { Area=""})" method="post" style="width: 100%;">
                             @Html.AntiForgeryToken()
                             <span class="logoff nav-item">
-                                <button type="submit" class="nav-link"> 
+                                <button type="submit" class="nav-link">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <span>登出</span>
                                 </button>
@@ -243,7 +240,6 @@
                         </form>
                     </li>
                 </ul>
-@*>>>>>>> 802426d1abd7d38d1f6e79d3378d39e1746e0b09*@
             </nav>
         </div>
         <!-- Content Wrapper -->

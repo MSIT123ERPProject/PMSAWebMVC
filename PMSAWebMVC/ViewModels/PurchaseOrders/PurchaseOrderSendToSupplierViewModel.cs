@@ -131,7 +131,33 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             public string ReceiptAddress { get; set; }
             [Display(Name = "簽核狀態")]
             public string SignStatus { get; set; }
+            [Display(Name = "主管簽核")]
+            public string SignStatusToShow
+            {
+                get
+                {
+                    switch (SignStatus)
+                    {
+                        case "Y":
+                            return "同意";
+                        case "N":
+                            return "拒絕";
+                        case "S":
+                            return "等待簽核中";
+                        default:
+                            return "";
+                    }
+                }
+                private set { }
+            }
             public Nullable<int> SignFlowOID { get; set; }
+            public Nullable<int> SignFlowDtlOID { get; set; }
+            [Display(Name = "簽核人姓名")]
+            public string ApprovingOfficerName { get; set; }
+            [Display(Name = "簽核意見")]
+            public string SignOpinion { get; set; }
+            [Display(Name = "簽核身份驗證密碼")]
+            public string SignPassword { get; set; }
             [Display(Name = "電子信箱")]
             public string Email { get; set; }
             [Display(Name = "聯絡電話")]
@@ -219,6 +245,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
             PRPORelation rel = po.PRPORelation.Where(item => item.PurchaseOrderID == purchaseOrderID).FirstOrDefault();
             Employee emp = po.Employee;
+
             var povm = new POInfoViewModel
             {
                 PurchaseOrderID = po.PurchaseOrderID,
@@ -237,6 +264,22 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 Tel = emp.Tel,
                 Email = emp.Email
             };
+
+            //寫入簽核內容
+            SignFlowDtl sfd = null;
+            if (po.SignFlowOID.HasValue)
+            {
+                sfd = db.SignFlowDtl
+                    .Where(item => item.SignFlowOID == po.SignFlowOID)
+                    .OrderByDescending(item => item.SignFlowDtlOID)
+                    .FirstOrDefault();
+            }
+            if (sfd != null)
+            {
+                povm.ApprovingOfficerName = db.Employee.Find(sfd.ApprovingOfficerID).Name;
+                povm.SignFlowDtlOID = sfd.SignFlowDtlOID;
+            }
+
             return povm;
         }
 

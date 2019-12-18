@@ -10,6 +10,8 @@
     ViewBag.Title = "送出至供應商";
 }
 
+<h2 class="text-dark">@ViewBag.Title</h2>
+
 @Html.Partial("_DetailsPartial")
 
 @using (Html.BeginForm("SendToSupplier", "PurchaseOrders", FormMethod.Post, new { @id = "formSendToSupplierPurchaseOrders" }))

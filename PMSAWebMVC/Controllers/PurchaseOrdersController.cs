@@ -84,7 +84,6 @@ namespace PMSAWebMVC.Controllers
             }
             return View(vm);
         }
-
         /// <summary>
         /// 答交供應商畫面
         /// </summary>

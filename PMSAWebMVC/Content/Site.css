@@ -6,22 +6,25 @@
 
 
 /* ul 底部 =======================*/
-#bottomUl {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+.topUl{
 }
 
 li.bottomLi {
     position: sticky;
     bottom: -8px;
-    border-top: 1px solid rgba(52, 58, 64, 0.5);
     background-color: #212529;
     padding-bottom: 20px;
 }
-
+#bottomUl div {
+    transform: translateX(-4px);
+}
+#bottomUl {
+    border-top: 1px solid rgba(52, 58, 64, 0.5);
+    width: 100%;
+}
 .middleUl {
-    height: 60vh;
+    transform: translateX(5px);
+    height: 70vh;
     overflow-y: scroll;
     overflow-x: hidden;
 }

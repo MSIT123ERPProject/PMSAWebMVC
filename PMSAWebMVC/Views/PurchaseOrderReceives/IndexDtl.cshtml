@@ -1,0 +1,249 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseOrderReceiveDtl>
+
+@{
+    ViewBag.Title = "進貨明細";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        進貨明細
+    </div>
+    <div class="card-body">
+        <div style="float:left">
+            <button class="btn btn-primary" title="返回進貨總表">@Html.ActionLink(" ", "Index", null, new { @class = "far fa-hand-point-left", @style = "color:white" })</button>&nbsp;&nbsp;
+        </div>
+        <div id="dabtn"></div>
+        <div class="table-responsive">
+            <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr class="bg-primary text-white text-center">
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderReceiveDtlCode)</th>
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderReceiveID)</th>
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderReceive.PurchaseOrderID)</th>
+                        <th>@Html.DisplayNameFor(model => model.PurchaseQty)</th>
+                        <th>@Html.DisplayNameFor(model => model.PurchaseAmount)</th>
+                        <th>@Html.DisplayNameFor(model => model.RejectQty)</th>
+                        <th>@Html.DisplayNameFor(model => model.AcceptQty)</th>
+                        <th>編輯</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        string amout = "NT$ " + item.PurchaseAmount;
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.PurchaseOrderReceiveDtlCode)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PurchaseOrderReceiveID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PurchaseOrderReceive.PurchaseOrderID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PurchaseQty)</td>
+                            <td>@Html.DisplayFor(modelItem => amout)</td>
+                            <td id="cel">@Html.DisplayFor(modelItem => item.RejectQty)</td>
+                            <td id="cel01">@Html.DisplayFor(modelItem => item.AcceptQty)</td>
+                            <td class="table-data-feature">
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.PurchaseOrderReceiveDtlCode">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </span>
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.PurchaseOrderReceiveDtlCode">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    #hiden {
+        display: none;
+    }
+
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: blueviolet;
+    }
+
+    .modal-title {
+        color: white;
+    }
+
+    .required:after {
+        margin: 2px;
+        content: '*';
+        color: red;
+    }
+</style>
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script>
+        var table = $('#dataTable').DataTable({
+            buttons: [
+                'excel', 'pdf'
+            ]
+        });
+        $(document).ready(function () {
+            table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
+        });
+
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+
+        //檢視
+        $(document).on('click', "button[name = 'click03']", function () {
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Details", "PurchaseOrderReceiveDtls")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視進貨明細');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('#btnUpdate').hide();
+                $("#PurchaseOrderReceiveDtlCode").val(datas[0].PurchaseOrderReceiveDtlCode);
+                $("#PurchaseOrderReceiveID").val(datas[0].PurchaseOrderReceiveID);
+                $("#PurchaseOrderDtlCode").val(datas[0].PurchaseOrderDtlCode);
+                $("#PurchaseQty").val(datas[0].PurchaseQty);
+                $("#PurchaseAmount").val(datas[0].PurchaseAmount);
+                $("#RejectQty").val(datas[0].RejectQty);
+                $("#AcceptQty").val(datas[0].AcceptQty);
+                $("#RejectReason").val(datas[0].RejectReason);
+                $("#Remark").val(datas[0].Remark);
+            })
+        });
+
+        //更新
+        var sell;
+        var sell01;
+        $(document).on('click', "td", function () {
+            var rowss = $(this).closest("tr");  //抓取列
+            var celss = $(this).siblings("#cel"); //抓取欄
+            sell = table.row(rowss).cell(celss);
+            var celss01 = $(this).siblings("#cel01"); //抓取欄
+            sell01 = table.row(rowss).cell(celss01);
+        })
+        var oidd = 0;
+        $(document).on('click', "button[name = 'click04']", function () {
+            let id1 = (this.dataset.dc);
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            oidd = id1;
+            $.getJSON("@Url.Action("Details", "PurchaseOrderReceiveDtls")/" + id1, function (datas) {
+                $('#ModalTitle').text('修改進貨明細');
+                $('*[name="da"]').attr('disabled', false);
+                $('*[name="dta"]').attr('disabled', true);
+                $('#btnUpdate').show();
+                $("#PurchaseOrderReceiveDtlCode").val(datas[0].PurchaseOrderReceiveDtlCode);
+                $("#PurchaseOrderReceiveID").val(datas[0].PurchaseOrderReceiveID);
+                $("#PurchaseOrderDtlCode").val(datas[0].PurchaseOrderDtlCode);
+                $("#PurchaseQty").val(datas[0].PurchaseQty);
+                $("#PurchaseAmount").val(datas[0].PurchaseAmount);
+                $("#RejectQty").val(datas[0].RejectQty);
+                $("#AcceptQty").val(datas[0].AcceptQty);
+                $("#RejectReason").val(datas[0].RejectReason);
+                $("#Remark").val(datas[0].Remark);
+            })
+        });
+
+        $('#btnUpdate').click(function () {
+            var purchdtlsObj = {
+                    PurchaseOrderReceiveDtlCode: $("#PurchaseOrderReceiveDtlCode").val(),
+                    PurchaseOrderReceiveID: $("#PurchaseOrderReceiveID").val(),
+                    PurchaseOrderDtlCode: $("#PurchaseOrderDtlCode").val(),
+                    PurchaseQty: $("#PurchaseQty").val(),
+                    PurchaseAmount:$("#PurchaseAmount").val(),
+                    RejectQty:$("#RejectQty").val(),
+                    AcceptQty:$("#AcceptQty").val(),
+                    RejectReason:$("#RejectReason").val(),
+                    Remark: $("#Remark").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Edit", "PurchaseOrderReceiveDtls")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(purchdtlsObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        sell.data(response.rqty).draw(false);
+                        sell01.data(response.aqty).draw(false);
+                    }
+                }).fail(function(response){
+                    toastr.error(response.message, "警告");
+                })
+            $('#StockInModal').modal('hide');
+        })
+
+    </script>
+
+}
+
+
+<!--Modal-->
+<div class="modal fade bd-example-modal-lg" id="StockInModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group" name="hidden1">
+                        <label for="PurchaseOrderReceiveDtlCode" name="dta">@Html.DisplayNameFor(model => model.PurchaseOrderReceiveDtlCode)</label>
+                        <input type="text" class="form-control" id="PurchaseOrderReceiveDtlCode" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="PurchaseOrderReceiveID">@Html.DisplayNameFor(model => model.PurchaseOrderReceiveID)</label>
+                        <br />
+                        <input type="text" class="form-control" id="PurchaseOrderReceiveID" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="PurchaseOrderDtlCode">@Html.DisplayNameFor(model => model.PurchaseOrderDtlCode)</label>
+                        <input type="text" class="form-control" id="PurchaseOrderDtlCode" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden2">
+                        <label for="PurchaseQty">@Html.DisplayNameFor(model => model.PurchaseQty)</label>
+                        <input type="text" class="form-control" id="PurchaseQty" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden3">
+                        <label for="PurchaseAmount">@Html.DisplayNameFor(model => model.PurchaseAmount)</label>
+                        <input type="text" class="form-control" id="PurchaseAmount" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden2">
+                        <label for="RejectQty">@Html.DisplayNameFor(model => model.RejectQty)</label>
+                        <input type="number" class="form-control" id="RejectQty" name="da">
+                    </div>
+                    <div class="form-group" name="hidden2">
+                        <label for="AcceptQty">@Html.DisplayNameFor(model => model.AcceptQty)</label>
+                        <input type="number" class="form-control" id="AcceptQty" name="da">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="RejectReason">@Html.DisplayNameFor(model => model.RejectReason)</label>
+                        <input type="text" class="form-control" id="RejectReason" name="da">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="Remark" name="dta">@Html.DisplayNameFor(model => model.Remark)</label>
+                        <input type="text" class="form-control" id="Remark" name="da">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="btnUpdate" type="button" class="btn btn-success">修改</button>
+            </div>
+        </div>
+    </div>
+</div>

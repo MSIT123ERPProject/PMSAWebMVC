@@ -215,16 +215,11 @@
                         }
                         @if (User.IsInRole("Buyer"))
                         {
-                            <li class="sidebar-dropdown nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-fw fa-folder"></i>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Index", "PurchaseOrderReceives",new { Area=""})">
+                                    <i class="fas fa-fw fa-table"></i>
                                     <span>進貨單</span>
                                 </a>
-                                <div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
-                                    @*<h6 class="dropdown-header">@PMSAWebMVC.Resources.AppResource.PartsMangement</h6>*@
-                                    <a class="dropdown-item" href="@Url.Action("Index", "PurchaseOrderReceives",new { Area=""})">進貨單總表</a>
-                                    <a class="dropdown-item" href="@Url.Action("Index", "PurchaseOrderReceiveDtls",new { Area=""})">進貨單明細</a>
-                                </div>
                             </li>
                         }
                         <li>

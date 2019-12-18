@@ -22,7 +22,7 @@ namespace PMSAWebMVC.Controllers
         }
 
         //入庫明細
-        public ActionResult IndexDtl(string id)
+        public ActionResult IndexDtls(string id)
         {
             var stockInDtl = db.StockInDtl.Where(w=>w.StockInID == id).Include(s => s.InventoryDtl).Include(s => s.Part).Include(s => s.StockIn);
             return View(stockInDtl.ToList());

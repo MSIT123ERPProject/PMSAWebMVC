@@ -33,97 +33,109 @@ namespace PMSAWebMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(purchaseOrderReceiveDtl);
+            
+            var datas = db.PurchaseOrderReceiveDtl.AsEnumerable().Where(w => w.PurchaseOrderReceiveDtlCode == id).
+                        Select(s => new
+                        {
+                            s.PurchaseOrderReceiveDtlCode,
+                            s.PurchaseOrderReceiveID,
+                            s.PurchaseOrderDtlCode,
+                            s.PurchaseQty,
+                            s.PurchaseAmount,
+                            s.RejectQty,
+                            s.AcceptQty,
+                            s.RejectReason,
+                            s.Remark
+                        });
+
+            return Json(datas, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: PurchaseOrderReceiveDtls/Create
-        public ActionResult Create()
+
+
+        //Create
+        public void Create(string suppid, string puchrid)
         {
-            ViewBag.PurchaseOrderDtlCode = new SelectList(db.PurchaseOrderDtl, "PurchaseOrderDtlCode", "PurchaseOrderID");
-            ViewBag.PurchaseOrderReceiveID = new SelectList(db.PurchaseOrderReceive, "PurchaseOrderReceiveID", "PurchaseOrderID");
-            return View();
-        }
-
-        // POST: PurchaseOrderReceiveDtls/Create
-        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
-        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PurchaseOrderReceiveDtlOID,PurchaseOrderReceiveDtlCode,PurchaseOrderReceiveID,PurchaseOrderDtlCode,PurchaseQty,PurchaseAmount,RejectQty,AcceptQty,RejectReason,Remark")] PurchaseOrderReceiveDtl purchaseOrderReceiveDtl)
-        {
-            if (ModelState.IsValid)
+            //PurchaseOrderDtlCode
+            //PurchaseQty
+            //PurchaseAmount
+            var podtlcode = db.ShipNoticeDtl.Where(w => w.ShipNoticeID == suppid).Select(s => new { s.PurchaseOrderDtlCode, s.ShipQty, s.ShipAmount }).ToList();
+            foreach (var item in podtlcode)
             {
-                db.PurchaseOrderReceiveDtl.Add(purchaseOrderReceiveDtl);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                //var q = db.PurchaseOrderReceiveDtl.Select(s => s.PurchaseOrderDtlCode);
+                //var q1 = db.ShipNoticeDtl.Select(s => s.PurchaseOrderDtlCode);
+                //var data1 = q.Except(q1);
+                //var data2 = data1.ToList();
+                //for(int i = 0; i < data2.Count(); i++)
+                //{
+                //    if(item.PurchaseOrderDtlCode == data2[i])
+                //    {
 
-            ViewBag.PurchaseOrderDtlCode = new SelectList(db.PurchaseOrderDtl, "PurchaseOrderDtlCode", "PurchaseOrderID", purchaseOrderReceiveDtl.PurchaseOrderDtlCode);
-            ViewBag.PurchaseOrderReceiveID = new SelectList(db.PurchaseOrderReceive, "PurchaseOrderReceiveID", "PurchaseOrderID", purchaseOrderReceiveDtl.PurchaseOrderReceiveID);
-            return View(purchaseOrderReceiveDtl);
-        }
+                //    }
+                //}
+                string pocode = $"{puchrid}-";
+                PurchaseOrderReceiveDtl purchaseOrderReceiveDtl = new PurchaseOrderReceiveDtl();
 
-        // GET: PurchaseOrderReceiveDtls/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //PurchaseOrderReceiveDtlCode
+                int count = db.PurchaseOrderReceiveDtl.Where(x => x.PurchaseOrderReceiveDtlCode.StartsWith(pocode)).Count();
+                count++;
+                pocode = $"{pocode}{count:000}";
+                purchaseOrderReceiveDtl.PurchaseOrderReceiveDtlCode = pocode;
+                //PurchaseOrderDtlCode
+                purchaseOrderReceiveDtl.PurchaseOrderDtlCode = item.PurchaseOrderDtlCode;
+                //PurchaseQty
+                purchaseOrderReceiveDtl.PurchaseQty = item.ShipQty;
+                //PurchaseAmount
+                purchaseOrderReceiveDtl.PurchaseAmount = item.ShipAmount;
+                //PurchaseOrderReceiveID
+                purchaseOrderReceiveDtl.PurchaseOrderReceiveID = puchrid;
+                //AcceptQty 可入庫數量
+                purchaseOrderReceiveDtl.AcceptQty = 0;
+                //RejectQty 驗退數量
+                purchaseOrderReceiveDtl.RejectQty = 0;
+                if (ModelState.IsValid)
+                {
+                    db.PurchaseOrderReceiveDtl.Add(purchaseOrderReceiveDtl);
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Data.Entity.Validation.DbEntityValidationException DbEntityValidationException = (System.Data.Entity.Validation.DbEntityValidationException)ex;
+                        throw DbEntityValidationException;
+                    }
+                }
             }
-            PurchaseOrderReceiveDtl purchaseOrderReceiveDtl = db.PurchaseOrderReceiveDtl.Find(id);
-            if (purchaseOrderReceiveDtl == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.PurchaseOrderDtlCode = new SelectList(db.PurchaseOrderDtl, "PurchaseOrderDtlCode", "PurchaseOrderID", purchaseOrderReceiveDtl.PurchaseOrderDtlCode);
-            ViewBag.PurchaseOrderReceiveID = new SelectList(db.PurchaseOrderReceive, "PurchaseOrderReceiveID", "PurchaseOrderID", purchaseOrderReceiveDtl.PurchaseOrderReceiveID);
-            return View(purchaseOrderReceiveDtl);
         }
+        
 
         // POST: PurchaseOrderReceiveDtls/Edit/5
         // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
         // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PurchaseOrderReceiveDtlOID,PurchaseOrderReceiveDtlCode,PurchaseOrderReceiveID,PurchaseOrderDtlCode,PurchaseQty,PurchaseAmount,RejectQty,AcceptQty,RejectReason,Remark")] PurchaseOrderReceiveDtl purchaseOrderReceiveDtl)
+        public ActionResult Edit(PurchaseOrderReceiveDtl purchaseOrderReceiveDtl)
         {
+            string message = "修改成功!!";
+            bool status = true;
             if (ModelState.IsValid)
             {
+                int rqty = purchaseOrderReceiveDtl.RejectQty;
+                int aqty = purchaseOrderReceiveDtl.AcceptQty;
                 db.Entry(purchaseOrderReceiveDtl).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(new { status = status, message = message, id = db.PurchaseOrderReceiveDtl.Max(x => x.PurchaseOrderReceiveDtlOID), rqty, aqty }, JsonRequestBehavior.AllowGet);
             }
-            ViewBag.PurchaseOrderDtlCode = new SelectList(db.PurchaseOrderDtl, "PurchaseOrderDtlCode", "PurchaseOrderID", purchaseOrderReceiveDtl.PurchaseOrderDtlCode);
-            ViewBag.PurchaseOrderReceiveID = new SelectList(db.PurchaseOrderReceive, "PurchaseOrderReceiveID", "PurchaseOrderID", purchaseOrderReceiveDtl.PurchaseOrderReceiveID);
-            return View(purchaseOrderReceiveDtl);
-        }
-
-        // GET: PurchaseOrderReceiveDtls/Delete/5
-        public ActionResult Delete(string id)
-        {
-            if (id == null)
+            else
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                message = "修改失敗!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
             }
-            PurchaseOrderReceiveDtl purchaseOrderReceiveDtl = db.PurchaseOrderReceiveDtl.Find(id);
-            if (purchaseOrderReceiveDtl == null)
-            {
-                return HttpNotFound();
-            }
-            return View(purchaseOrderReceiveDtl);
         }
 
-        // POST: PurchaseOrderReceiveDtls/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            PurchaseOrderReceiveDtl purchaseOrderReceiveDtl = db.PurchaseOrderReceiveDtl.Find(id);
-            db.PurchaseOrderReceiveDtl.Remove(purchaseOrderReceiveDtl);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

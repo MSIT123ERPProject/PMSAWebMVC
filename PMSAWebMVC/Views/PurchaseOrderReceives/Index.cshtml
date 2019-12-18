@@ -1,75 +1,238 @@
 ﻿@model IEnumerable<PMSAWebMVC.Models.PurchaseOrderReceive>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "進貨總表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        進貨總表
+    </div>
+    <div class="card-body">
+        <div>
+            <div style="float:right" id="dabtn"></div>
+        </div>
+        <div class="table-responsive">
+            <br />
+            <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr class="bg-primary text-white text-center">
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderReceiveID)</th>
+                        <th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>
+                        <th>廠商聯絡人</th>
+                        <th>@Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)</th>
+                        <th>@Html.DisplayNameFor(model => model.SignStatus)</th>
+                        <th>@Html.DisplayNameFor(model => model.PurchaseDate)</th>
+                        <th style="width:10%;">編輯</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        string date1 = String.Format("{0:yyyy/MM/dd}", item.PurchaseDate);
+                        string stuts = "";
+                        switch (item.SignStatus)
+                        {
+                            case "Y":
+                                stuts = "同意";
+                                break;
+                            case "N":
+                                stuts = "拒絕";
+                                break;
+                            case "S":
+                                stuts = "簽核中";
+                                break;
+                        }
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.PurchaseOrderReceiveID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PurchaseOrderID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SupplierAccount.ContactName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)</td>
+                            <td>@Html.DisplayFor(modelItem => stuts)</td>
+                            <td>@Html.DisplayFor(modelItem => date1)</td>
+                            <td class="table-data-feature">
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.PurchaseOrderReceiveID">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </span>
+                                @*<span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.PurchaseOrderReceiveID">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                </span>*@
+                                <button class="btn btn-outline-secondary btn-icon" title="進貨明細">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseOrderReceiveID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)" })</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PurchaseOrderReceiveOID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PurchaseDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SignStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Employee.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PurchaseOrder.SupplierCode)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SupplierAccount.ContactName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.PurchaseOrderReceiveOID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PurchaseDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SignStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Employee.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PurchaseOrder.SupplierCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SignFlow.OriginatorID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SupplierAccount.ContactName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PurchaseOrderReceiveID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PurchaseOrderReceiveID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PurchaseOrderReceiveID })
-        </td>
-    </tr>
+<style>
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: blueviolet;
+    }
+
+    .modal-title {
+        color: white;
+    }
+
+    .required:after {
+        margin: 2px;
+        content: '*';
+        color: red;
+    }
+
+    #bt {
+        border-style: none;
+    }
+</style>
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#dataTable').DataTable({
+                buttons: [
+                    'excel', 'pdf'
+                ]
+            });
+            table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
+        });
+
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+
+        //檢視
+        $(document).on('click', "button[name = 'click03']", function () {
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Details", "PurchaseOrderReceives")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視進貨總表');
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('#btnUpdate').hide();
+                $("#StockInID").val(datas[0].StockInID);
+                $("#PurchaseOrderReceiveID").val(datas[0].PurchaseOrderReceiveID);
+                $("#PurchaseOrderID").val(datas[0].PurchaseOrderID);
+                $("#PurchaseDate").val(datas[0].date);
+                $("#PurchaseEmployeeID").val(datas[0].emid1);
+                $("#SupplierCode").val(datas[0].scode1);
+                $("#SupplierAccountID").val(datas[0].supid1);
+                $("#SignStatus").val(datas[0].datastust);
+            })
+        });
+
+        //更新
+        $(document).on('click', "button[name = 'click04']", function () {
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Details", "PurchaseOrderReceives")/" + id1, function (datas) {
+                $('#ModalTitle').text('修改進貨總表');
+                $('*[name="da"]').attr('disabled', false);
+                $('*[name="dta"]').attr('disabled', true);
+                $('#btnUpdate').show();
+                $("#StockInID").val(datas[0].StockInID);
+                $("#PurchaseOrderReceiveID").val(datas[0].PurchaseOrderReceiveID);
+                $("#PurchaseOrderID").val(datas[0].PurchaseOrderID);
+                $("#PurchaseDate").val(datas[0].date);
+                $("#PurchaseEmployeeID").val(datas[0].emid1);
+                $("#SupplierCode").val(datas[0].scode1);
+                $("#SupplierAccountID").val(datas[0].supid1);
+                $("#SignStatus").val(datas[0].datastust);
+            })
+        });
+
+        $('#btnUpdate').click(function () {
+            var stockinObj = {
+                    StockInID:$("#StockInID").val(),
+                    PurchaseOrderReceiveID:$("#PurchaseOrderReceiveID").val(),
+                    SignStatus:$("#SignStatus").val(),
+                    CreateEmployeeID:$("#CreateEmployeeID").val(),
+                    CreateDate:$("#CreateDate").val(),
+                    Remark:$("#Remark").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Edit", "StockIns")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(stockinObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                    }
+                }).fail(function(response){
+                    toastr.error(response.message, "警告");
+                })
+            $('#StockInModal').modal('hide');
+        })
+
+    </script>
+
 }
 
-</table>
+
+<!--Modal-->
+<div class="modal fade bd-example-modal-lg" id="StockInModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label for="PurchaseOrderReceiveID" name="dta">@Html.DisplayNameFor(model => model.PurchaseOrderReceiveID)</label>
+                        <input type="text" class="form-control" id="PurchaseOrderReceiveID" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="PurchaseOrderID">@Html.DisplayNameFor(model => model.PurchaseOrderID)</label>
+                        <br />
+                        <input type="text" class="form-control" id="PurchaseOrderID" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="PurchaseEmployeeID">@Html.DisplayNameFor(model => model.PurchaseEmployeeID)</label>
+                        <br />
+                        <input type="text" class="form-control" id="PurchaseEmployeeID" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="SupplierCode" name="dta">進貨廠商</label>
+                        <input type="text" class="form-control" id="SupplierCode" name="dta">
+                    </div>
+                    <div class="form-group">
+                        <label for="SupplierAccountID">廠商聯絡人</label>
+                        <br />
+                        <input type="text" class="form-control" id="SupplierAccountID" name="dta">
+                    </div>
+                    <div class="form-group" name="dta">
+                        <label for="PurchaseDate">@Html.DisplayNameFor(model => model.PurchaseDate)</label>
+                        <input type="text" class="form-control" id="PurchaseDate" name="dta">
+                    </div>
+                    <div class="form-group" name="dta">
+                        <label for="SignStatus">@Html.DisplayNameFor(model => model.SignStatus)</label>
+                        <input type="text" class="form-control" id="SignStatus" name="dta">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="btnUpdate" type="button" class="btn btn-success">修改</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,6 @@
-﻿using PMSAWebMVC.Models;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using PMSAWebMVC.Models;
 using PMSAWebMVC.Utilities.YaChen;
 using PMSAWebMVC.ViewModels;
 using PMSAWebMVC.ViewModels.PurchaseOrders;
@@ -24,6 +26,27 @@ namespace PMSAWebMVC.Controllers
             db = new PMSAEntities();
             db.Database.Log = Console.Write;
             session = PurchaseOrderCreateSession.Current;
+        }
+
+        public PurchaseOrdersController(ApplicationSignInManager signInManager)
+        {
+            SignInManager = signInManager;
+        }
+
+        /// <summary>
+        /// 簽核驗證密碼使用
+        /// </summary>
+        private ApplicationSignInManager _signInManager;
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set
+            {
+                _signInManager = value;
+            }
         }
 
         // GET: PurchaseOrders
@@ -383,6 +406,19 @@ namespace PMSAWebMVC.Controllers
             {
                 sb.Append("登入密碼 為必填").Append(Environment.NewLine);
             }
+            else {
+                //取得目前登入者帳號(採購方)
+                var LoginId = User.Identity.GetUserName();
+
+                //結果回傳 true/false
+                bool result = Utilities.YangTing.checkPwd.isCorrectPwd(SignInManager, LoginId, model.POItem.SignPassword);
+
+                if (!result)
+                {
+                    sb.Append("登入密碼 輸入錯誤").Append(Environment.NewLine);
+                }
+            }
+
             if (sb.Length > 0)
             {
                 return Json(new { message = sb.ToString(), status = "warning" });

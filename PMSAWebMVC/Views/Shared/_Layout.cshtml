@@ -24,7 +24,7 @@
         <!-- Sidebar -->
         <div class="sidebar-content sidebar navbar-nav navbar-light" style="z-index:500">
             <!-- Navbar -->
-            <nav class="sidebar-wrapper navbar navbar-expand navbar-dark sidebar-menu sidebar nav">
+            <nav class="sidebar-wrapper navbar navbar-expand navbar-dark sidebar-menu sidebar nav" style="height:120px;">
                 <div class="sidebar-menu">
                     <ul>
                         <li class="d-flex align-items-center justify-content-center">
@@ -42,6 +42,8 @@
                                 }
                             </div>
                         </li>
+                    </ul>
+                    <ul class="middleUl">
                         <li class="sidebar-dropdown nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div id="userwrap">
@@ -104,14 +106,14 @@
                                 </a>
                             </li>
                             @*<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-fw fa-folder"></i>
-                                    <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
-                                </a>*@
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
+                    </a>*@
                             @*<div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
-                                @Html.ActionLink("訂單管理", "Index", "Orders", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-                                @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
+                    @Html.ActionLink("訂單管理", "Index", "Orders", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                    @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                    @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                    @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
                             @* </div>*@
 
                         }
@@ -150,7 +152,7 @@
                                     <span>角色管理</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item pagesDropdown">
                                 <a class="nav-link" href="@Url.Action("Index", "UsersAdmin")">
                                     <i class="fas fa-fw fa-table"></i>
                                     <span>採購方帳號管理</span>
@@ -164,7 +166,7 @@
                         }
                         @if (User.IsInRole("Buyer"))
                         {
-                            <li class="sidebar-dropdown nav-item dropdown">
+                            <li class="sidebar-dropdown nav-item dropdown pagesDropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-fw fa-folder"></i>
                                     <span>供應商管理</span>
@@ -178,7 +180,7 @@
                         }
                         @if (User.IsInRole("Buyer"))
                         {
-                            <li class="sidebar-dropdown nav-item dropdown">
+                            <li class="sidebar-dropdown nav-item dropdown pagesDropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-fw fa-folder"></i>
                                     <span>@PMSAWebMVC.Resources.AppResource.PartsMangement</span>
@@ -218,18 +220,18 @@
                             </li>
                         }
                     </ul>
-                    <ul style="position: sticky; bottom: -8px; width: 100%;">
-                        <li class="bottomLi" style="position: sticky;bottom: -8px;">
-                            @Html.Partial("_LanguagePartial")
-                            <form action="@Url.Action( "LogOff", "Account",new { Area=""})" method="post" style="width: 100%;">
-                                @Html.AntiForgeryToken()
-                                <span class="logoff dropdown-item nav-link">
-                                    <button type="submit"><i class="fas fa-power-off" style="font-size:15px"></i> 登出</button>
-                                </span>
-                            </form>
-                        </li>
-                    </ul>
                 </div>
+                <ul id="bottomUl">
+                    <li class="bottomLi">
+                        @Html.Partial("_LanguagePartial")
+                        <form action="@Url.Action( "LogOff", "Account",new { Area=""})" method="post" style="width: 100%;">
+                            @Html.AntiForgeryToken()
+                            <span class="logoff dropdown-item nav-link">
+                                <button type="submit"><i class="fas fa-power-off" style="font-size:15px"></i></button>
+                            </span>
+                        </form>
+                    </li>
+                </ul>
             </nav>
         </div>
         <!-- Content Wrapper -->

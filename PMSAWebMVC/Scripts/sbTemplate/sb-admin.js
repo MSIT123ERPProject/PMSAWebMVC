@@ -3,13 +3,27 @@
 
     // Toggle the side navigation
     $("#sidebarToggle").on('click', function (e) {
+
+        if ($(".pagesDropdown").hasClass('active')) {
+            $(".pagesDropdown").removeClass("active");
+            //展開
+            $(".sidebar").removeClass("toggled");
+            //顯示頭像
+            $("#userwrap").removeClass("d-none");
+            $("#userwrap").addClass("d-block");
+            //顯示頭像字
+            $(".userwrap").removeClass("d-none");
+            $(".userwrap").addClass("d-block");
+            //顯示brand
+            $("#navbrand").removeClass("d-none");
+            $("#navbrand").addClass("d-block");
+        }
+
         //阻止事件冒泡，修正DataTables在Sidebar縮小後跑版，另外其他內容也會在縮小後跑版
         e.stopPropagation();
         e.preventDefault();
         $(".sidebar").toggleClass("toggled");
-        $("#userwrap").toggleClass("d-none");
         $("#userwrap").toggleClass("d-block");
-        $("#navbrand").toggleClass("d-none");
         $("#navbrand").toggleClass("d-block");
         if ($(".sidebar").width() < 140) {
             $(".userwrap").addClass("d-none");
@@ -144,23 +158,42 @@ $("#show-sidebar").click(function () {
     $(".page-wrapper").addClass("toggled");
 });
 
-$("#pagesDropdown").click(function (e) {
+
+//點到摺疊就展開
+$(".pagesDropdown").click(function (e) {
+    console.log("hi")
     //阻止事件冒泡，修正DataTables在Sidebar縮小後跑版，另外其他內容也會在縮小後跑版
     e.stopPropagation();
     e.preventDefault();
-    $(".sidebar").toggleClass("toggled");
-    $("#userwrap").toggleClass("d-none");
-    $("#userwrap").toggleClass("d-block");
-    $("#navbrand").toggleClass("d-none");
-    $("#navbrand").toggleClass("d-block");
-    if ($(".sidebar").width() < 140) {
-        $(".userwrap").addClass("d-none");
-        $(".userwrap").removeClass("d-block");
-        $("#navbrand").addClass("d-none");
-        $("#navbrand").removeClass("d-block");
-    } else {
-        $(".userwrap").removeClass("d-none");
-        $(".userwrap").addClass("d-block");
-    }
+    //展開
+    $(".sidebar").removeClass("toggled");
+    //顯示頭像
+    $("#userwrap").removeClass("d-none");
+    $("#userwrap").addClass("d-block");
+    //顯示頭像字
+    $(".userwrap").removeClass("d-none");
+    $(".userwrap").addClass("d-block");
+    //顯示brand
+    $("#navbrand").removeClass("d-none");
+    $("#navbrand").addClass("d-block");
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
+});
+
+$("#userDropdown").click(function (e) {
+    console.log("hi")
+    //阻止事件冒泡，修正DataTables在Sidebar縮小後跑版，另外其他內容也會在縮小後跑版
+    e.stopPropagation();
+    e.preventDefault();
+    //展開
+    $(".sidebar").removeClass("toggled");
+    //顯示頭像
+    $("#userwrap").removeClass("d-none");
+    $("#userwrap").addClass("d-block");
+    //顯示頭像字
+    $(".userwrap").removeClass("d-none");
+    $(".userwrap").addClass("d-block");
+    //顯示brand
+    $("#navbrand").removeClass("d-none");
+    $("#navbrand").addClass("d-block");
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
 });

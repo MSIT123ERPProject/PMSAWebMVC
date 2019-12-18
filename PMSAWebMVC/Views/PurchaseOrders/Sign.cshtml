@@ -1,0 +1,184 @@
+﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.POSendToSupplierViewModel.SendToSupplierViewModel
+
+@section styles{
+    <link href="~/Content/Views/_PurchaseOrdersDetailsPartial.css" rel="stylesheet" />
+    <style>
+    </style>
+}
+
+@{
+    ViewBag.Title = "簽核採購單";
+}
+
+<h2 class="text-dark">@ViewBag.Title</h2>
+
+@*採購單簽核*@
+
+<h6 class="note note-editor text-muted small">確認內容無誤後，請點選<span class="text-danger">進行簽核</span>按鈕，完成簽核動作</h6>
+<button type="button" class="btn btn-primary btn-lg waves-effect waves-light mb-2" data-toggle="modal" data-target="#fluidModalLeftInfoDemo"><i class="fas fa-clipboard-check"></i> 進行簽核</button>
+
+<!-- Full Height Modal Left Info Demo-->
+<div class="modal fade left" id="fluidModalLeftInfoDemo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog modal-full-height modal-left modal-notify modal-info" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead"><i class="fas fa-clipboard-check"></i> 簽核</p>
+                <button type="button" class="btn btn-primary" id="btnSignDemo">Demo</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+
+            <!--Body-->
+            <div class="modal-body pt-0 pb-0 d-flex justify-content-center">
+                @using (Html.BeginForm("Sign", "PurchaseOrders", FormMethod.Post, new { @id = "formSignPurchaseOrders" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(m => m.POItem.PurchaseOrderID)
+                    @Html.HiddenFor(m => m.POItem.SignFlowOID)
+                    @Html.HiddenFor(m => m.POItem.SignFlowDtlOID)
+                    @Html.HiddenFor(m => m.POItem.SignStatus)
+
+                    <!-- Stepers Wrapper -->
+                    <ul class="stepper stepper-vertical p-0 m-0">
+
+                        <!-- First Step -->
+                        <li class="active">
+                            <a href="#" class="text-decoration-none">
+                                <span class="circle">1</span>
+                                <span class="label">第一步 資料輸入</span>
+                            </a>
+
+                            <div class="step-content grey lighten-4">
+                                <small><strong>簽核人</strong></small>
+                                <br>
+                                <p class="text-muted">@Model.POItem.ApprovingOfficerName</p>
+
+                                <small><strong>@Html.DisplayNameFor(m => m.POItem.SignStatus)</strong></small>
+                                <br>
+                                <div id="tab" class="btn-group btn-group-toggle btn-block mb-2" data-toggle="buttons">
+                                    <a href="#" class="btn btn-outline-primary p-1 d-flex justify-content-center" data-toggle="tab"><input type="radio" name="statusCode" value="Y" autocomplete="off">同意</a>
+                                    <a href="#" class="btn btn-outline-primary p-1 d-flex justify-content-center" data-toggle="tab"><input type="radio" name="statusCode" value="N" autocomplete="off">拒絕</a>
+                                </div>
+                                <br />
+
+                                <div class="md-form">
+                                    <i class="fas fa-pencil-alt prefix text-primary"></i>
+                                    @Html.TextAreaFor(m => m.POItem.SignOpinion, 2, 20, new { @class = "md-textarea form-control", maxlength = 128 })
+                                    <label for="signOpinion">簽核意見</label>
+                                </div>
+
+                            </div>
+                        </li>
+
+                        <!-- Second Step -->
+                        <li class="active">
+
+                            <!--Section Title -->
+                            <a href="#" class="text-decoration-none">
+                                <span class="circle">2</span>
+                                <span class="label">第二步 身份驗證</span>
+                            </a>
+
+                            <!-- Section Description -->
+                            <div class="step-content grey lighten-4">
+                                <div class="md-form">
+                                    <i class="fas fa-lock prefix text-primary"></i>
+                                    @Html.PasswordFor(m => m.POItem.SignPassword, new { @class = "form-control" })
+                                    <label for="signValidation">登入密碼</label>
+                                </div>
+
+                                <button id="btnSignSubmit" type="button" class="btn btn-primary btn-block">送出</button>
+                            </div>
+                        </li>
+
+                        <li class="completed">
+                            <a href="#" class="text-decoration-none">
+                                <span class="circle">3</span>
+                                <span class="label">完成簽核</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                    <!-- /.Stepers Wrapper -->
+                }
+            </div>
+
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+
+@Html.Partial("_DetailsPartial")
+
+@section scripts{
+    <script src="~/Scripts/Views/_PurchaseOrdersDetailsPartial.js"></script>
+    <script>
+
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+        }
+
+        //簽核狀態點擊
+        $("body").on('click', ".btn-group-toggle a[data-toggle='tab']", function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            let signStatusCode = $(this).children("input[type=radio]").val();
+            $("#POItem_SignStatus").val(signStatusCode);
+        });
+
+        //Demo鍵點擊
+        $("body").on('click', "#btnSignDemo", function () {
+            $("input[type='radio'][value='Y']").trigger("click");
+            $("#POItem_SignOpinion").trigger("focus").val("內容無誤，準予同意");
+            $("#POItem_SignPassword").trigger("focus").val("P@ssw0rd");
+        });
+
+        //送出簽核
+        $("body").on('click', "#btnSignSubmit", function () {
+            let result = true;
+            //let temp = $(".btn-group-toggle a[data-toggle='tab']").hasClass("active");
+            let temp = $("#POItem_SignStatus").val() != "S";
+            result = result && temp;
+            if (!temp) {
+                toastr.warning("簽核狀態 為必填", "", { timeOut: "6000" });
+            }
+            temp = $("#POItem_SignPassword").val() != "";
+            result = result && temp;
+            if (!temp) {
+                toastr.warning("登入密碼 為必填", "", { timeOut: "6000" });
+            }
+            $(this).prop("disabled", true);
+            if (result) {
+                updatePOSignStatus();
+            }
+        });
+
+        async function updatePOSignStatus() {
+            await $.ajax({
+                type: "POST",
+                url: "@Url.Action("Sign", "PurchaseOrders")",
+                data: $("#formSignPurchaseOrders").serialize(),
+            }).done(function (result) {
+                if (result.status == "success") {
+                    toastr.success(result.message);
+                    setTimeout(function () {
+                        location.href = '@Url.Action("Index", "PurchaseOrders")';
+                    }, 1000);
+                } else if (result.status == "warning") {
+                    toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'), "", { timeOut: 6000 });
+                }
+                    $("#btnSignSubmit").prop("disabled", false);
+                }).fail(function (e) {
+                    toastr.error(e.responseText);
+                    $("#btnSignSubmit").prop("disabled", false);
+                });
+        }
+
+    </script>
+
+}

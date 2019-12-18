@@ -8,6 +8,7 @@ using PMSAWebMVC.ViewModels.ShipNotices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -71,7 +72,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                        where po.PurchaseOrderStatus == "P" && po.SupplierCode == supplierCode
                        select new
                        {
-                           PurchaseOrderID = po.PurchaseOrderID
+                           po.PurchaseOrderID
                        };
             var s = qpoP.ToList();
             List<SelectListItem> orderList = new List<SelectListItem>();
@@ -203,15 +204,31 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
         //此方法為答交按鈕的方法，此功能為辰哥負責
         public async Task<JsonResult> OrderApply(string orderID)
         {
-            ///////////////////////////////////////////////////
             //取得供應商帳號資料
             SupplierAccount supplier = User.Identity.GetSupplierAccount();
             string supplierAccount = supplier.SupplierAccountID;
             string supplierCode = supplier.SupplierCode;
-            ////////////////////////////////////////////////////
-            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
 
             //供應商答交程式碼
+            if (string.IsNullOrWhiteSpace(orderID))
+            {
+                return Json("fail", JsonRequestBehavior.AllowGet);
+            }
+            PurchaseOrder orderUpdate = db.PurchaseOrder.Find(orderID);
+            if (orderUpdate == null)
+            {
+                return Json("fail", JsonRequestBehavior.AllowGet);
+            }
+            orderUpdate.PurchaseOrderStatus = "E";
+            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
+            if (!utilities.AddAPOChanged(orderUpdate, supplierAccount, supplierCode))
+            {
+                return Json("fail", JsonRequestBehavior.AllowGet);
+            }
+            db.Entry(orderUpdate).State = EntityState.Modified;
+            db.SaveChanges();
+            await SendMailToBuyer(orderUpdate, "已答交", null);
+            return Json("success", JsonRequestBehavior.AllowGet);
 
             var q = from poc in db.POChanged
                         //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
@@ -228,12 +245,31 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             {
                 return Json("fail", JsonRequestBehavior.AllowGet);
             }
+//<<<<<<< HEAD
             PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
                                    where po.PurchaseOrderID == orderID
                                    select po).SingleOrDefault();
             if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
             {
                 return Json("fail", JsonRequestBehavior.AllowGet);
+//=======
+            else
+            {
+                PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
+                                       where po.PurchaseOrderID == orderID
+                                       select po).SingleOrDefault();
+                if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
+                {
+                    return Json("fail", JsonRequestBehavior.AllowGet);
+                }
+                //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
+                order.PurchaseOrderStatus = "E";
+                db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+
+                db.SaveChanges();
+                await SendMailToBuyer(order, "已答交", null);
+                return Json("success", JsonRequestBehavior.AllowGet);
+//>>>>>>> 802426d1abd7d38d1f6e79d3378d39e1746e0b09
             }
             //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
             order.PurchaseOrderStatus = "W";
@@ -255,6 +291,10 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             ////////////////////////////////////////////////////
             ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             PurchaseOrder purchaseOrder = db.PurchaseOrder.Find(orderID);
+            if (purchaseOrder == null)
+            {
+                return Json("fail", JsonRequestBehavior.AllowGet);
+            }
             //狀態異動中=C
             purchaseOrder.PurchaseOrderStatus = "C";
             utilities.AddAPOChanged(purchaseOrder, supplierAccount, supplierCode);

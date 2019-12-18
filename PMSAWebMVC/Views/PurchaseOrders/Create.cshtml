@@ -569,7 +569,7 @@
                         toastr.success(result.message);
                         setTimeout(function () {
                              location.href = '@Url.Action("Index", "PurchaseOrders")';
-                        }, 2000);
+                        }, 1000);
                     }
                 }).fail(function (e) {
                     toastr.error(e.responseText);

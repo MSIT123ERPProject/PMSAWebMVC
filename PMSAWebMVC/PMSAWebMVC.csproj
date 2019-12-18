@@ -2422,6 +2422,7 @@
     <Content Include="Views\PurchaseOrders\Details.cshtml" />
     <Content Include="Views\PurchaseRequisitions\Confirm.cshtml" />
     <Content Include="Views\PurchaseRequisitions\_Confirm.cshtml" />
+<<<<<<< HEAD
     <Content Include="Views\PurchaseOrderReceives\Create.cshtml" />
     <Content Include="Views\PurchaseOrderReceives\Delete.cshtml" />
     <Content Include="Views\PurchaseOrderReceives\Details.cshtml" />
@@ -2434,6 +2435,10 @@
     <Content Include="Views\PurchaseOrderReceiveDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrderReceives\IndexDtl.cshtml" />
     <Content Include="Views\StockIns\IndexDtls.cshtml" />
+<!--=======-->
+    <Content Include="Views\PurchaseOrders\Sign.cshtml" />
+    <Content Include="Views\PurchaseOrders\OrderCommitments.cshtml" />
+<!-->>>>>>> 802426d1abd7d38d1f6e79d3378d39e1746e0b09-->
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

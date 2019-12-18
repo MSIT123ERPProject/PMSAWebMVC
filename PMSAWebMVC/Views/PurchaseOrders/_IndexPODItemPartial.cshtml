@@ -35,6 +35,23 @@
                             <i class="far fa-eye"></i>
                         </a>
 
+@*<<<<<<< HEAD
+=======*@
+                        @if (User.IsInRole("Buyer") && User.IsInRole("Manager") && (item.PurchaseOrderStatus == "N" || item.PurchaseOrderStatus == "C") && item.SignStatus == "S")
+                        {
+                            <a href="@Url.Action("Sign","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="簽核">
+                                <i class="fas fa-clipboard-check"></i>
+                            </a>
+                        }
+
+                        @if (User.IsInRole("Buyer") && !User.IsInRole("Manager") && item.PurchaseOrderStatus == "E")
+                        {
+                            <a href="@Url.Action("OrderCommitments","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="答交">
+                                <i class="fas fa-check-double"></i>
+                            </a>
+                        }
+
+@*>>>>>>> 802426d1abd7d38d1f6e79d3378d39e1746e0b09*@
                         @*<span data-toggle="modal" data-target="#detailModal">
                                 <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
                                     <i class="far fa-edit"></i>

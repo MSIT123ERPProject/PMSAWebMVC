@@ -143,3 +143,24 @@ $("#close-sidebar").click(function () {
 $("#show-sidebar").click(function () {
     $(".page-wrapper").addClass("toggled");
 });
+
+$("#pagesDropdown").click(function (e) {
+    //阻止事件冒泡，修正DataTables在Sidebar縮小後跑版，另外其他內容也會在縮小後跑版
+    e.stopPropagation();
+    e.preventDefault();
+    $(".sidebar").toggleClass("toggled");
+    $("#userwrap").toggleClass("d-none");
+    $("#userwrap").toggleClass("d-block");
+    $("#navbrand").toggleClass("d-none");
+    $("#navbrand").toggleClass("d-block");
+    if ($(".sidebar").width() < 140) {
+        $(".userwrap").addClass("d-none");
+        $(".userwrap").removeClass("d-block");
+        $("#navbrand").addClass("d-none");
+        $("#navbrand").removeClass("d-block");
+    } else {
+        $(".userwrap").removeClass("d-none");
+        $(".userwrap").addClass("d-block");
+    }
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust().responsive.recalc().draw();
+});

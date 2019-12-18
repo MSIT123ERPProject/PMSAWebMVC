@@ -131,6 +131,25 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             public string ReceiptAddress { get; set; }
             [Display(Name = "簽核狀態")]
             public string SignStatus { get; set; }
+            [Display(Name = "主管簽核")]
+            public string SignStatusToShow
+            {
+                get
+                {
+                    switch (SignStatus)
+                    {
+                        case "Y":
+                            return "同意";
+                        case "N":
+                            return "拒絕";
+                        case "S":
+                            return "等待簽核中";
+                        default:
+                            return "";
+                    }
+                }
+                private set { }
+            }
             public Nullable<int> SignFlowOID { get; set; }
             public Nullable<int> SignFlowDtlOID { get; set; }
             [Display(Name = "簽核人姓名")]

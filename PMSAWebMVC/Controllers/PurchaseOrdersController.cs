@@ -398,7 +398,7 @@ namespace PMSAWebMVC.Controllers
         {
             //欄位驗證
             StringBuilder sb = new StringBuilder();
-            if (model.POItem.SignStatus == "S")
+            if (model.POItem.SignStatus != "Y" && model.POItem.SignStatus != "N")
             {
                 sb.Append("簽核狀態 為必填").Append(Environment.NewLine);
             }
@@ -406,13 +406,12 @@ namespace PMSAWebMVC.Controllers
             {
                 sb.Append("登入密碼 為必填").Append(Environment.NewLine);
             }
-            else {
+            else
+            {
                 //取得目前登入者帳號(採購方)
                 var LoginId = User.Identity.GetUserName();
-
                 //結果回傳 true/false
                 bool result = Utilities.YangTing.checkPwd.isCorrectPwd(SignInManager, LoginId, model.POItem.SignPassword);
-
                 if (!result)
                 {
                     sb.Append("登入密碼 輸入錯誤").Append(Environment.NewLine);
@@ -424,13 +423,29 @@ namespace PMSAWebMVC.Controllers
                 return Json(new { message = sb.ToString(), status = "warning" });
             }
 
+            //更新簽核狀態
+            SignFlowDtl sfd = db.SignFlowDtl.Find(model.POItem.SignFlowDtlOID);
+            sfd.SignOpinion = model.POItem.SignOpinion;
+            sfd.SignStatusCode = model.POItem.SignStatus;
+            sfd.SignDate = DateTime.Now;
+            db.Entry(sfd).State = EntityState.Modified;
+            db.SaveChanges();
 
+            SignFlow sf = db.SignFlow.Find(model.POItem.SignFlowOID);
+            sf.SignStatusCode = model.POItem.SignStatus;
+            db.Entry(sf).State = EntityState.Modified;
+            db.SaveChanges();
 
-            return new EmptyResult();
+            PurchaseOrder po = db.PurchaseOrder.Find(model.POItem.PurchaseOrderID);
+            po.SignStatus = model.POItem.SignStatus;
+            db.Entry(po).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return Json(new { message = "簽核成功", status = "success" });
         }
 
-            // GET: PurchaseOrders/Create
-            public ActionResult Create()
+        // GET: PurchaseOrders/Create
+        public ActionResult Create()
         {
             PurchaseOrderCreateViewModel model = new PurchaseOrderCreateViewModel();
             ConfigureCreateViewModel(model);

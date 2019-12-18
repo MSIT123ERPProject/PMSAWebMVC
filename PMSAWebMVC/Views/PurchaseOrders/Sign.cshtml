@@ -157,7 +157,7 @@
             if (!temp) {
                 toastr.warning("登入密碼 為必填", "", { timeOut: "6000" });
             }
-
+            $(this).prop("disabled", true);
             if (result) {
                 updatePOSignStatus();
             }
@@ -177,6 +177,7 @@
                     } else if (result.status == "warning") {
                         toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'), "", { timeOut: 6000 });
                     }
+                    $("#btnSignSubmit").prop("disabled", false);
                 }).fail(function (e) {
                     toastr.error(e.responseText);
                 });

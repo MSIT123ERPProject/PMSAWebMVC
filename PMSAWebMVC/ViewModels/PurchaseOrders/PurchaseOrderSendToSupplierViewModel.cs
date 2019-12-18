@@ -135,6 +135,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             public Nullable<int> SignFlowDtlOID { get; set; }
             [Display(Name = "簽核人姓名")]
             public string ApprovingOfficerName { get; set; }
+            [Display(Name = "簽核意見")]
+            public string SignOpinion { get; set; }
+            [Display(Name = "簽核身份驗證密碼")]
+            public string SignPassword { get; set; }
             [Display(Name = "電子信箱")]
             public string Email { get; set; }
             [Display(Name = "聯絡電話")]

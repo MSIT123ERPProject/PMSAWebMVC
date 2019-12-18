@@ -369,8 +369,32 @@ namespace PMSAWebMVC.Controllers
             return View(vm);
         }
 
-        // GET: PurchaseOrders/Create
-        public ActionResult Create()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Sign([Bind(Include = "POInfoItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        {
+            //欄位驗證
+            StringBuilder sb = new StringBuilder();
+            if (model.POItem.SignStatus == "S")
+            {
+                sb.Append("簽核狀態 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(model.POItem.SignPassword))
+            {
+                sb.Append("登入密碼 為必填").Append(Environment.NewLine);
+            }
+            if (sb.Length > 0)
+            {
+                return Json(new { message = sb.ToString(), status = "warning" });
+            }
+
+
+
+            return new EmptyResult();
+        }
+
+            // GET: PurchaseOrders/Create
+            public ActionResult Create()
         {
             PurchaseOrderCreateViewModel model = new PurchaseOrderCreateViewModel();
             ConfigureCreateViewModel(model);

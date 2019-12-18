@@ -641,8 +641,8 @@ namespace PMSAWebMVC.Controllers
 
         //
         // POST: /Account/LogOff
-        [HttpGet]
-        //[ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);

@@ -71,8 +71,6 @@
                                     <a class="dropdown-item" href="@Url.Action("Index", "SupSetting", new { Area = "SupplierArea" })">基本資料設定</a>
                                 }
                                 <a class="dropdown-item" href="@Url.Action("ResetPassword", "Account", new { Area = "" })">重設密碼</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" style="font-weight: 600;letter-spacing:2px;" href="@Url.Action( "LogOff", "Account",new { Area=""})"><i class="fas fa-power-off"></i>登出</a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -106,15 +104,15 @@
                                 </a>
                             </li>
                             @*<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
-            </a>*@
+                                    <i class="fas fa-fw fa-folder"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
+                                </a>*@
                             @*<div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
                                 @Html.ActionLink("訂單管理", "Index", "Orders", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
                                 @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
                                 @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
                                 @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
-                           @* </div>*@
+                            @* </div>*@
 
                         }
                         @if (User.IsInRole("Warehouse"))
@@ -219,8 +217,16 @@
                                 </a>
                             </li>
                         }
-                        <li>
+                    </ul>
+                    <ul style="position: sticky; bottom: -8px; width: 100%;">
+                        <li class="bottomLi" style="position: sticky;bottom: -8px;">
                             @Html.Partial("_LanguagePartial")
+                            <form action="@Url.Action( "LogOff", "Account",new { Area=""})" method="post" style="width: 100%;">
+                                @Html.AntiForgeryToken()
+                                <span class="logoff dropdown-item nav-link">
+                                    <button type="submit"><i class="fas fa-power-off" style="font-size:15px"></i> 登出</button>
+                                </span>
+                            </form>
                         </li>
                     </ul>
                 </div>

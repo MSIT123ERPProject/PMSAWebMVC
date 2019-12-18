@@ -2434,7 +2434,6 @@
     <Content Include="Views\PurchaseOrderReceiveDtls\Index.cshtml" />
     <Content Include="Views\PurchaseOrderReceives\IndexDtl.cshtml" />
     <Content Include="Views\StockIns\IndexDtls.cshtml" />
-    <Content Include="Views\PurchaseOrders\Sign.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

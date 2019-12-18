@@ -213,61 +213,35 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 
             //供應商答交程式碼
 
-            var qP = (from poc in db.POChanged
-                          //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
-                          //into s
-                          //from po in s.DefaultIfEmpty()
-                      where poc.RequesterRole == "P" && poc.PurchaseOrderID == orderID
-                      select new
-                      {
-                          poc.PurchaseOrderID,
-                          poc.RequesterRole,
-                          poc.POChangedCategoryCode,
-                      }).Where(x => x.POChangedCategoryCode == "E");
-            var qS = (from poc in db.POChanged
-                          //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
-                          //into s
-                          //from po in s.DefaultIfEmpty()
-                      where poc.RequesterRole == "S" && poc.PurchaseOrderID == orderID
-                      select new
-                      {
-                          poc.PurchaseOrderID,
-                          poc.RequesterRole,
-                          poc.POChangedCategoryCode,
-                      }).Where(x => x.POChangedCategoryCode == "E");
-            if (qP.Count() != 0)
+            var q = from poc in db.POChanged
+                        //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
+                        //into s
+                        //from po in s.DefaultIfEmpty()
+                    where poc.RequesterRole == "P" && poc.PurchaseOrderID == orderID
+                    select new
+                    {
+                        poc.PurchaseOrderID,
+                        poc.RequesterRole,
+                    };
+            var t = q.ToList();
+            if (q.Count() == 0 || q.Count() == null)
             {
-                PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
-                                       where po.PurchaseOrderID == orderID
-                                       select po).SingleOrDefault();
-                if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
-                {
-                    return Json("fail", JsonRequestBehavior.AllowGet);
-                }
-                //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
-                order.PurchaseOrderStatus = "W";
-                db.Entry(order).State = System.Data.Entity.EntityState.Modified;
-
-                db.SaveChanges();
-                await SendMailToBuyer(order, "已答交", null);
-                return Json("success", JsonRequestBehavior.AllowGet);
+                return Json("fail", JsonRequestBehavior.AllowGet);
             }
-            else {
-                PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
-                                       where po.PurchaseOrderID == orderID
-                                       select po).SingleOrDefault();
-                if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
-                {
-                    return Json("fail", JsonRequestBehavior.AllowGet);
-                }
-                //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
-                order.PurchaseOrderStatus = "E";
-                db.Entry(order).State = System.Data.Entity.EntityState.Modified;
-
-                db.SaveChanges();
-                await SendMailToBuyer(order, "已答交", null);
-                return Json("success", JsonRequestBehavior.AllowGet);
+            PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
+                                   where po.PurchaseOrderID == orderID
+                                   select po).SingleOrDefault();
+            if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
+            {
+                return Json("fail", JsonRequestBehavior.AllowGet);
             }
+            //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
+            order.PurchaseOrderStatus = "W";
+            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+
+            db.SaveChanges();
+            await SendMailToBuyer(order, "已答交",null);
+            return Json("success", JsonRequestBehavior.AllowGet);
         }
 
         //拒絕按鈕
@@ -286,11 +260,11 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             utilities.AddAPOChanged(purchaseOrder, supplierAccount, supplierCode);
             db.Entry(purchaseOrder).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
-            await SendMailToBuyer(purchaseOrder, "已拒絕", null);
+            await SendMailToBuyer(purchaseOrder, "已拒絕",null);
             return Json("success", JsonRequestBehavior.AllowGet);
         }
         //寄信
-        public async Task SendMailToBuyer(PurchaseOrder order, string Reply, string OrderDtl)
+        public async Task SendMailToBuyer(PurchaseOrder order, string Reply,string OrderDtl)
         {
             ///////////////////////////////////////////////////
             //取得供應商帳號資料
@@ -307,11 +281,10 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //shipDtlMail += "</table>";
             string OrderID = order.PurchaseOrderID;
             string OrderApply = Reply;
-            if (OrderDtl == null)
-            {
+            if (OrderDtl == null) {
                 OrderDtl = "";
             }
-            string SupplierName = db.SupplierInfo.Where(x => x.SupplierCode == supplierCode).SingleOrDefault().SupplierName;
+            string SupplierName = db.SupplierInfo.Where(x=>x.SupplierCode==supplierCode).SingleOrDefault().SupplierName;
             string BuyerID = db.Employee.Where(x => x.EmployeeID == order.EmployeeID).SingleOrDefault().EmployeeID;
             string EmployeeName = db.Employee.Find(BuyerID).Name;
             var user = UserManager.Users.Where(x => x.UserName == BuyerID).SingleOrDefault();
@@ -325,7 +298,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             string tempMail = System.IO.File.ReadAllText(Server.MapPath(@"~\Areas\SupplierArea\Views\Shared\SendMailToBuyer.html"));
             // 經測試 gmail 不支援 uri data image 所以用網址傳圖比較保險
             //string img = "https://ci5.googleusercontent.com/proxy/4OJ0k4udeu09Coqzi7ZQRlKXsHTtpTKlg0ungn0aWQAQs2j1tTS6Q6e8E0dZVW2qsbzD1tod84Zbsx62gMgHLFGWigDzFOPv1qBrzhyFIlRYJWSMWH8=s0-d-e1-ft#https://app.flashimail.com/rest/images/5d8108c8e4b0f9c17e91fab7.jpg";
-            string MailBody = MembersDBService.getMailBody(tempMail, OrderID, OrderApply, EmployeeName, OrderDtl, SupplierName);
+            string MailBody = MembersDBService.getMailBody(tempMail, OrderID,OrderApply, EmployeeName, OrderDtl, SupplierName);
             //寄信
             await UserManager.SendEmailAsync(userId, "供應商訂單答交通知", MailBody);
         }

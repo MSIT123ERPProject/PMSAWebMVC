@@ -10,7 +10,7 @@
     ViewBag.Title = "送出至供應商";
 }
 
-<h2 class="text-dark">@ViewBag.Title</h2>
+@Html.Partial("_DetailsPartial")
 
 @using (Html.BeginForm("SendToSupplier", "PurchaseOrders", FormMethod.Post, new { @id = "formSendToSupplierPurchaseOrders" }))
 {
@@ -18,15 +18,10 @@
 
     @Html.HiddenFor(m => m.POItem.PurchaseOrderID)
 
-    <h6 class="note note-editor text-muted small">確認內容無誤後，請點選<span class="text-danger">送出至供應商</span>按鈕，完成送出動作</h6>
     <div class="form-group">
-        <button id="btnSubmit" type="button" class="btn btn-primary btn-lg"><i class="far fa-paper-plane"></i> 送出至供應商</button>
+        <button id="btnSubmit" type="button" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i> 送出至供應商</button>
     </div>
 }
-
-@Html.Partial("_DetailsPartial")
-
-
 
 @section scripts{
     <script src="~/Scripts/Views/_PurchaseOrdersDetailsPartial.js"></script>

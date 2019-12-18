@@ -7,7 +7,7 @@
     function initDataTablesPO() {
         dtPO = $('#dataTablesPO').DataTable({
             ordering: false,
-            fixedHeader: false,
+            fixedHeader: true,
             searching: false,
             paging: false,
             info: false,

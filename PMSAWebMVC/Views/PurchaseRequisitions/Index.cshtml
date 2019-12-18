@@ -67,13 +67,7 @@
                                 <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
                                     <i class="far fa-edit"></i>
                                 </button>
-                                <a href="@Url.Action("IndexDtl", "PurchaseRequisitions", new { id = item.PurchaseRequisitionID })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="" data-original-title="明細">
-                                    <i class="far fa-file-alt"></i>
-                                </a>
-                                <a href="@Url.Action("Sign", "PurchaseRequisitions", new { id = item.PurchaseRequisitionID })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="" data-original-title="簽核">
-                                    <i class="far fa-file-alt"></i>
-                                </a>
-                                @*<button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)" })</button>*@
+                                <button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)" })</button>
                             </div>
                         </td>
                     </tr>

@@ -370,13 +370,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             using (PMSAEntities db = new PMSAEntities())
             {
                 //有可能是不同來源
-                //找出生管, 及採購自己的請購單
-                List<string> empIds = db.Employee.Where(item => item.Title == "生管").Select(item => item.EmployeeID).ToList();
-                empIds.Add(emp.EmployeeID);
-
-                string[] pra = { "N", "O" };
                 var prq = from pr in db.PurchaseRequisition
-                          where pra.Contains(pr.ProcessStatus) && empIds.Contains(pr.EmployeeID)
+                          where pr.ProcessStatus == "N"
                           //where pr.ProcessStatus == "N" && pr.EmployeeID == emp.EmployeeID
                           select new SelectListItem
                           {

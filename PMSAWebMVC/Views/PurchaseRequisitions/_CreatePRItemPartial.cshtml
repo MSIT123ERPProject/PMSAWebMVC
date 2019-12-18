@@ -38,13 +38,8 @@
                         </td>
                         <td>
                             @*@using
-        @Html.BeginForm("Deletetest", "PurchaseRequisitions",FormMethod.Post)*@
-                            @*@Html.ActionLink("刪除", "Deletetest", "PurchaseRequisitions", new { id = Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PurchaseRequisitionDtlOID }, new { @class = "btn btn-info" })*@
-                            <div class="table-data-feature">
-                                <a href="@Url.Action("Deletetest", "PurchaseRequisitions", new { id = Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PurchaseRequisitionDtlOID  })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="" data-original-title="刪除">
-                                    <i class="far fa-trash-alt"></i>
-                                </a>
-                            </div>
+                                @Html.BeginForm("Deletetest", "PurchaseRequisitions",FormMethod.Post)*@
+                            @Html.ActionLink("刪除", "Deletetest", "PurchaseRequisitions", new { id = Model.PurchaseRequisitionDtlSetVM.ElementAt(i).PurchaseRequisitionDtlOID }, new { @class = "btn btn-info" })
                         </td>
                     </tr>
                 }

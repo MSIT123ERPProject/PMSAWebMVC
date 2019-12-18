@@ -230,54 +230,55 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             await SendMailToBuyer(orderUpdate, "已答交", null);
             return Json("success", JsonRequestBehavior.AllowGet);
 
-            var q = from poc in db.POChanged
-                        //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
-                        //into s
-                        //from po in s.DefaultIfEmpty()
-                    where poc.RequesterRole == "P" && poc.PurchaseOrderID == orderID
-                    select new
-                    {
-                        poc.PurchaseOrderID,
-                        poc.RequesterRole,
-                    };
-            var t = q.ToList();
-            if (q.Count() == 0 || q.Count() == null)
-            {
-                return Json("fail", JsonRequestBehavior.AllowGet);
-            }
-//<<<<<<< HEAD
-            PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
-                                   where po.PurchaseOrderID == orderID
-                                   select po).SingleOrDefault();
-            if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
-            {
-                return Json("fail", JsonRequestBehavior.AllowGet);
-//=======
-            else
-            {
-                PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
-                                       where po.PurchaseOrderID == orderID
-                                       select po).SingleOrDefault();
-                if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
-                {
-                    return Json("fail", JsonRequestBehavior.AllowGet);
-                }
-                //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
-                order.PurchaseOrderStatus = "E";
-                db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+//            var q = from poc in db.POChanged
+//                        //join po in db.PurchaseOrder on poc.PurchaseOrderID equals po.PurchaseOrderID
+//                        //into s
+//                        //from po in s.DefaultIfEmpty()
+//                    where poc.RequesterRole == "P" && poc.PurchaseOrderID == orderID
+//                    select new
+//                    {
+//                        poc.PurchaseOrderID,
+//                        poc.RequesterRole,
+//                    };
+//            var t = q.ToList();
+//            if (q.Count() == 0 || q.Count() == null)
+//            {
+//                return Json("fail", JsonRequestBehavior.AllowGet);
+//            }
+////<<<<<<< HEAD
+//            PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
+//                                   where po.PurchaseOrderID == orderID
+//                                   select po).SingleOrDefault();
+//            if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
+//            {
+//                return Json("fail", JsonRequestBehavior.AllowGet);
+//            }
+//            //=======
+//            else
+//            {
+//                PurchaseOrder order = (from po in db.PurchaseOrder.AsEnumerable()
+//                                       where po.PurchaseOrderID == orderID
+//                                       select po).SingleOrDefault();
+//                if (utilities.AddAPOChanged(order, supplierAccount, supplierCode) == false)
+//                {
+//                    return Json("fail", JsonRequestBehavior.AllowGet);
+//                }
+//                //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
+//                order.PurchaseOrderStatus = "E";
+//                db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
-                db.SaveChanges();
-                await SendMailToBuyer(order, "已答交", null);
-                return Json("success", JsonRequestBehavior.AllowGet);
-//>>>>>>> 802426d1abd7d38d1f6e79d3378d39e1746e0b09
-            }
-            //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
-            order.PurchaseOrderStatus = "W";
-            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
+//                db.SaveChanges();
+//                await SendMailToBuyer(order, "已答交", null);
+//                return Json("success", JsonRequestBehavior.AllowGet);
+//                //>>>>>>> 802426d1abd7d38d1f6e79d3378d39e1746e0b09
+//            }
+//            //採購單狀態W為雙方答交，供應商未出貨訂單判定應為判斷是否為W
+//            order.PurchaseOrderStatus = "W";
+//            db.Entry(order).State = System.Data.Entity.EntityState.Modified;
 
-            db.SaveChanges();
-            await SendMailToBuyer(order, "已答交",null);
-            return Json("success", JsonRequestBehavior.AllowGet);
+//            db.SaveChanges();
+//            await SendMailToBuyer(order, "已答交",null);
+//            return Json("success", JsonRequestBehavior.AllowGet);
         }
 
         //拒絕按鈕

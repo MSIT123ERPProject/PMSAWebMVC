@@ -2422,7 +2422,7 @@
     <Content Include="Views\PurchaseOrders\Details.cshtml" />
     <Content Include="Views\PurchaseRequisitions\Confirm.cshtml" />
     <Content Include="Views\PurchaseRequisitions\_Confirm.cshtml" />
-<<<<<<< HEAD
+<!--<<<<<<< HEAD-->
     <Content Include="Views\PurchaseOrderReceives\Create.cshtml" />
     <Content Include="Views\PurchaseOrderReceives\Delete.cshtml" />
     <Content Include="Views\PurchaseOrderReceives\Details.cshtml" />

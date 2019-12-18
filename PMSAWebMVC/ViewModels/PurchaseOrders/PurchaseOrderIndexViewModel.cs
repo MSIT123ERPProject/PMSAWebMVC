@@ -25,6 +25,15 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string PurchaseOrderStatus { get; set; }
         [Display(Name = "簽核狀態")]
         public string SignStatus { get; set; }
+        [Display(Name = "簽核")]
+        public string SignStatusToShow
+        {
+            get
+            {
+                return RepositoryUtils.GetSignStatus(SignStatus);
+            }
+            private set { }
+        }
     }
 
     public partial class Repository

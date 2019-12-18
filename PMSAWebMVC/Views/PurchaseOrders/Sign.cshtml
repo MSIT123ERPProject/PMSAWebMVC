@@ -139,25 +139,31 @@
         //Demo鍵點擊
         $("body").on('click', "#btnSignDemo", function () {
             $("input[type='radio'][value='Y']").trigger("click");
-            $("#signOpinion").trigger("focus").val("內容無誤，準予同意");
-            $("#signValidation").trigger("focus").val("P@ssw0rd");
+            $("#POItem_SignOpinion").trigger("focus").val("內容無誤，準予同意");
+            $("#POItem_SignPassword").trigger("focus").val("P@ssw0rd");
         });
 
         //送出簽核
         $("body").on('click', "#btnSignSubmit", function () {
-            $(this).addClass("active").siblings().removeClass("active");
-
-            if (!$(".btn-group-toggle a[data-toggle='tab']").hasClass("active")) {
+            let result = true;
+            //let temp = $(".btn-group-toggle a[data-toggle='tab']").hasClass("active");
+            let temp = $("#POItem_SignStatus").val() != "S";
+            result = result && temp;
+            if (!temp) {
                 toastr.warning("簽核狀態 為必填", "", { timeOut: "6000" });
             }
-
-            if ($("#signValidation").val() == "") {
+            temp = $("#POItem_SignPassword").val() != "";
+            result = result && temp;
+            if (!temp) {
                 toastr.warning("登入密碼 為必填", "", { timeOut: "6000" });
             }
 
+            if (result) {
+                updatePOSignStatus();
+            }
         });
 
-        async function updatePOStatus() {
+        async function updatePOSignStatus() {
               await  $.ajax({
                     type: "POST",
                     url: "@Url.Action("Sign", "PurchaseOrders")",

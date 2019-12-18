@@ -371,7 +371,7 @@ namespace PMSAWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Sign([Bind(Include = "POInfoItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        public ActionResult Sign([Bind(Include = "POItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
         {
             //欄位驗證
             StringBuilder sb = new StringBuilder();

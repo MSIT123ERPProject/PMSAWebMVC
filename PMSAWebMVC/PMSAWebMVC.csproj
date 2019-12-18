@@ -429,6 +429,7 @@
     <Compile Include="ViewModels\PurchaseOrders\PurchaseOrderIndexViewModel.cs" />
     <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionCreateViewModel.cs" />
     <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionIndexViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseRequisitions\PurchaseRequisitionSendToSupplierViewModel.cs" />
     <Compile Include="ViewModels\RolesAdmin\AdminViewModel.cs" />
     <Compile Include="ViewModels\Setting\BuyerCompInfoViewModel.cs" />
     <Compile Include="ViewModels\Setting\BuyerSettingViewModel.cs" />
@@ -2417,6 +2418,7 @@
     <Content Include="Views\PurchaseRequisitions\Confirm.cshtml" />
     <Content Include="Views\PurchaseRequisitions\_Confirm.cshtml" />
     <Content Include="Views\PurchaseOrders\Sign.cshtml" />
+    <Content Include="Views\PurchaseRequisitions\Sign.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

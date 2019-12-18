@@ -15,7 +15,7 @@ namespace PMSAWebMVC.Utilities.TingHuan
 {
     public class ShipNoticesUtilities : BaseController/*, IIdentityMessageService*/
     {
-        
+
         private PMSAEntities db = new PMSAEntities();
         /// <summary>
         /// 寄信功能想寫在這失敗了
@@ -51,9 +51,9 @@ namespace PMSAWebMVC.Utilities.TingHuan
         {
             //出貨明細通知的TABLE要改一下
             string borderColor = "border-color:black";
-            string borderLine ="1";
-            string shipDtlMail = "<table" + $" style={borderColor}" +$" border={borderLine}" +">";
-             shipDtlMail += $"<tr><td>{shipNotice.FirstOrDefault().ShipNoticeID}</td></tr>";
+            string borderLine = "1";
+            string shipDtlMail = "<table" + $" style={borderColor}" + $" border={borderLine}" + ">";
+            shipDtlMail += $"<tr><td>{shipNotice.FirstOrDefault().ShipNoticeID}</td></tr>";
             foreach (var snd in shipNotice)
             {
                 DateTime shipdate = (DateTime)snd.ShipDate;
@@ -111,7 +111,8 @@ namespace PMSAWebMVC.Utilities.TingHuan
                 db.SaveChanges();
                 return true;
             }
-            catch {
+            catch
+            {
                 return false;
             }
         }
@@ -173,6 +174,8 @@ namespace PMSAWebMVC.Utilities.TingHuan
                     return "逾期";
                 case "Z":
                     return "結案";
+                case "W":
+                    return "訂單成立";
                 default:
                     return "";
             }

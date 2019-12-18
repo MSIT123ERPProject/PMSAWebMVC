@@ -161,10 +161,8 @@ $("#show-sidebar").click(function () {
 
 //點到摺疊就展開
 $(".pagesDropdown").click(function (e) {
-    console.log("hi")
     //阻止事件冒泡，修正DataTables在Sidebar縮小後跑版，另外其他內容也會在縮小後跑版
     e.stopPropagation();
-    e.preventDefault();
     //展開
     $(".sidebar").removeClass("toggled");
     //顯示頭像
@@ -180,10 +178,8 @@ $(".pagesDropdown").click(function (e) {
 });
 
 $("#userDropdown").click(function (e) {
-    console.log("hi")
     //阻止事件冒泡，修正DataTables在Sidebar縮小後跑版，另外其他內容也會在縮小後跑版
     e.stopPropagation();
-    e.preventDefault();
     //展開
     $(".sidebar").removeClass("toggled");
     //顯示頭像

@@ -502,6 +502,35 @@ namespace PMSAWebMVC.Controllers
                 db.SaveChanges();
                 db.Entry(pr).State = EntityState.Detached;
 
+                //新增簽核表
+                SignFlow sf = new SignFlow
+                {
+                    OriginatorID = emp.EmployeeID,
+                    SignBeginDate = now,
+                    SignEvent = "PO",
+                    SignStatusCode = "S"
+                };
+                db.SignFlow.Add(sf);
+                db.SaveChanges();
+
+                //新增簽核明細
+                //暫不實作發信 SFDSendLetterState, SFDSendLetterDate
+                //找出員工主管
+                Employee manager = db.Employee.Find(emp.ManagerID);
+                SignFlowDtl sfd = new SignFlowDtl {
+                    SignFlowOID = sf.SignFlowOID,
+                    ApprovingOfficerID = manager.EmployeeID,
+                    SignStatusCode = "S"
+                };
+                db.SignFlowDtl.Add(sfd);
+                db.SaveChanges();
+
+                //更新採購單簽核欄位
+                po.SignStatus = "S";
+                po.SignFlowOID = sf.SignFlowOID;
+                db.Entry(po).State = EntityState.Modified;
+                db.SaveChanges();
+
                 //清空Session
                 session.ResetAllItems();
             }

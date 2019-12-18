@@ -30,7 +30,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             {
                 get
                 {
-                    return RepositoryUtils.GetStatus(POChangedCategoryCode);
+                    return RepositoryUtils.GetPurchaseOrderStatusCH(POChangedCategoryCode);
                 }
                 private set { }
             }
@@ -131,22 +131,12 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             public string ReceiptAddress { get; set; }
             [Display(Name = "簽核狀態")]
             public string SignStatus { get; set; }
-            [Display(Name = "主管簽核")]
+            [Display(Name = "簽核")]
             public string SignStatusToShow
             {
                 get
                 {
-                    switch (SignStatus)
-                    {
-                        case "Y":
-                            return "同意";
-                        case "N":
-                            return "拒絕";
-                        case "S":
-                            return "等待簽核中";
-                        default:
-                            return "";
-                    }
+                    return RepositoryUtils.GetSignStatusCH(SignStatus);
                 }
                 private set { }
             }
@@ -191,7 +181,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                     RequesterRole = item.RequesterRole,
                     RequesterID = item.RequesterID,
                     RequesterName = item.RequesterID == emp.EmployeeID ? emp.Name :
-                    RepositoryUtils.GetAccountName(item.RequesterID, item.RequesterRole, db),
+                    RepositoryUtils.GetAccountName(item.RequesterID, item.RequesterRole),
                     PurchaseOrderDtlCode = item.PurchaseOrderDtlCode,
                     Qty = item.Qty,
                     DateRequired = item.DateRequired
@@ -251,7 +241,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 PurchaseOrderID = po.PurchaseOrderID,
                 CreateDate = po.CreateDate,
                 PurchaseRequisitionID = rel.PurchaseRequisitionID,
-                PurchaseOrderStatus = RepositoryUtils.GetStatus(po.PurchaseOrderStatus),
+                PurchaseOrderStatus = RepositoryUtils.GetPurchaseOrderStatusCH(po.PurchaseOrderStatus),
                 Buyer = po.Employee.Name,
                 EmployeeID = po.EmployeeID,
                 SupplierCode = po.SupplierCode,

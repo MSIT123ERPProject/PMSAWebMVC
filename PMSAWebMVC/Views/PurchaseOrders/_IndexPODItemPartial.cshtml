@@ -8,7 +8,8 @@
             <th>@Html.DisplayNameFor(m => m.FirstOrDefault().CreateDate)</th>
             <th>@Html.DisplayNameFor(m => m.FirstOrDefault().SupplierName)</th>
             <th>@Html.DisplayNameFor(m => m.FirstOrDefault().PurchaseRequisitionID)</th>
-            <th>@Html.DisplayNameFor(m => m.FirstOrDefault().PurchaseOrderStatus)</th>
+            <th>@Html.DisplayNameFor(m => m.FirstOrDefault().PurchaseOrderStatusToShow)</th>
+            <th>@Html.DisplayNameFor(m => m.FirstOrDefault().SignStatusToShow)</th>
             <th data-priority="1">功能</th>
         </tr>
     </thead>
@@ -21,10 +22,11 @@
                 <td>@Html.DisplayFor(m => item.CreateDate)</td>
                 <td>@Html.DisplayFor(m => item.SupplierName)</td>
                 <td>@Html.DisplayFor(m => item.PurchaseRequisitionID)</td>
-                <td>@Html.DisplayFor(m => item.PurchaseOrderStatus)</td>
+                <td>@Html.DisplayFor(m => item.PurchaseOrderStatusToShow)</td>
+                <td>@Html.DisplayFor(m => item.SignStatusToShow)</td>
                 <td data-poid="@item.PurchaseOrderID">
                     <div class="table-data-feature">
-                        @if (User.IsInRole("Buyer") && !User.IsInRole("Manager") && (item.PurchaseOrderStatus == "新增" || item.PurchaseOrderStatus == "異動中") && item.SignStatus == "Y")
+                        @if (User.IsInRole("Buyer") && !User.IsInRole("Manager") && (item.PurchaseOrderStatus == "N" || item.PurchaseOrderStatus == "C") && item.SignStatus == "Y")
                         {
                             <a href="@Url.Action("SendToSupplier","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="送出至供應商">
                                 <i class="far fa-paper-plane"></i>
@@ -35,10 +37,17 @@
                             <i class="far fa-eye"></i>
                         </a>
 
-                        @if (User.IsInRole("Buyer") && User.IsInRole("Manager") && (item.PurchaseOrderStatus == "新增" || item.PurchaseOrderStatus == "異動中") && item.SignStatus == "S")
+                        @if (User.IsInRole("Buyer") && User.IsInRole("Manager") && (item.PurchaseOrderStatus == "N" || item.PurchaseOrderStatus == "C") && item.SignStatus == "S")
                         {
                             <a href="@Url.Action("Sign","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="簽核">
                                 <i class="fas fa-clipboard-check"></i>
+                            </a>
+                        }
+
+                        @if (User.IsInRole("Buyer") && !User.IsInRole("Manager") && item.PurchaseOrderStatus == "E")
+                        {
+                            <a href="@Url.Action("Details","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="答交">
+                                <i class="fas fa-check-double"></i>
                             </a>
                         }
 

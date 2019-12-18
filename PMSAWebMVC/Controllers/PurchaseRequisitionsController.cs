@@ -11,7 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 
 
-namespace PMSAWebMVC.Controllers
+ namespace PMSAWebMVC.Controllers
 {
     [Authorize(Roles = "Buyer, Manager, ProductionControl")]
     public class PurchaseRequisitionsController : BaseController
@@ -49,7 +49,7 @@ namespace PMSAWebMVC.Controllers
                     return "";
             }
         }
-        private string GetSignStatus(string SignStatus)
+        public string GetSignStatus(string SignStatus)
         {
             //S = 簽核中,Y = 同意 ,N = 拒絕
             switch (SignStatus)
@@ -656,8 +656,8 @@ namespace PMSAWebMVC.Controllers
             }
         }
 
+       
 
-        
     }
 }
 

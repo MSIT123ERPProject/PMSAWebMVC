@@ -218,7 +218,7 @@
                             </li>
                         }
                     </ul>
-                    <ul style="position: absolute; bottom: 0; width: 100%;">
+                    <ul style="position: sticky; bottom: -8px; width: 100%;">
                         <li class="bottomLi" style="position: sticky;bottom: -8px;">
                             @Html.Partial("_LanguagePartial")
                             <form action="@Url.Action( "LogOff", "Account",new { Area=""})" method="post" style="width: 100%;">

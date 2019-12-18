@@ -1,0 +1,349 @@
+﻿@model IEnumerable<PMSAWebMVC.Models.StockInDtl>
+
+@{
+    ViewBag.Title = "入庫明細";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-table"></i>
+        入庫明細
+    </div>
+    <div class="card-body">
+        <div style="float:left">
+            <button class="btn btn-primary" title="返回入庫總表">@Html.ActionLink(" ", "Index", null, new { @class = "far fa-hand-point-left", @style = "color:white" })</button>&nbsp;&nbsp;
+        </div>
+        <div id="dabtn"></div>
+        <div class="table-responsive">
+            <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr class="bg-primary text-white text-center">
+                        <th>@Html.DisplayNameFor(model => model.StockInDtlOID)</th>
+                        <th>@Html.DisplayNameFor(model => model.InventoryDtl.WarehouseCode)</th>
+                        <th>@Html.DisplayNameFor(model => model.StockIn.StockInID)</th>
+                        <th>@Html.DisplayNameFor(model => model.Part.PartName)</th>
+                        <th>@Html.DisplayNameFor(model => model.EXP)</th>
+                        <th>@Html.DisplayNameFor(model => model.StockInQty)</th>
+                        <th>編輯</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        string status = item.StockIn.SignStatus;
+                        string date1 = String.Format("{0:yyyy/MM/dd}", item.EXP);
+
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.StockInDtlOID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.InventoryDtl.WarehouseCode)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StockIn.StockInID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Part.PartName)</td>
+                            <td>@Html.DisplayFor(modelItem => date1)</td>
+                            <td id="cel">@Html.DisplayFor(modelItem => item.StockInQty)</td>
+                            <td class="table-data-feature">
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視" data-dc="@item.StockInDtlOID">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </span>
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.StockInDtlOID">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                </span>
+                                @if (status == "Y")
+                                {
+                                    <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                        <button name="click05" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="入庫" data-dc="@item.StockInDtlOID">
+                                            <i class="far fa-arrow-alt-circle-down"></i>
+                                        </button>
+                                    </span>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    #hiden {
+        display: none;
+    }
+
+    .modal-header {
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background-color: blueviolet;
+    }
+
+    .modal-title {
+        color: white;
+    }
+
+    .required:after {
+        margin: 2px;
+        content: '*';
+        color: red;
+    }
+</style>
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script>
+        var table = $('#dataTable').DataTable({
+            buttons: [
+                'excel', 'pdf'
+            ]
+        });
+        $(document).ready(function () {
+            table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
+        });
+
+        $('#myInput').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+
+        //檢視
+        $(document).on('click', "button[name = 'click03']", function () {
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("Detail", "StockInDtls")/" + id1, function (datas) {
+                $('#ModalTitle').text('檢視入庫明細');
+                $('*[name="hidden1"]').show();
+                $('*[name="hidden2"]').hide();
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="doa"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('*[name="dta1"]').attr('disabled', true);
+                $('*[name="dta11"]').attr('disabled', true);
+                $('#btnUpdate').hide();
+                $('#btnStockIn').hide();
+                $("#PurchaseQty").val(datas[0].puqty);
+                $("#StockInID").val(datas[0].StockInID);
+                $("#InventoryCode").val(datas[0].InventoryCode);
+                $("#PartName").val(datas[0].partName);
+                $("#StockInQty").val(datas[0].StockInQty);
+                $("#Remark").val(datas[0].Remark);
+                $("#EXP").val(datas[0].date);
+                let seninqty = datas[0].puqty - datas[0].StockInQty;
+                $("#senInQty").val(seninqty);
+            })
+        });
+
+        //更新
+        var oidd = 0;
+        $(document).on('click', "button[name = 'click04']", function () {
+            let id1 = (this.dataset.dc);
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            oidd = id1;
+            $.getJSON("@Url.Action("Detail", "StockInDtls")/" + id1, function (datas) {
+                $('#ModalTitle').text('修改入庫明細');
+                $('*[name="hidden1"]').show();
+                $('*[name="hidden2"]').hide();
+                $('*[name="da"]').attr('disabled', false);
+                $('*[name="doa"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('*[name="dta1"]').attr('disabled', true);
+                $('*[name="dta11"]').attr('disabled', true);
+                $('#btnUpdate').show();
+                $('#btnStockIn').hide();
+                $("#PurchaseQty").val(datas[0].puqty);
+                $("#StockInID").val(datas[0].StockInID);
+                $("#InventoryCode").val(datas[0].InventoryCode);
+                $("#PartName").val(datas[0].partName);
+                $("#StockInQty").val(datas[0].StockInQty);
+                $("#Remark").val(datas[0].Remark);
+                $("#EXP").val(datas[0].date);
+                let seninqty = datas[0].puqty - datas[0].StockInQty;
+                $("#senInQty").val(seninqty);
+            })
+        });
+
+        $('#btnUpdate').click(function () {
+            var stockinObj = {
+                    StockInDtlOID: oidd,
+                    StockInID:$("#StockInID").val(),
+                    InventoryCode: $("#InventoryCode").val(),
+                    PartNumber: $("#PartName").val(),
+                    StockInQty: $("#StockInQty").val(),
+                    Remark: $("#Remark").val(),
+                    EXP: $("#EXP").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("Edit", "StockInDtls")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(stockinObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                    }
+                }).fail(function(response){
+                    toastr.error(response.message, "警告");
+                })
+            $('#StockInModal').modal('hide');
+        })
+
+        //入庫
+        var sell;
+        $(document).on('click', "td", function () {
+            var rowss = $(this).closest("tr");  //抓取列
+            var celss = $(this).siblings("#cel"); //抓取欄
+            sell = table.row(rowss).cell(celss);
+        })
+        var oid1 = 0;
+        $(document).on('click', "button[name = 'click05']", function () {
+            let id1 = (this.dataset.dc);
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            oid1 = id1;
+            $.getJSON("@Url.Action("Detail", "StockInDtls")/" + id1, function (datas) {
+                $('#ModalTitle').text('新增入庫數量');
+                $('*[name="hidden1"]').hide();
+                $('*[name="hidden2"]').show();
+                $('*[name="da"]').attr('disabled', true);
+                $('*[name="doa"]').attr('disabled', true);
+                $('*[name="dta"]').attr('disabled', true);
+                $('*[name="dta1"]').attr('disabled', true);
+                $('*[name="dta11"]').attr('disabled', false);
+                $('#btnUpdate').hide();
+                $('#btnStockIn').show();
+                $("#PurchaseQty").val(datas[0].puqty);
+                $("#StockInID").val(datas[0].StockInID);
+                $("#InventoryCode").val(datas[0].InventoryCode);
+                $("#PartName").val(datas[0].partName);
+                $("#StockInQty").val(datas[0].StockInQty);
+                $("#Remark").val(datas[0].Remark);
+                $("#EXP").val(datas[0].date);
+                let seninqty = datas[0].puqty - datas[0].StockInQty;
+                $("#senInQty").val(seninqty);
+                $("#InQty").val(0);
+            })
+        });
+
+        $('#btnStockIn').click(function () {
+            let sinqty = $("#StockInQty").val(); //已入庫數量
+            let inqty = $("#InQty").val();       //本次入庫數量
+            let sen = $("#senInQty").val();      //剩餘可入庫數量
+            let sum = parseInt(sinqty) + parseInt(inqty);
+            if (inqty == 0) {
+                toastr.error("入庫數量不可為0", "警告");
+            } else if (sen < inqty) {
+                toastr.error("本次入庫數量不可大於剩餘可入庫數量", "警告");
+            } else if (sen >= inqty){
+                var stockinObj = {
+                    StockInDtlOID: oid1,
+                    StockInID:$("#StockInID").val(),
+                    InventoryCode: $("#InventoryCode").val(),
+                    PartNumber: $("#PartName").val(),
+                    Remark: $("#InQty").val(),       //本次入庫數量
+                    StockInQty: $("#StockInQty").val(),   //已入庫數量
+                    EXP: $("#EXP").val()
+                }
+                $.ajax({
+                    url: '@Url.Action("StockInEdit", "StockInDtls")',
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(stockinObj)
+                }).done(function (response) {
+                    if (response.status) {
+                        toastr.success(response.message, "通知");
+                        sell.data(sum).draw();
+                    } else {
+                        toastr.error(response.message, "警告");
+                    }
+                })
+            $('#StockInModal').modal('hide');
+            }
+
+        })
+
+        function qty() {
+            let pqty = $("#PurchaseQty").val();  //進貨數量
+            let sinqty = $("#StockInQty").val(); //已入庫數量
+            let inqty = $("#InQty").val();       //本次入庫數量
+            let sen = $("#senInQty").val();      //剩餘可入庫數量
+            console.log(sen);
+            console.log(inqty);
+            if (inqty == 0) {
+                toastr.error("入庫數量不可為0", "警告");
+            } else if (sen < inqty) {
+                toastr.error("本次入庫數量不可大於剩餘可入庫數量", "警告");
+            } else if (sen >= inqty) {
+
+            }
+        }
+    </script>
+
+}
+
+
+<!--Modal-->
+<div class="modal fade bd-example-modal-lg" id="StockInModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group" name="hidden1">
+                        <label for="StockInID" name="dta">@Html.DisplayNameFor(model => model.StockInID)</label>
+                        <input type="text" class="form-control" id="StockInID" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="InventoryCode">@Html.DisplayNameFor(model => model.InventoryCode)</label>
+                        <br />
+                        <input type="text" class="form-control" id="InventoryCode" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="PartName">@Html.DisplayNameFor(model => model.Part.PartName)</label>
+                        <input type="text" class="form-control" id="PartName" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden2">
+                        <label for="PurchaseQty">進貨數量</label>
+                        <input type="text" class="form-control" id="PurchaseQty" name="doa">
+                    </div>
+                    <div class="form-group" name="hidden3">
+                        <label for="StockInQty">@Html.DisplayNameFor(model => model.StockInQty)</label>
+                        <input type="text" class="form-control" id="StockInQty" name="dta1">
+                    </div>
+                    <div class="form-group" name="hidden2">
+                        <label for="senInQty">剩餘可入庫數量</label>
+                        <input type="number" class="form-control" id="senInQty" name="doa">
+                    </div>
+                    <div class="form-group" name="hidden2">
+                        <label for="InQty">本次要入庫數量</label>
+                        <input type="number" class="form-control" id="InQty" name="dta11" onblur="qty()">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="EXP">@Html.DisplayNameFor(model => model.EXP)</label>
+                        <input type="text" class="form-control" id="EXP" name="dta">
+                    </div>
+                    <div class="form-group" name="hidden1">
+                        <label for="Remark" name="dta">@Html.DisplayNameFor(model => model.Remark)</label>
+                        <input type="text" class="form-control" id="Remark" name="da">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnClose" type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="btnUpdate" type="button" class="btn btn-success">修改</button>
+                <button id="btnStockIn" type="button" class="btn btn-success">入庫</button>
+            </div>
+        </div>
+    </div>
+</div>

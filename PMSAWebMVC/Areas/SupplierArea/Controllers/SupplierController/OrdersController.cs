@@ -220,6 +220,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                 return Json("fail", JsonRequestBehavior.AllowGet);
             }
             orderUpdate.PurchaseOrderStatus = "E";
+            ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             if (!utilities.AddAPOChanged(orderUpdate, supplierAccount, supplierCode))
             {
                 return Json("fail", JsonRequestBehavior.AllowGet);

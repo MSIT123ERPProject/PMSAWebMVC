@@ -388,13 +388,13 @@ namespace PMSAWebMVC.Controllers
 
         //新增貨源清單及明細
         [HttpGet]
-        public ActionResult Creat(string partNumber, int qtyPerUnit, int? mOQ, int unitPrice, string supplierCode, int? safetyQty, int? eXP, int qtyDemanded, decimal discount, System.DateTime? discountBeginDate, System.DateTime? discountEndDate)
+        public ActionResult Creat(string partNumber, int qtyPerUnit, int unitPrice, string supplierCode, int? safetyQty, int? eXP, int qtyDemanded, decimal discount, System.DateTime? discountBeginDate, System.DateTime? discountEndDate)
         {
             SourceList sourceList = new SourceList(); //取得貨源清單資料
             sourceList.SourceListID = partNumber +"-"+ supplierCode;
             sourceList.PartNumber = partNumber;
             sourceList.QtyPerUnit = qtyPerUnit;
-            sourceList.MOQ = mOQ;
+            sourceList.MOQ = 0;
             sourceList.UnitPrice = unitPrice;
             sourceList.SupplierCode = supplierCode;
             sourceList.SafetyQty = safetyQty;

@@ -47,8 +47,10 @@
                         <div class="step-content grey lighten-4">
                             <small><strong>簽核人</strong></small>
                             <br>
-                            <p class="text-muted">劉淑君</p>
-
+                            <p class="text-muted">@Model.POItem.ApprovingOfficerName</p>
+                            @Html.HiddenFor(m => m.POItem.PurchaseOrderID)
+                            @Html.HiddenFor(m => m.POItem.SignFlowOID)
+                            @Html.HiddenFor(m => m.POItem.SignFlowDtlOID)
                             <small><strong>簽核狀態</strong></small>
                             <br>
                             <div id="tab" class="btn-group btn-group-toggle btn-block mb-2" data-toggle="buttons">

@@ -328,7 +328,12 @@ namespace PMSAWebMVC.Controllers
             model.WarehouseInfoList = new SelectList(warehouseInfos, "Value", "Text");
         }
 
-        // GET: PurchaseOrders/Details/5
+        /// <summary>
+        /// 檢視
+        /// </summary>
+        /// <param name="id">採購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
         public ActionResult Details(string id)
         {
             if (id == null)
@@ -347,6 +352,7 @@ namespace PMSAWebMVC.Controllers
         /// <summary>
         /// 採購單簽核
         /// </summary>
+        /// <param name="id">採購單編號</param>
         /// <returns></returns>
         public ActionResult Sign(string id)
         {
@@ -514,10 +520,11 @@ namespace PMSAWebMVC.Controllers
                 db.SaveChanges();
 
                 //新增簽核明細
-                //暫不實作發信 SFDSendLetterState, SFDSendLetterDate
+                //TODO:暫不實作發信 SFDSendLetterState, SFDSendLetterDate
                 //找出員工主管
                 Employee manager = db.Employee.Find(emp.ManagerID);
-                SignFlowDtl sfd = new SignFlowDtl {
+                SignFlowDtl sfd = new SignFlowDtl
+                {
                     SignFlowOID = sf.SignFlowOID,
                     ApprovingOfficerID = manager.EmployeeID,
                     SignStatusCode = "S"

@@ -4,11 +4,8 @@
     background-color: #f4f8f9;
 }
 
-/*<<<<<<< HEAD
-=======*/
-
 /* ul 底部 =======================*/
-.topUl{
+.topUl {
 }
 
 li.bottomLi {
@@ -17,13 +14,16 @@ li.bottomLi {
     background-color: #212529;
     padding-bottom: 20px;
 }
+
 #bottomUl div {
     transform: translateX(-4px);
 }
+
 #bottomUl {
     border-top: 1px solid rgba(52, 58, 64, 0.5);
     width: 100%;
 }
+
 .middleUl {
     transform: translateX(5px);
     height: 70vh;
@@ -31,7 +31,7 @@ li.bottomLi {
     overflow-x: hidden;
     width: 97%;
 }
-/*------scroll bar---------------------*/
+    /*------scroll bar---------------------*/
 
     .middleUl::-webkit-scrollbar {
         width: 10px;
@@ -139,7 +139,6 @@ li.bottomLi {
     .lanA:hover {
         border-bottom: 1px solid rgba(22, 199, 255, 0.5);
     }
-/*>>>>>>> 802426d1abd7d38d1f6e79d3378d39e1746e0b09*/
 /* input 將 bootstrap 翻成中文 =================*/
 .custom-file-label::after {
     content: "瀏覽";
@@ -150,8 +149,7 @@ li.bottomLi {
     width: 90px !important;
     background-color: #212529;
     min-height: 100vh;
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
+    overflow: hidden !important;
 }
 
     .sidebar .nav-item:last-child {

@@ -30,7 +30,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             {
                 get
                 {
-                    return RepositoryUtils.GetStatus(POChangedCategoryCode);
+                    return RepositoryUtils.GetPurchaseOrderStatusCH(POChangedCategoryCode);
                 }
                 private set { }
             }
@@ -136,7 +136,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             {
                 get
                 {
-                    return RepositoryUtils.GetSignStatus(SignStatus);
+                    return RepositoryUtils.GetSignStatusCH(SignStatus);
                 }
                 private set { }
             }
@@ -181,7 +181,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                     RequesterRole = item.RequesterRole,
                     RequesterID = item.RequesterID,
                     RequesterName = item.RequesterID == emp.EmployeeID ? emp.Name :
-                    RepositoryUtils.GetAccountName(item.RequesterID, item.RequesterRole, db),
+                    RepositoryUtils.GetAccountName(item.RequesterID, item.RequesterRole),
                     PurchaseOrderDtlCode = item.PurchaseOrderDtlCode,
                     Qty = item.Qty,
                     DateRequired = item.DateRequired
@@ -241,7 +241,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 PurchaseOrderID = po.PurchaseOrderID,
                 CreateDate = po.CreateDate,
                 PurchaseRequisitionID = rel.PurchaseRequisitionID,
-                PurchaseOrderStatus = RepositoryUtils.GetStatus(po.PurchaseOrderStatus),
+                PurchaseOrderStatus = RepositoryUtils.GetPurchaseOrderStatusCH(po.PurchaseOrderStatus),
                 Buyer = po.Employee.Name,
                 EmployeeID = po.EmployeeID,
                 SupplierCode = po.SupplierCode,

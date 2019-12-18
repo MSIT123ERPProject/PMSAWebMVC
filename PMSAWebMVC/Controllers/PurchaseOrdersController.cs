@@ -16,6 +16,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize(Roles = "Buyer")]
     public class PurchaseOrdersController : BaseController
     {
         private PMSAEntities db;

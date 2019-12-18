@@ -42,6 +42,26 @@ namespace PMSAWebMVC.Utilities.YaChen
         }
 
         /// <summary>
+        /// 取得簽核狀態代碼顯示內容
+        /// </summary>
+        /// <param name="signStatusCode"></param>
+        /// <returns></returns>
+        public static string GetSignStatus(string signStatusCode)
+        {
+            switch (signStatusCode)
+            {
+                case "Y":
+                    return "同意";
+                case "N":
+                    return "拒絕";
+                case "S":
+                    return "等待簽核中";
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
         /// 依角色別取得帳號姓名
         /// </summary>
         /// <param name="id"></param>

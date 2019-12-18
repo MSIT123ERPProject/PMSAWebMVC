@@ -9,6 +9,7 @@
             <th>@Html.DisplayNameFor(m => m.FirstOrDefault().SupplierName)</th>
             <th>@Html.DisplayNameFor(m => m.FirstOrDefault().PurchaseRequisitionID)</th>
             <th>@Html.DisplayNameFor(m => m.FirstOrDefault().PurchaseOrderStatus)</th>
+            <th>@Html.DisplayNameFor(m => m.FirstOrDefault().SignStatusToShow)</th>
             <th data-priority="1">功能</th>
         </tr>
     </thead>
@@ -22,6 +23,7 @@
                 <td>@Html.DisplayFor(m => item.SupplierName)</td>
                 <td>@Html.DisplayFor(m => item.PurchaseRequisitionID)</td>
                 <td>@Html.DisplayFor(m => item.PurchaseOrderStatus)</td>
+                <td>@Html.DisplayFor(m => item.SignStatusToShow)</td>
                 <td data-poid="@item.PurchaseOrderID">
                     <div class="table-data-feature">
                         @if (User.IsInRole("Buyer") && !User.IsInRole("Manager") && (item.PurchaseOrderStatus == "新增" || item.PurchaseOrderStatus == "異動中") && item.SignStatus == "Y")
@@ -43,15 +45,15 @@
                         }
 
                         @*<span data-toggle="modal" data-target="#detailModal">
-            <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
-                <i class="far fa-edit"></i>
-            </button>
-        </span>
-        <span data-model="del">
-            <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
-                <i class='far fa-trash-alt'></i>
-            </button>
-        </span>*@
+                                <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                            </span>
+                            <span data-model="del">
+                                <button type="button" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="刪除">
+                                    <i class='far fa-trash-alt'></i>
+                                </button>
+                            </span>*@
                     </div>
                 </td>
             </tr>

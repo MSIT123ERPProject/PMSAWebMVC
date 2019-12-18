@@ -226,8 +226,11 @@
                         @Html.Partial("_LanguagePartial")
                         <form action="@Url.Action( "LogOff", "Account",new { Area=""})" method="post" style="width: 100%;">
                             @Html.AntiForgeryToken()
-                            <span class="logoff dropdown-item nav-link">
-                                <button type="submit"><i class="fas fa-power-off" style="font-size:15px"></i></button>
+                            <span class="logoff nav-item">
+                                <button type="submit" class="nav-link"> 
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>登出</span>
+                                </button>
                             </span>
                         </form>
                     </li>

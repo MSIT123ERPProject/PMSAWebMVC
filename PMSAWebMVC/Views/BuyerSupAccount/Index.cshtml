@@ -1213,7 +1213,8 @@
                   showCancelButton: true,
                   confirmButtonColor: '#28A2FC',
                   cancelButtonColor: '#E8296C',
-                  confirmButtonText: '確定發送'
+                    confirmButtonText: '確定發送',
+                    cancelButtonText: '取消'
                 }).then((result) => {
                   if (result.value) {  $.ajax({
                     type: "POST",

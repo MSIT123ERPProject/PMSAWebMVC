@@ -5,6 +5,74 @@
 }
 
 
+/* ul 底部 =======================*/
+.topUl{
+}
+
+li.bottomLi {
+    position: sticky;
+    bottom: -8px;
+    background-color: #212529;
+    padding-bottom: 20px;
+}
+#bottomUl div {
+    transform: translateX(-4px);
+}
+#bottomUl {
+    border-top: 1px solid rgba(52, 58, 64, 0.5);
+    width: 100%;
+}
+.middleUl {
+    transform: translateX(5px);
+    height: 70vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+/*------scroll bar---------------------*/
+
+    .middleUl::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+        position: absolute;
+    }
+
+    .middleUl::-webkit-scrollbar-button {
+        /*width: 0px;
+    height: 0px;*/
+    }
+
+    .middleUl::-webkit-scrollbar-thumb {
+        background: #525965;
+        border: 0px none #ffffff;
+        border-radius: 0px;
+    }
+
+        .middleUl::-webkit-scrollbar-thumb:hover {
+            background: #525965;
+        }
+
+        .middleUl::-webkit-scrollbar-thumb:active {
+            background: #525965;
+        }
+
+    .middleUl::-webkit-scrollbar-track {
+        background: transparent;
+        border: 0px none;
+        border-radius: 50px;
+        margin: 0 5px 0 5px;
+    }
+
+        .middleUl::-webkit-scrollbar-track:hover {
+            background: transparent;
+        }
+
+        .middleUl::-webkit-scrollbar-track:active {
+            background: transparent;
+        }
+
+    .middleUl::-webkit-scrollbar-corner {
+        background: transparent;
+    }
 /* 登出=============================================*/
 .logoff.dropdown-item:hover, .logoff.dropdown-item:active, .logoff.dropdown-item:focus {
     color: #212529;
@@ -12,15 +80,12 @@
     background: transparent;
     outline: none;
 }
-li.bottomLi {
-    border-top: 1px solid rgba(52, 58, 64, 0.5);
-    background-color: #212529;
-    padding-bottom: 20px;
-}
+
 .logoff.dropdown-item {
     width: 80% !important;
     margin: 0px auto;
 }
+
 .logoff button {
     opacity: 0.8;
     transition: 0.3s;
@@ -33,10 +98,10 @@ li.bottomLi {
     margin-top: 10px;
 }
 
-.logoff button:focus {
-    box-shadow: none;
-    outline: none;
-}
+    .logoff button:focus {
+        box-shadow: none;
+        outline: none;
+    }
 
     .logoff button:hover {
         transition: 0.3s;
@@ -45,12 +110,14 @@ li.bottomLi {
         font-weight: 600;
     }
 
-.logoff button:active {
-    opacity: 0.8;
-}
+    .logoff button:active {
+        opacity: 0.8;
+    }
+
 .sidebar-wrapper .sidebar-menu ul li .logoff button i::before {
     color: #16c7ff;
 }
+
 .sidebar-wrapper .sidebar-menu ul li:hover .logoff button i::before {
     color: #16c7ff;
     text-shadow: 0px 0px 10px rgba(22, 199, 255, 0.5);
@@ -64,9 +131,10 @@ li.bottomLi {
     height: 20px;
     color: #16c7ff;
 }
-.lanA:hover {
-    border-bottom: 1px solid rgba(22, 199, 255, 0.5);
-}
+
+    .lanA:hover {
+        border-bottom: 1px solid rgba(22, 199, 255, 0.5);
+    }
 /* input 將 bootstrap 翻成中文 =================*/
 .custom-file-label::after {
     content: "瀏覽";
@@ -77,8 +145,7 @@ li.bottomLi {
     width: 90px !important;
     background-color: #212529;
     min-height: 100vh;
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
+    overflow: hidden !important;
 }
 
     .sidebar .nav-item:last-child {

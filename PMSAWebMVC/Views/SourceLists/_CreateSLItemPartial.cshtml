@@ -49,11 +49,13 @@
             </td>
             <td>
                 @*@using
-            @Html.BeginForm("Deletetest", "PurchaseRequisitions",FormMethod.Post)*@
+        @Html.BeginForm("Deletetest", "PurchaseRequisitions",FormMethod.Post)*@
                 @*@Html.ActionLink("刪除", "Deletetest", "SourceLists", new { id = Model.SourceListsDtlSetVM.ElementAt(i).SourceListID }, new { @class = "btn btn-info" })*@
-                <button name="click01" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="刪除"  >
-                    <i class="far fa-trash-alt"></i>
-                </button>
+                <div class="table-data-feature">
+                    <button name="click01" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="刪除">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </div>
             </td>
         </tr>
         }

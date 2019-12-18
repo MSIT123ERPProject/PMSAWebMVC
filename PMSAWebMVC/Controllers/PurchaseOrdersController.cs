@@ -1,4 +1,6 @@
-﻿using PMSAWebMVC.Models;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using PMSAWebMVC.Models;
 using PMSAWebMVC.Utilities.YaChen;
 using PMSAWebMVC.ViewModels;
 using PMSAWebMVC.ViewModels.PurchaseOrders;
@@ -14,6 +16,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize(Roles = "Buyer")]
     public class PurchaseOrdersController : BaseController
     {
         private PMSAEntities db;
@@ -24,6 +27,27 @@ namespace PMSAWebMVC.Controllers
             db = new PMSAEntities();
             db.Database.Log = Console.Write;
             session = PurchaseOrderCreateSession.Current;
+        }
+
+        public PurchaseOrdersController(ApplicationSignInManager signInManager)
+        {
+            SignInManager = signInManager;
+        }
+
+        /// <summary>
+        /// 簽核驗證密碼使用
+        /// </summary>
+        private ApplicationSignInManager _signInManager;
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set
+            {
+                _signInManager = value;
+            }
         }
 
         // GET: PurchaseOrders
@@ -328,7 +352,12 @@ namespace PMSAWebMVC.Controllers
             model.WarehouseInfoList = new SelectList(warehouseInfos, "Value", "Text");
         }
 
-        // GET: PurchaseOrders/Details/5
+        /// <summary>
+        /// 檢視
+        /// </summary>
+        /// <param name="id">採購單編號</param>
+        /// <returns></returns>
+        [HttpGet]
         public ActionResult Details(string id)
         {
             if (id == null)
@@ -342,6 +371,78 @@ namespace PMSAWebMVC.Controllers
                 return HttpNotFound();
             }
             return View(vm);
+        }
+
+        /// <summary>
+        /// 採購單簽核
+        /// </summary>
+        /// <param name="id">採購單編號</param>
+        /// <returns></returns>
+        public ActionResult Sign(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            POSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+            if (vm == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Sign([Bind(Include = "POItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        {
+            //欄位驗證
+            StringBuilder sb = new StringBuilder();
+            if (model.POItem.SignStatus != "Y" && model.POItem.SignStatus != "N")
+            {
+                sb.Append("簽核狀態 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(model.POItem.SignPassword))
+            {
+                sb.Append("登入密碼 為必填").Append(Environment.NewLine);
+            }
+            else
+            {
+                //取得目前登入者帳號(採購方)
+                var LoginId = User.Identity.GetUserName();
+                //結果回傳 true/false
+                bool result = Utilities.YangTing.checkPwd.isCorrectPwd(SignInManager, LoginId, model.POItem.SignPassword);
+                if (!result)
+                {
+                    sb.Append("登入密碼 輸入錯誤").Append(Environment.NewLine);
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                return Json(new { message = sb.ToString(), status = "warning" });
+            }
+
+            //更新簽核狀態
+            SignFlowDtl sfd = db.SignFlowDtl.Find(model.POItem.SignFlowDtlOID);
+            sfd.SignOpinion = model.POItem.SignOpinion;
+            sfd.SignStatusCode = model.POItem.SignStatus;
+            sfd.SignDate = DateTime.Now;
+            db.Entry(sfd).State = EntityState.Modified;
+            db.SaveChanges();
+
+            SignFlow sf = db.SignFlow.Find(model.POItem.SignFlowOID);
+            sf.SignStatusCode = model.POItem.SignStatus;
+            db.Entry(sf).State = EntityState.Modified;
+            db.SaveChanges();
+
+            PurchaseOrder po = db.PurchaseOrder.Find(model.POItem.PurchaseOrderID);
+            po.SignStatus = model.POItem.SignStatus;
+            db.Entry(po).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return Json(new { message = "簽核成功", status = "success" });
         }
 
         // GET: PurchaseOrders/Create
@@ -474,6 +575,45 @@ namespace PMSAWebMVC.Controllers
                     db.Entry(pod).Property(podp => podp.POChangedOID).IsModified = true;
                     db.SaveChanges();
                 }
+                //將請購單的狀態更新為O(採購中)
+                //if (db.Entry(pr).State == EntityState.Detached) {
+                //    db.PurchaseRequisition.Attach(pr);
+                //}
+                pr.ProcessStatus = "O";
+                db.Entry(pr).State = EntityState.Modified;
+                db.SaveChanges();
+                db.Entry(pr).State = EntityState.Detached;
+
+                //新增簽核表
+                SignFlow sf = new SignFlow
+                {
+                    OriginatorID = emp.EmployeeID,
+                    SignBeginDate = now,
+                    SignEvent = "PO",
+                    SignStatusCode = "S"
+                };
+                db.SignFlow.Add(sf);
+                db.SaveChanges();
+
+                //新增簽核明細
+                //TODO:暫不實作發信 SFDSendLetterState, SFDSendLetterDate
+                //找出員工主管
+                Employee manager = db.Employee.Find(emp.ManagerID);
+                SignFlowDtl sfd = new SignFlowDtl
+                {
+                    SignFlowOID = sf.SignFlowOID,
+                    ApprovingOfficerID = manager.EmployeeID,
+                    SignStatusCode = "S"
+                };
+                db.SignFlowDtl.Add(sfd);
+                db.SaveChanges();
+
+                //更新採購單簽核欄位
+                po.SignStatus = "S";
+                po.SignFlowOID = sf.SignFlowOID;
+                db.Entry(po).State = EntityState.Modified;
+                db.SaveChanges();
+
                 //清空Session
                 session.ResetAllItems();
             }

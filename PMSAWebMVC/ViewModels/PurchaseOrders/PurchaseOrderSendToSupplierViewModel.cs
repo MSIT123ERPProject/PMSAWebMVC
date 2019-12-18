@@ -30,7 +30,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             {
                 get
                 {
-                    return RepositoryUtils.GetStatus(POChangedCategoryCode);
+                    return RepositoryUtils.GetPurchaseOrderStatusCH(POChangedCategoryCode);
                 }
                 private set { }
             }
@@ -131,7 +131,23 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             public string ReceiptAddress { get; set; }
             [Display(Name = "簽核狀態")]
             public string SignStatus { get; set; }
+            [Display(Name = "簽核")]
+            public string SignStatusToShow
+            {
+                get
+                {
+                    return RepositoryUtils.GetSignStatusCH(SignStatus);
+                }
+                private set { }
+            }
             public Nullable<int> SignFlowOID { get; set; }
+            public Nullable<int> SignFlowDtlOID { get; set; }
+            [Display(Name = "簽核人姓名")]
+            public string ApprovingOfficerName { get; set; }
+            [Display(Name = "簽核意見")]
+            public string SignOpinion { get; set; }
+            [Display(Name = "簽核身份驗證密碼")]
+            public string SignPassword { get; set; }
             [Display(Name = "電子信箱")]
             public string Email { get; set; }
             [Display(Name = "聯絡電話")]
@@ -165,7 +181,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                     RequesterRole = item.RequesterRole,
                     RequesterID = item.RequesterID,
                     RequesterName = item.RequesterID == emp.EmployeeID ? emp.Name :
-                    RepositoryUtils.GetAccountName(item.RequesterID, item.RequesterRole, db),
+                    RepositoryUtils.GetAccountName(item.RequesterID, item.RequesterRole),
                     PurchaseOrderDtlCode = item.PurchaseOrderDtlCode,
                     Qty = item.Qty,
                     DateRequired = item.DateRequired
@@ -219,12 +235,13 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
             PRPORelation rel = po.PRPORelation.Where(item => item.PurchaseOrderID == purchaseOrderID).FirstOrDefault();
             Employee emp = po.Employee;
+
             var povm = new POInfoViewModel
             {
                 PurchaseOrderID = po.PurchaseOrderID,
                 CreateDate = po.CreateDate,
                 PurchaseRequisitionID = rel.PurchaseRequisitionID,
-                PurchaseOrderStatus = RepositoryUtils.GetStatus(po.PurchaseOrderStatus),
+                PurchaseOrderStatus = RepositoryUtils.GetPurchaseOrderStatusCH(po.PurchaseOrderStatus),
                 Buyer = po.Employee.Name,
                 EmployeeID = po.EmployeeID,
                 SupplierCode = po.SupplierCode,
@@ -237,6 +254,22 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 Tel = emp.Tel,
                 Email = emp.Email
             };
+
+            //寫入簽核內容
+            SignFlowDtl sfd = null;
+            if (po.SignFlowOID.HasValue)
+            {
+                sfd = db.SignFlowDtl
+                    .Where(item => item.SignFlowOID == po.SignFlowOID)
+                    .OrderByDescending(item => item.SignFlowDtlOID)
+                    .FirstOrDefault();
+            }
+            if (sfd != null)
+            {
+                povm.ApprovingOfficerName = db.Employee.Find(sfd.ApprovingOfficerID).Name;
+                povm.SignFlowDtlOID = sfd.SignFlowDtlOID;
+            }
+
             return povm;
         }
 

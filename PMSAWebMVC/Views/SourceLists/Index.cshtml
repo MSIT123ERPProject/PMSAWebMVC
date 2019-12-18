@@ -29,9 +29,9 @@
                         <th>
                             @Html.DisplayNameFor(model => model.QtyPerUnit)
                         </th>
-                        <th>
+                        @*<th>
                             @Html.DisplayNameFor(model => model.MOQ)
-                        </th>
+                        </th>*@
                         <th>
                             @Html.DisplayNameFor(model => model.UnitPrice)
                         </th>
@@ -100,9 +100,9 @@
                         <td id="qpu">
                             @Html.DisplayFor(modelItem => item.QtyPerUnit)
                         </td>
-                        <td id="moq">
+                        @*<td id="moq">
                             @Html.DisplayFor(modelItem => item.MOQ)
-                        </td>
+                        </td>*@
                         <td id="up">
                             @Html.DisplayFor(modelItem => item.UnitPrice)
                         </td>
@@ -124,13 +124,17 @@
                                     <i class="far fa-eye"></i>
                                 </button>
                                 <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.SourceListID">
-                                    <i class="far fa-edit" ></i>
+                                    <i class="far fa-edit"></i>
                                 </button>
 
                                 @*<button name="click3" type="button"   class="btn btn-outline-secondary btn-icon" title="明細" data-dc="@item.SourceListID">
-                                        <i class="far fa-file-alt"></i>
-                                    </button>*@
-                                <button type="button" class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.SourceListID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)", @title = "明細" })</button>
+            <i class="far fa-file-alt"></i>
+        </button>*@
+                                <a href="@Url.Action("IndexDtl", "SourceLists", new { id = item.SourceListID })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="" data-original-title="明細">
+                                    <i class="far fa-file-alt"></i>
+                                </a>
+
+                                @*<button type="button" class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.SourceListID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)", @title = "明細" })</button>*@
                             </div>
                         </td>
                     </tr>
@@ -220,7 +224,7 @@
                 $("#SourceListID").val(datas[0].SourceListID);
                 $("#PartNumber").val(datas[0].PartNumber);
                 $("#QtyPerUnit").val(datas[0].QtyPerUnit);
-                $("#MOQ").val(datas[0].MOQ);
+               
                 $("#UnitPrice").val(datas[0].UnitPrice);
                 $("#SupplierCode").val(datas[0].SupplierName);
                 $("#UnitsInStock").val(datas[0].UnitsInStock);
@@ -246,7 +250,7 @@
                 $("#SourceListID").val(datas[0].SourceListID);
                 $("#PartNumber").val(datas[0].PartNumber);
                 $("#QtyPerUnit").val(datas[0].QtyPerUnit);
-                $("#MOQ").val(datas[0].MOQ);
+                
                 $("#UnitPrice").val(datas[0].UnitPrice);
                 $("#SupplierCode").val(datas[0].SupplierName);
                 $("#supdisp").val(datas[0].SupplierCode);
@@ -264,12 +268,12 @@
             var table = $('#dataTable').DataTable();
             var rowss = $(this).closest("tr");  //抓取列
             var celss = $(this).siblings("#qpu"); //抓取欄
-            var celss2 = $(this).siblings("#moq"); //抓取欄
+            
             var celss3 = $(this).siblings("#up"); //抓取欄
             var celss4 = $(this).siblings("#sq"); //抓取欄
             var celss5 = $(this).siblings("#exp"); //抓取欄
             sell = table.row(rowss).cell(celss);
-            sell2 = table.row(rowss).cell(celss2);
+         
             sell3 = table.row(rowss).cell(celss3);
             sell4 = table.row(rowss).cell(celss4);
             sell5 = table.row(rowss).cell(celss5);
@@ -286,7 +290,7 @@
                     SourceListID: $("#SourceListID").val(),
                     PartNumber: $("#PartNumber").val(),
                     QtyPerUnit: $("#QtyPerUnit").val(),
-                    MOQ: $("#MOQ").val(),
+                    
                     UnitPrice: $("#UnitPrice").val(),
                     SupplierCode: $("#supdisp").val(),
                     UnitsInStock: $("#UnitsInStock").val(),
@@ -305,7 +309,7 @@
                         toastr.success(response.message, "通知");
                         //sell.data($("#ProcessStatus").find('option:selected').val()).draw();//取得選取的值
                         sell.data($("#QtyPerUnit").val()).draw();
-                        sell2.data($("#MOQ").val()).draw();
+                        
                         sell3.data($("#UnitPrice").val()).draw();
                         sell4.data($("#SafetyQty").val()).draw();
                         sell5.data($("#EXP").val()).draw();
@@ -341,10 +345,7 @@
                         <label class="required" for="QtyPerUnit">@Html.DisplayNameFor(model => model.QtyPerUnit)</label>
                         <input type="text" class="form-control" id="QtyPerUnit" name="dta">
                     </div>
-                    <div class="form-group">
-                        <label class="required" for="MOQ">@Html.DisplayNameFor(model => model.MOQ)</label>
-                        <input type="text" class="form-control" id="MOQ" name="dta">
-                    </div>
+                
                     <div class="form-group">
                         <label class="required" for="UnitPrice">@Html.DisplayNameFor(model => model.UnitPrice)</label>
                         <input type="text" class="form-control" id="UnitPrice" name="dta">

@@ -9,8 +9,8 @@
 
 
 <div class="card mb-3">
-    <div class="card-header">
-        <i class="fab fa-wpforms"></i> 貨源清單
+    <div class="card-header" style="text-align:center">
+        <div><i class="fab fa-wpforms"></i> 貨源清單基本資訊                </div>
     </div>
     <div class="card-body">
         <div class="form-horizontal">
@@ -20,6 +20,7 @@
                     @Html.DropDownListFor(m => m.SelectedSupplierName, Model.SupplierList, "請選擇", htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(m => m.SelectedSupplierName, "", new { @class = "text-danger" })
                 </div>
+
             </div>
             <div class="form-group row">
                 @Html.LabelFor(m => m.SelectedPartName, htmlAttributes: new { @class = "control-label col-md-3" })
@@ -30,37 +31,35 @@
             </div>
             <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
                 <div class="row">
-                    <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.MOQ, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.MOQ, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.MOQ, "", new { @class = "text-danger" })
-                    </div>
+                    @*<div class="col-md-3 col-6">
+                    @Html.LabelFor(model => model.MOQ, htmlAttributes: new { @class = "control-label " })
+                    @Html.EditorFor(model => model.MOQ, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MOQ, "", new { @class = "text-danger" })
+                </div>*@
                     <div class="col-md-3 col-6">
                         @Html.LabelFor(model => model.QtyPerUnit, htmlAttributes: new { @class = "control-label " })
                         @Html.EditorFor(model => model.QtyPerUnit, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.QtyPerUnit, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3 col-6">
+                        @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label " })
+                        @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-3 col-6">
                         @Html.LabelFor(model => model.EXP, htmlAttributes: new { @class = "control-label" })
                         @Html.EditorFor(model => model.EXP, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.EXP, "", new { @class = "text-danger" })
                     </div>
-                </div>
-            </div>
-            <div class="card-body mb-0 pb-0 pt-2 border-top-dashed mt-3">
-                <div class="row">
                     <div class="col-md-3 col-6">
                         @Html.LabelFor(model => model.SafetyQty, htmlAttributes: new { @class = "control-label " })
                         @Html.EditorFor(model => model.SafetyQty, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.SafetyQty, "", new { @class = "text-danger" })
                     </div>
-                    <div class="col-md-3 col-6">
-                        @Html.LabelFor(model => model.UnitPrice, htmlAttributes: new { @class = "control-label " })
-                        @Html.EditorFor(model => model.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.UnitPrice, "", new { @class = "text-danger" })
-                    </div>
+
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -74,7 +73,7 @@
 
 
 <div class="card mb-3">
-    <div class="card-header">
+    <div class="card-header" style="text-align:center">
         <i class="fab fa-wpforms"></i> 貨源清單明細
     </div>
     <div class="card-body">
@@ -92,10 +91,10 @@
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="form-group">
-                        <label class="control-label " for="DiscountEndDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
-                        <div class="input-group date" id="DiscountEndDate" data-target-input="nearest">
-                            <input type="text" id="DiscountEndDate2" class="form-control datetimepicker-input" data-target="#DiscountEndDate" data-toggle="datetimepicker" name="da"/>
-                            <div class="input-group-append" data-target="#DiscountEndDate" data-toggle="datetimepicker">
+                        <label class="control-label " for="DiscountBeginDate">@Html.DisplayNameFor(model => model.DiscountBeginDate)</label>
+                        <div class="input-group date" id="DiscountBeginDate" data-target-input="nearest">
+                            <input type="text" id="DiscountBeginDate2" class="form-control datetimepicker-input" data-target="#DiscountBeginDate" data-toggle="datetimepicker" name="da" />
+                            <div class="input-group-append" data-target="#DiscountBeginDate" data-toggle="datetimepicker">
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar"></i>
                                 </div>
@@ -105,10 +104,10 @@
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="form-group">
-                        <label class="control-label " for="DiscountBeginDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
-                        <div class="input-group date" id="DiscountBeginDate" data-target-input="nearest">
-                            <input type="text" id="DiscountBeginDate2" class="form-control datetimepicker-input" data-target="#DiscountBeginDate" data-toggle="datetimepicker" name="da"/>
-                            <div class="input-group-append" data-target="#DiscountBeginDate" data-toggle="datetimepicker">
+                        <label class="control-label " for="DiscountEndDate">@Html.DisplayNameFor(model => model.DiscountEndDate)</label>
+                        <div class="input-group date" id="DiscountEndDate" data-target-input="nearest">
+                            <input type="text" id="DiscountEndDate2" class="form-control datetimepicker-input" data-target="#DiscountEndDate" data-toggle="datetimepicker" name="da" />
+                            <div class="input-group-append" data-target="#DiscountEndDate" data-toggle="datetimepicker">
                                 <div class="input-group-text">
                                     <i class="fa fa-calendar"></i>
                                 </div>
@@ -116,6 +115,7 @@
                         </div>
                     </div>
                 </div>
+
 
             </div>
         </div>
@@ -126,13 +126,19 @@
 <div class="form-group">
     <div class="d-flex justify-content-center">
         <button id="btnSubmit1" type="submit" class="btn btn-primary btn-block"><i class="far fa-paper-plane"></i>新增</button>
+        <button id="demo" style="float:right;" type="submit" class="btn btn-primary">demo</button>
     </div>
 </div>
 
 
+       
+
+
+
+
 @Html.AntiForgeryToken()
 <div class="card mb-3">
-    <div class="card-header">
+    <div class="card-header" style="text-align:center">
         <i class="fas fa-list"></i> 貨源清單細項
     </div>
     <div class="card-body">
@@ -162,6 +168,14 @@
        getday()
         });
 
+        $('#demo').click(function () {
+            $("#QtyPerUnit").val(50);$("#UnitPrice").val(100);$("#EXP").val(365);$("#SafetyQty").val(20); 
+            $("#QtyDemanded").val(100); $("#Discount").val(0.1); 
+    
+            var date = "2019/12/25"; var date2 = "2020/12/25";
+            $('#DiscountBeginDate').children("input").val(date);
+            $('#DiscountEndDate').children("input").val(date2);
+        });
 
         $('#btnSubmit1').click(function () {//新增
             $.ajax({
@@ -170,7 +184,7 @@
                 data: {
                     SupplierCode: $("#SelectedSupplierName").val(),
                     PartNumber: $("#SelectedPartName").val(),
-                    MOQ: $("#MOQ").val(),
+                    //MOQ: $("#MOQ").val(),
                     QtyPerUnit: $("#QtyPerUnit").val(),
                     SafetyQty: $("#SafetyQty").val(),
                     UnitPrice: $("#UnitPrice").val(),
@@ -187,7 +201,7 @@
                 $('*[name="da"]').attr('disabled', true);
         $('#SelectedSupplierName').attr('disabled', true);
         $('#SelectedPartName').attr('disabled', true);
-        $('#MOQ').attr('disabled', true);
+        //$('#MOQ').attr('disabled', true);
         $('#UnitPrice').attr('disabled', true);
         $('#SafetyQty').attr('disabled', true);
         $('#QtyPerUnit').attr('disabled', true);
@@ -204,7 +218,7 @@
         $('*[name="da"]').attr('disabled', false);
         $('#SelectedSupplierName').attr('disabled', false);
         $('#SelectedPartName').attr('disabled', false);
-        $('#MOQ').attr('disabled', false);
+        //$('#MOQ').attr('disabled', false);
         $('#UnitPrice').attr('disabled', false);
         $('#SafetyQty').attr('disabled', false);
         $('#QtyPerUnit').attr('disabled', false);
@@ -213,7 +227,7 @@
 
         $("#SelectedSupplierName")[0].selectedIndex = 0;
         $("#SelectedPartName")[0].selectedIndex = 0;
-        $("#MOQ").val(0);$("#UnitPrice").val(0);$("#SafetyQty").val(0);$("#QtyPerUnit").val(0);$("#EXP").val(0);
+       /* $("#MOQ").val(0);*/$("#UnitPrice").val(0);$("#SafetyQty").val(0);$("#QtyPerUnit").val(0);$("#EXP").val(0);
 
         $("#Discount").val(0.00);$("#QtyDemanded").val(0);
         getday()

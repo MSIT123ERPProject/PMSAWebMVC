@@ -21,8 +21,27 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public string SupplierName { get; set; }
         [Display(Name = "來自請購單號")]
         public string PurchaseRequisitionID { get; set; }
-        [Display(Name = "狀態")]
         public string PurchaseOrderStatus { get; set; }
+        [Display(Name = "狀態")]
+        public string PurchaseOrderStatusToShow
+        {
+            get
+            {
+                return RepositoryUtils.GetPurchaseOrderStatusCH(PurchaseOrderStatus);
+            }
+            private set { }
+        }
+        [Display(Name = "簽核狀態")]
+        public string SignStatus { get; set; }
+        [Display(Name = "簽核")]
+        public string SignStatusToShow
+        {
+            get
+            {
+                return RepositoryUtils.GetSignStatusCH(SignStatus);
+            }
+            private set { }
+        }
     }
 
     public partial class Repository
@@ -59,7 +78,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                            po.CreateDate,
                            si.SupplierName,
                            rel.PurchaseRequisitionID,
-                           po.PurchaseOrderStatus
+                           po.PurchaseOrderStatus,
+                           po.SignStatus
                        } into gp
                        orderby gp.Key.PurchaseOrderID descending
                        select new PurchaseOrderIndexViewModel
@@ -68,7 +88,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                            CreateDate = gp.Key.CreateDate,
                            SupplierName = gp.Key.SupplierName,
                            PurchaseRequisitionID = gp.Key.PurchaseRequisitionID,
-                           PurchaseOrderStatus = RepositoryUtils.GetStatus(gp.Key.PurchaseOrderStatus)
+                           PurchaseOrderStatus = gp.Key.PurchaseOrderStatus,
+                           SignStatus = gp.Key.SignStatus
                        };
             return povm;
         }

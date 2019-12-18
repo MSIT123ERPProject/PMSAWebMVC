@@ -2417,6 +2417,7 @@
     <Content Include="Views\PurchaseRequisitions\Confirm.cshtml" />
     <Content Include="Views\PurchaseRequisitions\_Confirm.cshtml" />
     <Content Include="Views\PurchaseOrders\Sign.cshtml" />
+    <Content Include="Views\PurchaseOrders\OrderCommitments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

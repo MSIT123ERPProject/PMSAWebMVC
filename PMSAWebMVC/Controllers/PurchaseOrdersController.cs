@@ -89,9 +89,48 @@ namespace PMSAWebMVC.Controllers
         }
 
         /// <summary>
-        /// 送出至供應商畫面
+        /// 答交供應商畫面
         /// </summary>
         /// <param name="id">採購單編號 PurchaseOrderID</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult OrderCommitments(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            POSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+            if (vm == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vm);
+        }
+
+        /// <summary>
+        /// 答交供應商畫面
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("OrderCommitments")]
+        [ValidateAntiForgeryToken]
+        public ActionResult OrderCommitmentsPost([Bind(Include = "POItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        {
+            if (model == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            rep.UpdatePOStatus(model.POItem.PurchaseOrderID, "W");
+            return Json(new { message = "答交成功", status = "success" });
+        }
+
+        /// <summary>
+        /// 送出至供應商畫面
+        /// </summary>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, ActionName("SendToSupplier")]
         [ValidateAntiForgeryToken]

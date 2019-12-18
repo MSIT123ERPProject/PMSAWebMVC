@@ -46,7 +46,7 @@
 
                         @if (User.IsInRole("Buyer") && !User.IsInRole("Manager") && item.PurchaseOrderStatus == "E")
                         {
-                            <a href="@Url.Action("Details","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="答交">
+                            <a href="@Url.Action("OrderCommitments","PurchaseOrders", routeValues:new { id = item.PurchaseOrderID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="答交">
                                 <i class="fas fa-check-double"></i>
                             </a>
                         }

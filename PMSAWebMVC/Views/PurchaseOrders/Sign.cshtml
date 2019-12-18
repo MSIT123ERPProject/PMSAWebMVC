@@ -168,7 +168,7 @@
                     toastr.success(result.message);
                     setTimeout(function () {
                         location.href = '@Url.Action("Index", "PurchaseOrders")';
-                    }, 2000);
+                    }, 1000);
                 } else if (result.status == "warning") {
                     toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'), "", { timeOut: 6000 });
                 }

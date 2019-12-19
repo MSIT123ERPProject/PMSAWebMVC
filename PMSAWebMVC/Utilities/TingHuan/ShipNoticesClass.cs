@@ -99,15 +99,6 @@ namespace PMSAWebMVC.Utilities.TingHuan
 
         public bool AddAPOChanged(PurchaseOrder purchaseOrder, string supplierAccount, string supplierCode)
         {
-            ///////////////////////////////////////////////////
-            //取得供應商帳號資料
-            //SupplierAccount supplier = User.Identity.GetSupplierAccount();
-            //string supplierAccount = supplier.SupplierAccountID;
-            //string supplierCode = supplier.SupplierCode;
-            ////////////////////////////////////////////////////
-            if ( purchaseOrder == null ) {
-                return false;
-            }
             POChanged pO = new POChanged();
             pO.PurchaseOrderID = purchaseOrder.PurchaseOrderID;
             pO.POChangedCategoryCode = purchaseOrder.PurchaseOrderStatus;

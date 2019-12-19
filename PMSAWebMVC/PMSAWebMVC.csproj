@@ -211,8 +211,6 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="Controllers\PurchaseOrderReceiveDtlsController.cs" />
-    <Compile Include="Controllers\PurchaseOrderReceivesController.cs" />
     <Compile Include="Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Controllers\PurchaseRequisitionsController.cs" />
     <Compile Include="Controllers\AdminController\RolesAdminController.cs" />
@@ -232,10 +230,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Metadata\PurchaseOrderReceive.cs" />
-    <Compile Include="Metadata\PurchaseOrderReceiveDtl.cs" />
-    <Compile Include="Metadata\PurchaseOrderReceiveDtlMetadata.cs" />
-    <Compile Include="Metadata\PurchaseOrderReceiveMetadata.cs" />
     <Compile Include="Metadata\SupplierAccount.cs" />
     <Compile Include="Metadata\SupplierRating.cs" />
     <Compile Include="Metadata\CompanyInfo.cs" />
@@ -2422,19 +2416,8 @@
     <Content Include="Views\PurchaseOrders\Details.cshtml" />
     <Content Include="Views\PurchaseRequisitions\Confirm.cshtml" />
     <Content Include="Views\PurchaseRequisitions\_Confirm.cshtml" />
-    <Content Include="Views\PurchaseOrderReceives\Create.cshtml" />
-    <Content Include="Views\PurchaseOrderReceives\Delete.cshtml" />
-    <Content Include="Views\PurchaseOrderReceives\Details.cshtml" />
-    <Content Include="Views\PurchaseOrderReceives\Edit.cshtml" />
-    <Content Include="Views\PurchaseOrderReceives\Index.cshtml" />
-    <Content Include="Views\PurchaseOrderReceiveDtls\Create.cshtml" />
-    <Content Include="Views\PurchaseOrderReceiveDtls\Delete.cshtml" />
-    <Content Include="Views\PurchaseOrderReceiveDtls\Details.cshtml" />
-    <Content Include="Views\PurchaseOrderReceiveDtls\Edit.cshtml" />
-    <Content Include="Views\PurchaseOrderReceiveDtls\Index.cshtml" />
-    <Content Include="Views\PurchaseOrderReceives\IndexDtl.cshtml" />
-    <Content Include="Views\StockIns\IndexDtls.cshtml" />
     <Content Include="Views\PurchaseOrders\Sign.cshtml" />
+    <Content Include="Views\PurchaseOrders\OrderCommitments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -85,7 +85,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             ////////////////////////////////////////////////////
             ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string status = PurchaseOrderStatus;
-            var query = from po in db.PurchaseOrder.AsEnumerable()
+            var query = (from po in db.PurchaseOrder.AsEnumerable()
                         where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)
                         select new shipOrderViewModel
                         {
@@ -94,8 +94,13 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                             ReceiverName = po.ReceiverName,
                             ReceiverTel = po.ReceiverTel,
                             ReceiverMobile = po.ReceiverMobile,
-                            ReceiptAddress = po.ReceiptAddress
-                        };
+                            ReceiptAddress = po.ReceiptAddress,
+                        }).ToList();
+            for (int i = 0; i < query.Count(); i++)
+            {
+                query[i].PurchaseOrderStatusDisplay = utilities.GetStatus(query[i].PurchaseOrderStatus);
+            }
+            var c = query.ToList();
             List<shipOrderViewModel> qlist = query.ToList();
             for (int i = 0; i < qlist.Count(); i++)
             {

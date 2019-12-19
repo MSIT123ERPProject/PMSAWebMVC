@@ -4,9 +4,8 @@
     background-color: #f4f8f9;
 }
 
-
 /* ul 底部 =======================*/
-.topUl{
+.topUl {
 }
 
 li.bottomLi {
@@ -15,18 +14,22 @@ li.bottomLi {
     background-color: #212529;
     padding-bottom: 20px;
 }
+
 #bottomUl div {
     transform: translateX(-4px);
 }
+
 #bottomUl {
     border-top: 1px solid rgba(52, 58, 64, 0.5);
     width: 100%;
 }
+
 .middleUl {
     transform: translateX(5px);
     height: 70vh;
     overflow-y: scroll;
     overflow-x: hidden;
+    width: 97%;
 }
 /*------scroll bar---------------------*/
 
@@ -81,12 +84,13 @@ li.bottomLi {
     outline: none;
 }
 
-.logoff.dropdown-item {
+.logoff.nav-item {
     width: 80% !important;
     margin: 0px auto;
 }
 
 .logoff button {
+    text-align: center !important;
     opacity: 0.8;
     transition: 0.3s;
     color: white;
@@ -94,7 +98,7 @@ li.bottomLi {
     width: 100% !important;
     border: 1px solid rgb(71, 75, 78);
     background-color: #212529;
-    padding: 5px 0;
+    padding: 5px !important;
     margin-top: 10px;
 }
 

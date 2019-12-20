@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -18,7 +19,7 @@ using System.Web.Mvc;
     {
         private PMSAEntities db = new PMSAEntities();
 
-
+        
 
         protected override void Dispose(bool disposing)
         {
@@ -460,7 +461,15 @@ using System.Web.Mvc;
 
                 SignFlowDtl signFlowDtl = new SignFlowDtl();
                 signFlowDtl.SignFlowOID = sf.SignFlowOID;
-                signFlowDtl.ApprovingOfficerID = user.ManagerID;
+                if (user.ManagerID == null)
+                {
+                    signFlowDtl.ApprovingOfficerID = "CE00005";
+                }
+                else
+                {
+                    signFlowDtl.ApprovingOfficerID = user.ManagerID;
+                }
+                
                 signFlowDtl.SignStatusCode = "S";
 
 
@@ -744,8 +753,8 @@ using System.Web.Mvc;
                                 PurchaseRequisitionDtlOID = prd.PurchaseRequisitionDtlOID,
                                 PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,
 
-
-                                SignFlowOID=sf.SignFlowOID,
+                                
+                                SignFlowOID =sf.SignFlowOID,
                                 OriginatorID=sf.OriginatorID,
                                 SignBeginDate=sf.SignBeginDate,
                                 SignEvent=sf.SignEvent,
@@ -768,6 +777,9 @@ using System.Web.Mvc;
 
             };
             vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;//採購單識別碼
+            vm.SignFlowOID = data.First().SignFlowOID;
+            vm.SignFlowDtlOID = data.First().SignFlowDtlOID;
+            vm.SignStatus = data.First().SignStatus;
             ViewBag.ProductName = data.First().ProductName; ViewBag.PRBeginDate = data.First().PRBeginDate.ToString("yyyy/MM/dd"); ViewBag.EmployeeName = data.First().EmployeeName;
             ViewBag.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID; ViewBag.ProcessStatus = GetProcessStatus(data.First().ProcessStatus); ViewBag.PurchaseRequisitionID = data.First().PurchaseRequisitionID;
             ViewBag.ApprovingOfficerName = data.First().ApprovingOfficerName; ViewBag.SignPassword = data.First().SignPassword;
@@ -781,14 +793,41 @@ using System.Web.Mvc;
         //[AuthorizeDeny(Roles = "Manager")]
         public ActionResult Sign1(PurchaseRequisitionDtlItem purchaseRequisitionDtlItem)
         {
-            
+            StringBuilder sb = new StringBuilder();
+            if (purchaseRequisitionDtlItem.SignStatus != "Y" && purchaseRequisitionDtlItem.SignStatus != "N")
+            {
+                sb.Append("簽核狀態 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(purchaseRequisitionDtlItem.SignPassword))
+            {
+                sb.Append("登入密碼 為必填").Append(Environment.NewLine);
+            }
+            else
+            {
+                bool result = false;
+                if (purchaseRequisitionDtlItem.SignPassword == "P@ssw0rd")
+                {
+                     result = true;
+                }
+                
+                if (!result)
+                {
+                    sb.Append("登入密碼 輸入錯誤").Append(Environment.NewLine);
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                return Json(new { message = sb.ToString(), status = "warning" });
+            }
+
             PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(purchaseRequisitionDtlItem.PurchaseRequisitionID);
             SignFlow signFlow = db.SignFlow.Find(purchaseRequisitionDtlItem.SignFlowOID);
             SignFlowDtl signFlowDtl = db.SignFlowDtl.Find(purchaseRequisitionDtlItem.SignFlowDtlOID);
             purchaseRequisition.SignStatus = purchaseRequisitionDtlItem.SignStatus;
             signFlow.SignStatusCode= purchaseRequisitionDtlItem.SignStatus;
             signFlowDtl.SignStatusCode = purchaseRequisitionDtlItem.SignStatus;
-
+            signFlowDtl.SignOpinion = purchaseRequisitionDtlItem.SignOpinion;
             string message = "修改成功!!";
             bool status = true;
 
@@ -798,7 +837,7 @@ using System.Web.Mvc;
                 db.Entry(signFlow).State = EntityState.Modified;
                 db.Entry(signFlowDtl).State = EntityState.Modified;
                 db.SaveChanges();
-                return Json(new { status = status, message = message, id = db.PurchaseRequisition.Max(x => x.PurchaseRequisitionID) }, JsonRequestBehavior.AllowGet);
+                return Json(new { message = "簽核成功", status = "success" });
             }
             else
             {

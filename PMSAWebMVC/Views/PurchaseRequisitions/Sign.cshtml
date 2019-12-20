@@ -6,7 +6,14 @@
 @Html.HiddenFor(m => m.SignFlowOID)
 @Html.HiddenFor(m => m.SignFlowDtlOID)
 @Html.HiddenFor(m => m.SignStatus)
-<h2 class="text-dark">@ViewBag.Title</h2><h2 class="text-dark">@ViewBag.SignFlowDtlOID</h2><h2 class="text-dark">@ViewBag.SignFlowOID</h2>
+
+
+@*@Html.TextBoxFor(m => m.PurchaseRequisitionID)
+    @Html.TextBoxFor(m => m.SignFlowOID)
+    @Html.TextBoxFor(m => m.SignFlowDtlOID)
+    @Html.TextBoxFor(m => m.SignStatus)*@
+<label></label>
+<h2 class="text-dark">@ViewBag.Title</h2>
 
 <h6 class="note note-editor text-muted small">確認內容無誤後，請點選<span class="text-danger">進行簽核</span>按鈕，完成簽核動作</h6>
 <button type="button" class="btn btn-primary btn-lg waves-effect waves-light mb-2" data-toggle="modal" data-target="#fluidModalLeftInfoDemo"><i class="fas fa-clipboard-check"></i> 進行簽核</button>
@@ -21,7 +28,7 @@
             <!--Header-->
             <div class="modal-header">
                 <p class="heading lead"><i class="fas fa-clipboard-check"></i> 簽核</p>
-                @*<button type="button" class="btn btn-primary" id="btnSignDemo">Demo</button>*@
+                <button type="button" class="btn btn-primary" id="btnSignDemo">Demo</button>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" class="white-text">&times;</span>
                 </button>
@@ -33,10 +40,6 @@
                 {
                     @Html.AntiForgeryToken()
 
-                    @Html.HiddenFor(m => m.PurchaseRequisitionID)
-                    @Html.HiddenFor(m => m.SignFlowOID)
-                    @Html.HiddenFor(m => m.SignFlowDtlOID)
-                    @Html.HiddenFor(m => m.SignStatus)
 
                     <!-- Stepers Wrapper -->
                     <ul class="stepper stepper-vertical p-0 m-0">
@@ -149,6 +152,12 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
 @*請購明細*@
 <div class="card mb-3">
     <div class="card-header">
@@ -161,7 +170,7 @@
         <div class="card-body pb-0 pt-2">
             <table class="table table-striped hover order-column nowrap text-left" id="dataTable" cellspacing="0" style="width:100%">
                 <thead style="border:double">
-                    <tr class=" text-left">
+                    <tr class="bg-primary text-white text-center text-left">
 
                         <th data-priority="1">@Html.DisplayNameFor(model => model.PurchaseRequisitionDtlCode)</th>
                         <th>@Html.DisplayNameFor(model => model.PartName)</th>
@@ -208,7 +217,12 @@
             "closeButton": true,
             "progressBar": true,
         }
-
+        //Demo鍵點擊
+        $("body").on('click', "#btnSignDemo", function () {
+            $("input[type='radio'][value='Y']").trigger("click");
+            $("#SignOpinionSignOpinion").trigger("focus").val("內容無誤，準予同意");
+            $("#SignPassword").trigger("focus").val("P@ssw0rd");
+        });
         //簽核狀態點擊
         $("body").on('click', ".btn-group-toggle a[data-toggle='tab']", function () {
             $(this).addClass("active").siblings().removeClass("active");
@@ -242,7 +256,8 @@
                 PurchaseRequisitionID: $("#PurchaseRequisitionID").val(),
                 SignStatus: $("#SignStatus").val(),
                 SignFlowOID: $("#SignFlowOID").val(),
-                SignFlowDtlOID: $("#SignFlowDtlOID").val()
+                SignFlowDtlOID: $("#SignFlowDtlOID").val(),
+                SignOpinion: $("#SignOpinion").val()
             }
 
             await $.ajax({
@@ -253,7 +268,7 @@
                 if (result.status == "success") {
                     toastr.success(result.message);
                     setTimeout(function () {
-                        location.href = '@Url.Action("Index", "PurchaseOrders")';
+                        location.href = '@Url.Action("Index", "PurchaseRequisitions")';
                     }, 2000);
                 } else if (result.status == "warning") {
                     toastr.warning(result.message.replace(/(?:\r\n|\r|\n)/g, '<br>'), "", { timeOut: 6000 });

@@ -487,7 +487,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         [Display(Name = "簽核狀態")]
         public string SignStatus { get; set; }
         [Display(Name = "簽核流程表識別碼")]
-        public string SignFlowOID { get; set; }
+        public int SignFlowOID { get; set; }
         public string PurchaseRequisitionDtlOID { get; set; }
         [Display(Name = "發起人")]
         public string OriginatorID { get; set; }//簽核總表
@@ -507,6 +507,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         public string SignOpinion { get; set; }
         [Display(Name = "簽核時間")]
         public DateTime? SignDate { get; set; }
+        
 
         //TODO: 應是多筆的狀況，之後需作修正
         public string ProductNumber { get; set; }

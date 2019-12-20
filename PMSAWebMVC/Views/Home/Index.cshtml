@@ -383,26 +383,27 @@
         <p class="lead text-light">提供各項統計資訊。</p>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h2><i class="fas fa-search-dollar"></i>每月採購金額</h2>
             <div class="card" id="monthsum"></div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h2><i class="fas fa-fw fa-table"></i>已採購未進貨表單</h2>
             <div class="card" id="pco"></div>
         </div>
+        <div class="col-md-4">
+            <h2><i class="fas fa-fw fa-table"></i>進貨單處於簽核中</h2>
+            <div class="card" id="sss"></div>
+        </div>
     </div>
-    <hr />
+    @*<hr />
     <div class="row">
         <div class="col-md-6">
             <h2><i class="far fa-surprise"></i>已產生採購單但逾期之採購單</h2>
             <div class="card" id="oo"></div>
         </div>
-        <div class="col-md-6">
-            <h2><i class="fas fa-fw fa-table"></i>進貨單處於簽核中</h2>
-            <div class="card" id="sss"></div>
-        </div>
-    </div>
+        
+    </div>*@
     @section scripts{
         @*<script src="https://code.highcharts.com/highcharts.js"></script>
             <script src="https://code.highcharts.com/modules/series-label.js"></script>
@@ -416,7 +417,6 @@
             $(document).ready(function () {
                 PSMonthSum();
                 PCE();
-                GetO();
                 GetSSS();
             });
 
@@ -513,7 +513,7 @@
                         },
                         yAxis: {
                             title: {
-                                text: 'Unit ($)'
+                                text: '金額 ($)'
                             }
                         },
                         plotOptions: {
@@ -538,11 +538,13 @@
                     var ps = [];
                     var cs = [];
                     var es = [];
+                    var os = [];
                     for (var i = 0; i < data.length; i++) {
                         Names.push(data[i].name);
                         ps.push(data[i].count);
                         cs.push(data[i].count1);
                         es.push(data[i].count2);
+                        os.push(data[i].count4);
                     }
 
                     Highcharts.chart('pco', {
@@ -577,19 +579,22 @@
                             }
                         },
                         series: [{
-                            name: '訂單送出',
+                            name: '採購單送出',
                             data: ps
                         }, {
-                            name: '訂單異動中',
+                            name: '採購單異動中',
                             data: cs
                         }, {
-                            name: '訂單已達交',
+                            name: '採購單已達交',
                             data: es
+                        }, {
+                            name: '採購單逾期',
+                            data: os
                         }]
                     });
                 });
             }
-            //BUBBLECHART
+            //BUBBLECHART//先移掉
             function GetO() {
                 $.getJSON('@Url.Action("GetO", "PSReports")', function (data) {
                     var Names = [];
@@ -901,20 +906,17 @@
         <p class="lead text-light">提供各項統計資訊。</p>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h2><i class="fas fa-laptop"></i>最新十筆入庫明細</h2>
             <div class="card" id="tenstk"></div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h2><i class="fas fa-fw fa-table"></i>入庫但有缺件</h2>
             <div class="card" id="pord"></div>
         </div>
-
-    </div>
-    <div class="row">
-        <div class="col-md-6 mt-3">
+        <div class="col-md-4">
             <h2><i class="fas fa-fw fa-table"></i>查詢即將到期商品</h2>
-            <div class="card" id="sindtl"></div>
+            <div class="card" style="height:400px" id="sindtl"></div>
         </div>
     </div>
 

@@ -157,6 +157,7 @@
                 //$("#ProcessStatus").val(JSON.stringify(datas[0].ProcessStatus));//轉字串
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
+                $("#SignOpinion").val(datas[0].SignOpinion);
                 //$('#PRBeginDate').datetimepicker({
                 //    defaultDate: datas[0].PRBeginDate
                 //});
@@ -199,6 +200,7 @@
                 $("#EmployeeID").val(datas[0].EmployeeID);
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
+                $("#SignOpinion").val(datas[0].SignOpinion);
                 $('#PRBeginDate').children("input").val(datas[0].PRBeginDate);
             })
             });
@@ -314,6 +316,10 @@
                             <option id="opt5" value="Y">同意</option>
                             <option id="opt6" value="N">拒絕</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required" >簽核意見</label>
+                        <input type="text" class="form-control" id="SignOpinion" name="da">
                     </div>
                 </form>
             </div>

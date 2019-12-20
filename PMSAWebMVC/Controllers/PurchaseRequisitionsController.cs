@@ -104,23 +104,54 @@ using System.Web.Mvc;
             {
                 return HttpNotFound();
             }
+            if (purchaseRequisition.SignFlowOID == null)
+            {
+                var datas = from p in db.PurchaseRequisition.AsEnumerable()
+                            
+                            where p.PurchaseRequisitionID == id
+                            select new /*PurchaseRequisitionIndexViewModel*/
+                            {
+                                PurchaseRequisitionID = p.PurchaseRequisitionID,
+                                ProductNumber = p.ProductNumber,
+                                EmployeeID = p.EmployeeID,
+                                PRBeginDate = p.PRBeginDate.ToString("yyyy/MM/dd"),
+                                //ProcessStatus = GetProcessStatus(p.ProcessStatus),
+                                //SignStatus = GetSignStatus(p.SignStatus)
+                                ProcessStatus = p.ProcessStatus,
+                                SignStatus = p.SignStatus,
+                                UserEmployeeID = user.EmployeeID,
+                                SignOpinion = "",
+                                SignFlowOID = p.SignFlowOID
 
-            var datas = from p in db.PurchaseRequisition.AsEnumerable()
-                        where p.PurchaseRequisitionID == id
-                        select new /*PurchaseRequisitionIndexViewModel*/
-                        {
-                            PurchaseRequisitionID = p.PurchaseRequisitionID,
-                            ProductNumber = p.ProductNumber,
-                            EmployeeID = p.EmployeeID,
-                            PRBeginDate = p.PRBeginDate.ToString("yyyy/MM/dd"),
-                            //ProcessStatus = GetProcessStatus(p.ProcessStatus),
-                            //SignStatus = GetSignStatus(p.SignStatus)
-                            ProcessStatus = p.ProcessStatus,
-                            SignStatus = p.SignStatus,
-                            UserEmployeeID = user.EmployeeID
-                        };
-            var da=datas.ToList();
-            return Json(datas, JsonRequestBehavior.AllowGet);
+                            };
+                var da = datas.ToList();
+                return Json(datas, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var datas = from p in db.PurchaseRequisition.AsEnumerable()
+                            join sfd in db.SignFlowDtl
+                            on p.SignFlowOID equals sfd.SignFlowOID
+                            where p.PurchaseRequisitionID == id
+                            select new /*PurchaseRequisitionIndexViewModel*/
+                            {
+                                PurchaseRequisitionID = p.PurchaseRequisitionID,
+                                ProductNumber = p.ProductNumber,
+                                EmployeeID = p.EmployeeID,
+                                PRBeginDate = p.PRBeginDate.ToString("yyyy/MM/dd"),
+                                //ProcessStatus = GetProcessStatus(p.ProcessStatus),
+                                //SignStatus = GetSignStatus(p.SignStatus)
+                                ProcessStatus = p.ProcessStatus,
+                                SignStatus = p.SignStatus,
+                                UserEmployeeID = user.EmployeeID,
+                                SignOpinion = sfd.SignOpinion,
+                                SignFlowOID = p.SignFlowOID
+
+                            };
+                var da = datas.ToList();
+                return Json(datas, JsonRequestBehavior.AllowGet);
+            }
+            
         }
 
         //取得請購單資料集

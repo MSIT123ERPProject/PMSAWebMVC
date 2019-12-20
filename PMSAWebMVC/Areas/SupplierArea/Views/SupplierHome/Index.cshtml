@@ -27,7 +27,7 @@
         <p class="lead text-light">提供各項統計資訊。</p>
     </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-12">
             @*<h2><i class="fas fa-money-check-alt"></i>出貨金額比例</h2>*@
             @*DateTimePickerStart*@
             <div class="input-group date" id="datetimepickerIdStart" data-target-input="nearest">
@@ -45,18 +45,14 @@
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                 </div>
             </div>
-            <div class="card" id="container"></div>
+            <div class="card mt-1" id="container"></div>
         </div>
-        <div class="col-md-4">
-            @*<h2><i class="fas fa-chart-bar"></i>料件庫存數量</h2>*@
+        <div class="col-12 mt-3">
             <div class="card" id="container2"></div>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 mt-3">
             <div class="card" id="container3"></div>
         </div>
-        @*<div class="col-md-4">
-                <div class="card" id="ShipQtyByStatus"></div>
-            </div>*@
     </div>
     @section scripts{
         @*bubbleChart還是需要引用此CDN*@
@@ -73,7 +69,6 @@
                 unitsInStockChart();
                 partTotalPrice();
                 SplitBubbleChart();
-                ShipQtyByStatus();
             });
             //時間選擇器
             $('#datetimepickerIdStart').datetimepicker(
@@ -196,11 +191,12 @@
                     safetyQty.push(datas[i].SafetyQty);
                     unitsInStock.push(datas[i].UnitsInStock);
                     unitsOnOrder.push(datas[i].UnitsOnOrder);
-                };
+                   };
+
                 var chart2 = new Highcharts.chart({
                     title: {
                         useHTML: true,
-                        text: '<i class="fas fa - chart - bar"></i>目前庫存量' ,
+                        text: '目前庫存量' ,
                     },
                     subtitle: { text: '料件' },
                     chart: {
@@ -219,7 +215,7 @@
                     xAxis: {
                         categories: partNumber
                     },
-                    yAxis: [{
+                    yAxis: {
                         min: 0,
                         title: {
                             text: '庫存',
@@ -229,11 +225,6 @@
                             overflow:'justify'
                         }
                     },
-                        {
-                            title: 'safetyQty',
-                            opposite: true
-                        }
-                    ],
                     series: [
                         {
                         name:'庫存',
@@ -254,20 +245,20 @@
                             borderWidth: 0
                         }
                     },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        vertical: '',
-                        x: -40,
-                        y: 80,
-                        floating: true,
-                        borderwidth: 1,
-                        backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                        shadow: true
-                    },
-                    credits: {
-                        enable: false
-                    }
+                    //legend: {
+                    //    layout: 'vertical',
+                    //    align: 'right',
+                    //    vertical: '',
+                    //    x: -40,
+                    //    y: 80,
+                    //    floating: true,
+                    //    borderwidth: 1,
+                    //    backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                    //    shadow: true
+                    //},
+                    //credits: {
+                    //    enable: false
+                    //}
                 });
             });
         }
@@ -285,36 +276,8 @@
                 for (var i = 0; i < datas.length; i++) {
                     percentage.push(datas[i].Percentage);
                     partname.push(datas[i].PartName);
-                    pie.push({ name: datas[i].SourceListID, y: datas[i].ToalPrice });
+                    pie.push({ name: datas[i].PartNumber, y: datas[i].ToalPrice });
                 }
-                var chart = new Highcharts.chart({
-                    chart: {
-                        renderTo: 'container',
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
-                    title: {
-                        text: '各料件銷售金額百分比',
-                    },
-                    tooltip: {
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                            },
-                            showInLegend: true,
-                        },
-
-                    },
-                });
-
 
                     if (pie[0] == null) {
                         toastr.error("查無資料", "通知");
@@ -408,14 +371,14 @@
                     let qty = [];
                     let shipqty = [];
                     let unitsonorder = [];
-                    console.log(datas);
+                    //console.log(datas);
                     for (let i = 0; i < datas.length; i++) {
                         partname.push(datas[i].PartName);
                         qty.push(datas[i].Qty);
                         shipqty.push(datas[i].ShipQty);
                         unitsonorder.push(datas[i].UnitsOnOrder);
                     }
-                    console.log(partname);
+                    //console.log(partname);
                     Highcharts.chart('ShipQtyByStatus', {
                         chart: {
                             type: 'bar',

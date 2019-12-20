@@ -78,6 +78,22 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                 dateEndD = DateTime.Now;
             }
             //計算計算選取區間已出貨的商品金額，如無選取預設為今日以前三個月
+            var poq = from po in db.PurchaseOrder
+                      from pod in po.PurchaseOrderDtl
+                      where po.CreateDate > dateStartD && po.CreateDate < dateEndD
+                      && "WSRZ".Contains(po.PurchaseOrderStatus)
+                      && po.SupplierCode == supplierCode
+                      group pod by new
+                      {
+                          pod.PartName,
+                          pod.PartNumber,
+                          pod.SourceListID,
+                          ToalPrice = pod.Qty * pod.PurchaseUnitPrice * pod.Qty * (1 - pod.Discount)
+                      } into g
+                      select new { g.Key.PartName, g.Key.PartNumber, g.Key.SourceListID, g.Key.ToalPrice };
+
+            return Json(poq, JsonRequestBehavior.AllowGet);
+
             var qpo = from po in db.PurchaseOrder
                       join pod in db.PurchaseOrderDtl
                       on po.PurchaseOrderID equals pod.PurchaseOrderID
@@ -203,7 +219,8 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                 }
             }
         }
-        public class ShipQtyByStatusViewModel {
+        public class ShipQtyByStatusViewModel
+        {
             public string PartName { set; get; }
             public string PartNumber { set; get; }
             public int Qty { set; get; }

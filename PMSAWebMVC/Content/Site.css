@@ -20,7 +20,7 @@ li.bottomLi {
 }
 
 #bottomUl {
-    border-top: 1px solid rgba(52, 58, 64, 0.5);
+    border-top: 1px solid white;
     width: 100%;
 }
 
@@ -31,7 +31,7 @@ li.bottomLi {
     overflow-x: hidden;
     width: 97%;
 }
-/*------scroll bar---------------------*/
+    /*------scroll bar---------------------*/
 
     .middleUl::-webkit-scrollbar {
         width: 10px;
@@ -96,10 +96,15 @@ li.bottomLi {
     color: white;
     letter-spacing: 2px;
     width: 100% !important;
-    border: 1px solid rgb(71, 75, 78);
-    background-color: #212529;
+    border: 1px solid #aaa;
+    background-color: black;
     padding: 5px !important;
     margin-top: 10px;
+}
+.logoff span {
+    color: white;
+    letter-spacing: 2px;
+    font-weight: 600;
 }
 
     .logoff button:focus {
@@ -107,22 +112,22 @@ li.bottomLi {
         outline: none;
     }
 
-    .logoff button:hover {
-        transition: 0.3s;
-        background-color: rgba(255, 255, 255, 0.75) !important;
-        color: #212529 !important;
-        font-weight: 600;
-    }
+.logoff button:hover {
+    transition: 0.3s;
+    background-color: #16181a !important;
+    color: #212529 !important;
+    font-weight: 600;
+}
 
     .logoff button:active {
         opacity: 0.8;
     }
 
-.sidebar-wrapper .sidebar-menu ul li .logoff button i::before {
-    color: #16c7ff;
-}
+    .logoff button i::before {
+        color: #16c7ff;
+    }
 
-.sidebar-wrapper .sidebar-menu ul li:hover .logoff button i::before {
+.bottomLi:hover .logoff button i::before {
     color: #16c7ff;
     text-shadow: 0px 0px 10px rgba(22, 199, 255, 0.5);
     display: inline-block;

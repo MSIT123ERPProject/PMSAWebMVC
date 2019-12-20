@@ -207,6 +207,7 @@
                             <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
                             <button id="btnSave" name="btnSave" type="button" class="btn btn-primary">新增</button>
                             <button id="btnUpdate" name="btnUpdate" type="button" class="btn btn-success">修改</button>
+                            <button id="btnDEMO" name="btnDEMO" type="button" class="btn btn-success">DEMO</button>
                         </div>
 
                     </form>
@@ -258,6 +259,7 @@
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', true);
                 $('#btnSave').hide();
+                $('#btnDEMO').hide();
                 $('#btnUpdate').hide();
                 $("#PartUnitName1").hide();
                 $('#CategoryName1').hide();
@@ -296,6 +298,7 @@
               $("#CreatedDate2").val("");
               $('#CategoryName1').show();
               $('#btnSave').show();
+              $('#btnDEMO').show();
               $("#partImg2Div").show();
               $("#PartUnitName1").show();
               $("#CreatedDateDiv").hide();
@@ -305,6 +308,17 @@
               $('#CategoryName').hide();
              $('.modal').modal('show');
         });
+        //DEMO
+        $("#btnDEMO").click(function ()
+        {
+            $("#PartNumber").val("ART525");
+            $("#PartName").val("越野車手把");
+            $("#PartSpec").val("22.1MM");
+            $("#PartUnitName2").val(3);
+            $("#QtyPerUnit").val(40);
+            $("#CategoryName2").val(5);
+
+        }); 
         //儲存資料
         $("#btnSave").click(function ()
         {
@@ -364,6 +378,7 @@
                         });
                     }
                 })
+           
             @*$.ajax
             (
                 {
@@ -400,6 +415,7 @@
                 $('#btnUpdate').show();
                 $("#partImg2Div").show();
                 $("#PartUnitName1").show();
+                $('#btnDEMO').hide();
                 $("#CreatedDateDiv").hide();
                 $("#partImg1").hide();
                 $('#PartUnitName').hide();
@@ -413,7 +429,7 @@
                 $("#partImg2").attr("src", `/assets/parts/${datas[0].PartNumber}-${datas[0].PartName}.jpg`);
                 $("#PartUnitName2").val(datas[0].PartUnitOID);
                 $("#QtyPerUnit").val(datas[0].QtyPerUnit);
-                $("#CategoryName").val(datas[0].CategoryName).text();
+                $("#CategoryName").val(datas[0].PartCategoryOID).text();
                 $("#CategoryName").attr('disabled', true);
                 $("#CreatedDate2").val(datas[0].CreatedDate);
             });
@@ -427,7 +443,7 @@
             var PartSpec = $("#PartSpec").val();
             var PartUnitOID = $("#PartUnitName2").val();
             var QtyPerUnit = $("#QtyPerUnit").val();
-            var PartCategoryOID = $("#CategoryName").val();
+            var PartCategoryOID = $("#CategoryName2").val();
             var PtImgFile = $("#PtImgFile")[0].files[0];
             var Jsondata = JSON.stringify(
                 {

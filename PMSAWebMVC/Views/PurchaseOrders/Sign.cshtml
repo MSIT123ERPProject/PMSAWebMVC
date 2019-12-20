@@ -39,9 +39,9 @@
                     @Html.AntiForgeryToken()
 
                     @Html.HiddenFor(m => m.POItem.PurchaseOrderID)
-                    @Html.HiddenFor(m => m.POItem.SignFlowOID)
-                    @Html.HiddenFor(m => m.POItem.SignFlowDtlOID)
-                    @Html.HiddenFor(m => m.POItem.SignStatus)
+                    @Html.HiddenFor(m => m.SFItem.SignFlowOID)
+                    @Html.HiddenFor(m => m.SFItem.SignFlowDtlOID)
+                    @Html.HiddenFor(m => m.SFItem.SignStatus)
 
                     <!-- Stepers Wrapper -->
                     <ul class="stepper stepper-vertical p-0 m-0">
@@ -56,9 +56,9 @@
                             <div class="step-content grey lighten-4">
                                 <small><strong>簽核人</strong></small>
                                 <br>
-                                <p class="text-muted">@Model.POItem.ApprovingOfficerName</p>
+                                <p class="text-muted">@Model.SFItem.ApprovingOfficerName</p>
 
-                                <small><strong>@Html.DisplayNameFor(m => m.POItem.SignStatus)</strong></small>
+                                <small><strong>@Html.DisplayNameFor(m => m.SFItem.SignStatus)</strong></small>
                                 <br>
                                 <div id="tab" class="btn-group btn-group-toggle btn-block mb-2" data-toggle="buttons">
                                     <a href="#" class="btn btn-outline-primary p-1 d-flex justify-content-center" data-toggle="tab"><input type="radio" name="statusCode" value="Y" autocomplete="off">同意</a>
@@ -68,7 +68,7 @@
 
                                 <div class="md-form">
                                     <i class="fas fa-pencil-alt prefix text-primary"></i>
-                                    @Html.TextAreaFor(m => m.POItem.SignOpinion, 2, 20, new { @class = "md-textarea form-control", maxlength = 128 })
+                                    @Html.TextAreaFor(m => m.SFItem.SignOpinion, 2, 20, new { @class = "md-textarea form-control", maxlength = 128 })
                                     <label for="signOpinion">簽核意見</label>
                                 </div>
 
@@ -88,7 +88,7 @@
                             <div class="step-content grey lighten-4">
                                 <div class="md-form">
                                     <i class="fas fa-lock prefix text-primary"></i>
-                                    @Html.PasswordFor(m => m.POItem.SignPassword, new { @class = "form-control" })
+                                    @Html.PasswordFor(m => m.SFItem.SignPassword, new { @class = "form-control" })
                                     <label for="signValidation">登入密碼</label>
                                 </div>
 
@@ -128,26 +128,26 @@
         $("body").on('click', ".btn-group-toggle a[data-toggle='tab']", function () {
             $(this).addClass("active").siblings().removeClass("active");
             let signStatusCode = $(this).children("input[type=radio]").val();
-            $("#POItem_SignStatus").val(signStatusCode);
+            $("#SFItem_SignStatus").val(signStatusCode);
         });
 
         //Demo鍵點擊
         $("body").on('click', "#btnSignDemo", function () {
             $("input[type='radio'][value='Y']").trigger("click");
-            $("#POItem_SignOpinion").trigger("focus").val("內容無誤，準予同意");
-            $("#POItem_SignPassword").trigger("focus").val("P@ssw0rd");
+            $("#SFItem_SignOpinion").trigger("focus").val("內容無誤，準予同意");
+            $("#SFItem_SignPassword").trigger("focus").val("P@ssw0rd");
         });
 
         //送出簽核
         $("body").on('click', "#btnSignSubmit", function () {
             let result = true;
             //let temp = $(".btn-group-toggle a[data-toggle='tab']").hasClass("active");
-            let temp = $("#POItem_SignStatus").val() != "S";
+            let temp = $("#SFItem_SignStatus").val() != "S";
             result = result && temp;
             if (!temp) {
                 toastr.warning("簽核狀態 為必填", "", { timeOut: "6000" });
             }
-            temp = $("#POItem_SignPassword").val() != "";
+            temp = $("#SFItem_SignPassword").val() != "";
             result = result && temp;
             if (!temp) {
                 toastr.warning("登入密碼 為必填", "", { timeOut: "6000" });

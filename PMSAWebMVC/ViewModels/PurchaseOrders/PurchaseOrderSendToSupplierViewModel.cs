@@ -87,6 +87,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             /// </summary>
             public POInfoViewModel POItem { get; set; }
             /// <summary>
+            /// 簽核資訊
+            /// </summary>
+            public SignFlowViewModel SFItem { get; set; }
+            /// <summary>
             /// 供應商資訊
             /// </summary>
             public SUPInfoViewModel SUPItem { get; set; }
@@ -102,6 +106,37 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             /// 交易記錄：檢視使用          
             /// </summary>
             public IList<POChangedRecordViewModel> POChangedItems { get; set; }
+        }
+
+        public class SignFlowViewModel
+        {
+            public Nullable<int> SignFlowOID { get; set; }
+            public Nullable<int> SignFlowDtlOID { get; set; }
+            [Display(Name = "簽核狀態")]
+            public string SignStatus { get; set; }
+            [Display(Name = "簽核")]
+            public string SignStatusToShow
+            {
+                get
+                {
+                    return RepositoryUtils.GetSignStatusCH(SignStatus);
+                }
+                private set { }
+            }
+            [Display(Name = "簽核人")]
+            public string ApprovingOfficerName { get; set; }
+            [Display(Name = "簽核意見")]
+            public string SignOpinion { get; set; }
+            [Display(Name = "簽核身份驗證密碼")]
+            public string SignPassword { get; set; }
+            [DataType(DataType.DateTime)]
+            [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm:ss}")]
+            [Display(Name = "通知時間")]
+            public DateTime? SignBeginDate { get; set; }
+            [DataType(DataType.DateTime)]
+            [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm:ss}")]
+            [Display(Name = "簽核時間")]
+            public DateTime? SignDate { get; set; }
         }
 
         public class POInfoViewModel
@@ -129,6 +164,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             public string ReceiverMobile { get; set; }
             [Display(Name = "收貨地址")]
             public string ReceiptAddress { get; set; }
+            [Display(Name = "電子信箱")]
+            public string Email { get; set; }
+            [Display(Name = "聯絡電話")]
+            public string Tel { get; set; }
             [Display(Name = "簽核狀態")]
             public string SignStatus { get; set; }
             [Display(Name = "簽核")]
@@ -141,17 +180,6 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 private set { }
             }
             public Nullable<int> SignFlowOID { get; set; }
-            public Nullable<int> SignFlowDtlOID { get; set; }
-            [Display(Name = "簽核人姓名")]
-            public string ApprovingOfficerName { get; set; }
-            [Display(Name = "簽核意見")]
-            public string SignOpinion { get; set; }
-            [Display(Name = "簽核身份驗證密碼")]
-            public string SignPassword { get; set; }
-            [Display(Name = "電子信箱")]
-            public string Email { get; set; }
-            [Display(Name = "聯絡電話")]
-            public string Tel { get; set; }
         }
     }
 
@@ -166,6 +194,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         public SendToSupplierViewModel GetPOSendToSupplierViewModel(string purchaseOrderID)
         {
             var poitem = GetPOInfoViewModel(purchaseOrderID);
+            var sfitem = GetSFItemViewModel(poitem.SignFlowOID);
             var si = db.SupplierInfo.Find(poitem.SupplierCode);
             var supacc = si.SupplierAccount.FirstOrDefault();
             var pocs = db.POChanged.Where(item => item.PurchaseOrderID == purchaseOrderID)
@@ -216,6 +245,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             SendToSupplierViewModel po = new SendToSupplierViewModel
             {
                 POItem = poitem,
+                SFItem = sfitem,
                 SUPItem = supitem,
                 PODItems = poditems,
                 PODItemsAggregate = poditems.Sum(item => item.Total),
@@ -223,6 +253,45 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             };
 
             return po;
+        }
+
+        /// <summary>
+        /// 取得簽核資訊
+        /// </summary>
+        /// <param name="signFlowOID"></param>
+        /// <returns></returns>
+        public SignFlowViewModel GetSFItemViewModel(int? signFlowOID)
+        {
+            SignFlow sf = null;
+            SignFlowDtl sfd = null;
+            SignFlowViewModel sfvm = null;
+
+            if (signFlowOID.HasValue)
+            {
+                sf = db.SignFlow.Find(signFlowOID);
+
+                sfd = db.SignFlowDtl
+                    .Where(item => item.SignFlowOID == signFlowOID.Value)
+                    .OrderByDescending(item => item.SignFlowDtlOID)
+                    .FirstOrDefault();
+            }
+
+            if (sfd != null)
+            {
+                sfvm = new SignFlowViewModel
+                {
+                    SignFlowOID = signFlowOID,
+                    SignFlowDtlOID = sfd.SignFlowDtlOID,
+                    SignStatus = sfd.SignStatusCode,
+                    ApprovingOfficerName = db.Employee.Find(sfd.ApprovingOfficerID).Name,
+                    SignOpinion = sfd.SignOpinion,
+                    SignPassword = "",
+                    SignBeginDate = sf.SignBeginDate.Value,
+                    SignDate = sfd.SignDate.HasValue ? sfd.SignDate.Value : sfd.SignDate
+                };
+            }
+
+            return sfvm;
         }
 
         /// <summary>
@@ -254,21 +323,6 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                 Tel = emp.Tel,
                 Email = emp.Email
             };
-
-            //寫入簽核內容
-            SignFlowDtl sfd = null;
-            if (po.SignFlowOID.HasValue)
-            {
-                sfd = db.SignFlowDtl
-                    .Where(item => item.SignFlowOID == po.SignFlowOID)
-                    .OrderByDescending(item => item.SignFlowDtlOID)
-                    .FirstOrDefault();
-            }
-            if (sfd != null)
-            {
-                povm.ApprovingOfficerName = db.Employee.Find(sfd.ApprovingOfficerID).Name;
-                povm.SignFlowDtlOID = sfd.SignFlowDtlOID;
-            }
 
             return povm;
         }

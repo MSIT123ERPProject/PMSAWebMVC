@@ -61,9 +61,9 @@
                 });
                 $("#dataTableUOD").DataTable(
                     {
-                        ordering: false,
+                        ordering: true,
                         //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
-                        order: [[2, 'desc']],
+                        order: [],
                         //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
                         responsive: {
                             details: {

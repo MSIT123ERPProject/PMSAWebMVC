@@ -108,9 +108,9 @@
                         "contentType": "application/json;charset=utf-8",
                         "cache": true
                     },
-             ordering: false,
+             ordering: true,
              //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
-             order: [[2, 'desc']],
+             order: [],
              //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
              responsive: {
                  details: {
@@ -122,7 +122,7 @@
                  targets: 0,
                  className: 'control'
              },
-                 { orderable: false, targets: [0, 1, -1] },
+                 { orderable: false, targets: [0, -1] },
                  //{ targets: [4, 5, 6, 7, 8], className: 'dt-body-right' },
                  { className: 'text-left', targets: [3] },
                  { className: 'text-center', targets: [1,2,4,5,6,7,8] },
@@ -133,7 +133,7 @@
                          return " ";
                      }
                  },
-                 { "data": "SourceListID", orderable: true },
+                 { "data": "SourceListID" },
                  { "data": "PartNumber" },
                  { "data": "PartName" },
                         { "data": "QtyPerUnit" },
@@ -159,8 +159,7 @@
                      }
                  },
                         {
-                         "data": "SafetyQty",
-                          orderable: false
+                         "data": "SafetyQty"
                         },
                         {
                             "data": "SourceListID",

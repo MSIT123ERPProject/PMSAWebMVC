@@ -287,35 +287,6 @@
                     partname.push(datas[i].PartName);
                     pie.push({ name: datas[i].SourceListID, y: datas[i].ToalPrice });
                 }
-                var chart = new Highcharts.chart({
-                    chart: {
-                        renderTo: 'container',
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
-                    title: {
-                        text: '各料件銷售金額百分比',
-                    },
-                    tooltip: {
-                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: true,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                            },
-                            showInLegend: true,
-                        },
-
-                    },
-                });
-
-
                     if (pie[0] == null) {
                         toastr.error("查無資料", "通知");
                     }

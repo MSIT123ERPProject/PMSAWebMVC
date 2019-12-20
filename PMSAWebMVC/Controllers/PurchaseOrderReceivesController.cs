@@ -154,12 +154,12 @@ namespace PMSAWebMVC.Controllers
                 db.SaveChanges();
 
                 //判斷是否有此筆入庫單
-                var datas = db.StockIn.Where(w => w.PurchaseOrderReceiveID == poid).Select(s => s.StockInID).ToList();
-                if (datas[0].Count() > 0)
-                {
-                    string ss = datas[0];
-                    this.stockinstatus(ss, stu);
-                }
+                //var datas = db.StockIn.Where(w => w.PurchaseOrderReceiveID == poid).Select(s => s.StockInID).ToList();
+                //if (datas != null&&datas[0].Count() > 0)
+                //{
+                //    string ss = datas[0];
+                //    this.stockinstatus(ss, stu);
+                //}
 
                 return Json(new { status = status, message = message, id = db.PurchaseOrderReceive.Max(x => x.PurchaseOrderReceiveOID), datastust }, JsonRequestBehavior.AllowGet);
             }

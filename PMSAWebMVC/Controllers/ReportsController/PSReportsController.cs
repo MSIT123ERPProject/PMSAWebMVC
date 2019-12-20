@@ -34,7 +34,8 @@ namespace PMSAWebMVC.Controllers
                              name = g.Key,
                              count = g.Where(w => w.PurchaseOrderStatus == "P").Count(),
                              count1 = g.Where(w => w.PurchaseOrderStatus == "C").Count(),
-                             count2 = g.Where(w => w.PurchaseOrderStatus == "E").Count()
+                             count2 = g.Where(w => w.PurchaseOrderStatus == "E").Count(),
+                             count4 = g.Where(w => w.PurchaseOrderStatus == "O").Count()
                          });
 
             return Json(report, JsonRequestBehavior.AllowGet);

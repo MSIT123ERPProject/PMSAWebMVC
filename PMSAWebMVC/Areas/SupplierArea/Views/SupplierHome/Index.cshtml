@@ -66,7 +66,7 @@
             <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
         @*//////////////////////////////////////////*@
         @*引用highchart主題*@
-        <script src="~/scripts/highcharts/themes/sunset.js"></script>
+        <script src="~/scripts/highcharts/themes/high-contrast-light.js"></script>
         @*//////////////////////////////////////////*@
         <script>
             $(document).ready(function () {
@@ -92,8 +92,17 @@
                 //console.log(e);
                 //console.log(this);
                 dateTimeStart = $(this).find("input").val();
+                dateTimeEnd = $('#datetimepickerIdEnd').find("input").val();
+                //檢查是否日期選擇正確
+                if (dateTimeStart > dateTimeEnd) {
+                    toastr.error("起始日期不得小於結束日期", "警告");
+                }
+                else {
+                    partTotalPrice();
+                }
             });
             $('#datetimepickerIdEnd').on('change.datetimepicker', function (e) {
+                dateTimeStart = $('#datetimepickerIdStart').find("input").val();
                 dateTimeEnd = $(this).find("input").val();
                 //檢查是否日期選擇正確
                 if (dateTimeStart > dateTimeEnd) {
@@ -111,7 +120,7 @@
                         fontFamily: "微軟正黑體",
                         fontsize: "30px",
                     },
-                    backgroundColor: '#A5DEE4',
+                    backgroundColor: '#FFFFFF',
                     //width: 510,
                     reflow: true,
                 },

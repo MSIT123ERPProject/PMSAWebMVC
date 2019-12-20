@@ -16,6 +16,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Controllers
 {
+    [Authorize(Roles = "Buyer")]
     public class PurchaseOrdersController : BaseController
     {
         private PMSAEntities db;
@@ -88,9 +89,48 @@ namespace PMSAWebMVC.Controllers
         }
 
         /// <summary>
-        /// 送出至供應商畫面
+        /// 答交供應商畫面
         /// </summary>
         /// <param name="id">採購單編號 PurchaseOrderID</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult OrderCommitments(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            POSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+            if (vm == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vm);
+        }
+
+        /// <summary>
+        /// 答交供應商畫面
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("OrderCommitments")]
+        [ValidateAntiForgeryToken]
+        public ActionResult OrderCommitmentsPost([Bind(Include = "POItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        {
+            if (model == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Repository rep = new Repository(User.Identity.GetEmployee(), db);
+            rep.UpdatePOStatus(model.POItem.PurchaseOrderID, "W");
+            return Json(new { message = "答交成功", status = "success" });
+        }
+
+        /// <summary>
+        /// 送出至供應商畫面
+        /// </summary>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, ActionName("SendToSupplier")]
         [ValidateAntiForgeryToken]
@@ -394,15 +434,15 @@ namespace PMSAWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Sign([Bind(Include = "POItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
+        public ActionResult Sign([Bind(Include = "POItem,SFItem")] POSendToSupplierViewModel.SendToSupplierViewModel model)
         {
             //欄位驗證
             StringBuilder sb = new StringBuilder();
-            if (model.POItem.SignStatus != "Y" && model.POItem.SignStatus != "N")
+            if (model.SFItem.SignStatus != "Y" && model.SFItem.SignStatus != "N")
             {
                 sb.Append("簽核狀態 為必填").Append(Environment.NewLine);
             }
-            if (string.IsNullOrWhiteSpace(model.POItem.SignPassword))
+            if (string.IsNullOrWhiteSpace(model.SFItem.SignPassword))
             {
                 sb.Append("登入密碼 為必填").Append(Environment.NewLine);
             }
@@ -411,7 +451,7 @@ namespace PMSAWebMVC.Controllers
                 //取得目前登入者帳號(採購方)
                 var LoginId = User.Identity.GetUserName();
                 //結果回傳 true/false
-                bool result = Utilities.YangTing.checkPwd.isCorrectPwd(SignInManager, LoginId, model.POItem.SignPassword);
+                bool result = Utilities.YangTing.checkPwd.isCorrectPwd(SignInManager, LoginId, model.SFItem.SignPassword);
                 if (!result)
                 {
                     sb.Append("登入密碼 輸入錯誤").Append(Environment.NewLine);
@@ -424,20 +464,20 @@ namespace PMSAWebMVC.Controllers
             }
 
             //更新簽核狀態
-            SignFlowDtl sfd = db.SignFlowDtl.Find(model.POItem.SignFlowDtlOID);
-            sfd.SignOpinion = model.POItem.SignOpinion;
-            sfd.SignStatusCode = model.POItem.SignStatus;
+            SignFlowDtl sfd = db.SignFlowDtl.Find(model.SFItem.SignFlowDtlOID);
+            sfd.SignOpinion = model.SFItem.SignOpinion;
+            sfd.SignStatusCode = model.SFItem.SignStatus;
             sfd.SignDate = DateTime.Now;
             db.Entry(sfd).State = EntityState.Modified;
             db.SaveChanges();
 
-            SignFlow sf = db.SignFlow.Find(model.POItem.SignFlowOID);
-            sf.SignStatusCode = model.POItem.SignStatus;
+            SignFlow sf = db.SignFlow.Find(model.SFItem.SignFlowOID);
+            sf.SignStatusCode = model.SFItem.SignStatus;
             db.Entry(sf).State = EntityState.Modified;
             db.SaveChanges();
 
             PurchaseOrder po = db.PurchaseOrder.Find(model.POItem.PurchaseOrderID);
-            po.SignStatus = model.POItem.SignStatus;
+            po.SignStatus = model.SFItem.SignStatus;
             db.Entry(po).State = EntityState.Modified;
             db.SaveChanges();
 

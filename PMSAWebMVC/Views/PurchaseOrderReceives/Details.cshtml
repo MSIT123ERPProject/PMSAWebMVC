@@ -1,0 +1,82 @@
+﻿@model PMSAWebMVC.Models.PurchaseOrderReceive
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PurchaseOrderReceive</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderReceiveOID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderReceiveOID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SignStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SignStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Employee.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Employee.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrder.SupplierCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrder.SupplierCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SignFlow.OriginatorID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SignFlow.OriginatorID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SupplierAccount.ContactName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SupplierAccount.ContactName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SupplierInfo.SupplierName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SupplierInfo.SupplierName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PurchaseOrderReceiveID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

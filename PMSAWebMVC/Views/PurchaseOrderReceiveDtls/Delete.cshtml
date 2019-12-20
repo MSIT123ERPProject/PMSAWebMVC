@@ -1,0 +1,96 @@
+﻿@model PMSAWebMVC.Models.PurchaseOrderReceiveDtl
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PurchaseOrderReceiveDtl</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderReceiveDtlOID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderReceiveDtlOID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RejectQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RejectQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AcceptQty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AcceptQty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RejectReason)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RejectReason)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderDtl.PurchaseOrderID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderDtl.PurchaseOrderID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseOrderReceive.PurchaseOrderID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseOrderReceive.PurchaseOrderID)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

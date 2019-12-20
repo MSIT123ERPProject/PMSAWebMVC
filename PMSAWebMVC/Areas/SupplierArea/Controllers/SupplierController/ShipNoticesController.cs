@@ -85,7 +85,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             ////////////////////////////////////////////////////
             ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string status = PurchaseOrderStatus;
-            var query = from po in db.PurchaseOrder.AsEnumerable()
+            var query = (from po in db.PurchaseOrder.AsEnumerable()
                         where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)
                         select new shipOrderViewModel
                         {
@@ -94,8 +94,13 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                             ReceiverName = po.ReceiverName,
                             ReceiverTel = po.ReceiverTel,
                             ReceiverMobile = po.ReceiverMobile,
-                            ReceiptAddress = po.ReceiptAddress
-                        };
+                            ReceiptAddress = po.ReceiptAddress,
+                        }).ToList();
+            for (int i = 0; i < query.Count(); i++)
+            {
+                query[i].PurchaseOrderStatusDisplay = utilities.GetStatus(query[i].PurchaseOrderStatus);
+            }
+            var c = query.ToList();
             List<shipOrderViewModel> qlist = query.ToList();
             for (int i = 0; i < qlist.Count(); i++)
             {
@@ -151,6 +156,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
         [HttpPost]
         public async Task<ActionResult> shipCheckDtl(shipOrderViewModel unshipOrderDtl)
         {
+            string shipnoticesid = "";//為了進貨單而設立的變數
             ////////////////////////////////////////////////
             //取得供應商帳號資料
             SupplierAccount supplier = User.Identity.GetSupplierAccount();
@@ -231,6 +237,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                     count++;
                     snId = $"{snId}{count:000}";
                     shipNotice.ShipNoticeID = snId;
+                    shipnoticesid = snId; //將出貨ID存入變數中
                     shipNotice.PurchaseOrderID = unshipOrderDtl.PurchaseOrderID;
                     shipNotice.ShipDate = now;
                     shipNotice.EmployeeID = db.PurchaseOrder.Find(unshipOrderDtl.PurchaseOrderID).EmployeeID;
@@ -246,6 +253,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                     //新增出貨明細 保存期限先不填 
                     ShipNoticeDtl shipNoticeDtl = new ShipNoticeDtl();
                     shipNoticeDtl.ShipNoticeID = db.ShipNotice.Where(x => x.PurchaseOrderID == unshipOrderDtl.PurchaseOrderID).FirstOrDefault().ShipNoticeID;
+                    shipnoticesid = shipNoticeDtl.ShipNoticeID; //將出貨ID存入變數中
                     shipNoticeDtl.PurchaseOrderDtlCode = dtl.PurchaseOrderDtlCode;
                     shipNoticeDtl.ShipQty = unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty;
                     //金額為數量*單價*折扣*批量
@@ -352,6 +360,11 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             }
             List<OrderDtlForMail> odm = orderDtlForMails(shipDtlList, shipDtlListQty);
             await SendMailToBuyer(odm);
+
+            //呼叫新增進貨單方法
+            PurchaseOrderReceivesController purchaseOrderReceivesController = new PurchaseOrderReceivesController();
+            purchaseOrderReceivesController.Create(shipnoticesid);
+
             //return Json(new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message },JsonRequestBehavior.AllowGet);
             return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
         }

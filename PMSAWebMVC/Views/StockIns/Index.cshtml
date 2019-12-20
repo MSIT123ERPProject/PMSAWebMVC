@@ -65,6 +65,10 @@
                                         <i class="far fa-edit"></i>
                                     </button>
                                 </span>
+                                <a class="btn btn-outline-secondary btn-icon" href='@Url.Action("IndexDtls", new { id = item.StockInID })'>
+                                    <i class="far fa-file-alt"></i>
+                                </a>
+                                @*<button name="click05" class="btn btn-outline-secondary btn-icon" title="入庫明細" data-dc="@item.StockInID"><i class="far fa-file-alt"></i></button>*@
                             </td>
                         </tr>
                     }
@@ -72,7 +76,6 @@
             </table>
         </div>
     </div>
-    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
 </div>
 
 <style>
@@ -114,18 +117,28 @@
             table.search(this.value).draw();
         });
 
+        @*//明細
+        $(document).on('click', "button[name = 'click05']", function () {
+            let id1 = this.dataset.dc;
+            if(id1 == undefined){
+                id1 = $(this).parents('tr').find('td:first-child').text();
+            }
+            $.getJSON("@Url.Action("IndexDtls", "StockIns")/" + id1)
+        });*@
+
         //新增
         $(document).on('click', "#btnAdd", function () {
             let id1 = 'POR-20191023-001';
             var table = $('#dataTable').DataTable();
-            var cell4 = '&nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> &nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span>'
+            var cell4 = '&nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click03" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="檢視"><i class="far fa-eye"></i></button></span> &nbsp;<span data-toggle="modal" data-target=".bd-example-modal-lg"><button id="bt" name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯"><i class="far fa-edit"></i></button></span><button class="btn btn-outline-secondary btn-icon" title="入庫明細"></button>'
             $.ajax({
                     url: '@Url.Action("Create", "StockIns")',
                     contentType: 'application/json; charset=utf-8'
             }).done(function (response) {
                 if (response.status) {
                     toastr.success(response.message, "通知");
-                    table.row.add([response.inid1, response.orid1, response.sstus1, "", response.crdate1, cell4]).draw(false);
+                    //table.row.add([response.inid1, response.orid1, response.sstus1, "", response.crdate1, cell4]).draw(false);
+                    window.location.reload()
                 } else {
                     toastr.error(response.message, "警告");
                 }

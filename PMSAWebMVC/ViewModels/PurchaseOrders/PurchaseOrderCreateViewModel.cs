@@ -860,8 +860,15 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         {
             PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
             po.PurchaseOrderStatus = status;
+
             db.Entry(po).Property(pop => pop.PurchaseOrderStatus).IsModified = true;
             db.SaveChanges();
+
+            //採購單雙方答交W，異動表要改為E(單方答交)
+            if (status == "W")
+            {
+                status = "E";
+            }
 
             //採購單異動總表 
             DateTime now = DateTime.Now;

@@ -18,7 +18,7 @@ namespace PMSAWebMVC.Controllers
         {
             //Employee emg = User.Identity.GetEmployee();  //判斷腳色
             var report1 = db.PurchaseOrderDtl.Include("PurchaseOrder").
-                          Where(q => q.PurchaseOrder.PurchaseOrderStatus == "Z" && q.PurchaseOrder.EmployeeID == "CE00002").
+                          Where(q => q.PurchaseOrder.PurchaseOrderStatus != "O" || q.PurchaseOrder.PurchaseOrderStatus != "N" || q.PurchaseOrder.PurchaseOrderStatus != "D").
                           GroupBy(p => p.PurchaseOrder.CreateDate.Year + "/" + p.PurchaseOrder.CreateDate.Month).
                           Select(g => new { name = g.Key, count = g.Sum(q => q.Total) });
 

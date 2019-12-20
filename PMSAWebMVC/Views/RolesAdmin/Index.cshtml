@@ -397,10 +397,12 @@
             $("#All").click(() => {
                 oTable.search("").draw();
                 oTable.ajax.url(url).load();
+                oTable.column(1).visible(true);
             })
             $("#two").click(() => {
                 oTable.search("").draw();
                 oTable.ajax.url('@Url.Action("getTwoRolesToIndexAjax","RolesAdmin")').load();
+                oTable.column(1).visible(false);
             })
         });
 

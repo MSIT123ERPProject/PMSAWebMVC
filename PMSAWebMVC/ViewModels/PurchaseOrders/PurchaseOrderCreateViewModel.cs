@@ -860,6 +860,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         {
             PurchaseOrder po = db.PurchaseOrder.Find(purchaseOrderID);
             po.PurchaseOrderStatus = status;
+
             db.Entry(po).Property(pop => pop.PurchaseOrderStatus).IsModified = true;
             db.SaveChanges();
 

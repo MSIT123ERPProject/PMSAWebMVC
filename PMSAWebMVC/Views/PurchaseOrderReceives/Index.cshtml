@@ -50,7 +50,7 @@
                             <td>@Html.DisplayFor(modelItem => item.PurchaseOrderID)</td>
                             <td>@Html.DisplayFor(modelItem => item.SupplierAccount.ContactName)</td>
                             <td>@Html.DisplayFor(modelItem => item.SupplierInfo.SupplierName)</td>
-                            <td>@Html.DisplayFor(modelItem => stuts)</td>
+                            <td id="cel01">@Html.DisplayFor(modelItem => stuts)</td>
                             <td>@Html.DisplayFor(modelItem => date1)</td>
                             <td class="table-data-feature">
                                 <span data-toggle="modal" data-target=".bd-example-modal-lg">
@@ -58,11 +58,11 @@
                                         <i class="far fa-eye"></i>
                                     </button>
                                 </span>
-                                @*<span data-toggle="modal" data-target=".bd-example-modal-lg">
-                                    <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="編輯" data-dc="@item.PurchaseOrderReceiveID">
+                                <span data-toggle="modal" data-target=".bd-example-modal-lg">
+                                    <button name="click04" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="簽核" data-dc="@item.PurchaseOrderReceiveID">
                                         <i class="far fa-edit"></i>
                                     </button>
-                                </span>*@
+                                </span>
                                 <button class="btn btn-outline-secondary btn-icon" title="進貨明細">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseOrderReceiveID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)" })</button>
                             </td>
                         </tr>
@@ -100,12 +100,12 @@
 {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script>
+        var table = $('#dataTable').DataTable({
+            buttons: [
+                'excel', 'pdf'
+            ]
+        });
         $(document).ready(function () {
-            var table = $('#dataTable').DataTable({
-                buttons: [
-                    'excel', 'pdf'
-                ]
-            });
             table.buttons().container().appendTo($('.col-sm-6:eq(0)', table.buttons().container().appendTo($('#dabtn'))));
         });
 
@@ -123,7 +123,10 @@
                 $('#ModalTitle').text('檢視進貨總表');
                 $('*[name="da"]').attr('disabled', true);
                 $('*[name="dta"]').attr('disabled', true);
+                $('*[name="daal"]').attr('disabled', true);
                 $('#btnUpdate').hide();
+                $('*[name=dal]').hide();
+                $('*[name=dta]').show();
                 $("#StockInID").val(datas[0].StockInID);
                 $("#PurchaseOrderReceiveID").val(datas[0].PurchaseOrderReceiveID);
                 $("#PurchaseOrderID").val(datas[0].PurchaseOrderID);
@@ -132,20 +135,32 @@
                 $("#SupplierCode").val(datas[0].scode1);
                 $("#SupplierAccountID").val(datas[0].supid1);
                 $("#SignStatus").val(datas[0].datastust);
+                $("#PurchaseEmployeeID01").val(datas[0].PurchaseEmployeeID);
+                $("#SupplierCode01").val(datas[0].SupplierCode);
+                $("#SupplierAccountID01").val(datas[0].SupplierAccountID);
             })
         });
 
         //更新
+        var sein;
+        $(document).on('click', "td", function () {
+            var rowss = $(this).closest("tr");  //抓取列
+            var celss = $(this).siblings("#cel01"); //抓取欄
+            sein = table.row(rowss).cell(celss);
+        })
         $(document).on('click', "button[name = 'click04']", function () {
             let id1 = this.dataset.dc;
             if(id1 == undefined){
                 id1 = $(this).parents('tr').find('td:first-child').text();
             }
             $.getJSON("@Url.Action("Details", "PurchaseOrderReceives")/" + id1, function (datas) {
-                $('#ModalTitle').text('修改進貨總表');
+                $('#ModalTitle').text('簽核');
                 $('*[name="da"]').attr('disabled', false);
                 $('*[name="dta"]').attr('disabled', true);
+                $('*[name="daal"]').attr('disabled', true);
                 $('#btnUpdate').show();
+                $('*[name=dal]').show();
+                $('*[name=dta]').hide();
                 $("#StockInID").val(datas[0].StockInID);
                 $("#PurchaseOrderReceiveID").val(datas[0].PurchaseOrderReceiveID);
                 $("#PurchaseOrderID").val(datas[0].PurchaseOrderID);
@@ -154,27 +169,33 @@
                 $("#SupplierCode").val(datas[0].scode1);
                 $("#SupplierAccountID").val(datas[0].supid1);
                 $("#SignStatus").val(datas[0].datastust);
+                $("#PurchaseEmployeeID01").val(datas[0].PurchaseEmployeeID);
+                $("#SupplierCode01").val(datas[0].SupplierCode);
+                $("#SupplierAccountID01").val(datas[0].SupplierAccountID);
             })
         });
 
         $('#btnUpdate').click(function () {
-            var stockinObj = {
-                    StockInID:$("#StockInID").val(),
-                    PurchaseOrderReceiveID:$("#PurchaseOrderReceiveID").val(),
-                    SignStatus:$("#SignStatus").val(),
-                    CreateEmployeeID:$("#CreateEmployeeID").val(),
-                    CreateDate:$("#CreateDate").val(),
-                    Remark:$("#Remark").val()
+            var statusObj = {
+                StockInID: $("#StockInID").val(),
+                PurchaseOrderReceiveID: $("#PurchaseOrderReceiveID").val(),
+                SignStatus: $("#SignStatus01").val(),
+                PurchaseOrderID:$("#PurchaseOrderID").val(),
+                PurchaseDate:$("#PurchaseDate").val(),
+                PurchaseEmployeeID:$("#PurchaseEmployeeID01").val(),
+                SupplierCode:$("#SupplierCode01").val(),
+                SupplierAccountID:$("#SupplierAccountID01").val()
                 }
                 $.ajax({
-                    url: '@Url.Action("Edit", "StockIns")',
+                    url: '@Url.Action("Edit", "PurchaseOrderReceives")',
                     dataType: 'json',
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(stockinObj)
+                    data: JSON.stringify(statusObj)
                 }).done(function (response) {
                     if (response.status) {
                         toastr.success(response.message, "通知");
+                        sein.data(response.datastust).draw(false);
                     }
                 }).fail(function(response){
                     toastr.error(response.message, "警告");
@@ -196,36 +217,44 @@
             </div>
             <div class="modal-body">
                 <form id="addForm">
-                    <div class="form-group">
-                        <label for="PurchaseOrderReceiveID" name="dta">@Html.DisplayNameFor(model => model.PurchaseOrderReceiveID)</label>
-                        <input type="text" class="form-control" id="PurchaseOrderReceiveID" name="dta">
+                    <div class="form-group" name="daal">
+                        <label for="PurchaseOrderReceiveID">@Html.DisplayNameFor(model => model.PurchaseOrderReceiveID)</label>
+                        <input type="text" class="form-control" id="PurchaseOrderReceiveID" name="daal">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" name="dta">
                         <label for="PurchaseOrderID">@Html.DisplayNameFor(model => model.PurchaseOrderID)</label>
                         <br />
                         <input type="text" class="form-control" id="PurchaseOrderID" name="dta">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" name="dta">
                         <label for="PurchaseEmployeeID">@Html.DisplayNameFor(model => model.PurchaseEmployeeID)</label>
                         <br />
                         <input type="text" class="form-control" id="PurchaseEmployeeID" name="dta">
+                        <input style="display:none" type="text" class="form-control" id="PurchaseEmployeeID01" name="d">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" name="dta">
                         <label for="SupplierCode" name="dta">進貨廠商</label>
                         <input type="text" class="form-control" id="SupplierCode" name="dta">
+                        <input style="display:none" type="text" class="form-control" id="SupplierCode01" name="d">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" name="dta">
                         <label for="SupplierAccountID">廠商聯絡人</label>
                         <br />
                         <input type="text" class="form-control" id="SupplierAccountID" name="dta">
+                        <input style="display:none" type="text" class="form-control" id="SupplierAccountID01" name="d">
                     </div>
                     <div class="form-group" name="dta">
                         <label for="PurchaseDate">@Html.DisplayNameFor(model => model.PurchaseDate)</label>
                         <input type="text" class="form-control" id="PurchaseDate" name="dta">
                     </div>
-                    <div class="form-group" name="dta">
+                    <div class="form-group" name="daa">
                         <label for="SignStatus">@Html.DisplayNameFor(model => model.SignStatus)</label>
                         <input type="text" class="form-control" id="SignStatus" name="dta">
+                        <select class="form-control" id="SignStatus01" name="dal">
+                            <option value="S">簽核中</option>
+                            <option value="Y">同意</option>
+                            <option value="N">拒絕</option>
+                        </select>
                     </div>
                 </form>
             </div>

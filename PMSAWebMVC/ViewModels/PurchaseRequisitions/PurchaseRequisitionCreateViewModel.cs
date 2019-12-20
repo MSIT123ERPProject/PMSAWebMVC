@@ -1,4 +1,5 @@
 ﻿using PMSAWebMVC.Models;
+using PMSAWebMVC.Utilities.YaChen;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -68,7 +69,7 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         [Display(Name = "簽核狀態")]
         public string SignStatus { get; set; }
         [Display(Name = "簽核流程表識別碼")]
-        public string SignFlowOID { get; set; }
+        public int SignFlowOID { get; set; }
 
 
         [Display(Name = "請購單明細識別碼")]
@@ -85,25 +86,55 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         public string SuggestSupplierCode { get; set; }
         [Display(Name = "需求日期")]
         public DateTime DateRequired { get; set; }//需求日期
-
-
-        [Display(Name = "選取")]
-        public bool Checked { get; set; }
         [DisplayFormat(DataFormatString = "{0:C0}")]
         [DataType(DataType.Currency)]
         [Display(Name = "單價")]
         public int OriginalUnitPrice { get; set; }
+        [Display(Name = "請購單明細編號")]
+        public string PurchaseRequisitionDtlCode { get; set; }
+        [Display(Name = "選取")]
+        public bool Checked { get; set; }
+
+        [Display(Name = "發起人")]
+        public string OriginatorID { get; set; }//簽核總表
+        [Display(Name = "簽核發起時間")]
+        public DateTime? SignBeginDate { get; set; }
+        [Display(Name = "簽核事件")]
+        public string SignEvent { get; set; }
+        [Display(Name = "簽核狀態代碼")]
+        public string SignStatusCode { get; set; }
+
+
+        [Display(Name = "簽核流程明細識別碼")]
+        public int SignFlowDtlOID { get; set; }//簽核明細
+        [Display(Name = "簽核人")]
+        public string ApprovingOfficerName{ get; set; }
+        [Display(Name = "簽核意見")]
+        public string SignOpinion { get; set; }
+        [Display(Name = "簽核時間")]
+        public DateTime? SignDate { get; set; }
+        [Display(Name = "簽核身份驗證密碼")]
+        public string SignPassword { get; set; }
 
     }
     //資料庫相關方法
-    public class Repository
+    public partial class Repository
     {
+        private Employee emp;
+        private PMSAEntities db;
+        private PurchaseOrderCreateSession session;
         public static Employee GetEmployee()//取得員工
         {
             using (PMSAEntities db = new PMSAEntities())
             {
                 return db.Employee.Find("CE00002");//預用CE00002下去找
             }
+        }
+        public Repository(Employee emp, PMSAEntities ent)
+        {
+            this.emp = emp;
+            this.db = ent;
+            this.session = PurchaseOrderCreateSession.Current;
         }
 
         //取得產品資料集
@@ -422,7 +453,10 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         [Display(Name = "待簽核請購單")]
         public string SelectedPurchaseRequisitions { get; set; }
 
-
+        [Display(Name = "簽核流程明細識別碼")]
+        public int SignFlowDtlOID { get; set; }//簽核明細
+        [Display(Name = "請購單明細編號")]
+        public string PurchaseRequisitionDtlCode { get; set; }
         public SelectList PurchaseRequisitionList { get; set; }
         [Display(Name = "請購單編號")]
         public string PurchaseRequisitionID { get; set; }//請購單識別碼
@@ -453,8 +487,28 @@ namespace PMSAWebMVC.ViewModels.PurchaseRequisitions
         [Display(Name = "簽核狀態")]
         public string SignStatus { get; set; }
         [Display(Name = "簽核流程表識別碼")]
-        public string SignFlowOID { get; set; }
+        public int SignFlowOID { get; set; }
         public string PurchaseRequisitionDtlOID { get; set; }
+        [Display(Name = "發起人")]
+        public string OriginatorID { get; set; }//簽核總表
+        [Display(Name = "簽核發起時間")]
+        public DateTime? SignBeginDate { get; set; }
+        [Display(Name = "簽核事件")]
+        public string SignEvent { get; set; }
+        [Display(Name = "簽核狀態代碼")]
+        public string SignStatusCode { get; set; }
+
+
+        [Display(Name = "簽核身份驗證密碼")]
+        public string SignPassword { get; set; }
+        [Display(Name = "簽核人")]
+        public string ApprovingOfficerID { get; set; }
+        [Display(Name = "簽核意見")]
+        public string SignOpinion { get; set; }
+        [Display(Name = "簽核時間")]
+        public DateTime? SignDate { get; set; }
+        
+
         //TODO: 應是多筆的狀況，之後需作修正
         public string ProductNumber { get; set; }
         //public string ProductName { get; set; }

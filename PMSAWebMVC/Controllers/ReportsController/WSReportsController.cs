@@ -20,7 +20,7 @@ namespace PMSAWebMVC.Controllers
         //最新十筆入庫明細
         public JsonResult GetTenSk()
         {
-            var report = db.StockInDtl.Include("StockIn").OrderByDescending(o => o.StockIn.CreateDate).
+            var report = db.StockInDtl.Where(w=>w.StockIn.SignStatus == "Y").OrderByDescending(o => o.StockIn.CreateDate).
                          Select(g => new { name = g.PartNumber, count = g.StockInQty }).Take(10);
 
             return Json(report, JsonRequestBehavior.AllowGet);
@@ -39,7 +39,7 @@ namespace PMSAWebMVC.Controllers
         //查詢即將到期商品
         public JsonResult GetSInDtl()
         {
-            var report = db.StockInDtl.AsEnumerable().
+            var report = db.StockInDtl.Where(w => w.StockIn.SignStatus == "Y").AsEnumerable().
                          Where(w => w.EXP < DateTime.Now.AddMonths(1)).
                          Select(g => new { name = g.PartNumber, value = g.StockInQty });
 

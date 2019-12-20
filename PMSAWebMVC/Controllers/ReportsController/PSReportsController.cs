@@ -1,6 +1,7 @@
 ﻿using PMSAWebMVC.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,10 +17,10 @@ namespace PMSAWebMVC.Controllers
         //個人每月採購金額
         public ActionResult GetPSMonthSum()
         {
-            //Employee emg = User.Identity.GetEmployee();  //判斷腳色
+            string empId = User.Identity.GetEmployee().EmployeeID;
             var report1 = db.PurchaseOrderDtl.Include("PurchaseOrder").
-                          Where(q => q.PurchaseOrder.PurchaseOrderStatus == "Z" && q.PurchaseOrder.EmployeeID == "CE00002").
-                          GroupBy(p => p.PurchaseOrder.CreateDate.Year + "/" + p.PurchaseOrder.CreateDate.Month).
+                          Where(q => "WSRZ".Contains(q.PurchaseOrder.PurchaseOrderStatus) && q.PurchaseOrder.EmployeeID == empId).
+                          GroupBy(p => p.PurchaseOrder.CreateDate.Year + "/" + DbFunctions.Right("0" + p.PurchaseOrder.CreateDate.Month, 2)).
                           Select(g => new { name = g.Key, count = g.Sum(q => q.Total) });
 
             return Json(report1, JsonRequestBehavior.AllowGet);//允許用戶端的HTTP GET請求
@@ -29,12 +30,14 @@ namespace PMSAWebMVC.Controllers
         public JsonResult GetPCE()
         {
             var report = db.PurchaseOrder.
-                         GroupBy(p => p.CreateDate.Year + "/" + p.CreateDate.Month).
-                         Select(g => new {
+                         GroupBy(p => p.CreateDate.Year + "/" + DbFunctions.Right("0" + p.CreateDate.Month, 2)).
+                         Select(g => new
+                         {
                              name = g.Key,
                              count = g.Where(w => w.PurchaseOrderStatus == "P").Count(),
                              count1 = g.Where(w => w.PurchaseOrderStatus == "C").Count(),
-                             count2 = g.Where(w => w.PurchaseOrderStatus == "E").Count()
+                             count2 = g.Where(w => "WE".Contains(w.PurchaseOrderStatus)).Count(),
+                             count4 = g.Where(w => w.PurchaseOrderStatus == "O").Count()
                          });
 
             return Json(report, JsonRequestBehavior.AllowGet);
@@ -44,8 +47,9 @@ namespace PMSAWebMVC.Controllers
         public JsonResult GetO()
         {
             var report = db.PurchaseOrder.
-                         GroupBy(p => p.CreateDate.Year + "/" + p.CreateDate.Month).
-                         Select(g => new {
+                         GroupBy(p => p.CreateDate.Year + "/" + DbFunctions.Right("0" + p.CreateDate.Month, 2)).
+                         Select(g => new
+                         {
                              name = g.Key,
                              count = g.Where(w => w.PurchaseOrderStatus == "O").Count()
                          });
@@ -58,7 +62,7 @@ namespace PMSAWebMVC.Controllers
         {
             var report = db.PurchaseOrderReceiveDtl.Include("PurchaseOrderReceive").
                              Where(w => w.PurchaseOrderReceive.SignStatus == "S").
-                             GroupBy(p => p.PurchaseOrderReceive.PurchaseDate.Year + "/" + p.PurchaseOrderReceive.PurchaseDate.Month).
+                             GroupBy(p => p.PurchaseOrderReceive.PurchaseDate.Year + "/" + DbFunctions.Right("0" + p.PurchaseOrderReceive.PurchaseDate.Month, 2)).
                              Select(g => new { name = g.Key, count = g.Count() });
 
             return Json(report, JsonRequestBehavior.AllowGet);

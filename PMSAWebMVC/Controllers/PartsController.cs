@@ -175,7 +175,6 @@ namespace PMSAWebMVC.Controllers
             
             //將Model帶進來的值存入資料庫
             PartCategoryDtl PartCategoryDtl = new PartCategoryDtl();
-            PartCategoryDtl PartCategoryDtl2 = new PartCategoryDtl();
             Part part1 = new Part();
             part.PictureAdress = "~/assets/parts/" + part.PartNumber + "-" + part.PartName + ".jpg";
             part.CreatedDate = DateTime.Now;

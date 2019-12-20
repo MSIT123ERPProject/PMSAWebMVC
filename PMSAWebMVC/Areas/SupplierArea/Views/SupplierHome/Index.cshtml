@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "供應商首頁";
 }
 @section styles
 {
@@ -92,8 +92,17 @@
                 //console.log(e);
                 //console.log(this);
                 dateTimeStart = $(this).find("input").val();
+                dateTimeEnd = $('#datetimepickerIdEnd').find("input").val();
+                //檢查是否日期選擇正確
+                if (dateTimeStart > dateTimeEnd) {
+                    toastr.error("起始日期不得小於結束日期", "警告");
+                }
+                else {
+                    partTotalPrice();
+                }
             });
             $('#datetimepickerIdEnd').on('change.datetimepicker', function (e) {
+                dateTimeStart = $('#datetimepickerIdStart').find("input").val();
                 dateTimeEnd = $(this).find("input").val();
                 //檢查是否日期選擇正確
                 if (dateTimeStart > dateTimeEnd) {

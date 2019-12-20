@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -18,7 +19,7 @@ using System.Web.Mvc;
     {
         private PMSAEntities db = new PMSAEntities();
 
-
+        
 
         protected override void Dispose(bool disposing)
         {
@@ -34,7 +35,7 @@ using System.Web.Mvc;
         /// </summary>
         /// <returns></returns>
 
-        private string GetProcessStatus(string ProcessStatus)
+        public string GetProcessStatus(string ProcessStatus)
         {
             //N = 新增,O = 採購中,C = 結案
             switch (ProcessStatus)
@@ -103,23 +104,54 @@ using System.Web.Mvc;
             {
                 return HttpNotFound();
             }
+            if (purchaseRequisition.SignFlowOID == null)
+            {
+                var datas = from p in db.PurchaseRequisition.AsEnumerable()
+                            
+                            where p.PurchaseRequisitionID == id
+                            select new /*PurchaseRequisitionIndexViewModel*/
+                            {
+                                PurchaseRequisitionID = p.PurchaseRequisitionID,
+                                ProductNumber = p.ProductNumber,
+                                EmployeeID = p.EmployeeID,
+                                PRBeginDate = p.PRBeginDate.ToString("yyyy/MM/dd"),
+                                //ProcessStatus = GetProcessStatus(p.ProcessStatus),
+                                //SignStatus = GetSignStatus(p.SignStatus)
+                                ProcessStatus = p.ProcessStatus,
+                                SignStatus = p.SignStatus,
+                                UserEmployeeID = user.EmployeeID,
+                                SignOpinion = "",
+                                SignFlowOID = p.SignFlowOID
 
-            var datas = from p in db.PurchaseRequisition.AsEnumerable()
-                        where p.PurchaseRequisitionID == id
-                        select new /*PurchaseRequisitionIndexViewModel*/
-                        {
-                            PurchaseRequisitionID = p.PurchaseRequisitionID,
-                            ProductNumber = p.ProductNumber,
-                            EmployeeID = p.EmployeeID,
-                            PRBeginDate = p.PRBeginDate.ToString("yyyy/MM/dd"),
-                            //ProcessStatus = GetProcessStatus(p.ProcessStatus),
-                            //SignStatus = GetSignStatus(p.SignStatus)
-                            ProcessStatus = p.ProcessStatus,
-                            SignStatus = p.SignStatus,
-                            UserEmployeeID = user.EmployeeID
-                        };
-            var da=datas.ToList();
-            return Json(datas, JsonRequestBehavior.AllowGet);
+                            };
+                var da = datas.ToList();
+                return Json(datas, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var datas = from p in db.PurchaseRequisition.AsEnumerable()
+                            join sfd in db.SignFlowDtl
+                            on p.SignFlowOID equals sfd.SignFlowOID
+                            where p.PurchaseRequisitionID == id
+                            select new /*PurchaseRequisitionIndexViewModel*/
+                            {
+                                PurchaseRequisitionID = p.PurchaseRequisitionID,
+                                ProductNumber = p.ProductNumber,
+                                EmployeeID = p.EmployeeID,
+                                PRBeginDate = p.PRBeginDate.ToString("yyyy/MM/dd"),
+                                //ProcessStatus = GetProcessStatus(p.ProcessStatus),
+                                //SignStatus = GetSignStatus(p.SignStatus)
+                                ProcessStatus = p.ProcessStatus,
+                                SignStatus = p.SignStatus,
+                                UserEmployeeID = user.EmployeeID,
+                                SignOpinion = sfd.SignOpinion,
+                                SignFlowOID = p.SignFlowOID
+
+                            };
+                var da = datas.ToList();
+                return Json(datas, JsonRequestBehavior.AllowGet);
+            }
+            
         }
 
         //取得請購單資料集
@@ -344,9 +376,10 @@ using System.Web.Mvc;
         [HttpGet] //站存表資料寫入請購單
         public ActionResult CreatePR()
         {
-            
+
+
             var user = User.Identity.GetEmployee();
-            
+          
             var prtdata = from prt in db.PurchaseRequisitionTemp   //取得暫存表
                           where prt.EmployeeID == user.EmployeeID
                           select prt;
@@ -433,10 +466,55 @@ using System.Web.Mvc;
                     
                 }
                 purchaseRequisitionDtllist.ToList();
-                
+
+
+
+
+
+                /////////////////////////////簽核
+                SignFlow signFlow = new SignFlow();
+                var d = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
+                var dd = Convert.ToDateTime(d);
+
+                signFlow.OriginatorID = user.EmployeeID;//放資料
+                signFlow.SignBeginDate = dd;
+                signFlow.SignEvent = "PR";
+                signFlow.SignStatusCode = "S";
+
                 if (ModelState.IsValid)//丟資料庫
                 {
-                   
+
+                    db.SignFlow.Add(signFlow);
+                 
+                    db.SaveChanges();
+                }
+                var sf = db.SignFlow.Where(s => s.OriginatorID == user.EmployeeID && s.SignBeginDate == dd).SingleOrDefault();
+
+                SignFlowDtl signFlowDtl = new SignFlowDtl();
+                signFlowDtl.SignFlowOID = sf.SignFlowOID;
+                if (user.ManagerID == null)
+                {
+                    signFlowDtl.ApprovingOfficerID = "CE00005";
+                }
+                else
+                {
+                    signFlowDtl.ApprovingOfficerID = user.ManagerID;
+                }
+                
+                signFlowDtl.SignStatusCode = "S";
+
+
+
+                /////////////////////////////////
+
+                purchaseRequisition.SignFlowOID = sf.SignFlowOID;
+                //請購單取得簽核識別碼
+
+
+
+                if (ModelState.IsValid)//丟資料庫
+                {
+                    db.SignFlowDtl.Add(signFlowDtl);
                     db.PurchaseRequisition.Add(purchaseRequisition);
                     foreach (var p in purchaseRequisitionDtllist)
                     {
@@ -655,9 +733,151 @@ using System.Web.Mvc;
                 return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
             }
         }
+        ////簽核用頁面切換
+        //public ActionResult Sign(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Repository rep = new Repository(User.Identity.GetEmployee(), db);
+        //    PurchaseRequisitionSendToSupplierViewModel.SendToSupplierViewModel vm = rep.GetPOSendToSupplierViewModel(id);
+        //    if (vm == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(vm);
+        //}
 
-       
 
+        //簽核用 取得請購單資料
+        [HttpGet]
+        public ActionResult Sign(string purchaseRequisitionID)
+        {
+            IEnumerable<PurchaseRequisitionDtlItem> data = null;
+            var prConfirm = from pr in db.PurchaseRequisition
+                            join prd in db.PurchaseRequisitionDtl
+                            on pr.PurchaseRequisitionID equals prd.PurchaseRequisitionID
+                            join  sf in db.SignFlow
+                            on pr.SignFlowOID equals sf.SignFlowOID
+                            join sfd in db.SignFlowDtl
+                            on sf.SignFlowOID equals sfd.SignFlowOID
+                            where pr.PurchaseRequisitionID == purchaseRequisitionID
+                            select new PurchaseRequisitionDtlItem
+                            {
+                                PurchaseRequisitionOID = pr.PurchaseRequisitionOID,
+
+                                EmployeeID = pr.EmployeeID, //請購單
+                                PRBeginDate = pr.PRBeginDate,
+                                PartNumber = prd.PartNumber,
+                                PartName = prd.Part.PartName,
+                                PurchaseRequisitionID = pr.PurchaseRequisitionID,
+                                EmployeeName = pr.Employee.Name,
+                                ProcessStatus = pr.ProcessStatus,
+                                SuggestSupplierCode=prd.SuggestSupplierCode,
+
+                                Qty = prd.Qty,
+                                SupplierName = prd.SupplierInfo.SupplierName, //明細
+                                DateRequired = prd.DateRequired,
+                                ProductNumber = pr.ProductNumber,
+                                ProductName = pr.Product.ProductName,
+                                PurchaseRequisitionDtlOID = prd.PurchaseRequisitionDtlOID,
+                                PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,
+
+                                
+                                SignFlowOID =sf.SignFlowOID,
+                                OriginatorID=sf.OriginatorID,
+                                SignBeginDate=sf.SignBeginDate,
+                                SignEvent=sf.SignEvent,
+                                SignStatusCode=sf.SignStatusCode,
+
+
+                                SignFlowDtlOID=sfd.SignFlowDtlOID,
+                                ApprovingOfficerName=sfd.Employee.Name,
+                                SignOpinion = sfd.SignOpinion,
+                                SignDate = sfd.SignDate,
+                                SignPassword=sfd.Employee.PasswordHash
+
+
+                            };
+            data = prConfirm.ToList();
+
+            PurchaseRequisitionConfirmViewModel vm = new PurchaseRequisitionConfirmViewModel
+            {
+                PurchaseRequisitionDtlSetVM = data, //採購單明細設定模型
+
+            };
+            vm.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID;//採購單識別碼
+            vm.SignFlowOID = data.First().SignFlowOID;
+            vm.SignFlowDtlOID = data.First().SignFlowDtlOID;
+            vm.SignStatus = data.First().SignStatus;
+            ViewBag.ProductName = data.First().ProductName; ViewBag.PRBeginDate = data.First().PRBeginDate.ToString("yyyy/MM/dd"); ViewBag.EmployeeName = data.First().EmployeeName;
+            ViewBag.PurchaseRequisitionOID = data.First().PurchaseRequisitionOID; ViewBag.ProcessStatus = GetProcessStatus(data.First().ProcessStatus); ViewBag.PurchaseRequisitionID = data.First().PurchaseRequisitionID;
+            ViewBag.ApprovingOfficerName = data.First().ApprovingOfficerName; ViewBag.SignPassword = data.First().SignPassword;
+            ViewBag.SignFlowOID = data.First().SignFlowOID; ViewBag.SignFlowDtlOID = data.First().SignFlowDtlOID;
+            return View(vm);//注意
+        }
+
+
+
+        [HttpPost]
+        //[AuthorizeDeny(Roles = "Manager")]
+        public ActionResult Sign1(PurchaseRequisitionDtlItem purchaseRequisitionDtlItem)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (purchaseRequisitionDtlItem.SignStatus != "Y" && purchaseRequisitionDtlItem.SignStatus != "N")
+            {
+                sb.Append("簽核狀態 為必填").Append(Environment.NewLine);
+            }
+            if (string.IsNullOrWhiteSpace(purchaseRequisitionDtlItem.SignPassword))
+            {
+                sb.Append("登入密碼 為必填").Append(Environment.NewLine);
+            }
+            else
+            {
+                bool result = false;
+                if (purchaseRequisitionDtlItem.SignPassword == "P@ssw0rd")
+                {
+                     result = true;
+                }
+                
+                if (!result)
+                {
+                    sb.Append("登入密碼 輸入錯誤").Append(Environment.NewLine);
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                return Json(new { message = sb.ToString(), status = "warning" });
+            }
+
+            PurchaseRequisition purchaseRequisition = db.PurchaseRequisition.Find(purchaseRequisitionDtlItem.PurchaseRequisitionID);
+            SignFlow signFlow = db.SignFlow.Find(purchaseRequisitionDtlItem.SignFlowOID);
+            SignFlowDtl signFlowDtl = db.SignFlowDtl.Find(purchaseRequisitionDtlItem.SignFlowDtlOID);
+            purchaseRequisition.SignStatus = purchaseRequisitionDtlItem.SignStatus;
+            signFlow.SignStatusCode= purchaseRequisitionDtlItem.SignStatus;
+            signFlowDtl.SignStatusCode = purchaseRequisitionDtlItem.SignStatus;
+            signFlowDtl.SignOpinion = purchaseRequisitionDtlItem.SignOpinion;
+            signFlowDtl.SignDate = DateTime.Now;
+            string message = "修改成功!!";
+            bool status = true;
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(purchaseRequisition).State = EntityState.Modified;
+                db.Entry(signFlow).State = EntityState.Modified;
+                db.Entry(signFlowDtl).State = EntityState.Modified;
+                db.SaveChanges();
+                return Json(new { message = "簽核成功", status = "success" });
+            }
+            else
+            {
+                message = "修改失敗!!";
+                status = false;
+                return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
 

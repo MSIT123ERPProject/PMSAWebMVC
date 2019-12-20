@@ -2,9 +2,15 @@
 
 @{
     ViewBag.Title = "請購單";
-    
-}
 
+}
+@section styles{
+    <style>
+        body {
+        overflow-y:scroll;
+        }
+    </style>
+        }
 <h2>請購單</h2>
 
 @*<p>@Html.ActionLink("查詢請購單明細", "IndexDtl", null, new { @class = "btn btn-success" })</p>*@
@@ -12,74 +18,83 @@
     <div class="card-header">
         <i class="fas fa-table"></i>
         @Html.ActionLink("新增請購單", "Createtest", null, new { @class = "btn btn-info" })
-        @Html.ActionLink("請購單簽核", "Confirm", null, new { @class = "btn btn-info" ,@id="con",@style= "visibility:hidden " })
+        @*@Html.ActionLink("請購單簽核", "Confirm", null, new { @class = "btn btn-info", @id = "con", @style = "visibility:hidden " })*@
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
-                <thead>
-                    <tr class="bg-primary text-white text-left">
-                        <th data-priority="1">
-                            @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Product.ProductName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PRBeginDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ProcessStatus)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.SignStatus)
-                        </th>
+       
+                <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
+                    <thead>
+                        <tr class="bg-primary text-white text-left">
+                            <th>&nbsp;</th>
+                            <th data-priority="1">
+                                @Html.DisplayNameFor(model => model.PurchaseRequisitionID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Product.ProductName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PRBeginDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProcessStatus)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SignStatus)
+                            </th>
 
-                        <th data-priority="1">動作</th>
-                    </tr>
-                </thead>
-              
-                @foreach (var item in Model)
-                {
-                    <tr>
+                            <th data-priority="1">動作</th>
+                        </tr>
+                    </thead>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Product.ProductName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PRBeginDate)
-                        </td>
-                        <td id="ps1">
-                            @Html.DisplayFor(modelItem => item.ProcessStatus)
-                        </td>
-                        <td id="ss1">
-                            @Html.DisplayFor(modelItem => item.SignStatus)
-                        </td>
-                        <td>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PurchaseRequisitionID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PRBeginDate)
+                            </td>
+                            <td id="ps1">
+                                @Html.DisplayFor(modelItem => item.ProcessStatus)
+                            </td>
+                            <td id="ss1">
+                                @Html.DisplayFor(modelItem => item.SignStatus)
+                            </td>
+                            <td>
+                                <div class="table-data-feature">
+                                    <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                    @if (User.IsInRole("Buyer") && !User.IsInRole("Manager"))
+                                    {
+                                        <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
+                                            <i class="far fa-edit"></i>
+                                        </button>
+                                    }
+                                        <a href="@Url.Action("IndexDtl", "PurchaseRequisitions", new { id = item.PurchaseRequisitionID })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="明細">
+                                            <i class="far fa-file-alt"></i>
+                                        </a>
+                                        @if (User.IsInRole("Buyer") && User.IsInRole("Manager") && (item.SignStatus == "簽核中" && item.SignFlowOID != null))
+                                        {<a id="con" href="@Url.Action("Sign", "PurchaseRequisitions", new { purchaseRequisitionID = item.PurchaseRequisitionID })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="簽核">
+                                                <i class="fas fa-clipboard-check"></i>
+                                            </a>}
 
-                            <div class="table-data-feature">
-                                <button name="click1" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="檢視" data-dc="@item.PurchaseRequisitionID">
-                                    <i class="far fa-eye"></i>
-                                </button>
-                                <button name="click2" type="button" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-outline-secondary btn-icon" title="修改" data-dc="@item.PurchaseRequisitionID">
-                                    <i class="far fa-edit"></i>
-                                </button>
-                                <a href="@Url.Action("IndexDtl", "PurchaseRequisitions", new { id = item.PurchaseRequisitionID })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="" data-original-title="明細">
-                                    <i class="far fa-file-alt"></i>
-                                </a>
-                                <a href="@Url.Action("Sign", "PurchaseRequisitions", new { id = item.PurchaseRequisitionID })" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="" data-original-title="簽核">
-                                    <i class="far fa-file-alt"></i>
-                                </a>
-                                @*<button class="btn btn-outline-secondary btn-icon">@Html.ActionLink(" ", "IndexDtl", new { id = item.PurchaseRequisitionID }, new { @class = "far fa-file-alt", @style = "color:rgb(160, 185, 185)" })</button>*@
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </table>
-        </div>
+                                        @*@if (User.IsInRole("Buyer") && User.IsInRole("Manager") && (item.SignStatus == "簽核中"))
+            {
+                <a href="@Url.Action("Sign","PurchaseRequisitions", routeValues:new { id = item.PurchaseRequisitionID})" class="btn btn-outline-secondary btn-icon" data-toggle="tooltip" title="簽核">
+                    <i class="fas fa-clipboard-check"></i>
+                </a>
+            }*@
+                                    </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
     </div>
     @*<div class="card-footer small text-muted">Updated at 10/23</div>*@
 </div>
@@ -89,10 +104,38 @@
 
     <script>
         $(document).ready(function () {
-            $('#dataTable').DataTable();
-            var emp = $('#empid').text();
-            if (emp == "CE00005") { $("#con").css("visibility", "visible"); }
+            dataTablesId = $('#dataTable').DataTable({
+                ordering: false,
+                fixedHeader: false,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [[1, 'desc']],
+                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                columnDefs: [{
+                    targets: 0,
+                    className: 'control',
+                    searchable: false
+                },
+                { orderable: false, targets: [0, 1, -1] },
+                ],
+            });
+
+            dataTablesId.on('responsive-resize', function (e, datatable, columns) {
+                //修正縮放大小不正確的問題
+                dataTablesId.columns.adjust().responsive.recalc();
+            });
+
+            //var emp = $('#empid').text();
+            //if (emp == "CE00005") { $("#con").css("visibility", "visible"); }
         });
+
+        var dataTablesId;
+
 
             //檢視
             $(document).on('click', "button[name = 'click1']", function () {
@@ -114,6 +157,7 @@
                 //$("#ProcessStatus").val(JSON.stringify(datas[0].ProcessStatus));//轉字串
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
+                $("#SignOpinion").val(datas[0].SignOpinion);
                 //$('#PRBeginDate').datetimepicker({
                 //    defaultDate: datas[0].PRBeginDate
                 //});
@@ -127,8 +171,8 @@
         //    if(id1 == undefined){
         //        id1 = $(this).parents('tr').find('td:first-child').text();
         //        }
-                
-           
+
+
         //});
 
             //修改檢視
@@ -156,12 +200,13 @@
                 $("#EmployeeID").val(datas[0].EmployeeID);
                 $("#ProcessStatus").val(datas[0].ProcessStatus);
                 $("#SignStatus").val(datas[0].SignStatus);
+                $("#SignOpinion").val(datas[0].SignOpinion);
                 $('#PRBeginDate').children("input").val(datas[0].PRBeginDate);
             })
             });
 
 
-            
+
 
             //局部更新時取得欄位 位置
             var sell; var  sell2;
@@ -241,12 +286,12 @@
                         <input type="text" class="form-control" id="EmployeeID" name="da">
                     </div>
 
-                   
+
 
                     <div class="form-group">
                         <label for="PRBeginDate">@Html.DisplayNameFor(model => model.PRBeginDate)</label>
                         <div class="input-group date" id="PRBeginDate" data-target-input="nearest">
-                            <input type="text" id="PRBeginDate2" class="form-control datetimepicker-input" data-target="#PRBeginDate" data-toggle="datetimepicker" name="da"/>
+                            <input type="text" id="PRBeginDate2" class="form-control datetimepicker-input" data-target="#PRBeginDate" data-toggle="datetimepicker" name="da" />
                             <div class="input-group-append" data-target="#PRBeginDate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -272,13 +317,17 @@
                             <option id="opt6" value="N">拒絕</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label class="required" >簽核意見</label>
+                        <input type="text" class="form-control" id="SignOpinion" name="da">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">關閉</button>
                 <button id="btnUpdate" type="button" class="btn btn-success" data-dismiss="modal">修改</button>
                 @*<button id="btnSave" type="button" class="btn btn-primary" data-dismiss="modal">新增</button>*@
-                
+
             </div>
         </div>
     </div>

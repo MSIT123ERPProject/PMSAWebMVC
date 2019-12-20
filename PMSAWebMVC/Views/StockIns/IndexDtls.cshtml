@@ -240,9 +240,9 @@
             let sum = parseInt(sinqty) + parseInt(inqty);
             if (inqty == 0) {
                 toastr.error("入庫數量不可為0", "警告");
-            } else if (sen < inqty) {
+            } else if (parseInt(sen) < parseInt(inqty)) {
                 toastr.error("本次入庫數量不可大於剩餘可入庫數量", "警告");
-            } else if (sen >= inqty){
+            } else if (parseInt(sen) >= parseInt(inqty)){
                 var stockinObj = {
                     StockInDtlOID: oid1,
                     StockInID:$("#StockInID").val(),
@@ -271,21 +271,21 @@
 
         })
 
-        function qty() {
-            let pqty = $("#PurchaseQty").val();  //進貨數量
-            let sinqty = $("#StockInQty").val(); //已入庫數量
-            let inqty = $("#InQty").val();       //本次入庫數量
-            let sen = $("#senInQty").val();      //剩餘可入庫數量
-            console.log(sen);
-            console.log(inqty);
-            if (inqty == 0) {
-                toastr.error("入庫數量不可為0", "警告");
-            } else if (sen < inqty) {
-                toastr.error("本次入庫數量不可大於剩餘可入庫數量", "警告");
-            } else if (sen >= inqty) {
+        //function qty() {
+        //    let pqty = $("#PurchaseQty").val();  //進貨數量
+        //    let sinqty = $("#StockInQty").val(); //已入庫數量
+        //    let inqty = $("#InQty").val();       //本次入庫數量
+        //    let sen = $("#senInQty").val();      //剩餘可入庫數量
+        //    console.log(sen);
+        //    console.log(inqty);
+        //    if (inqty == 0) {
+        //        toastr.error("入庫數量不可為0", "警告");
+        //    } else if (sen < inqty) {
+        //        toastr.error("本次入庫數量不可大於剩餘可入庫數量", "警告");
+        //    } else if (sen >= inqty) {
 
-            }
-        }
+        //    }
+        //}
     </script>
 
 }
@@ -327,7 +327,7 @@
                     </div>
                     <div class="form-group" name="hidden2">
                         <label for="InQty">本次要入庫數量</label>
-                        <input type="number" class="form-control" id="InQty" name="dta11" onblur="qty()">
+                        <input type="number" class="form-control" id="InQty" name="dta11">
                     </div>
                     <div class="form-group" name="hidden1">
                         <label for="EXP">@Html.DisplayNameFor(model => model.EXP)</label>

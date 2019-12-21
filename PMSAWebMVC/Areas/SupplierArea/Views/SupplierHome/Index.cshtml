@@ -31,41 +31,46 @@
         <h1 class="text-light">報表</h1>
         <p class="lead text-light">提供各項統計資訊。</p>
     </div>
-    <div class="row">
-        <div class="col-12">
+    <div class="row border-bottom border-bottom-dashed pt-3">
+        <div class="col-sm-12 col-md-6 col-12 mb-3">
             @*<h2><i class="fas fa-money-check-alt"></i>出貨金額比例</h2>*@
-            @*DateTimePickerStart*@
-            <div class="input-group date" id="datetimepickerIdStart" data-target-input="nearest">
-                <div class="input-group-text">開始</div>
-                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerIdStart" data-toggle="datetimepicker" />
-                <div class="input-group-append" data-target="#datetimepickerIdStart" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+            <div class="d-flex justify-content-between align-items-center">
+                @*DateTimePickerStart*@
+                <div class="input-group date mr-1" id="datetimepickerIdStart" data-target-input="nearest">
+                    <span class="input-group-prepend">
+                        <label class="input-group-text">開始</label>
+                    </span>
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerIdStart" data-toggle="datetimepicker" />
+                    <div class="input-group-append" data-target="#datetimepickerIdStart" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+                @*DateTimePickerEnd*@
+                <div class="input-group date ml-1" id="datetimepickerIdEnd" data-target-input="nearest">
+                    <span class="input-group-prepend">
+                        <label class="input-group-text">結束</label>
+                    </span>
+                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerIdEnd" data-toggle="datetimepicker" />
+                    <div class="input-group-append" data-target="#datetimepickerIdEnd" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
             </div>
-            @*DateTimePickerEnd*@
-            <div class="input-group date" id="datetimepickerIdEnd" data-target-input="nearest">
-                <div class="input-group-text">結束</div>
-                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerIdEnd" data-toggle="datetimepicker" />
-                <div class="input-group-append" data-target="#datetimepickerIdEnd" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                </div>
-            </div>
-            <div class="card mt-1 hichart" id="container"></div>
+
+            <div class="card hichart shadow-none border-0" id="container"></div>
         </div>
-        <div class="col-12 mt-3 hichart">
-            <div class="card hichart" id="container2"></div>
-        </div>
-        <div class="col-12 mt-3 ">
-            <div class="card hichart" id="container3"></div>
+        <div class="col-sm-12 col-md-6 col-12">
+            <div class="card hichart shadow-none border-0 border-left-3" id="container3"></div>
         </div>
     </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card hichart shadow-none border-0" id="container2"></div>
+        </div>
+    </div>
+
     @section scripts{
-        @*bubbleChart還是需要引用此CDN*@
-        @*<script src="https://code.highcharts.com/highcharts.js"></script>
-            <script src="https://code.highcharts.com/highcharts-more.js"></script>
-            <script src="https://code.highcharts.com/modules/exporting.js"></script>
-            <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
-        @*//////////////////////////////////////////*@
         @*引用highchart主題*@
         <script src="~/scripts/highcharts/themes/high-contrast-light.js"></script>
         @*//////////////////////////////////////////*@
@@ -95,7 +100,7 @@
                 dateTimeEnd = $('#datetimepickerIdEnd').find("input").val();
                 //檢查是否日期選擇正確
                 if (dateTimeStart > dateTimeEnd) {
-                    toastr.error("起始日期不得小於結束日期", "警告");
+                    toastr.warning("起始日期不得小於結束日期", "警告");
                 }
                 else {
                     partTotalPrice();
@@ -106,7 +111,7 @@
                 dateTimeEnd = $(this).find("input").val();
                 //檢查是否日期選擇正確
                 if (dateTimeStart > dateTimeEnd) {
-                    toastr.error("起始日期不得小於結束日期", "警告");
+                    toastr.warning("起始日期不得小於結束日期", "警告");
                 }
                 else {
                     partTotalPrice();
@@ -182,6 +187,9 @@
                         fontSize: "20px"
                     }
                 },
+                credits: {
+                    enable: false
+                }
             });
             ////////////////////////////////////
         //庫存不足料件圖 column chart

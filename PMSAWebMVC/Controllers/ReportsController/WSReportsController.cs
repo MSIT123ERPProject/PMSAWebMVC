@@ -1,6 +1,7 @@
 ﻿using PMSAWebMVC.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -30,7 +31,8 @@ namespace PMSAWebMVC.Controllers
         public JsonResult GetPORD()
         {
             var report = db.PurchaseOrderReceiveDtl.
-                         GroupBy(p => p.PurchaseOrderReceive.PurchaseDate.Year + "/" + p.PurchaseOrderReceive.PurchaseDate.Month).
+                         Where(w=>w.RejectQty != 0).
+                         GroupBy(p => p.PurchaseOrderReceive.PurchaseDate.Year + "/" + DbFunctions.Right("0" + p.PurchaseOrderReceive.PurchaseDate.Month, 2)).
                          Select(g => new { name = g.Key, count = g.Where(p => p.RejectQty != 0).Count() });
 
             return Json(report, JsonRequestBehavior.AllowGet);

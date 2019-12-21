@@ -1,6 +1,7 @@
 ﻿@model PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderCreateViewModel
 
 @section styles{
+    <link href="~/Content/Views/PurchaseOrders.css" rel="stylesheet" />
     <style>
         /*內容分隔線*/
         .border-top-dashed {
@@ -69,7 +70,7 @@
     ViewBag.Title = "新增採購單";
 }
 
-<h2 class="text-dark">@ViewBag.Title</h2>
+@Html.Partial("_POLevel3BreadcrumbPartial")
 
 @*請購單資訊*@
 <div class="card mb-3">

@@ -1,0 +1,7 @@
+﻿.bc-icons-2 .breadcrumb-item + .breadcrumb-item::before {
+    content: none;
+}
+
+.bc-icons-2 .breadcrumb-item.active {
+    color: #455a64;
+}

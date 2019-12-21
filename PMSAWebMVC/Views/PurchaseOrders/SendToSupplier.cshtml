@@ -2,6 +2,7 @@
 
 @section styles{
     <link href="~/Content/Views/_PurchaseOrdersDetailsPartial.css" rel="stylesheet" />
+    <link href="~/Content/Views/PurchaseOrders.css" rel="stylesheet" />
     <style>
     </style>
 }
@@ -10,7 +11,7 @@
     ViewBag.Title = "送出至供應商";
 }
 
-<h2 class="text-dark">@ViewBag.Title</h2>
+@Html.Partial("_POLevel3BreadcrumbPartial")
 
 @using (Html.BeginForm("SendToSupplier", "PurchaseOrders", FormMethod.Post, new { @id = "formSendToSupplierPurchaseOrders" }))
 {

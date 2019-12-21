@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
+    [Authorize(Roles = "Supplier")]
     public class SupplierHomeController : Controller
     {
         private PMSAEntities db;

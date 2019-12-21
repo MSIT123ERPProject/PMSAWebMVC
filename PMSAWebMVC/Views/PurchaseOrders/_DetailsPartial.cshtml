@@ -68,7 +68,16 @@
                                                 <strong>@Html.DisplayNameFor(model => Model.SFItem.SignDate)</strong><span class="ml-3">@Html.DisplayFor(model => Model.SFItem.SignDate)</span>
                                             </div>
                                             <div class="dropdown-item d-flex justify-content-between align-items-start">
-                                                <strong>@Html.DisplayNameFor(model => Model.SFItem.SignOpinion)</strong><span class="ml-3">@Html.DisplayFor(model => Model.SFItem.SignOpinion)</span>
+                                                <strong>@Html.DisplayNameFor(model => Model.SFItem.SignOpinion)</strong><span class="ml-3">
+                                                    @if (string.IsNullOrWhiteSpace(Model.SFItem.SignOpinion))
+                                                    {
+                                                        @:無
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DisplayFor(model => Model.SFItem.SignOpinion)
+                                                    }
+                                                </span>
                                             </div>
                                         }
                                         else

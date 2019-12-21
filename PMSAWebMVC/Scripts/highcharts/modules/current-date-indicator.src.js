@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Gantt JS v7.2.1 (2019-10-31)
+ * @license Highcharts Gantt JS v8.0.0 (2019-12-10)
  *
  * CurrentDateIndicator
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'parts-gantt/CurrentDateIndicator.js', [_modules['parts/Globals.js']], function (H) {
+    _registerModule(_modules, 'parts-gantt/CurrentDateIndicator.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js']], function (H, U) {
         /* *
          *
          *  (c) 2016-2019 Highsoft AS
@@ -40,7 +40,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var addEvent = H.addEvent, Axis = H.Axis, PlotLineOrBand = H.PlotLineOrBand, merge = H.merge, wrap = H.wrap;
+        var wrap = U.wrap;
+        var addEvent = H.addEvent, Axis = H.Axis, PlotLineOrBand = H.PlotLineOrBand, merge = H.merge;
         var defaultConfig = {
             /**
              * Show an indicator on the axis for the current date and time. Can be a
@@ -52,6 +53,7 @@
              * @sample gantt/current-date-indicator/object-config
              *         Current date indicator with custom options
              *
+             * @declare   Highcharts.AxisCurrentDateIndicatorOptions
              * @type      {boolean|*}
              * @default   true
              * @extends   xAxis.plotLines
@@ -62,6 +64,9 @@
             currentDateIndicator: true,
             color: '#ccd6eb',
             width: 2,
+            /**
+             * @declare Highcharts.AxisCurrentDateIndicatorLabelOptions
+             */
             label: {
                 /**
                  * Format of the label. This options is passed as the fist argument to
@@ -77,7 +82,11 @@
                     return H.dateFormat(format, value);
                 },
                 rotation: 0,
+                /**
+                 * @type {Highcharts.CSSObject}
+                 */
                 style: {
+                    /** @internal */
                     fontSize: '10px'
                 }
             }

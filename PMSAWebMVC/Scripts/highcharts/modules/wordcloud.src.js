@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * (c) 2016-2019 Highsoft AS
  * Authors: Jon Arild Nygard
@@ -61,7 +61,7 @@
                 graphic
                     .css(css)
                     .attr(params.attribs)
-                    .animate(animatableAttribs, params.isNew ? false : undefined, onComplete);
+                    .animate(animatableAttribs, params.isNew ? false : void 0, onComplete);
             }
             else if (graphic) {
                 var destroy = function () {
@@ -72,7 +72,7 @@
                 };
                 // animate only runs complete callback if something was animated.
                 if (Object.keys(animatableAttribs).length) {
-                    graphic.animate(animatableAttribs, undefined, function () {
+                    graphic.animate(animatableAttribs, void 0, function () {
                         destroy();
                     });
                 }
@@ -127,7 +127,7 @@
         /* eslint-disable no-invalid-this, valid-jsdoc */
         /**
          * Alternative solution to correctFloat.
-         * E.g H.correctFloat(123, 2) returns 120, when it should be 123.
+         * E.g Highcharts.correctFloat(123, 2) returns 120, when it should be 123.
          *
          * @private
          * @function correctFloat
@@ -889,6 +889,7 @@
              */
             allowExtendPlayingField: true,
             animation: {
+                /** @internal */
                 duration: 500
             },
             borderWidth: 0,
@@ -1122,7 +1123,7 @@
                         css: css,
                         group: group,
                         renderer: renderer,
-                        shapeArgs: undefined,
+                        shapeArgs: void 0,
                         shapeType: 'text'
                     });
                 });

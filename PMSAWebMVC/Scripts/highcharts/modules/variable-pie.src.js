@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Variable Pie module for Highcharts
  *
@@ -43,7 +43,7 @@
         /**
          * @typedef {"area"|"radius"} Highcharts.VariablePieSizeByValue
          */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, pick = U.pick;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, clamp = U.clamp, pick = U.pick;
         var fireEvent = H.fireEvent, seriesType = H.seriesType, pieProto = H.seriesTypes.pie.prototype;
         /**
          * The variablepie series type.
@@ -109,7 +109,7 @@
              * @type  {number}
              * @since 6.0.0
              */
-            zMin: undefined,
+            zMin: void 0,
             /**
              * The maximum possible z value for the point's radius calculation. If
              * the point's Z value is bigger than zMax, the slice will be drawn
@@ -121,7 +121,7 @@
              * @type  {number}
              * @since 6.0.0
              */
-            zMax: undefined,
+            zMax: void 0,
             /**
              * Whether the pie slice's value should be represented by the area or
              * the radius of the slice. Can be either `area` or `radius`. The
@@ -173,7 +173,7 @@
                         length * 2; // Because it should be radius, not diameter.
                 });
                 series.minPxSize = positions[3] + extremes.minPointSize;
-                series.maxPxSize = Math.max(Math.min(positions[2], extremes.maxPointSize), positions[3] + extremes.minPointSize);
+                series.maxPxSize = clamp(positions[2], positions[3] + extremes.minPointSize, extremes.maxPointSize);
                 if (zData.length) {
                     zMin = pick(seriesOptions.zMin, arrayMin(zData.filter(series.zValEval)));
                     zMax = pick(seriesOptions.zMax, arrayMax(zData.filter(series.zValEval)));

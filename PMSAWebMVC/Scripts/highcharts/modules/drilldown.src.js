@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Highcharts Drilldown module
  *
@@ -153,8 +153,8 @@
         * @name Highcharts.DrillupEventObject#type
         * @type {"drillup"}
         */
-        var extend = U.extend, objectEach = U.objectEach, pick = U.pick, syncTimeout = U.syncTimeout;
-        var animObject = H.animObject, noop = H.noop, color = H.color, defaultOptions = H.defaultOptions, format = H.format, Chart = H.Chart, seriesTypes = H.seriesTypes, PieSeries = seriesTypes.pie, ColumnSeries = seriesTypes.column, Tick = H.Tick, fireEvent = H.fireEvent, ddSeriesId = 1;
+        var animObject = U.animObject, extend = U.extend, objectEach = U.objectEach, pick = U.pick, syncTimeout = U.syncTimeout;
+        var addEvent = H.addEvent, noop = H.noop, color = H.color, defaultOptions = H.defaultOptions, format = H.format, Chart = H.Chart, seriesTypes = H.seriesTypes, PieSeries = seriesTypes.pie, ColumnSeries = seriesTypes.column, Tick = H.Tick, fireEvent = H.fireEvent, ddSeriesId = 1;
         // Add language
         extend(defaultOptions.lang, 
         /**
@@ -181,7 +181,7 @@
          * The drilldown feature requires the drilldown.js file to be loaded,
          * found in the modules directory of the download package, or online at
          * [code.highcharts.com/modules/drilldown.js
-         * ](code.highcharts.com/modules/drilldown.js).
+         * ](https://code.highcharts.com/modules/drilldown.js).
          *
          * @product      highcharts highmaps
          * @requires     modules/drilldown
@@ -280,12 +280,11 @@
              *   [the easing demo](https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/series-animation-easing/).
              *
              * @type    {boolean|Highcharts.AnimationOptionsObject}
-             * @default { "duration": 500 }
              * @since   3.0.8
              * @product highcharts highmaps
              */
             animation: {
-                /** @ignore-option */
+                /** @internal */
                 duration: 500
             },
             /**
@@ -375,7 +374,7 @@
          *
          * Event arguments:
          *
-         * - `category`: If a category label was clicked, which index.</dd>
+         * - `category`: If a category label was clicked, which index.
          *
          * - `originalEvent`: The original browser event (usually click) that triggered
          *   the drilldown.
@@ -383,7 +382,7 @@
          * - `point`: The originating point.
          *
          * - `points`: If a category label was clicked, this array holds all points
-         *   corresponing to the category.</dd>
+         *   corresponing to the category.
          *
          * - `seriesOptions`: Options for the new series.
          *
@@ -492,7 +491,7 @@
             // See if we can reuse the registered series from last run
             last = this.drilldownLevels[this.drilldownLevels.length - 1];
             if (last && last.levelNumber !== levelNumber) {
-                last = undefined;
+                last = void 0;
             }
             ddOptions = extend(extend({
                 _ddSeriesId: ddSeriesId++
@@ -727,12 +726,12 @@
             };
         });
         // Don't show the reset button if we already are displaying the drillUp button.
-        H.addEvent(Chart, 'beforeShowResetZoom', function () {
+        addEvent(Chart, 'beforeShowResetZoom', function () {
             if (this.drillUpButton) {
                 return false;
             }
         });
-        H.addEvent(Chart, 'render', function () {
+        addEvent(Chart, 'render', function () {
             (this.xAxis || []).forEach(function (axis) {
                 axis.ddPoints = {};
                 axis.series.forEach(function (series) {
@@ -795,7 +794,7 @@
                     if (newSeries.points) { // May be destroyed in the meantime, #3389
                         newSeries.points.forEach(function (point, i) {
                             // Fade in other points
-                            var verb = i === (level && level.pointIndex) ? 'show' : 'fadeIn', inherit = verb === 'show' ? true : undefined, dataLabel = point.dataLabel;
+                            var verb = i === (level && level.pointIndex) ? 'show' : 'fadeIn', inherit = verb === 'show' ? true : void 0, dataLabel = point.dataLabel;
                             if (point.graphic) { // #3407
                                 point.graphic[verb](inherit);
                             }
@@ -935,7 +934,7 @@
                 seriesOptions: seriesOptions,
                 category: category,
                 originalEvent: originalEvent,
-                points: (category !== undefined &&
+                points: (typeof category !== 'undefined' &&
                     this.series.xAxis.getDDPoints(category).slice(0))
             }, function (e) {
                 var chart = e.point.series && e.point.series.chart, seriesOptions = e.seriesOptions;
@@ -1000,32 +999,31 @@
                     if (!label.basicStyles && !styledMode) {
                         label.basicStyles = H.merge(label.styles);
                     }
-                    label
-                        .addClass('highcharts-drilldown-axis-label')
-                        .on('click', function (e) {
+                    label.addClass('highcharts-drilldown-axis-label');
+                    label.removeOnDrillableClick = addEvent(label.element, 'click', function (e) {
                         axis.drilldownCategory(pos, e);
                     });
                     if (!styledMode) {
                         label.css(axis.chart.options.drilldown.activeAxisLabelStyle);
                     }
                 }
-                else if (label && label.drillable) {
+                else if (label && label.removeOnDrillableClick) {
                     if (!styledMode) {
                         label.styles = {}; // reset for full overwrite of styles
                         label.css(label.basicStyles);
                     }
-                    label.on('click', null); // #3806
+                    label.removeOnDrillableClick(); // #3806
                     label.removeClass('highcharts-drilldown-axis-label');
                 }
             }
         };
         // On initialization of each point, identify its label and make it clickable.
         // Also, provide a list of points associated to that label.
-        H.addEvent(H.Point, 'afterInit', function () {
+        addEvent(H.Point, 'afterInit', function () {
             var point = this, series = point.series;
             if (point.drilldown) {
                 // Add the click event to the point
-                H.addEvent(point, 'click', function (e) {
+                addEvent(point, 'click', function (e) {
                     if (series.xAxis &&
                         series.chart.options.drilldown.allowPointDrilldown ===
                             false) {
@@ -1033,13 +1031,13 @@
                         series.xAxis.drilldownCategory(point.x, e);
                     }
                     else {
-                        point.doDrilldown(undefined, undefined, e);
+                        point.doDrilldown(void 0, void 0, e);
                     }
                 });
             }
             return point;
         });
-        H.addEvent(H.Series, 'afterDrawDataLabels', function () {
+        addEvent(H.Series, 'afterDrawDataLabels', function () {
             var css = this.chart.options.drilldown.activeDataLabelStyle, renderer = this.chart.renderer, styledMode = this.chart.styledMode;
             this.points.forEach(function (point) {
                 var dataLabelsOptions = point.options.dataLabels, pointCSS = pick(point.dlOptions, dataLabelsOptions && dataLabelsOptions.style, {});
@@ -1067,7 +1065,7 @@
             }
         };
         // Mark the trackers with a pointer
-        H.addEvent(H.Series, 'afterDrawTracker', function () {
+        addEvent(H.Series, 'afterDrawTracker', function () {
             var styledMode = this.chart.styledMode;
             this.points.forEach(function (point) {
                 if (point.drilldown && point.graphic) {
@@ -1075,7 +1073,7 @@
                 }
             });
         });
-        H.addEvent(H.Point, 'afterSetState', function () {
+        addEvent(H.Point, 'afterSetState', function () {
             var styledMode = this.series.chart.styledMode;
             if (this.drilldown && this.series.halo && this.state === 'hover') {
                 applyCursorCSS(this.series.halo, 'pointer', true, styledMode);

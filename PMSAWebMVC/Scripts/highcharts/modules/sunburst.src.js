@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * (c) 2016-2019 Highsoft AS
  * Authors: Jon Arild Nygard
@@ -61,7 +61,7 @@
                 graphic
                     .css(css)
                     .attr(params.attribs)
-                    .animate(animatableAttribs, params.isNew ? false : undefined, onComplete);
+                    .animate(animatableAttribs, params.isNew ? false : void 0, onComplete);
             }
             else if (graphic) {
                 var destroy = function () {
@@ -72,7 +72,7 @@
                 };
                 // animate only runs complete callback if something was animated.
                 if (Object.keys(animatableAttribs).length) {
-                    graphic.animate(animatableAttribs, undefined, function () {
+                    graphic.animate(animatableAttribs, void 0, function () {
                         destroy();
                     });
                 }
@@ -296,8 +296,9 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, extend = U.extend, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString, objectEach = U.objectEach, pick = U.pick;
+        var correctFloat = U.correctFloat, defined = U.defined, extend = U.extend, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString, objectEach = U.objectEach, pick = U.pick;
         /* eslint-disable no-invalid-this */
+        var AXIS_MAX = 100;
         var seriesType = H.seriesType, seriesTypes = H.seriesTypes, addEvent = H.addEvent, merge = H.merge, error = H.error, noop = H.noop, fireEvent = H.fireEvent, getColor = mixinTreeSeries.getColor, getLevelOptions = mixinTreeSeries.getLevelOptions, 
         // @todo Similar to eachObject, this function is likely redundant
         isBoolean = function (x) {
@@ -462,21 +463,15 @@
              * @since 4.1.0
              */
             dataLabels: {
-                /** @ignore-option */
                 defer: false,
-                /** @ignore-option */
                 enabled: true,
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     var point = this && this.point ?
                         this.point :
                         {}, name = isString(point.name) ? point.name : '';
                     return name;
                 },
-                /** @ignore-option */
                 inside: true,
-                /** @ignore-option */
                 verticalAlign: 'middle'
             },
             tooltip: {
@@ -636,8 +631,9 @@
              */
             /**
              * Set the dash style of the border of all the point which lies on the
-             * level. See <a href"#plotoptions.scatter.dashstyle">
-             * plotOptions.scatter.dashStyle</a> for possible options.
+             * level. See
+             * [plotOptions.scatter.dashStyle](#plotoptions.scatter.dashstyle)
+             * for possible options.
              *
              * @type      {Highcharts.DashStyleValue}
              * @since     4.1.0
@@ -701,7 +697,7 @@
              * [plotOptions.treemap.dataLabels](#plotOptions.treemap.dataLabels) for
              * possible values.
              *
-             * @type      {Highcharts.DataLabelsOptionsObject}
+             * @extends   plotOptions.treemap.dataLabels
              * @since     4.1.0
              * @product   highcharts
              * @apioption plotOptions.treemap.levels.dataLabels
@@ -825,7 +821,7 @@
             getListOfParents: function (data, existingIds) {
                 var arr = isArray(data) ? data : [], ids = isArray(existingIds) ? existingIds : [], listOfParents = arr.reduce(function (prev, curr, i) {
                     var parent = pick(curr.parent, '');
-                    if (prev[parent] === undefined) {
+                    if (typeof prev[parent] === 'undefined') {
                         prev[parent] = [];
                     }
                     prev[parent].push(i);
@@ -864,7 +860,7 @@
                     this.colorAttribs = colorMapSeriesMixin.colorAttribs;
                 }
                 // Handle deprecated options.
-                addEvent(series, 'setOptions', function (event) {
+                series.eventsToUnbind.push(addEvent(series, 'setOptions', function (event) {
                     var options = event.userOptions;
                     if (defined(options.allowDrillToNode) &&
                         !defined(options.allowTraversingTree)) {
@@ -876,10 +872,10 @@
                         options.traverseUpButton = options.drillUpButton;
                         delete options.drillUpButton;
                     }
-                });
+                }));
                 Series.prototype.init.call(series, chart, options);
                 if (series.options.allowTraversingTree) {
-                    addEvent(series, 'click', series.onClickDrillToNode);
+                    series.eventsToUnbind.push(addEvent(series, 'click', series.onClickDrillToNode));
                 }
             },
             buildNode: function (id, i, level, list, parent) {
@@ -973,6 +969,9 @@
                     });
                     child.pointValues = merge(values, {
                         x: (values.x / series.axisRatio),
+                        // Flip y-values to avoid visual regression with csvCoord in
+                        // Axis.translate at setPointValues. #12488
+                        y: AXIS_MAX - values.y - values.height,
                         width: (values.width / series.axisRatio)
                     });
                     // If node has children, then call method recursively
@@ -982,24 +981,28 @@
                 });
             },
             setPointValues: function () {
-                var series = this, xAxis = series.xAxis, yAxis = series.yAxis;
-                series.points.forEach(function (point) {
-                    var node = point.node, values = node.pointValues, x1, x2, y1, y2, crispCorr = 0;
-                    // Get the crisp correction in classic mode. For this to work in
-                    // styled mode, we would need to first add the shape (without x,
-                    // y, width and height), then read the rendered stroke width
-                    // using point.graphic.strokeWidth(), then modify and apply the
-                    // shapeArgs. This applies also to column series, but the
-                    // downside is performance and code complexity.
-                    if (!series.chart.styledMode) {
-                        crispCorr = ((series.pointAttribs(point)['stroke-width'] || 0) % 2) / 2;
-                    }
+                var series = this;
+                var points = series.points, xAxis = series.xAxis, yAxis = series.yAxis;
+                var styledMode = series.chart.styledMode;
+                // Get the crisp correction in classic mode. For this to work in
+                // styled mode, we would need to first add the shape (without x,
+                // y, width and height), then read the rendered stroke width
+                // using point.graphic.strokeWidth(), then modify and apply the
+                // shapeArgs. This applies also to column series, but the
+                // downside is performance and code complexity.
+                var getCrispCorrection = function (point) { return (styledMode ?
+                    0 :
+                    ((series.pointAttribs(point)['stroke-width'] || 0) % 2) / 2); };
+                points.forEach(function (point) {
+                    var _a = point.node, values = _a.pointValues, visible = _a.visible;
                     // Points which is ignored, have no values.
-                    if (values && node.visible) {
-                        x1 = Math.round(xAxis.translate(values.x, 0, 0, 0, 1)) - crispCorr;
-                        x2 = Math.round(xAxis.translate(values.x + values.width, 0, 0, 0, 1)) - crispCorr;
-                        y1 = Math.round(yAxis.translate(values.y, 0, 0, 0, 1)) - crispCorr;
-                        y2 = Math.round(yAxis.translate(values.y + values.height, 0, 0, 0, 1)) - crispCorr;
+                    if (values && visible) {
+                        var height = values.height, width = values.width, x = values.x, y = values.y;
+                        var crispCorr = getCrispCorrection(point);
+                        var x1 = Math.round(xAxis.toPixels(x, true)) - crispCorr;
+                        var x2 = Math.round(xAxis.toPixels(x + width, true)) - crispCorr;
+                        var y1 = Math.round(yAxis.toPixels(y, true)) - crispCorr;
+                        var y2 = Math.round(yAxis.toPixels(y + height, true)) - crispCorr;
                         // Set point values
                         point.shapeArgs = {
                             x: Math.min(x1, x2),
@@ -1126,7 +1129,7 @@
                             x: pX,
                             y: pY,
                             width: pW,
-                            height: H.correctFloat(pH)
+                            height: correctFloat(pH)
                         });
                         if (group.direction === 0) {
                             plot.y = plot.y + pH;
@@ -1274,8 +1277,8 @@
                 series.nodeMap[''].pointValues = pointValues = {
                     x: 0,
                     y: 0,
-                    width: 100,
-                    height: 100
+                    width: AXIS_MAX,
+                    height: AXIS_MAX
                 };
                 series.nodeMap[''].values = seriesArea = merge(pointValues, {
                     width: (pointValues.width * series.axisRatio),
@@ -1645,8 +1648,8 @@
                     min: 0,
                     dataMin: 0,
                     minPadding: 0,
-                    max: 100,
-                    dataMax: 100,
+                    max: AXIS_MAX,
+                    dataMax: AXIS_MAX,
                     maxPadding: 0,
                     startOnTick: false,
                     title: null,
@@ -1716,6 +1719,89 @@
             }
             /* eslint-enable no-invalid-this, valid-jsdoc */
         });
+        /**
+         * A `treemap` series. If the [type](#series.treemap.type) option is
+         * not specified, it is inherited from [chart.type](#chart.type).
+         *
+         * @extends   series,plotOptions.treemap
+         * @excluding dataParser, dataURL, stack
+         * @product   highcharts
+         * @requires  modules/treemap
+         * @apioption series.treemap
+         */
+        /**
+         * An array of data points for the series. For the `treemap` series
+         * type, points can be given in the following ways:
+         *
+         * 1. An array of numerical values. In this case, the numerical values will be
+         *    interpreted as `value` options. Example:
+         *    ```js
+         *    data: [0, 5, 3, 5]
+         *    ```
+         *
+         * 2. An array of objects with named values. The following snippet shows only a
+         *    few settings, see the complete options set below. If the total number of
+         *    data points exceeds the series'
+         *    [turboThreshold](#series.treemap.turboThreshold),
+         *    this option is not available.
+         *    ```js
+         *      data: [{
+         *        value: 9,
+         *        name: "Point2",
+         *        color: "#00FF00"
+         *      }, {
+         *        value: 6,
+         *        name: "Point1",
+         *        color: "#FF00FF"
+         *      }]
+         *    ```
+         *
+         * @sample {highcharts} highcharts/chart/reflow-true/
+         *         Numerical values
+         * @sample {highcharts} highcharts/series/data-array-of-objects/
+         *         Config objects
+         *
+         * @type      {Array<number|null|*>}
+         * @extends   series.heatmap.data
+         * @excluding x, y
+         * @product   highcharts
+         * @apioption series.treemap.data
+         */
+        /**
+         * The value of the point, resulting in a relative area of the point
+         * in the treemap.
+         *
+         * @type      {number|null}
+         * @product   highcharts
+         * @apioption series.treemap.data.value
+         */
+        /**
+         * Serves a purpose only if a `colorAxis` object is defined in the chart
+         * options. This value will decide which color the point gets from the
+         * scale of the colorAxis.
+         *
+         * @type      {number}
+         * @since     4.1.0
+         * @product   highcharts
+         * @apioption series.treemap.data.colorValue
+         */
+        /**
+         * Only for treemap. Use this option to build a tree structure. The
+         * value should be the id of the point which is the parent. If no points
+         * has a matching id, or this option is undefined, then the parent will
+         * be set to the root.
+         *
+         * @sample {highcharts} highcharts/point/parent/
+         *         Point parent
+         * @sample {highcharts} highcharts/demo/treemap-with-levels/
+         *         Example where parent id is not matching
+         *
+         * @type      {string}
+         * @since     4.1.0
+         * @product   highcharts
+         * @apioption series.treemap.data.parent
+         */
+        ''; // adds doclets above to transpiled file
 
     });
     _registerModule(_modules, 'modules/sunburst.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/draw-point.js'], _modules['mixins/tree-series.js']], function (H, U, drawPoint, mixinTreeSeries) {
@@ -1732,35 +1818,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        /**
-         * Possible rotation options for data labels in the sunburst series.
-         *
-         * @typedef {"auto"|"perpendicular"|"parallel"} Highcharts.SeriesSunburstDataLabelsRotationValue
-         */
-        /**
-         * Options for data labels in the sunburst series.
-         *
-         * @interface Highcharts.SeriesSunburstDataLabelsOptionsObject
-         * @extends Highcharts.DataLabelsOptionsObject
-         */ /**
-        * @name Highcharts.SeriesSunburstDataLabelsOptionsObject#align
-        * @type {undefined}
-        */ /**
-        * @name Highcharts.SeriesSunburstDataLabelsOptionsObject#allowOverlap
-        * @type {undefined}
-        */ /**
-        * Decides how the data label will be rotated relative to the perimeter
-        * of the sunburst. Valid values are `auto`, `parallel` and
-        * `perpendicular`. When `auto`, the best fit will be computed for the
-        * point.
-        *
-        * The `series.rotation` option takes precedence over `rotationMode`.
-        *
-        * @name Highcharts.SeriesSunburstDataLabelsOptionsObject#rotationMode
-        * @type {Highcharts.SeriesSunburstDataLabelsRotationValue|undefined}
-        * @since 6.0.0
-        */
-        var extend = U.extend, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString;
+        var correctFloat = U.correctFloat, extend = U.extend, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString, splat = U.splat;
         var CenteredSeriesMixin = H.CenteredSeriesMixin, Series = H.Series, getCenter = CenteredSeriesMixin.getCenter, getColor = mixinTreeSeries.getColor, getLevelOptions = mixinTreeSeries.getLevelOptions, getStartAndEndRadians = CenteredSeriesMixin.getStartAndEndRadians, isBoolean = function (x) {
             return typeof x === 'boolean';
         }, merge = H.merge, noop = H.noop, rad2deg = 180 / Math.PI, seriesType = H.seriesType, seriesTypes = H.seriesTypes, setTreeValues = mixinTreeSeries.setTreeValues, updateRootId = mixinTreeSeries.updateRootId;
@@ -1893,26 +1951,53 @@
             // Set options to new object to avoid problems with scope
             var point = params.point, shape = isObject(params.shapeArgs) ? params.shapeArgs : {}, optionsPoint = (isObject(params.optionsPoint) ?
                 params.optionsPoint.dataLabels :
-                {}), optionsLevel = (isObject(params.level) ?
+                {}), 
+            // The splat was used because levels dataLabels
+            // options doesn't work as an array
+            optionsLevel = splat(isObject(params.level) ?
                 params.level.dataLabels :
-                {}), options = merge({
+                {})[0], options = merge({
                 style: {}
             }, optionsLevel, optionsPoint), rotationRad, rotation, rotationMode = options.rotationMode;
             if (!isNumber(options.rotation)) {
-                if (rotationMode === 'auto') {
+                if (rotationMode === 'auto' || rotationMode === 'circular') {
                     if (point.innerArcLength < 1 &&
                         point.outerArcLength > shape.radius) {
                         rotationRad = 0;
+                        // Triger setTextPath function to get textOutline etc.
+                        if (point.dataLabelPath && rotationMode === 'circular') {
+                            options.textPath = {
+                                enabled: true
+                            };
+                        }
                     }
                     else if (point.innerArcLength > 1 &&
                         point.outerArcLength > 1.5 * shape.radius) {
-                        rotationMode = 'parallel';
+                        if (rotationMode === 'circular') {
+                            options.textPath = {
+                                enabled: true,
+                                attributes: {
+                                    dy: 5
+                                }
+                            };
+                        }
+                        else {
+                            rotationMode = 'parallel';
+                        }
                     }
                     else {
+                        // Trigger the destroyTextPath function
+                        if (point.dataLabel &&
+                            point.dataLabel.textPathWrapper &&
+                            rotationMode === 'circular') {
+                            options.textPath = {
+                                enabled: false
+                            };
+                        }
                         rotationMode = 'perpendicular';
                     }
                 }
-                if (rotationMode !== 'auto') {
+                if (rotationMode !== 'auto' && rotationMode !== 'circular') {
                     rotationRad = (shape.end -
                         (shape.end - shape.start) / 2);
                 }
@@ -1940,6 +2025,33 @@
                     rotation += 180;
                 }
                 options.rotation = rotation;
+            }
+            if (options.textPath) {
+                if (point.shapeExisting.innerR === 0 &&
+                    options.textPath.enabled) {
+                    // Enable rotation to render text
+                    options.rotation = 0;
+                    // Center dataLabel - disable textPath
+                    options.textPath.enabled = false;
+                    // Setting width and padding
+                    options.style.width = Math.max((point.shapeExisting.r * 2) -
+                        2 * (options.padding || 0), 1);
+                }
+                else if (point.dlOptions &&
+                    point.dlOptions.textPath &&
+                    !point.dlOptions.textPath.enabled &&
+                    (rotationMode === 'circular')) {
+                    // Bring dataLabel back if was a center dataLabel
+                    options.textPath.enabled = true;
+                }
+                if (options.textPath.enabled) {
+                    // Enable rotation to render text
+                    options.rotation = 0;
+                    // Setting width and padding
+                    options.style.width = Math.max((point.outerArcLength +
+                        point.innerArcLength) / 2 -
+                        2 * (options.padding || 0), 1);
+                }
             }
             // NOTE: alignDataLabel positions the data label differntly when rotation is
             // 0. Avoiding this by setting rotation to a small number.
@@ -2022,6 +2134,13 @@
                 }
             }
             return drillId;
+        };
+        var getLevelFromAndTo = function getLevelFromAndTo(_a) {
+            var level = _a.level, height = _a.height;
+            //  Never displays level below 1
+            var from = level > 0 ? level : 1;
+            var to = level + height;
+            return { from: from, to: to };
         };
         var cbSetTreeValuesBefore = function before(node, options) {
             var mapIdToNode = options.mapIdToNode, nodeParent = mapIdToNode[node.parent], series = options.series, chart = series.chart, points = series.points, point = points[node.i], colors = (series.options.colors || chart && chart.options.colors), colorInfo = getColor(node, {
@@ -2118,7 +2237,7 @@
             /**
              * Can set `dataLabels` on all points which lies on the same level.
              *
-             * @type      {Highcharts.SeriesSunburstDataLabelsOptionsObject}
+             * @extends   plotOptions.sunburst.dataLabels
              * @apioption plotOptions.sunburst.levels.dataLabels
              */
             /**
@@ -2181,18 +2300,26 @@
              */
             opacity: 1,
             /**
-             * @type    {Highcharts.SeriesSunburstDataLabelsOptionsObject|Array<Highcharts.SeriesSunburstDataLabelsOptionsObject>}
-             * @default {"allowOverlap": true, "defer": true, "rotationMode": "auto", "style": {"textOverflow": "ellipsis"}}
+             * @declare Highcharts.SeriesSunburstDataLabelsOptionsObject
              */
             dataLabels: {
-                /** @ignore-option */
                 allowOverlap: true,
-                /** @ignore-option */
                 defer: true,
-                /** @ignore-option */
+                /**
+                 * Decides how the data label will be rotated relative to the perimeter
+                 * of the sunburst. Valid values are `auto`, `parallel` and
+                 * `perpendicular`. When `auto`, the best fit will be computed for the
+                 * point.
+                 *
+                 * The `series.rotation` option takes precedence over `rotationMode`.
+                 *
+                 * @type       {string}
+                 * @validvalue ["auto", "perpendicular", "parallel"]
+                 * @since      6.0.0
+                 */
                 rotationMode: 'auto',
-                /** @ignore-option */
                 style: {
+                    /** @internal */
                     textOverflow: 'ellipsis'
                 }
             },
@@ -2201,7 +2328,7 @@
              *
              * @type {string}
              */
-            rootId: undefined,
+            rootId: void 0,
             /**
              * Used together with the levels and `allowDrillToNode` options. When
              * set to false the first level visible when drilling is considered
@@ -2248,8 +2375,8 @@
             /**
              * Options for the button appearing when traversing down in a treemap.
              *
-             * @extends plotOptions.treemap.traverseUpButton
-             * @since 6.0.0
+             * @extends   plotOptions.treemap.traverseUpButton
+             * @since     6.0.0
              * @apioption plotOptions.sunburst.traverseUpButton
              */
             /**
@@ -2411,10 +2538,11 @@
                 nodeRoot = mapIdToNode[rootId];
                 idTop = isString(nodeRoot.parent) ? nodeRoot.parent : '';
                 nodeTop = mapIdToNode[idTop];
+                var _a = getLevelFromAndTo(nodeRoot), from = _a.from, to = _a.to;
                 mapOptionsToLevel = getLevelOptions({
-                    from: nodeRoot.level > 0 ? nodeRoot.level : 1,
+                    from: from,
                     levels: series.options.levels,
-                    to: tree.height,
+                    to: to,
                     defaults: {
                         colorByPoint: options.colorByPoint,
                         dataLabels: options.dataLabels,
@@ -2427,8 +2555,8 @@
                 // getLevelOptions
                 mapOptionsToLevel = calculateLevelSizes(mapOptionsToLevel, {
                     diffRadius: diffRadius,
-                    from: nodeRoot.level > 0 ? nodeRoot.level : 1,
-                    to: tree.height
+                    from: from,
+                    to: to
                 });
                 // TODO Try to combine setTreeValues & setColorRecursive to avoid
                 //  unnecessary looping.
@@ -2462,6 +2590,13 @@
                 });
                 // reset object
                 nodeIds = {};
+            },
+            alignDataLabel: function (point, dataLabel, labelOptions) {
+                if (labelOptions.textPath && labelOptions.textPath.enabled) {
+                    return;
+                }
+                return seriesTypes.treemap.prototype.alignDataLabel
+                    .apply(this, arguments);
             },
             // Animate the slices in. Similar to the animation of polar charts.
             animate: function (init) {
@@ -2499,6 +2634,7 @@
             },
             utils: {
                 calculateLevelSizes: calculateLevelSizes,
+                getLevelFromAndTo: getLevelFromAndTo,
                 range: range
             }
         };
@@ -2510,6 +2646,45 @@
             },
             isValid: function isValid() {
                 return true;
+            },
+            getDataLabelPath: function (label) {
+                var renderer = this.series.chart.renderer, shapeArgs = this.shapeExisting, start = shapeArgs.start, end = shapeArgs.end, angle = start + (end - start) / 2, // arc middle value
+                upperHalf = angle < 0 &&
+                    angle > -Math.PI ||
+                    angle > Math.PI, r = (shapeArgs.r + (label.options.distance || 0)), moreThanHalf;
+                // Check if point is a full circle
+                if (start === -Math.PI / 2 &&
+                    correctFloat(end) === correctFloat(Math.PI * 1.5)) {
+                    start = -Math.PI + Math.PI / 360;
+                    end = -Math.PI / 360;
+                    upperHalf = true;
+                }
+                // Check if dataLabels should be render in the
+                // upper half of the circle
+                if (end - start > Math.PI) {
+                    upperHalf = false;
+                    moreThanHalf = true;
+                }
+                if (this.dataLabelPath) {
+                    this.dataLabelPath = this.dataLabelPath.destroy();
+                }
+                this.dataLabelPath = renderer
+                    .arc({
+                    open: true,
+                    longArc: moreThanHalf ? 1 : 0
+                })
+                    // Add it inside the data label group so it gets destroyed
+                    // with the label
+                    .add(label);
+                this.dataLabelPath.attr({
+                    start: (upperHalf ? start : end),
+                    end: (upperHalf ? end : start),
+                    clockwise: +upperHalf,
+                    x: shapeArgs.x,
+                    y: shapeArgs.y,
+                    r: (r + shapeArgs.innerR) / 2
+                });
+                return this.dataLabelPath;
             }
         };
         /**
@@ -2551,7 +2726,7 @@
          * @type      {string}
          * @since     6.0.0
          * @product   highcharts
-         * @apioption series.treemap.data.parent
+         * @apioption series.sunburst.data.parent
          */
         /**
           * Whether to display a slice offset from the center. When a sunburst point is

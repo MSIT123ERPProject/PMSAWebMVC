@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Item series type for Highcharts
  *
@@ -92,7 +92,7 @@
              *         Parliament chart
              * @type {undefined|number}
              */
-            endAngle: undefined,
+            endAngle: void 0,
             /**
              * In circular view, the size of the inner diameter of the circle. Can
              * be a percentage or pixel value. Percentages are relative to the outer
@@ -133,7 +133,7 @@
              *         Fixed row count
              * @type {number}
              */
-            rows: undefined,
+            rows: void 0,
             showInLegend: true,
             /**
              * In circular view, the start angle of the item layout, in degrees
@@ -143,7 +143,7 @@
              *         Parliament chart
              * @type {undefined|number}
              */
-            startAngle: undefined
+            startAngle: void 0
         }, 
         // Prototype members
         {
@@ -347,7 +347,7 @@
                                 width: width,
                                 height: height
                             };
-                            if (r !== undefined) {
+                            if (typeof r !== 'undefined') {
                                 attr.r = r;
                             }
                             if (graphics[val]) {

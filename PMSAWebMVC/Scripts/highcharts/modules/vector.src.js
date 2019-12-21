@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Vector plot series module
  *
@@ -40,7 +40,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var arrayMax = U.arrayMax, pick = U.pick;
+        var animObject = U.animObject, arrayMax = U.arrayMax, pick = U.pick;
         var seriesType = H.seriesType;
         /**
          * The vector series class.
@@ -272,7 +272,7 @@
                 else {
                     this.markerGroup.animate({
                         opacity: 1
-                    }, H.animObject(this.options.animation));
+                    }, animObject(this.options.animation));
                     this.animate = null;
                 }
             }

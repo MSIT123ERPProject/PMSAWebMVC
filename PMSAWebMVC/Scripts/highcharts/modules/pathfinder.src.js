@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Gantt JS v7.2.1 (2019-10-31)
+ * @license Highcharts Gantt JS v8.0.0 (2019-12-10)
  *
  * Pathfinder
  *
@@ -934,6 +934,7 @@
              * @sample gantt/pathfinder/demo
              *         Pathfinder connections
              *
+             * @declare      Highcharts.ConnectorsOptions
              * @product      gantt
              * @optionparent connectors
              */
@@ -1024,7 +1025,8 @@
                  * this option is overridden by the `startMarker` and `endMarker`
                  * options.
                  *
-                 * @since 6.2.0
+                 * @declare Highcharts.ConnectorsMarkerOptions
+                 * @since   6.2.0
                  */
                 marker: {
                     /**
@@ -1099,6 +1101,7 @@
                  * Marker options specific to the start markers for this chart's
                  * Pathfinder connectors. Overrides the generic marker options.
                  *
+                 * @declare Highcharts.ConnectorsStartMarkerOptions
                  * @extends connectors.marker
                  * @since   6.2.0
                  */
@@ -1112,6 +1115,7 @@
                  * Marker options specific to the end markers for this chart's
                  * Pathfinder connectors. Overrides the generic marker options.
                  *
+                 * @declare Highcharts.ConnectorsEndMarkerOptions
                  * @extends connectors.marker
                  * @since   6.2.0
                  */
@@ -1127,6 +1131,7 @@
          * Override Pathfinder connector options for a series. Requires Highcharts Gantt
          * to be loaded.
          *
+         * @declare   Highcharts.SeriesConnectorsOptionsObject
          * @extends   connectors
          * @since     6.2.0
          * @excluding enabled, algorithmMargin
@@ -1141,6 +1146,7 @@
          * @sample gantt/pathfinder/demo
          *         Different connection types
          *
+         * @declare   Highcharts.XrangePointConnectorsOptionsObject
          * @type      {string|Array<string|*>|*}
          * @extends   plotOptions.series.connectors
          * @since     6.2.0

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Highcharts funnel module
  *
@@ -42,8 +42,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var extend = U.extend, pick = U.pick;
-        var charts = H.charts, color = H.color, error = H.error, merge = H.merge, seriesType = H.seriesType, seriesTypes = H.seriesTypes, relativeLength = H.relativeLength, 
+        var extend = U.extend, pick = U.pick, relativeLength = U.relativeLength;
+        var charts = H.charts, color = H.color, error = H.error, merge = H.merge, seriesType = H.seriesType, seriesTypes = H.seriesTypes, 
         // Use H.Renderer instead of H.SVGRenderer for VML support.
         RendererProto = H.Renderer.prototype, 
         //
@@ -138,17 +138,10 @@
             edgeWidth: 0,
             colorByPoint: true,
             showInLegend: false,
-            /**
-             * @default {"align": "right", "crop": false, "inside": false, "overflow": "allow"}
-             */
             dataLabels: {
-                /** @ignore-option */
                 align: 'right',
-                /** @ignore-option */
                 crop: false,
-                /** @ignore-option */
                 inside: false,
-                /** @ignore-option */
                 overflow: 'allow'
             }
         }, {

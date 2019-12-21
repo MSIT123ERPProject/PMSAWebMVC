@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Dependency wheel module
  *
@@ -28,7 +28,7 @@
             obj[path] = fn.apply(null, args);
         }
     }
-    _registerModule(_modules, 'modules/dependency-wheel.src.js', [_modules['parts/Globals.js']], function (H) {
+    _registerModule(_modules, 'modules/dependency-wheel.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js']], function (H, U) {
         /* *
          *
          *  Dependency wheel module
@@ -40,6 +40,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var animObject = U.animObject;
         var base = H.seriesTypes.sankey.prototype;
         /**
          * @private
@@ -238,7 +239,7 @@
             },
             animate: function (init) {
                 if (!init) {
-                    var duration = H.animObject(this.options.animation).duration, step = (duration / 2) / this.nodes.length;
+                    var duration = animObject(this.options.animation).duration, step = (duration / 2) / this.nodes.length;
                     this.nodes.forEach(function (point, i) {
                         var graphic = point.graphic;
                         if (graphic) {

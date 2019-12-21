@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * (c) 2017-2019 Highsoft AS
  * Authors: Jon Arild Nygard
@@ -61,7 +61,7 @@
                 graphic
                     .css(css)
                     .attr(params.attribs)
-                    .animate(animatableAttribs, params.isNew ? false : undefined, onComplete);
+                    .animate(animatableAttribs, params.isNew ? false : void 0, onComplete);
             }
             else if (graphic) {
                 var destroy = function () {
@@ -72,7 +72,7 @@
                 };
                 // animate only runs complete callback if something was animated.
                 if (Object.keys(animatableAttribs).length) {
-                    graphic.animate(animatableAttribs, undefined, function () {
+                    graphic.animate(animatableAttribs, void 0, function () {
                         destroy();
                     });
                 }
@@ -295,6 +295,19 @@
             }, []);
         }
         /**
+         * Tests wether the first circle is completely overlapping the second circle.
+         *
+         * @private
+         * @param {Highcharts.CircleObject} circle1 The first circle.
+         * @param {Highcharts.CircleObject} circle2 The The second circle.
+         * @return {boolean} Returns true if circle1 is completely overlapping circle2,
+         * false if not.
+         */
+        function isCircle1CompletelyOverlappingCircle2(circle1, circle2) {
+            return getDistanceBetweenPoints(circle1, circle2) + circle2.r <
+                circle1.r + 1e-10;
+        }
+        /**
          * Tests wether a point lies within a given circle.
          * @private
          * @param {Highcharts.PositionObject} point
@@ -455,6 +468,7 @@
             getCirclesIntersectionPolygon: getCirclesIntersectionPolygon,
             getCircularSegmentArea: getCircularSegmentArea,
             getOverlapBetweenCircles: getOverlapBetweenCircles,
+            isCircle1CompletelyOverlappingCircle2: isCircle1CompletelyOverlappingCircle2,
             isPointInsideCircle: isPointInsideCircle,
             isPointInsideAllCircles: isPointInsideAllCircles,
             isPointOutsideAllCircles: isPointOutsideAllCircles,
@@ -598,7 +612,7 @@
 
         return content;
     });
-    _registerModule(_modules, 'modules/venn.src.js', [_modules['parts/Globals.js'], _modules['mixins/draw-point.js'], _modules['mixins/geometry.js'], _modules['mixins/geometry-circles.js'], _modules['mixins/nelder-mead.js'], _modules['parts/Utilities.js']], function (H, draw, geometry, geometryCircles, NelderMeadModule, U) {
+    _registerModule(_modules, 'modules/venn.src.js', [_modules['parts/Globals.js'], _modules['mixins/draw-point.js'], _modules['mixins/geometry.js'], _modules['mixins/geometry-circles.js'], _modules['mixins/nelder-mead.js'], _modules['parts/Utilities.js']], function (H, draw, geometry, GeometryCircleMixin, NelderMeadModule, U) {
         /* *
          *
          *  Experimental Highcharts module which enables visualization of a Venn
@@ -615,10 +629,11 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var getAreaOfCircle = GeometryCircleMixin.getAreaOfCircle, getAreaOfIntersectionBetweenCircles = GeometryCircleMixin.getAreaOfIntersectionBetweenCircles, getCircleCircleIntersection = GeometryCircleMixin.getCircleCircleIntersection, getCirclesIntersectionPolygon = GeometryCircleMixin.getCirclesIntersectionPolygon, getOverlapBetweenCirclesByDistance = GeometryCircleMixin.getOverlapBetweenCircles, isCircle1CompletelyOverlappingCircle2 = GeometryCircleMixin.isCircle1CompletelyOverlappingCircle2, isPointInsideAllCircles = GeometryCircleMixin.isPointInsideAllCircles, isPointInsideCircle = GeometryCircleMixin.isPointInsideCircle, isPointOutsideAllCircles = GeometryCircleMixin.isPointOutsideAllCircles;
         // TODO: replace with individual imports
         var nelderMead = NelderMeadModule.nelderMead;
-        var isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString;
-        var addEvent = H.addEvent, color = H.Color, extend = H.extend, getAreaOfCircle = geometryCircles.getAreaOfCircle, getAreaOfIntersectionBetweenCircles = geometryCircles.getAreaOfIntersectionBetweenCircles, getCirclesIntersectionPolygon = geometryCircles.getCirclesIntersectionPolygon, getCircleCircleIntersection = geometryCircles.getCircleCircleIntersection, getCenterOfPoints = geometry.getCenterOfPoints, getDistanceBetweenPoints = geometry.getDistanceBetweenPoints, getOverlapBetweenCirclesByDistance = geometryCircles.getOverlapBetweenCircles, isPointInsideAllCircles = geometryCircles.isPointInsideAllCircles, isPointInsideCircle = geometryCircles.isPointInsideCircle, isPointOutsideAllCircles = geometryCircles.isPointOutsideAllCircles, merge = H.merge, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
+        var animObject = U.animObject, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString;
+        var addEvent = H.addEvent, color = H.Color, extend = H.extend, getCenterOfPoints = geometry.getCenterOfPoints, getDistanceBetweenPoints = geometry.getDistanceBetweenPoints, merge = H.merge, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         var objectValues = function objectValues(obj) {
             return Object.keys(obj).map(function (x) {
                 return obj[x];
@@ -830,7 +845,7 @@
                     return best;
                 }, best);
             }, {
-                point: undefined,
+                point: void 0,
                 margin: -Number.MAX_VALUE
             }).point;
             // Use nelder mead to optimize the initial label position.
@@ -898,44 +913,46 @@
             return Math.min(findDistance(radius, -1), findDistance(radius, 1)) * 2;
         };
         /**
-         * Calulates data label values for a list of relations.
+         * Calulates data label values for a given relations object.
+         *
          * @private
          * @todo add unit tests
-         * @todo NOTE: may be better suited as a part of the layout function.
-         * @param {Array<Highcharts.VennRelationObject>} relations
-         * The list of relations.
-         * @return {Highcharts.Dictionary<Highcharts.VennLabelValuesObject>}
-         * Returns a map from id to the data label values.
+         * @param {Highcharts.VennRelationObject} relation A relations object.
+         * @param {Array<Highcharts.VennRelationObject>} setRelations The list of
+         * relations that is a set.
+         * @return {Highcharts.VennLabelValuesObject}
+         * Returns an object containing position and width of the label.
          */
-        var getLabelValues = function getLabelValues(relations) {
-            var singleSets = relations.filter(isSet);
-            return relations.reduce(function (map, relation) {
-                if (relation.value) {
-                    var sets = relation.sets, id = sets.join(), 
-                    // Create a list of internal and external circles.
-                    data = singleSets.reduce(function (data, set) {
-                        // If the set exists in this relation, then it is internal,
-                        // otherwise it will be external.
-                        var isInternal = sets.indexOf(set.sets[0]) > -1, property = isInternal ? 'internal' : 'external';
-                        // Add the circle to the list.
-                        data[property].push(set.circle);
-                        return data;
-                    }, {
-                        internal: [],
-                        external: []
-                    }), 
-                    // Calulate the label position.
-                    position = getLabelPosition(data.internal, data.external), 
-                    // Calculate the label width
-                    width = getLabelWidth(position, data.internal, data.external);
-                    map[id] = {
-                        position: position,
-                        width: width
-                    };
-                }
-                return map;
-            }, {});
-        };
+        function getLabelValues(relation, setRelations) {
+            var sets = relation.sets;
+            // Create a list of internal and external circles.
+            var data = setRelations.reduce(function (data, set) {
+                // If the set exists in this relation, then it is internal,
+                // otherwise it will be external.
+                var isInternal = sets.indexOf(set.sets[0]) > -1;
+                var property = isInternal ? 'internal' : 'external';
+                // Add the circle to the list.
+                data[property].push(set.circle);
+                return data;
+            }, {
+                internal: [],
+                external: []
+            });
+            // Filter out external circles that are completely overlapping all internal
+            data.external = data.external.filter(function (externalCircle) {
+                return data.internal.some(function (internalCircle) {
+                    return !isCircle1CompletelyOverlappingCircle2(externalCircle, internalCircle);
+                });
+            });
+            // Calulate the label position.
+            var position = getLabelPosition(data.internal, data.external);
+            // Calculate the label width
+            var width = getLabelWidth(position, data.internal, data.external);
+            return {
+                position: position,
+                width: width
+            };
+        }
         /**
          * Takes an array of relations and adds the properties `totalOverlap` and
          * `overlapping` to each set. The property `totalOverlap` is the sum of value
@@ -1089,7 +1106,7 @@
                     return best;
                 }, {
                     loss: Number.MAX_VALUE,
-                    coordinates: undefined
+                    coordinates: void 0
                 });
                 // Add the set to its final position.
                 positionSet(set, bestPosition.coordinates);
@@ -1098,34 +1115,42 @@
             return mapOfIdToCircles;
         };
         /**
-         * Calculates the positions of all the sets in the venn diagram.
+         * Calculates the positions, and the label values of all the sets in the venn
+         * diagram.
+         *
          * @private
          * @todo Add support for constrained MDS.
          * @param {Array<Highchats.VennRelationObject>} relations
          * List of the overlap between two or more sets, or the size of a single set.
-         * @return {Highcharts.Dictionary<(Highcharts.CircleObject|Highcharts.GeometryIntersectionObject)>}
+         * @return {Highcharts.Dictionary<*>}
          * List of circles and their calculated positions.
          */
-        var layout = function (relations) {
+        function layout(relations) {
             var mapOfIdToShape = {};
+            var mapOfIdToLabelValues = {};
             // Calculate best initial positions by using greedy layout.
             if (relations.length > 0) {
-                mapOfIdToShape = layoutGreedyVenn(relations);
+                var mapOfIdToCircles_1 = layoutGreedyVenn(relations);
+                var setRelations_1 = relations.filter(isSet);
                 relations
-                    .filter(function (x) {
-                    return !isSet(x);
-                })
                     .forEach(function (relation) {
-                    var sets = relation.sets, id = sets.join(), circles = sets.map(function (set) {
-                        return mapOfIdToShape[set];
-                    });
-                    // Add intersection shape to map
-                    mapOfIdToShape[id] =
-                        getAreaOfIntersectionBetweenCircles(circles);
+                    var sets = relation.sets;
+                    var id = sets.join();
+                    // Get shape from map of circles, or calculate intersection.
+                    var shape = isSet(relation) ?
+                        mapOfIdToCircles_1[id] :
+                        getAreaOfIntersectionBetweenCircles(sets.map(function (set) {
+                            return mapOfIdToCircles_1[set];
+                        }));
+                    // Calculate label values if the set has a shape
+                    if (shape) {
+                        mapOfIdToShape[id] = shape;
+                        mapOfIdToLabelValues[id] = getLabelValues(relation, setRelations_1);
+                    }
                 });
             }
-            return mapOfIdToShape;
-        };
+            return { mapOfIdToShape: mapOfIdToShape, mapOfIdToLabelValues: mapOfIdToLabelValues };
+        }
         var isValidRelation = function (x) {
             var map = {};
             return (isObject(x) &&
@@ -1276,12 +1301,8 @@
             clip: false,
             colorByPoint: true,
             dataLabels: {
-                /** @ignore-option */
                 enabled: true,
-                /** @ignore-option */
                 verticalAlign: 'middle',
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     return this.point.name;
                 }
@@ -1327,9 +1348,7 @@
                 // Process the data before passing it into the layout function.
                 var relations = processVennData(this.options.data);
                 // Calculate the positions of each circle.
-                var mapOfIdToShape = layout(relations);
-                // Calculate positions of each data label
-                var mapOfIdToLabelValues = getLabelValues(relations);
+                var _a = layout(relations), mapOfIdToShape = _a.mapOfIdToShape, mapOfIdToLabelValues = _a.mapOfIdToLabelValues;
                 // Calculate the scale, and center of the plot area.
                 var field = Object.keys(mapOfIdToShape)
                     .filter(function (key) {
@@ -1458,7 +1477,7 @@
             /* eslint-enable valid-jsdoc */
             animate: function (init) {
                 if (!init) {
-                    var series = this, animOptions = H.animObject(series.options.animation);
+                    var series = this, animOptions = animObject(series.options.animation);
                     series.points.forEach(function (point) {
                         var args = point.shapeArgs;
                         if (point.graphic && args) {
@@ -1494,7 +1513,7 @@
             utils: {
                 addOverlapToSets: addOverlapToSets,
                 geometry: geometry,
-                geometryCircles: geometryCircles,
+                geometryCircles: GeometryCircleMixin,
                 getLabelWidth: getLabelWidth,
                 getMarginFromCircles: getMarginFromCircles,
                 getDistanceBetweenCirclesByOverlap: getDistanceBetweenCirclesByOverlap,

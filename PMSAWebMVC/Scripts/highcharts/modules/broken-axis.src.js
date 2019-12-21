@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * (c) 2009-2019 Torstein Honsi
  *
@@ -175,6 +175,10 @@
             axis.isBroken = isBroken;
             axis.options.breaks = axis.userOptions.breaks = breaks;
             axis.forceRedraw = true; // Force recalculation in setScale
+            // Recalculate series related to the axis.
+            axis.series.forEach(function (series) {
+                series.isDirty = true;
+            });
             if (!isBroken && axis.val2lin === breakVal2Lin) {
                 // Revert to prototype functions
                 delete axis.val2lin;
@@ -296,21 +300,23 @@
             }
         };
         addEvent(Series, 'afterGeneratePoints', function () {
-            var series = this, xAxis = series.xAxis, yAxis = series.yAxis, points = series.points, point, i = points.length, connectNulls = series.options.connectNulls, nullGap;
-            if (xAxis && yAxis && (xAxis.options.breaks || yAxis.options.breaks)) {
+            var _a = this, isDirty = _a.isDirty, connectNulls = _a.options.connectNulls, points = _a.points, xAxis = _a.xAxis, yAxis = _a.yAxis;
+            /* Set, or reset visibility of the points. Axis.setBreaks marks the series
+            as isDirty */
+            if (isDirty) {
+                var i = points.length;
                 while (i--) {
-                    point = points[i];
+                    var point = points[i];
                     // Respect nulls inside the break (#4275)
-                    nullGap = point.y === null && connectNulls === false;
-                    if (!nullGap &&
-                        (xAxis.isInAnyBreak(point.x, true) ||
-                            yAxis.isInAnyBreak(point.y, true))) {
-                        points.splice(i, 1);
-                        if (this.data[i]) {
-                            // Removes the graphics for this point if they exist
-                            this.data[i].destroyElements();
-                        }
-                    }
+                    var nullGap = point.y === null && connectNulls === false;
+                    var isPointInBreak = (!nullGap &&
+                        (xAxis && xAxis.isInAnyBreak(point.x, true) ||
+                            yAxis && yAxis.isInAnyBreak(point.y, true)));
+                    // Set point.visible if in any break.
+                    // If not in break, reset visible to original value.
+                    point.visible = isPointInBreak ?
+                        false :
+                        point.options.visible !== false;
                 }
             }
         });
@@ -366,7 +372,7 @@
          *         Gapped path
          */
         H.Series.prototype.gappedPath = function () {
-            var currentDataGrouping = this.currentDataGrouping, groupingSize = currentDataGrouping && currentDataGrouping.gapSize, gapSize = this.options.gapSize, points = this.points.slice(), i = points.length - 1, yAxis = this.yAxis, xRange, stack;
+            var currentDataGrouping = this.currentDataGrouping, groupingSize = currentDataGrouping && currentDataGrouping.gapSize, gapSize = this.options.gapSize, points = this.points.slice(), i = points.length - 1, yAxis = this.yAxis, stack;
             /**
              * Defines when to display a gap in the graph, together with the
              * [gapUnit](plotOptions.series.gapUnit) option.
@@ -431,9 +437,19 @@
                     gapSize = groupingSize;
                 }
                 // extension for ordinal breaks
+                var current = void 0, next = void 0;
                 while (i--) {
-                    if (points[i + 1].x - points[i].x > gapSize) {
-                        xRange = (points[i].x + points[i + 1].x) / 2;
+                    // Reassign next if it is not visible
+                    if (!(next && next.visible !== false)) {
+                        next = points[i + 1];
+                    }
+                    current = points[i];
+                    // Skip iteration if one of the points is not visible
+                    if (next.visible === false || current.visible === false) {
+                        continue;
+                    }
+                    if (next.x - current.x > gapSize) {
+                        var xRange = (current.x + next.x) / 2;
                         points.splice(// insert after this one
                         i + 1, 0, {
                             isNull: true,
@@ -447,6 +463,8 @@
                             stack.total = 0;
                         }
                     }
+                    // Assign current to next for the upcoming iteration
+                    next = current;
                 }
             }
             // Call base method

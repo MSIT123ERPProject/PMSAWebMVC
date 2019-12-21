@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Boost module
  *
@@ -138,7 +138,7 @@
 
         return boostableMap;
     });
-    _registerModule(_modules, 'modules/boost/wgl-shader.js', [_modules['parts/Globals.js']], function (H) {
+    _registerModule(_modules, 'modules/boost/wgl-shader.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js']], function (H, U) {
         /* *
          *
          *  Copyright (c) 2019-2019 Highsoft AS
@@ -150,6 +150,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var clamp = U.clamp;
         var pick = H.pick;
         /* eslint-disable valid-jsdoc */
         /**
@@ -512,8 +513,8 @@
             function setBubbleUniforms(series, zCalcMin, zCalcMax) {
                 var seriesOptions = series.options, zMin = Number.MAX_VALUE, zMax = -Number.MAX_VALUE;
                 if (gl && shaderProgram && series.type === 'bubble') {
-                    zMin = pick(seriesOptions.zMin, Math.min(zMin, Math.max(zCalcMin, seriesOptions.displayNegative === false ?
-                        seriesOptions.zThreshold : -Number.MAX_VALUE)));
+                    zMin = pick(seriesOptions.zMin, clamp(zCalcMin, seriesOptions.displayNegative === false ?
+                        seriesOptions.zThreshold : -Number.MAX_VALUE, zMin));
                     zMax = pick(seriesOptions.zMax, Math.max(zMax, zCalcMax));
                     gl.uniform1i(isBubbleUniform, 1);
                     gl.uniform1i(isCircleUniform, 1);
@@ -1329,7 +1330,7 @@
                     // Out of bound things are shown if and only if the next
                     // or previous point is inside the rect.
                     if (inst.hasMarkers && isXInside) {
-                        // x = H.correctFloat(
+                        // x = Highcharts.correctFloat(
                         //     Math.min(Math.max(-1e5, xAxis.translate(
                         //         x,
                         //         0,
@@ -2310,8 +2311,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var extend = U.extend;
-        var addEvent = H.addEvent, fireEvent = H.fireEvent, Series = H.Series, seriesTypes = H.seriesTypes, wrap = H.wrap, noop = function () { }, eachAsync = butils.eachAsync, pointDrawHandler = butils.pointDrawHandler, allocateIfNotSeriesBoosting = butils.allocateIfNotSeriesBoosting, renderIfNotSeriesBoosting = butils.renderIfNotSeriesBoosting, shouldForceChartSeriesBoosting = butils.shouldForceChartSeriesBoosting, index;
+        var extend = U.extend, wrap = U.wrap;
+        var addEvent = H.addEvent, fireEvent = H.fireEvent, Series = H.Series, seriesTypes = H.seriesTypes, noop = function () { }, eachAsync = butils.eachAsync, pointDrawHandler = butils.pointDrawHandler, allocateIfNotSeriesBoosting = butils.allocateIfNotSeriesBoosting, renderIfNotSeriesBoosting = butils.renderIfNotSeriesBoosting, shouldForceChartSeriesBoosting = butils.shouldForceChartSeriesBoosting, index;
         /* eslint-disable valid-jsdoc */
         /**
          * Initialize the boot module.
@@ -2373,7 +2374,7 @@
                         // If all series were boosting, but are not anymore
                         // restore private markerGroup
                         if (this.markerGroup === chart.markerGroup) {
-                            this.markerGroup = undefined;
+                            this.markerGroup = void 0;
                         }
                         this.markerGroup = series.plotGroup('markerGroup', 'markers', true, 1, chart.seriesGroup);
                     }
@@ -2437,15 +2438,17 @@
                             if (!isNull && x >= xMin && x <= xMax && isYInside) {
                                 clientX = xAxis.toPixels(x, true);
                                 if (sampling) {
-                                    if (minI === undefined || clientX === lastClientX) {
+                                    if (typeof minI === 'undefined' ||
+                                        clientX === lastClientX) {
                                         if (!isRange) {
                                             low = y;
                                         }
-                                        if (maxI === undefined || y > maxVal) {
+                                        if (typeof maxI === 'undefined' ||
+                                            y > maxVal) {
                                             maxVal = y;
                                             maxI = i;
                                         }
-                                        if (minI === undefined ||
+                                        if (typeof minI === 'undefined' ||
                                             low < minVal) {
                                             minVal = low;
                                             minI = i;
@@ -2453,7 +2456,8 @@
                                     }
                                     // Add points and reset
                                     if (clientX !== lastClientX) {
-                                        if (minI !== undefined) { // maxI is number too
+                                        // maxI is number too:
+                                        if (typeof minI !== 'undefined') {
                                             plotY =
                                                 yAxis.toPixels(maxVal, true);
                                             yBottom =
@@ -2463,7 +2467,7 @@
                                                 addKDPoint(clientX, yBottom, minI);
                                             }
                                         }
-                                        minI = maxI = undefined;
+                                        minI = maxI = void 0;
                                         lastClientX = clientX;
                                     }
                                 }
@@ -2549,7 +2553,7 @@
                  */
                 function preRender() {
                     // Reset force state
-                    chart.boostForceChartBoost = undefined;
+                    chart.boostForceChartBoost = void 0;
                     chart.boostForceChartBoost = shouldForceChartSeriesBoosting(chart);
                     chart.isBoosting = false;
                     if (!chart.isChartSeriesBoosting() && chart.didBoost) {
@@ -2597,8 +2601,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isNumber = U.isNumber;
-        var boostEnabled = butils.boostEnabled, shouldForceChartSeriesBoosting = butils.shouldForceChartSeriesBoosting, Chart = H.Chart, Series = H.Series, Point = H.Point, seriesTypes = H.seriesTypes, addEvent = H.addEvent, pick = H.pick, wrap = H.wrap, plotOptions = H.getOptions().plotOptions;
+        var isNumber = U.isNumber, wrap = U.wrap;
+        var boostEnabled = butils.boostEnabled, shouldForceChartSeriesBoosting = butils.shouldForceChartSeriesBoosting, Chart = H.Chart, Series = H.Series, Point = H.Point, seriesTypes = H.seriesTypes, addEvent = H.addEvent, pick = H.pick, plotOptions = H.getOptions().plotOptions;
         /**
          * Returns true if the chart is in series boost mode.
          *
@@ -2661,7 +2665,7 @@
                 false);
             if (boostPoint && !(boostPoint instanceof this.pointClass)) {
                 point = (new this.pointClass()).init(// eslint-disable-line new-cap
-                this, this.options.data[boostPoint.i], xData ? xData[boostPoint.i] : undefined);
+                this, this.options.data[boostPoint.i], xData ? xData[boostPoint.i] : void 0);
                 point.category = pick(this.xAxis.categories ?
                     this.xAxis.categories[point.x] :
                     point.x, // @todo simplify

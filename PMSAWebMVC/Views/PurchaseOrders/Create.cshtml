@@ -828,7 +828,7 @@
             var dtPO;
             function initDataTablesPO() {
                 dtPO = $('#dataTablesPO').DataTable({
-                    ordering: false,
+                    ordering: true,
                     fixedHeader: false,
                     paging: false,
                     //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
@@ -860,7 +860,7 @@
             function initDataTablesPR() {
                 //請購明細
                 dtPR = $('#dataTablesPR').DataTable({
-                    ordering: false,
+                    ordering: true,
                     fixedHeader: false,
                     paging: false,
                     //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失

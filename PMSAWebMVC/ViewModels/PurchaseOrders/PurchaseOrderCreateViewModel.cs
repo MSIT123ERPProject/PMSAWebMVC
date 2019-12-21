@@ -322,9 +322,12 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <returns></returns>
         public IList<PRDtlTableViewModel> GetPRDtlTableViewModel(string purchaseRequisitionID)
         {
+            IList<string> prIds = session.PRItems.Select(item => item.PurchaseRequisitionID).ToList();
             var prdq = from prd in db.PurchaseRequisitionDtl
                        where !(from prdRel in db.PRPORelation
                                select prdRel.PurchaseRequisitionDtlCode).Contains(prd.PurchaseRequisitionDtlCode)
+                               //需是匯入的請購單編號
+                               && prIds.Contains(prd.PurchaseRequisitionID)
                        select new PRDtlTableViewModel
                        {
                            PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,

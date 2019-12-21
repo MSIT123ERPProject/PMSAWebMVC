@@ -127,13 +127,7 @@ namespace PMSAWebMVC.Controllers
             var data = db.Part.Where(w => w.PartName == stockInDtl.PartNumber).Select(s => s.PartNumber).ToList();
             stockInDtl.PartNumber = data[0];
             string oid = stockInDtl.InventoryCode;
-            //StockInDtlOID: oidd, Y
-            //            StockInID:$("#StockInID").val(),Y
-            //            InventoryCode: $("#InventoryCode").val(),Y
-            //            PartNumber: $("#PartName").val(),Y
-            //            StockInQty: $("#StockInQty").val(),Y
-            //            Remark: $("#Remark").val(),
-            //            EXP: $("#EXP").val()Y
+            string stockinid = stockInDtl.StockInID;
 
             int senstockin = Convert.ToInt32(stockInDtl.Remark);        //本次入庫數量
             stockInDtl.StockInQty = stockInDtl.StockInQty + senstockin; //原本入庫數量+本次入庫數量
@@ -144,6 +138,7 @@ namespace PMSAWebMVC.Controllers
             {
                 db.Entry(stockInDtl).State = EntityState.Modified;
                 db.SaveChanges();
+                Stockinedit(stockinid);
                 InventoryDtlEdit(oid, senstockin);
                 return Json(new { status = status, message = message, id = db.StockInDtl.Max(x => x.StockInDtlOID) }, JsonRequestBehavior.AllowGet);
             }
@@ -152,6 +147,33 @@ namespace PMSAWebMVC.Controllers
                 message = "入庫失敗!!";
                 status = false;
                 return Json(new { status = status, message = message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        DateTime now = DateTime.Now;
+        //入庫總表入庫日期
+        public void Stockinedit(string oid)
+        {
+            StockIn stockIn = new StockIn();
+            stockIn.StockInID = oid;
+            stockIn.AddStockDate = now;
+            var datas = db.StockIn.Where(w => w.StockInID == oid).Select(s => new
+            {
+                s.PurchaseOrderReceiveID,
+                s.Remark,
+                s.CreateEmployeeID,
+                s.CreateDate,
+                s.SignStatus
+            }).ToList();
+            stockIn.PurchaseOrderReceiveID = datas[0].PurchaseOrderReceiveID;
+            stockIn.Remark = datas[0].Remark;
+            stockIn.CreateEmployeeID = datas[0].CreateEmployeeID;
+            stockIn.CreateDate = datas[0].CreateDate;
+            stockIn.SignStatus = datas[0].SignStatus;
+            if (ModelState.IsValid)
+            {
+                db.Entry(stockIn).State = EntityState.Modified;
+                db.SaveChanges();
             }
         }
 

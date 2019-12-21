@@ -21,7 +21,7 @@ namespace PMSAWebMVC.Controllers
         public ActionResult GetMonthSum()
         {
             var report1 = db.PurchaseOrderDtl.Include("PurchaseOrder").
-                          Where(q => q.PurchaseOrder.PurchaseOrderStatus == "Z").
+                          Where(q => "WSRZ".Contains(q.PurchaseOrder.PurchaseOrderStatus) && q.PurchaseOrder.EmployeeID == "CE00002").
                           GroupBy(p => p.PurchaseOrder.CreateDate.Year + "/" + p.PurchaseOrder.CreateDate.Month).
                           Select(g => new { name = g.Key, count = g.Sum(q => q.Total) });
 

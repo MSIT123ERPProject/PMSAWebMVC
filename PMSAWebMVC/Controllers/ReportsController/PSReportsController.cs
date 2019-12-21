@@ -23,7 +23,6 @@ namespace PMSAWebMVC.Controllers
             {
                 empIds.AddRange(db.Employee.Where(item => item.ManagerID == emp.EmployeeID)
                     .Select(item => item.EmployeeID).ToList());
-
             }
             string empId = User.Identity.GetEmployee().EmployeeID;
             var report1 = db.PurchaseOrderDtl.Include("PurchaseOrder").

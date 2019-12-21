@@ -203,7 +203,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             {
                 TempData["message"] = "<script>toastr.error('請選擇欲出貨商品!','通知')</script>";
                 message = "請選擇欲出貨商品!";
-                return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
+                return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
             }
             DateTime now = DateTime.Now;
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
@@ -217,7 +217,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                     TempData["message"] = "<script>Swal.fire({  icon: 'error',  title: 'Oops...',  text: '庫存不足!',  footer: '<a href>Why do I have this issue?</a>'})</script>";
                     message = "庫存不足!";
                     // return Json(new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message }, JsonRequestBehavior.AllowGet);
-                    return RedirectToAction("UnshipOrderDtl", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
+                    return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
                 }
                 //扣除該料件貨源清單的庫存以及訂單數量
                 //出貨數量要在這裡檢查，先檢查出貨明細裡面的shipQty比對是否小於同一個採購單明細的Qty，

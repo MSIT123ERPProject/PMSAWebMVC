@@ -532,7 +532,7 @@
                 e.stopPropagation();
 
                 let span = $(this);
-                let dtlcode = span.parent("td").data('dtlcode');
+                let dtlcode = span.parents("td").data('dtlcode');
                 //delBtnClick(dtlcode, partnumber);
                 Swal.fire({
                     title: '刪除確認',

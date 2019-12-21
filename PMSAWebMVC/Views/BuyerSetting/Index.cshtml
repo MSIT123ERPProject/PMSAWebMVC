@@ -68,20 +68,75 @@
             border-left: 2px solid #28A2FC !important;
         }
         /*input ======================*/
+        #BuyerSettingViewModel_Name:hover, #BuyerSettingViewModel_Email:hover, #BuyerSettingViewModel_Mobile:hover,
+        #BuyerSettingViewModel_Tel:hover {
+            border-bottom: 1px solid #27a2fc;
+            -webkit-box-shadow: 0 1px 0 0 #27a2fc;
+            box-shadow: 0 1px 0 0 #27a2fc;
+        }
+        .md-form .control-label {
+            font-weight: 600 !important;
+            color: black !important;
+            font-size: 20px !important;
+        }
+
+            .md-form .control-label::before {
+                font-family: "Font Awesome 5 Free";
+                content: '\f304';
+                display: inline-block;
+                margin-right: 10px;
+                width: 15px;
+                height: 15px;
+            }
+
+        .form-group label::before {
+            font-family: "Font Awesome 5 Free";
+            content: '\f192';
+            display: inline-block;
+            margin-right: 8px;
+            width: 15px;
+            height: 15px;
+        }
+        #BuyerSettingViewModel_Name, #BuyerSettingViewModel_Email, #BuyerSettingViewModel_Mobile,
+        #BuyerSettingViewModel_Tel {
+            transform: translateY(10px);
+            margin-bottom: 35px;
+        }
         .form-group label {
             margin: 0;
             margin-bottom: 2px;
             font-weight: 600;
         }
 
+            .form-group label::before {
+                font-family: "Font Awesome 5 Free";
+                content: '\f192';
+                display: inline-block;
+                margin-right: 8px;
+                width: 15px;
+                height: 15px;
+            }
+
         .disabled {
-            background-color: #eee;
+            background-color: transparent;
+            box-shadow: none;
+            width: 50%;
             border: 0;
             font-size: 16px;
             height: auto;
             color: #909399;
         }
-
+        .custom-switch{
+            margin-bottom: 20px;
+        }
+            .custom-switch label {
+                font-weight: 600;
+                transform: translateX(32px);
+            }
+        .waves-input-wrapper{
+            display: block;
+        }
+        /*=============================*/
         .modal-header {
             background-color: #eee;
         }
@@ -147,39 +202,39 @@
                         <h4>個人資料設定</h4>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerSettingViewModel.EmployeeID, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerSettingViewModel.EmployeeID, new { htmlAttributes = new { @class = "form-control disabled" } })
+                            <div class="">
+                                @Html.EditorFor(model => model.BuyerSettingViewModel.EmployeeID, new { htmlAttributes = new { @class = "form-control disabled", style = "width:23%" } })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.EmployeeID, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSettingViewModel.Name, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                        <div class="md-form form-group">
+                            @Html.LabelFor(model => model.BuyerSettingViewModel.Name, htmlAttributes: new { @class = "control-label col-lg-12 text-info active" })
+                            <div class="col-5">
                                 @Html.EditorFor(model => model.BuyerSettingViewModel.Name, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.Name, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSettingViewModel.Email, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                        <div class="md-form form-group">
+                            @Html.LabelFor(model => model.BuyerSettingViewModel.Email, htmlAttributes: new { @class = "control-label col-lg-12 text-info active" })
+                            <div class="col-10">
                                 @Html.EditorFor(model => model.BuyerSettingViewModel.Email, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSettingViewModel.Mobile, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                        <div class="md-form form-group">
+                            @Html.LabelFor(model => model.BuyerSettingViewModel.Mobile, htmlAttributes: new { @class = "control-label col-lg-12 text-info active" })
+                            <div class="col-5">
                                 @Html.EditorFor(model => model.BuyerSettingViewModel.Mobile, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.Mobile, "", new { @class = "text-danger" })
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSettingViewModel.Tel, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                        <div class="md-form form-group">
+                            @Html.LabelFor(model => model.BuyerSettingViewModel.Tel, htmlAttributes: new { @class = "control-label col-lg-12 text-info active" })
+                            <div class="col-5">
                                 @Html.EditorFor(model => model.BuyerSettingViewModel.Tel, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.Tel, "", new { @class = "text-danger" })
                             </div>
@@ -187,18 +242,15 @@
 
                         <h4 class="mt-5">安全性設定</h4>
                         <div id="alert" class="alert alert-danger font-weight-bold"></div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
-                                @Html.DropDownListFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, new List<SelectListItem> { new SelectListItem { Text="是", Value="true"},
-                                                                                                                        new SelectListItem { Text="否", Value="false"}}, new { @class = "form-control  col-lg-12 TFA" })
-                                @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, "", new { @class = "text-danger" })
-                            </div>
+                        <div class="custom-control custom-switch alert alert-secondary">
+                            @Html.CheckBoxFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, new { id = "customSwitches", @class = "form-control TFA custom-control-input" })
+                            @Html.LabelFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, htmlAttributes: new { @for = "customSwitches", @class = "control-label custom-control-label" })
+                            @Html.ValidationMessageFor(model => model.BuyerSettingViewModel.EnableTwoFactorAuth, "", new { @class = "text-danger" })
                         </div>
 
                         <div class="form-group">
-                            <div class="col-12 mt-4 mb-4">
-                                <input type="submit" value="確定修改" class="btn btn-primary" />
+                            <div class="mt-4 mb-4 col-12 p-0 sbtn">
+                                <input type="submit" value="確定修改" class="btn btn-primary" style="width: 100%;"/>
                             </div>
                         </div>
                     </div>
@@ -217,36 +269,36 @@
                         <h4>公司資料總覽</h4>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.CompanyName, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                            <div class="">
                                 @Html.EditorFor(model => model.BuyerCompInfoViewModel.CompanyName, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.CompanyName, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.TaxID, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                            <div class="">
                                 @Html.EditorFor(model => model.BuyerCompInfoViewModel.TaxID, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.TaxID, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.Email, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                            <div class="">
                                 @Html.EditorFor(model => model.BuyerCompInfoViewModel.Email, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.Tel, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
+                            <div class="">
                                 @Html.EditorFor(model => model.BuyerCompInfoViewModel.Tel, new { htmlAttributes = new { @class = "form-control disabled" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.Tel, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(model => model.BuyerCompInfoViewModel.Address, htmlAttributes: new { @class = "control-label col-lg-12" })
-                            <div class="col-12">
-                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Address, new { htmlAttributes = new { @class = "form-control disabled" } })
+                            <div class="">
+                                @Html.EditorFor(model => model.BuyerCompInfoViewModel.Address, new { htmlAttributes = new { @class = "form-control disabled", style = "width:100%" } })
                                 @Html.ValidationMessageFor(model => model.BuyerCompInfoViewModel.Address, "", new { @class = "text-danger" })
                             </div>
                         </div>

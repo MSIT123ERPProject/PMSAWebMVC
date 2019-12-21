@@ -96,7 +96,8 @@ li.bottomLi {
     color: white;
     letter-spacing: 2px;
     width: 100% !important;
-    border: 1px solid #aaa;
+    /*border: 1px solid #aaa;*/
+    border: 0;
     background-color: black;
     padding: 5px !important;
     margin-top: 10px;

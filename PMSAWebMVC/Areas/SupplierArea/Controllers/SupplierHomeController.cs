@@ -91,7 +91,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                           pod.SourceListID
                       } into g
                       select new { g.Key.PartName, g.Key.PartNumber, g.Key.SourceListID, ToalPrice = g.Sum(pod => pod.Total) };
-
+           
             return Json(poq, JsonRequestBehavior.AllowGet);
 
             var qpo = from po in db.PurchaseOrder

@@ -715,6 +715,7 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="Content\v4-shims.css" />
     <Content Include="Content\v4-shims.min.css" />
+    <Content Include="Content\Views\PurchaseOrders.css" />
     <Content Include="Controls\RESXManager\FileManagement.ascx" />
     <Content Include="Controls\RESXManager\FilterControls\SearchByBrowsing.ascx" />
     <Content Include="Controls\RESXManager\FilterControls\SearchByText.ascx" />
@@ -1933,6 +1934,7 @@
     <Content Include="Views\PurchaseOrderReceives\Index.cshtml" />
     <Content Include="Views\PurchaseOrderReceives\IndexDtl.cshtml" />
     <Content Include="Views\StockIns\IndexDtls.cshtml" />
+    <Content Include="Views\PurchaseOrders\_POLevel3BreadcrumbPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

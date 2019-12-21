@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<PMSAWebMVC.ViewModels.PurchaseOrders.PurchaseOrderIndexViewModel>
 
 @section styles{
+    <link href="~/Content/Views/PurchaseOrders.css" rel="stylesheet" />
     <style>
         /*表格欄位內容對齊*/
         #dataTablesPO tbody tr td:nth-child(3) {
@@ -16,8 +17,16 @@
 @{
     ViewBag.Title = "採購單";
 }
-
-<h2>@ViewBag.Title</h2>
+<div class="bc-icons-2">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb blue-grey lighten-5">
+            <li class="breadcrumb-item">
+                <a class="black-text" href="@Url.Action("Index","Home")">首頁</a><i class="fas fa-angle-right mx-2" aria-hidden="true"></i>
+            </li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+</div>
 
 @if (User.IsInRole("Buyer") && !User.IsInRole("Manager"))
 {

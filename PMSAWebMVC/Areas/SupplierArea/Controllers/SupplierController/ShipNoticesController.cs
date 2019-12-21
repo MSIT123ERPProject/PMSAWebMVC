@@ -74,6 +74,22 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             }
             return View();
         }
+        public JsonResult GetOrderbyStatus(string status)
+        {
+            var qpo = from po in db.PurchaseOrder
+                      where po.PurchaseOrderStatus == status
+                      select new GetOrderbyStatusViewModel
+                      {
+                          value = po.PurchaseOrderID,
+                          text = po.PurchaseOrderID,
+                      };
+            return Json(qpo, JsonRequestBehavior.AllowGet);
+        }
+        public class GetOrderbyStatusViewModel
+        {
+            public string value { get; set; }
+            public string text { get; set; }
+        }
         //此方法為幫助INDEX的DATATABLE查訂單資料
         public JsonResult GetPurchaseOrderList(string PurchaseOrderStatus)
         {
@@ -86,16 +102,16 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string status = PurchaseOrderStatus;
             var query = (from po in db.PurchaseOrder.AsEnumerable()
-                        where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)
-                        select new shipOrderViewModel
-                        {
-                            PurchaseOrderStatus = po.PurchaseOrderStatus,
-                            PurchaseOrderID = po.PurchaseOrderID,
-                            ReceiverName = po.ReceiverName,
-                            ReceiverTel = po.ReceiverTel,
-                            ReceiverMobile = po.ReceiverMobile,
-                            ReceiptAddress = po.ReceiptAddress,
-                        }).ToList();
+                         where (po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode)
+                         select new shipOrderViewModel
+                         {
+                             PurchaseOrderStatus = po.PurchaseOrderStatus,
+                             PurchaseOrderID = po.PurchaseOrderID,
+                             ReceiverName = po.ReceiverName,
+                             ReceiverTel = po.ReceiverTel,
+                             ReceiverMobile = po.ReceiverMobile,
+                             ReceiptAddress = po.ReceiptAddress,
+                         }).ToList();
             for (int i = 0; i < query.Count(); i++)
             {
                 query[i].PurchaseOrderStatusDisplay = utilities.GetStatus(query[i].PurchaseOrderStatus);
@@ -474,7 +490,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
         }
         //用來查詢已出貨商品明細(用採購單編號)，並且回傳一份清單給寄信用的方法用
         //這裡回傳的清單應該要是出貨數量而不是已出貨數量
-        public List<OrderDtlForMail> orderDtlForMails(List<string> shipDtlList,List<int> shipDtlListQty)
+        public List<OrderDtlForMail> orderDtlForMails(List<string> shipDtlList, List<int> shipDtlListQty)
         {
             List<OrderDtlForMail> odm = new List<OrderDtlForMail>();
             for (int i = 0; i < shipDtlList.Count(); i++)
@@ -494,7 +510,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                              //ShipQty = snd.ShipQty,
                              ShipNoticeOID = snd.ShipNoticeDtlOID
                          }).SingleOrDefault();
-                q.ShipQty= shipDtlListQty[i];
+                q.ShipQty = shipDtlListQty[i];
                 odm.Add(q);
             }
             return odm;
@@ -522,7 +538,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //}
             //shipDtlMail += "</tbody></table>";  
             string snId = shipNotice[0].ShipNoticeID;
-            PurchaseOrder order = db.PurchaseOrder.Find(db.ShipNotice.Find(snId).PurchaseOrderID); 
+            PurchaseOrder order = db.PurchaseOrder.Find(db.ShipNotice.Find(snId).PurchaseOrderID);
             string OrderID = order.PurchaseOrderID;
             string OrderApply = "已出貨";
             string borderSize = "1";
@@ -539,7 +555,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             }
             string SupplierName = db.SupplierInfo.Where(x => x.SupplierCode == supplierCode).SingleOrDefault().SupplierName;
             string BuyerID = db.Employee.Where(x => x.EmployeeID == order.EmployeeID).SingleOrDefault().EmployeeID;
-          
+
             string emp = db.PurchaseOrder.Find(db.ShipNotice.Find(snId).PurchaseOrderID).EmployeeID;
             string EmployeeName = db.Employee.Find(emp).Name;
             var user = UserManager.Users.Where(x => x.UserName == emp).SingleOrDefault();

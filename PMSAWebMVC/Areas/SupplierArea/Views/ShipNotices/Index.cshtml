@@ -10,12 +10,7 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
-    @*=================================================================*@
-    @*這裡想加一個採購單編號的下拉式選單還沒成功*@
-    @*<div id="idOrder" class="col-sm-auto">
-            @Html.DropDownListFor(model=>model.Where(x=>x.PurchaseOrderStatus=="E"), new { id = "idStatus", @class = "form-control" })
-        </div>*@
-    @*=============================================================================================*@
+   
 </nav>
 @*dropdownlist取得值得方法*@
 @*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
@@ -23,60 +18,43 @@
 <!-- DataTables Example -->
 <div class="card mb-3">
     <div class="card-header">
-            @Html.DropDownList("selectlist", new SelectList(new[]
-         {
-            new SelectListItem { Text = "未出貨", Value = "W",Selected=true },
-            //new SelectListItem { Text = "未答交",Value="P",Selected=false },
-            new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
-            }, "Value", "Text"),
-         new { id = "idStatus", @class = "form-control" }
-         ) 
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped hover order-column nowrap text-left" style="width:100%" id="dataTable">
-                <thead>
-                    <tr class="bg-primary text-white text-center">
-                        <th data-priority="1"></th>
-                        <th>採購單狀態</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
-                        <th data-priority="1">採購單編號</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>*@
-                        <th>收貨人名稱</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverName)</th>*@
-                        <th>收貨人電話</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>*@
-                        <th>收貨人手機</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>*@
-                        <th>收貨人地址</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
-                        <th data-priority="1">出貨明細</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th>訂單狀態</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderStatus)</th>*@
-                        <th>訂單編號</th>
-                        @*<th>@Html.DisplayNameFor(model => model.PurchaseOrderID)</th>*@
-                        <th>收貨人名稱</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverName)</th>*@
-                        <th>收貨人電話</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverTel)</th>*@
-                        <th>收貨人手機</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiverMobile)</th>*@
-                        <th>收貨人地址</th>
-                        @*<th>@Html.DisplayNameFor(model => model.ReceiptAddress)</th>*@
-                        <th>出貨明細</th>
-                    </tr>
-                </tfoot>
-            </table>
+        <div class="row">
+            <div class="col-md-6" style="margin-left:50px">
+                @Html.DropDownList("selectlist", new SelectList(new[]
+                  {
+                    new SelectListItem { Text = "請選擇",Value="",Selected=true },
+                     new SelectListItem { Text = "未出貨", Value = "W",Selected=false },
+                     //new SelectListItem { Text = "未答交",Value="P",Selected=false },
+                     new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
+                     }, "Value", "Text"),
+                  new { id = "idStatus", @class = "form-control" }
+                  )
+            </div>
         </div>
     </div>
-    <div class="card-footer small text-muted"></div>
-</div>
-
+    <div class="card-header">
+        @*=================================================================*@
+        @*這裡想加一個採購單編號的下拉式選單還沒成功*@
+        <div class="row">
+            <div id="idOrderDiv" class="col-md-6" style="margin-left:50px">
+                <select id="idOrder" class="form-control"></select>
+            </div>
+        </div>
+        @*=============================================================================================*@
+    </div>
+    @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
+    {
+    <div class="card mb-3">
+        <div class="card-body" id="table">
+            <div class="table-responsive" id="divTable"></div>
+        </div>
+        <div class="form-group">
+            <div class="d-flex justify-content-center">
+                <button type="submit" id="idbutton" class="btn btn-primary btn-block" value="出貨"><i class="fas fa-shipping-fast"></i>出貨</button>
+            </div>
+        </div>
+    </div>
+    }
 @section scripts{
     
     <script>
@@ -85,28 +63,260 @@
             if (message != null) {
                 toastr.success(message, "通知");
             }
-            shipDatatable();
+            $("#table").hide();
+            $("#idbutton").hide();
+            $("#idOrder").prop('disabled',true);
+           // shipDatatable();
             $("#idStatus").change(function () {
-                shipDatatable();
+                $("#idOrder").prop('disabled', false)
+                $("#idStatus").prop('disabled', true);
+                idOrder();
+                //shipDatatable();
             });
         });
 
         //用來取得下拉式選單所選取的採購單編號
-        @*function idOrder() {
+        function idOrder() {
             $.ajax({
-                url: `@Url.Action("unshipOrderDtl","ShipNotices")`,
+                url: `@Url.Action("GetOrderbyStatus", "ShipNotices")`,
                 type: "GET",
-                data: { id: $("#idStatus option:selected").val() }
+                data: { status: $("#idStatus option:selected").val() }
             }).done(function (result) {
                 $("#idOrder").empty();
                 $("#idOrder").append($(`<option></option>`).val('').text('請選擇'));
                 $.each(result, function (index, item) {
                     $("#idOrder").append($(`<option></option>`).val(item.value).text(item.text));
                 });
+                $("#idOrder").change(function () {
+                    purchaseOrderDtlForPartialView();
+                    QtyText();
+                   // dataTableUOD();
+                    if ($("#idStatus option:selected").val() == "W") {
+                        $("#table").show();
+                        $("#idbutton").show();
+                    }
+                    else {
+                        $("#table").show();
+                    }
+                });
                 }).fail(function () {
                     alert("idOrder ajax is fail");
                 });
+        }
+          //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面 partialView方法
+        function purchaseOrderDtlForPartialView() {
+            let id = $("#idOrder option:selected").val();
+            let queryId = `@Url.Action("GetPurchaseOrderDtlPatialView","ShipNotices")` + "?PurchaseOrderID=" + id;
+            $.ajax({
+                url: `@Url.Action("GetPurchaseOrderDtlPatialView","ShipNotices")`,
+                type: "GET",
+                data: { PurchaseOrderID :id },
+            }).done(function (result) {
+                //alert("訂單明細載入成功");
+                //toastr.success("訂單明細載入成功","通知");
+                $("#divTable").html('');
+                $("#divTable").html(result);
+                //全選、全勾消
+                $("input[name=chkAll]").change(function () {
+                    let checked = $(this).prop("checked");
+                    $("#dataTableUOD>tbody input:checkbox").prop("checked", checked);
+                });
+                $("#dataTableUOD").DataTable(
+                    {
+                        ordering: true,
+                        //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                        order: [],
+                        //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                        responsive: {
+                            details: {
+                                type: 'column',
+                                target: 0
+                            }
+                        },
+                        columnDefs: [{
+                            targets: 0,
+                            className: 'control'
+                        },
+                        { orderable: false, targets: [0, 1, -1] },
+                        { className: 'text-center', targets: [5, 6, 7, 8, 9, 10, 11] },
+                        ],
+                        language: {
+                            url: "@Url.Content("~/Scripts/DataTables/i18n/chinese-traditional.json")",
+                        },
+                    }
+                );
+                }).fail(function () {
+                    toastr.error("訂單明細載入失敗","通知");
+                //Swal.fire({
+                //    icon: 'error',
+                //    title: 'Oops...',
+                //    text: '訂單明細載入失敗',
+                //    footer: '<a href>Why do I have this issue?</a>'
+                //})
+            });
+            //fetch方法會回傳PROMISE物件，不知道要兂麼把他轉乘HTML元素，而用JQUERY的AJAX方法回傳後會是直接的一個HTML元素
+            //fetch(queryId)
+            //    .then(function (response) {
+            //        alert("response is " + response);
+            //        if (response != null) {
+
+            //            return Promise.resolve(response.json());
+            //        }
+            //    }).then(function (response) {
+            //        alert("response suceeded" + response);
+
+            //        $("#divTable").empty();
+            //        $("#divTable").html(response);
+            //    }).catch(function (err) {
+            //        alert("error response is null" + err);
+            //    })
+        }
+
+        @*先註解*@
+        //要求SERVER端把訂單明細資料傳回並顯示在DATATABLE上面  ajax方法
+        //因為不知道要怎麼把有勾選的集合取出來並傳給controller
+        @*function purchaseOrderDtlForDataTable() {
+            if ($.fn.dataTable.isDataTable("#dataTableOrderDtl")) {
+                $("#dataTableOrderDtl").DataTable().destroy();
+            }
+           let id ="@Model.PurchaseOrderID" ;
+            $("#dataTableOrderDtl").DataTable({
+                "ajax": {
+                    "url": `@Url.Action("GetPurchaseOrderDtl","ShipNotices")`,
+                    "type": "GET",
+                    "dataType": "json",
+                    "data": { "purchaseOrderID": id },
+                    "contentType": "application/json;charset=utf-8",
+                    cache: true
+                },
+                //CONTROLLER傳過來的值，要用物件傳並且屬性名稱要是DATA
+                "columns": [
+                    {
+                        "data": "PurchaseOrderDtlCode",
+                        orderable: false,
+                        render: function (data, type, obj, meta) {
+                            return '<input type="checkbox" value="' + data + '"/>';
+                        }
+                    },
+                    { "data":"PurchaseOrderID"},
+                    {
+                        "data": "PurchaseOrderDtlCode", "autoWidth": true
+                    },
+                    { "data": "PartName" },
+                    { "data": "Qty" },
+                    { "data": "QtyPerUnit" },
+                    {
+                        "data": "CommittedArrivalDate",
+                        render: function (data, type, full, meta ) {
+                                 return moment(data).format("YYYY/MM/DD");
+                        }
+                    }
+                ]
+            });
         }*@
+
+        @*出貨按鈕AJAX的寫法但是資料傳不進shipCheckDtl的方法，所以改用PARTIALVIEW寫寫看*@
+        @*先註解*@
+        @*function PostCheckedOrderDtlData() {
+            $("idbutton").click(function () {
+                let dtlList = $("input[type='checkbox']").val();
+                $.ajax({
+                    url: `@Url.Action("shipCheckDtl","ShipNotices")`,
+                    type: "POST",
+                    dataType: "json",
+                    data: $("form[name=formTable]").serialize()
+                }).done(function (response) {
+                    let result = response.json();
+                    if (result == "suceeded") {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Stocks are not enough',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                    }
+                }).fail(function () {
+                    Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ajax fail!',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                });
+
+                //想試試看用fetch寫法，但還是不太熟，先放者
+                let purchaseOrderID = @Model.PurchaseOrderID;
+                fetch(`@Url.Action("shipCheckDtl","ShipNotices")/${purchaseOrderID}`)
+                    .then(function (response) {
+                        let result = response.json();
+                        if (result == "suceeded") {
+                            return Promise.resolve();
+                        }
+                        else {
+                            return Promise.reject();
+                        }
+                    })
+                    .then(function (response) {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        )
+                    })
+                    .catch(function (err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            footer: '<a href>Why do I have this issue?</a>'
+                        });
+                    });
+                ///////////////////////////////////////////////////
+            });
+        }*@
+        ///////////////////////////////////////////////////////
+        //改寫SUBMIT按鈕執行動作
+        function QtyText(e) {
+            console.log(e);
+            let content = $(e).val();
+            $(e).attr("value", content);
+            //這裡想寫檢查出貨數量不得大於採購數量的功能，先放著
+            //let purchaseQty = e.closest('td').prev('td').val();
+            //let shipQty = $(e).val();
+            //if (purchaseQty < shipQty) {
+            //    toastr.warning( "出貨數量不得大於採購數量","通知" );
+            //}
+        }
+        //dataTable
+        function dataTableUOD() {
+            $('#dataTableUOD').DataTable({
+                ordering: false,
+                //預設第1欄會有排序按鈕，需指定其他排序欄位才會消失
+                order: [[2, 'desc']],
+                //如第1欄是checkbox，會造成只有縮放按鈕有效，checkbox無法使用，所以縮放按鈕要分欄
+                responsive: {
+                    details: {
+                        type: 'column',
+                        target: 0
+                    }
+                },
+                columnDefs: [{
+                    targets: 0,
+                    className: 'control'
+                },
+                    { orderable: false, targets: [0, 1, -1] },
+                    {className:'text-center',targets:[5,6,7,8,9,10,11]},
+                ],
+            });
+        }
+        //===============================================
         //顯示選取的採購單狀態的所有採購單
         function shipDatatable() {
             if ($.fn.dataTable.isDataTable("#dataTable")) {

@@ -77,11 +77,13 @@
 
         //用來取得下拉式選單所選取的採購單編號
         function idOrder() {
+            console.log($("#idStatus option:selected").val());
             $.ajax({
                 url: `@Url.Action("GetOrderbyStatus", "ShipNotices")`,
                 type: "GET",
-                data: { status: $("#idStatus option:selected").val() }
+                data: { status: $("#idStatus option:selected").val() },
             }).done(function (result) {
+                console.log(result);
                 $("#idOrder").empty();
                 $("#idOrder").append($(`<option></option>`).val('').text('請選擇'));
                 $.each(result, function (index, item) {

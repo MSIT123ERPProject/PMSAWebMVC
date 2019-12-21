@@ -17,6 +17,7 @@ using System.Web.Mvc;
 
 namespace PMSAWebMVC.Areas.SupplierArea.Controllers
 {
+    [Authorize(Roles = "Supplier")]
     public class ShipNoticesController : BaseController
     {
         /// <summary>
@@ -74,10 +75,19 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             }
             return View();
         }
-        public JsonResult GetOrderbyStatus(string status)
+        //==============================
+        //第一個下拉式選單的方法
+        [HttpGet]
+        public ActionResult GetOrderbyStatus(string status)
         {
+            ////////////////////////////////////////////////
+            //取得供應商帳號資料
+            SupplierAccount supplier = User.Identity.GetSupplierAccount();
+            supplierAccount = supplier.SupplierAccountID;
+            supplierCode = supplier.SupplierCode;
+            ////////////////////////////////////////////////////
             var qpo = from po in db.PurchaseOrder
-                      where po.PurchaseOrderStatus == status
+                      where po.PurchaseOrderStatus == status && po.SupplierCode == supplierCode
                       select new GetOrderbyStatusViewModel
                       {
                           value = po.PurchaseOrderID,
@@ -85,11 +95,13 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                       };
             return Json(qpo, JsonRequestBehavior.AllowGet);
         }
+        //給第二個下拉式選單使用
         public class GetOrderbyStatusViewModel
         {
             public string value { get; set; }
             public string text { get; set; }
         }
+        //==========================================
         //此方法為幫助INDEX的DATATABLE查訂單資料
         public JsonResult GetPurchaseOrderList(string PurchaseOrderStatus)
         {

@@ -17,9 +17,17 @@ namespace PMSAWebMVC.Controllers
         //個人每月採購金額
         public ActionResult GetPSMonthSum()
         {
+            Employee emp = User.Identity.GetEmployee();
+            List<string> empIds = new List<string> { emp.EmployeeID };
+            if (emp.Title == "採購主管")
+            {
+                empIds.AddRange(db.Employee.Where(item => item.ManagerID == emp.EmployeeID)
+                    .Select(item => item.EmployeeID).ToList());
+
+            }
             string empId = User.Identity.GetEmployee().EmployeeID;
             var report1 = db.PurchaseOrderDtl.Include("PurchaseOrder").
-                          Where(q => "WSRZ".Contains(q.PurchaseOrder.PurchaseOrderStatus) && q.PurchaseOrder.EmployeeID == empId).
+                          Where(q => "WSRZ".Contains(q.PurchaseOrder.PurchaseOrderStatus) && empIds.Contains(q.PurchaseOrder.EmployeeID)).
                           GroupBy(p => p.PurchaseOrder.CreateDate.Year + "/" + DbFunctions.Right("0" + p.PurchaseOrder.CreateDate.Month, 2)).
                           Select(g => new { name = g.Key, count = g.Sum(q => q.Total) });
 

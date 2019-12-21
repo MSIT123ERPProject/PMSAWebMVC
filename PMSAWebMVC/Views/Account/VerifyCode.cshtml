@@ -20,12 +20,12 @@
         <div style="border: 1px solid #eee;background-color: #eee; padding: 20px;">
             <div class="form-group">
                 <div class="col-12">
-                    @Html.LabelFor(m => m.Code, new { @class = "control-label",style = "font-weight:700;" })
+                    @Html.Label("安全碼", new { @class = "control-label",style = "font-weight:700;" })
                     @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-12 mb-5">
+                <div class="col-12 mb-2">
                     <div class="checkbox custom-control custom-checkbox">
                         @Html.CheckBoxFor(m => m.RememberBrowser, new { @class = "custom-control-input" })
                         @Html.LabelFor(m => m.RememberBrowser, new { @class = "custom-control-label" })

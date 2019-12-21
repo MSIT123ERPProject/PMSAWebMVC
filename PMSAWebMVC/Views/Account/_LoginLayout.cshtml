@@ -33,14 +33,17 @@
         .right {
             background-color: black;
         }
+        .waves-input-wrapper{
+            width: 100%;
+        }
     </style>
 </head>
 <body>
     @RenderBody()
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/allpluginjs")
+    @Scripts.Render("~/bundles/js")
+    @Scripts.Render("~/bundles/css")
     @RenderSection("scripts", required: false)
 </body>
 </html>

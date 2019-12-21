@@ -71,7 +71,7 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             }
             else
             {
-                ViewBag.message = "你好";
+               // ViewBag.message = "你好";
             }
             return View();
         }
@@ -93,9 +93,12 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
                           value = po.PurchaseOrderID,
                           text = po.PurchaseOrderID,
                       };
+            if ( qpo.Count() ==0 ) {
+                return Json(false,JsonRequestBehavior.AllowGet);
+            }
             return Json(qpo, JsonRequestBehavior.AllowGet);
         }
-        //給第二個下拉式選單使用
+        //給第二個下拉式選單使用的資料
         public class GetOrderbyStatusViewModel
         {
             public string value { get; set; }

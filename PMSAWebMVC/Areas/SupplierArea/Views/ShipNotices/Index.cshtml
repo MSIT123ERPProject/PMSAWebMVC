@@ -10,7 +10,7 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
-   
+
 </nav>
 @*dropdownlist取得值得方法*@
 @*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
@@ -18,32 +18,53 @@
 <!-- DataTables Example -->
 <div class="card mb-3">
     <div class="card-header">
-        <div class="row">
-            <div class="col-md-6" style="margin-left:50px">
-                @Html.DropDownList("selectlist", new SelectList(new[]
-                  {
-                    new SelectListItem { Text = "請選擇",Value="",Selected=true },
-                     new SelectListItem { Text = "未出貨", Value = "W",Selected=false },
-                     //new SelectListItem { Text = "未答交",Value="P",Selected=false },
-                     new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
-                     }, "Value", "Text"),
-                  new { id = "idStatus", @class = "form-control" }
-                  )
+        @*<div class="col-md-3 text-primary" style="font-size:larger;margin-left:100px">*@
+        <a data-toggle="collapse" href="#collapse-rpinfo" aria-expanded="true" aria-controls="collapse-rpinfo" id="heading-rpinfo" class="d-block nounderline">
+            <i class="fab fa-wpforms"></i>  請選擇已出貨或未出貨 <i class="fa fa-chevron-down"></i>
+        </a>
+        @*</div>*@
+    </div>
+    <div id="collapse-rpinfo" class="collapse show" aria-labelledby="heading-rpinfo">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-3" @*style="margin-left:20px"*@>
+                    @Html.DropDownList("selectlist", new SelectList(new[]
+                      {
+                        new SelectListItem { Text = "請選擇",Value="",Selected=true },
+                         new SelectListItem { Text = "未出貨", Value = "W",Selected=false },
+                         //new SelectListItem { Text = "未答交",Value="P",Selected=false },
+                         new SelectListItem { Text = "已出貨", Value = "S",Selected=false }
+                         }, "Value", "Text"),
+                      new { id = "idStatus", @class = "form-control" }
+                      )
+                </div>
             </div>
         </div>
+
     </div>
+</div>
+<div class="card mb-3">
     <div class="card-header">
-        @*=================================================================*@
-        @*這裡想加一個採購單編號的下拉式選單還沒成功*@
-        <div class="row">
-            <div id="idOrderDiv" class="col-md-6" style="margin-left:50px">
-                <select id="idOrder" class="form-control"></select>
+        <a data-toggle="collapse" href="#collapse-orderinfo" aria-expanded="true" aria-controls="collapse-orderinfo" id="heading-orderinfo" class="d-block nounderline">
+            <i class="fab fa-wpforms"></i>  請選擇訂單 <i class="fa fa-chevron-down"></i>
+        </a>
+    </div>
+    <div id="collapse-orderinfo" class="collapse show" aria-labelledby="heading-orderinfo">
+        <div class="card-body">
+            <div class="row">
+                @*=================================================================*@
+                @*這裡想加一個採購單編號的下拉式選單還沒成功*@
+                <div id="idOrderDiv" class="col-md-3" @*style="margin-left:50px"*@>
+                    <select id="idOrder" class="form-control"></select>
+                </div>
+                @*=============================================================================================*@
             </div>
         </div>
-        @*=============================================================================================*@
     </div>
-    @using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
-    {
+</div>
+@using (Html.BeginForm("shipCheckDtl", "ShipNotices", FormMethod.Post, new { name = "formTable" }))
+{
     <div class="card mb-3">
         <div class="card-body" id="table">
             <div class="table-responsive" id="divTable"></div>
@@ -54,13 +75,30 @@
             </div>
         </div>
     </div>
-    }
+}
 @section scripts{
-    
+
     <script>
         $(document).ready(function () {
-          let message=  `@ViewBag.message`;
-            if (message != null) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            let message = `@ViewBag.message`;
+            if (message != "" ) {
                 toastr.success(message, "通知");
             }
             $("#table").hide();
@@ -78,12 +116,23 @@
         //用來取得下拉式選單所選取的採購單編號
         function idOrder() {
             console.log($("#idStatus option:selected").val());
+            var datas = { status: $("#idStatus option:selected").val() };
+            console.log(datas);
             $.ajax({
                 url: `@Url.Action("GetOrderbyStatus", "ShipNotices")`,
                 type: "GET",
-                data: { status: $("#idStatus option:selected").val() },
+                data: datas,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
             }).done(function (result) {
                 console.log(result);
+                if (!result) {
+                    toastr.warning("查無資料", "通知")
+                    $("#idOrder").prop("disabled", true);
+                    $("#idStatus").prop("disabled", false);
+                    return;
+                }
+                toastr.info("請選擇訂單", "通知")
                 $("#idOrder").empty();
                 $("#idOrder").append($(`<option></option>`).val('').text('請選擇'));
                 $.each(result, function (index, item) {
@@ -451,7 +500,7 @@
         //        '</tr>' +
         //        '</table>';
         //}
-     
+
     </script>
 
 }

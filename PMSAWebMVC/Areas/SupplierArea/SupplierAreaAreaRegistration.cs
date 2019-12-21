@@ -17,8 +17,8 @@ namespace PMSAWebMVC.Areas.SupplierArea
             context.MapRoute(
                 "SupplierArea_default",
                 "SupplierArea/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional },
-                new { action = "GetOrderbyStatus", id = UrlParameter.Optional }
+                new { action = "Index", id = UrlParameter.Optional }
+                //new { action = "GetOrderbyStatus", id = UrlParameter.Optional }
             );
         }
     }

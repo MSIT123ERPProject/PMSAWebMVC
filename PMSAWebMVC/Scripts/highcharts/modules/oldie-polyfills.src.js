@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Old IE (v6, v7, v8) array polyfills for Highcharts v7+.
  *
@@ -49,7 +49,7 @@
             Array.prototype.forEach = function (fn, thisArg) {
                 var i = 0, len = this.length;
                 for (; i < len; i++) {
-                    if (this[i] !== undefined && // added check
+                    if (typeof this[i] !== 'undefined' && // added check
                         fn.call(thisArg, this[i], i, this) === false) {
                         return i;
                     }

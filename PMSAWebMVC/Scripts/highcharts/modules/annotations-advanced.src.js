@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Annotations module
  *
@@ -52,6 +52,14 @@
             addEvents: function () {
                 var emitter = this;
 
+                H.addEvent(
+                    emitter.graphic.element,
+                    'mousedown',
+                    function (e) {
+                        emitter.onMouseDown(e);
+                    }
+                );
+
                 objectEach(emitter.options.events, function (event, type) {
                     var eventHandler = function (e) {
                         if (type !== 'click' || !emitter.cancelClick) {
@@ -71,13 +79,6 @@
                 });
 
                 if (emitter.options.draggable) {
-                    H.addEvent(
-                        emitter.graphic.element,
-                        'mousedown',
-                        function (e) {
-                            emitter.onMouseDown(e);
-                        }
-                    );
 
                     H.addEvent(emitter, 'drag', emitter.onDrag);
 
@@ -2222,7 +2223,7 @@
                             H.format(
                                 text,
                                 point.getLabelConfig(),
-                                this.annotation.chart.time
+                                this.annotation.chart
                             ) :
                             options.formatter.call(point, this)
                     });
@@ -2520,7 +2521,8 @@
             erase = U.erase,
             extend = U.extend,
             pick = U.pick,
-            splat = U.splat;
+            splat = U.splat,
+            wrap = U.wrap;
 
 
         var merge = H.merge,
@@ -3803,7 +3805,7 @@
             });
         });
 
-        H.wrap(
+        wrap(
             H.Pointer.prototype,
             'onContainerMouseDown',
             function (proceed) {
@@ -5316,7 +5318,7 @@
                 addBackground: function () {
                     var shapePoints = this.shapePointsOptions();
 
-                    if (shapePoints[0].x === undefined) {
+                    if (typeof shapePoints[0].x === 'undefined') {
                         return;
                     }
 
@@ -5848,7 +5850,7 @@
                         /**
                          * The color of border.
                          */
-                        stroke: undefined
+                        stroke: void 0
                     },
                     /**
                      * Configure a crosshair that is horizontally placed in middle of
@@ -5985,7 +5987,7 @@
                          * @type      {function}
                          *
                          */
-                        formatter: undefined
+                        formatter: void 0
                     }
                 },
                 controlPointOptions: {
@@ -7453,7 +7455,7 @@
                  * from a different server.
                  *
                  * @type      {string}
-                 * @default   https://code.highcharts.com/7.2.1/gfx/stock-icons/
+                 * @default   https://code.highcharts.com/8.0.0/gfx/stock-icons/
                  * @since     7.1.3
                  * @apioption navigation.iconsURL
                  */
@@ -7466,11 +7468,11 @@
                  */
 
                 /**
-                 * A `hidePopop` event. Fired when Popup should be hidden, for exampole
+                 * A `closePopup` event. Fired when Popup should be hidden, for example
                  * when clicking on an annotation again.
                  *
                  * @type      {Function}
-                 * @apioption navigation.events.hidePopup
+                 * @apioption navigation.events.closePopup
                  */
 
                 /**
@@ -7537,11 +7539,11 @@
             isObject = U.isObject,
             isString = U.isString,
             objectEach = U.objectEach,
-            pick = U.pick;
+            pick = U.pick,
+            wrap = U.wrap;
 
         var addEvent = H.addEvent,
             createElement = H.createElement,
-            wrap = H.wrap,
             indexFilter = /\d/g,
             PREFIX = 'highcharts-',
             DIV = 'div',
@@ -8583,7 +8585,7 @@
                             this.chart.options.stockTools &&
                             this.chart.options.stockTools.gui.iconsURL
                         ) ||
-                        'https://code.highcharts.com/7.2.1/gfx/stock-icons/'
+                        'https://code.highcharts.com/8.0.0/gfx/stock-icons/'
                     )
                 );
             }

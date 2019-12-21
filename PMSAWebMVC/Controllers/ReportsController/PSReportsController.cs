@@ -19,7 +19,7 @@ namespace PMSAWebMVC.Controllers
         {
             string empId = User.Identity.GetEmployee().EmployeeID;
             var report1 = db.PurchaseOrderDtl.Include("PurchaseOrder").
-                          Where(q => "WSRZ".Contains(q.PurchaseOrder.PurchaseOrderStatus) && q.PurchaseOrder.EmployeeID == empId).
+                          Where(q => "WSRZ".Contains(q.PurchaseOrder.PurchaseOrderStatus) && q.PurchaseOrder.EmployeeID == "CE00002"). //先用此帳號 因為其他帳號沒資料
                           GroupBy(p => p.PurchaseOrder.CreateDate.Year + "/" + DbFunctions.Right("0" + p.PurchaseOrder.CreateDate.Month, 2)).
                           Select(g => new { name = g.Key, count = g.Sum(q => q.Total) });
 

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * (c) 2009-2019 Torstein Honsi
  *
@@ -66,7 +66,7 @@
          * https://jsfiddle.net/highcharts/264Nm/
          * https://jsfiddle.net/highcharts/y5A37/
          */
-        var extend = U.extend, isNumber = U.isNumber, pick = U.pick, syncTimeout = U.syncTimeout;
+        var animObject = U.animObject, extend = U.extend, isNumber = U.isNumber, pick = U.pick, syncTimeout = U.syncTimeout;
         var labelDistance = 3, addEvent = H.addEvent, Series = H.Series, SVGRenderer = H.SVGRenderer, Chart = H.Chart;
         H.setOptions({
             /**
@@ -90,6 +90,7 @@
                      * @sample highcharts/series-label/stock-chart
                      *         Stock chart
                      *
+                     * @declare  Highcharts.SeriesLabelOptionsObject
                      * @since    6.0.0
                      * @product  highcharts highstock gantt
                      * @requires modules/series-label
@@ -141,11 +142,10 @@
                          * Styles for the series label. The color defaults to the series
                          * color, or a contrast color if `onArea`.
                          *
-                         * @type    {Highcharts.CSSObject}
-                         * @default {"font-weight": "bold"}
+                         * @type {Highcharts.CSSObject}
                          */
                         style: {
-                            /** @ignore */
+                            /** @internal */
                             fontWeight: 'bold'
                         },
                         /**
@@ -655,7 +655,7 @@
                                 .animate(anim, isNew ?
                                 // Default initial animation to a fraction of
                                 // the series animation (#9396)
-                                H.animObject(series.options.animation).duration * 0.2 :
+                                animObject(series.options.animation).duration * 0.2 :
                                 // On updating, default to the general chart
                                 // animation
                                 chart.renderer.globalAnimation);
@@ -692,7 +692,7 @@
          * @function drawLabels
          */
         function drawLabels(e) {
-            var chart = this, delay = H.animObject(chart.renderer.globalAnimation).duration;
+            var chart = this, delay = animObject(chart.renderer.globalAnimation).duration;
             chart.labelSeries = [];
             chart.labelSeriesMaxSum = 0;
             H.clearTimeout(chart.seriesLabelTimer);
@@ -712,11 +712,11 @@
                     }
                     // The labels are processing heavy, wait until the animation is done
                     if (e.type === 'load') {
-                        delay = Math.max(delay, H.animObject(series.options.animation).duration);
+                        delay = Math.max(delay, animObject(series.options.animation).duration);
                     }
                     // Keep the position updated to the axis while redrawing
                     if (closest) {
-                        if (closest[0].plotX !== undefined) {
+                        if (typeof closest[0].plotX !== 'undefined') {
                             label.animate({
                                 x: closest[0].plotX + closest[1],
                                 y: closest[0].plotY + closest[2]

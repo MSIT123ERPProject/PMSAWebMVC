@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Old IE (v6, v7, v8) module for Highcharts v6+.
  *
@@ -41,8 +41,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, discardElement = U.discardElement, erase = U.erase, extend = U.extend, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, pick = U.pick, pInt = U.pInt;
-        var VMLRenderer, VMLRendererExtension, VMLElement, Chart = H.Chart, createElement = H.createElement, css = H.css, deg2rad = H.deg2rad, doc = H.doc, extendClass = H.extendClass, merge = H.merge, noop = H.noop, svg = H.svg, SVGElement = H.SVGElement, SVGRenderer = H.SVGRenderer, win = H.win;
+        var defined = U.defined, discardElement = U.discardElement, erase = U.erase, extend = U.extend, extendClass = U.extendClass, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, offset = U.offset, pick = U.pick, pInt = U.pInt;
+        var VMLRenderer, VMLRendererExtension, VMLElement, Chart = H.Chart, createElement = H.createElement, css = H.css, deg2rad = H.deg2rad, doc = H.doc, merge = H.merge, noop = H.noop, svg = H.svg, SVGElement = H.SVGElement, SVGRenderer = H.SVGRenderer, win = H.win;
         /**
          * Path to the pattern image required by VML browsers in order to
          * draw radial gradients.
@@ -54,7 +54,7 @@
          * @apioption global.VMLRadialGradientURL
          */
         H.getOptions().global.VMLRadialGradientURL =
-            'http://code.highcharts.com/7.2.1/gfx/vml-radial-gradient.png';
+            'http://code.highcharts.com/8.0.0/gfx/vml-radial-gradient.png';
         // Utilites
         if (doc && !doc.defaultView) {
             H.getStyle = function (el, prop) {
@@ -114,7 +114,7 @@
                 }
                 // Get mouse position
                 if (!chartPosition) {
-                    this.chartPosition = chartPosition = H.offset(this.chart.container);
+                    this.chartPosition = chartPosition = offset(this.chart.container);
                 }
                 return extend(e, {
                     // #2005, #2129: the second case is for IE10 quirks mode within

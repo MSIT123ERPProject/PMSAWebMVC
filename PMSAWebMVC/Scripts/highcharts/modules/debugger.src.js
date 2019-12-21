@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Debugger module
  *
@@ -221,7 +221,7 @@
                     zIndex: 3
                 }).add();
                 // Render error message
-                chart.errorElements[1] = renderer.label(msg, 0, 0, 'rect', undefined, undefined, undefined, undefined, 'debugger').css({
+                chart.errorElements[1] = renderer.label(msg, 0, 0, 'rect', void 0, void 0, void 0, void 0, 'debugger').css({
                     color: '#ffffff',
                     width: chartWidth - 16,
                     padding: 0

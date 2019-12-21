@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Boost module
  *
@@ -44,8 +44,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var extend = U.extend, isNumber = U.isNumber;
-        var win = H.win, doc = win.document, noop = function () { }, Color = H.Color, Series = H.Series, seriesTypes = H.seriesTypes, addEvent = H.addEvent, fireEvent = H.fireEvent, merge = H.merge, pick = H.pick, wrap = H.wrap, CHUNK_SIZE = 50000, destroyLoadingDiv;
+        var extend = U.extend, isNumber = U.isNumber, wrap = U.wrap;
+        var win = H.win, doc = win.document, noop = function () { }, Color = H.Color, Series = H.Series, seriesTypes = H.seriesTypes, addEvent = H.addEvent, fireEvent = H.fireEvent, merge = H.merge, pick = H.pick, CHUNK_SIZE = 50000, destroyLoadingDiv;
         /* eslint-disable no-invalid-this, valid-jsdoc */
         /**
          * Initialize the canvas boost.
@@ -54,13 +54,13 @@
          */
         H.initCanvasBoost = function () {
             if (H.seriesTypes.heatmap) {
-                H.wrap(H.seriesTypes.heatmap.prototype, 'drawPoints', function () {
+                wrap(H.seriesTypes.heatmap.prototype, 'drawPoints', function () {
                     var chart = this.chart, ctx = this.getContext(), inverted = this.chart.inverted, xAxis = this.xAxis, yAxis = this.yAxis;
                     if (ctx) {
                         // draw the columns
                         this.points.forEach(function (point) {
                             var plotY = point.plotY, shapeArgs, pointAttr;
-                            if (plotY !== undefined &&
+                            if (typeof plotY !== 'undefined' &&
                                 !isNaN(plotY) &&
                                 point.y !== null) {
                                 shapeArgs = point.shapeArgs;
@@ -385,15 +385,16 @@
                                     (isNextInside || isPrevInside))) {
                                 clientX = Math.round(xAxis.toPixels(x, true));
                                 if (sampling) {
-                                    if (minI === undefined || clientX === lastClientX) {
+                                    if (typeof minI === 'undefined' ||
+                                        clientX === lastClientX) {
                                         if (!isRange) {
                                             low = y;
                                         }
-                                        if (maxI === undefined || y > maxVal) {
+                                        if (typeof maxI === 'undefined' || y > maxVal) {
                                             maxVal = y;
                                             maxI = i;
                                         }
-                                        if (minI === undefined ||
+                                        if (typeof minI === 'undefined' ||
                                             low < minVal) {
                                             minVal = low;
                                             minI = i;
@@ -401,7 +402,8 @@
                                     }
                                     // Add points and reset
                                     if (clientX !== lastClientX) {
-                                        if (minI !== undefined) { // maxI also a number
+                                        // maxI also a number:
+                                        if (typeof minI !== 'undefined') {
                                             plotY = yAxis.toPixels(maxVal, true);
                                             yBottom = yAxis.toPixels(minVal, true);
                                             drawPoint(clientX, hasThreshold ?
@@ -412,7 +414,7 @@
                                                 addKDPoint(clientX, yBottom, minI);
                                             }
                                         }
-                                        minI = maxI = undefined;
+                                        minI = maxI = void 0;
                                         lastClientX = clientX;
                                     }
                                 }
@@ -463,7 +465,7 @@
                         series.buildKDTree();
                         // Don't do async on export, the exportChart, getSVGForExport and
                         // getSVG methods are not chained for it.
-                    }, chart.renderer.forExport ? Number.MAX_VALUE : undefined);
+                    }, chart.renderer.forExport ? Number.MAX_VALUE : void 0);
                 }
             });
             seriesTypes.scatter.prototype.cvsMarkerCircle = function (ctx, clientX, plotY, r) {

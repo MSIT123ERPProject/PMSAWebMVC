@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Gantt JS v7.2.1 (2019-10-31)
+ * @license Highcharts Gantt JS v8.0.0 (2019-12-10)
  *
  * StaticScale
  *
@@ -80,7 +80,7 @@
                         if (Math.abs(diff) >= 1) {
                             chart.plotHeight = height;
                             chart.redrawTrigger = 'adjustHeight';
-                            chart.setSize(undefined, chart.chartHeight + diff, animate);
+                            chart.setSize(void 0, chart.chartHeight + diff, animate);
                         }
                         // Make sure clip rects have the right height before initial
                         // animation.

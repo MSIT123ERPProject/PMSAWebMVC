@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v8.0.0 (2019-12-10)
  *
  * Advanced Highstock tools
  *
@@ -47,6 +47,7 @@
          * @sample {highstock} stock/indicators/last-visible-price
          *         Last visible price
          *
+         * @declare   Highcharts.SeriesLastVisiblePriceOptionsObject
          * @product   highstock
          * @requires  modules/price-indicator
          * @apioption plotOptions.series.lastVisiblePrice
@@ -58,6 +59,10 @@
          * @product   highstock
          * @default   true
          * @apioption plotOptions.series.lastVisiblePrice.enabled
+         */
+        /**
+         * @declare   Highcharts.SeriesLastVisiblePriceLabelOptionsObject
+         * @apioption plotOptions.series.lastVisiblePrice.label
          */
         /**
          * Enable or disable the label.
@@ -74,6 +79,7 @@
          * @sample {highstock} stock/indicators/last-price
          *         Last price
          *
+         * @declare   Highcharts.SeriesLastPriceOptionsObject
          * @product   highstock
          * @requires  modules/price-indicator
          * @apioption plotOptions.series.lastPrice

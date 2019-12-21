@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Client side exporting module
  *
@@ -98,7 +98,7 @@
                 }
             }
             // Try HTML5 download attr if supported
-            if (a.download !== undefined) {
+            if (typeof a.download !== 'undefined') {
                 a.href = dataURL;
                 a.download = filename; // HTML5 download attribute
                 doc.body.appendChild(a);
@@ -109,7 +109,7 @@
                 // No download attr, just opening data URI
                 try {
                     windowRef = win.open(dataURL, 'chart');
-                    if (windowRef === undefined || windowRef === null) {
+                    if (typeof windowRef === 'undefined' || windowRef === null) {
                         throw new Error('Failed to open window');
                     }
                 }
@@ -671,7 +671,7 @@
         };
         // Extend the default options to use the local exporter logic
         merge(true, Highcharts.getOptions().exporting, {
-            libURL: 'https://code.highcharts.com/7.2.1/lib/',
+            libURL: 'https://code.highcharts.com/8.0.0/lib/',
             // When offline-exporting is loaded, redefine the menu item definitions
             // related to download.
             menuItemDefinitions: {

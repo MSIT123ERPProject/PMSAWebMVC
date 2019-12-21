@@ -257,10 +257,10 @@
                                                 else{
                                                 @:badge-secondary
                                                }
-                                               @Html.DisplayFor(m => item.RequesterRoleToShow)
                                               ">
-                                        @Html.DisplayFor(m => item.RequesterName)
+                                        @Html.DisplayFor(m => item.RequesterRoleToShow)
                                     </span>
+                                    @Html.DisplayFor(m => item.RequesterName)
                                 </span>
                                 <span class="text-primary float-right">@Html.DisplayFor(m => item.RequestDate)</span>
                                 <p>@Html.Raw(item.Record)</p>

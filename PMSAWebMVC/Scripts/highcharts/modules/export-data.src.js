@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Exporting module
  *
@@ -243,7 +243,7 @@
                 }
             }
             // Try HTML5 download attr if supported
-            if (a.download !== undefined) {
+            if (typeof a.download !== 'undefined') {
                 a.href = dataURL;
                 a.download = filename; // HTML5 download attribute
                 doc.body.appendChild(a);
@@ -254,7 +254,7 @@
                 // No download attr, just opening data URI
                 try {
                     windowRef = win.open(dataURL, 'chart');
-                    if (windowRef === undefined || windowRef === null) {
+                    if (typeof windowRef === 'undefined' || windowRef === null) {
                         throw new Error('Failed to open window');
                     }
                 }
@@ -902,7 +902,7 @@
                 if (subheaders) {
                     html += '<tr>';
                     for (i = 0, len = subheaders.length; i < len; ++i) {
-                        if (subheaders[i] !== undefined) {
+                        if (typeof subheaders[i] !== 'undefined') {
                             html += getCellHTMLFromValue('th', null, 'scope="col"', subheaders[i]);
                         }
                     }

@@ -322,9 +322,12 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
         /// <returns></returns>
         public IList<PRDtlTableViewModel> GetPRDtlTableViewModel(string purchaseRequisitionID)
         {
+            IList<string> prIds = session.PRItems.Select(item => item.PurchaseRequisitionID).ToList();
             var prdq = from prd in db.PurchaseRequisitionDtl
                        where !(from prdRel in db.PRPORelation
                                select prdRel.PurchaseRequisitionDtlCode).Contains(prd.PurchaseRequisitionDtlCode)
+                               //需是匯入的請購單編號
+                               && prIds.Contains(prd.PurchaseRequisitionID)
                        select new PRDtlTableViewModel
                        {
                            PurchaseRequisitionDtlCode = prd.PurchaseRequisitionDtlCode,
@@ -370,18 +373,26 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
             using (PMSAEntities db = new PMSAEntities())
             {
                 //有可能是不同來源
-                //找出生管, 及採購自己的請購單
+                //找出生管及採購自己的請購單
                 List<string> empIds = db.Employee.Where(item => item.Title == "生管").Select(item => item.EmployeeID).ToList();
                 empIds.Add(emp.EmployeeID);
 
-                string[] pra = { "N", "O" };
                 var prq = from pr in db.PurchaseRequisition
-                          where pra.Contains(pr.ProcessStatus) && empIds.Contains(pr.EmployeeID)
-                          //where pr.ProcessStatus == "N" && pr.EmployeeID == emp.EmployeeID
+                          from prd in pr.PurchaseRequisitionDtl
+                              //新增或採購中
+                          where "NO".Contains(pr.ProcessStatus)
+                          //簽核同意
+                          && pr.SignStatus == "Y"
+                          //生管及採購自己的請購單
+                          && empIds.Contains(pr.EmployeeID)
+                          //未被採購
+                          && !(from relation in db.PRPORelation
+                               select relation.PurchaseRequisitionDtlCode).Contains(prd.PurchaseRequisitionDtlCode)
+                          group pr by new { Display = pr.PurchaseRequisitionID, Value = pr.PurchaseRequisitionID } into g
                           select new SelectListItem
                           {
-                              Display = pr.PurchaseRequisitionID,
-                              Value = pr.PurchaseRequisitionID
+                              Display = g.Key.Display,
+                              Value = g.Key.Value
                           };
                 return prq.ToList();
             }

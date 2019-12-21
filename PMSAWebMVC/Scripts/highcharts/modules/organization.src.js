@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  * Organization chart series type
  *
  * (c) 2019-2019 Torstein Honsi
@@ -39,7 +39,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var pick = U.pick;
+        var pick = U.pick, wrap = U.wrap;
         /**
          * Layout value for the child nodes in an organization chart. If `hanging`, this
          * node's children will hang below their parent, allowing a tighter packing of
@@ -47,28 +47,6 @@
          *
          * @typedef {"normal"|"hanging"} Highcharts.SeriesOrganizationNodesLayoutValue
          */
-        /**
-         * @interface Highcharts.SeriesOrganizationDataLabelsOptionsObject
-         * @extends Highcharts.SeriesSankeyDataLabelsOptionsObject
-         */ /**
-        * A callback for defining the format for _nodes_ in the
-        * organization chart. The `nodeFormat` option takes precedence over
-        * `nodeFormatter`.
-        *
-        * In an organization chart, the `nodeFormatter` is a quite complex
-        * function of the available options, striving for a good default
-        * layout of cards with or without images. In organization chart,
-        * the data labels come with `useHTML` set to true, meaning they
-        * will be rendered as true HTML above the SVG.
-        *
-        * @sample highcharts/series-organization/datalabels-nodeformatter
-        *         Modify the default label format output
-        *
-        * @name Highcharts.SeriesOrganizationDataLabelsOptionsObject#nodeFormatter
-        * @type {Highcharts.SeriesSankeyDataLabelsFormatterCallbackFunction|undefined}
-        * @default function () { return this.point.name; }
-        * @since 6.0.2
-        */
         var base = H.seriesTypes.sankey.prototype;
         /**
          * @private
@@ -124,12 +102,29 @@
             linkRadius: 10,
             borderWidth: 1,
             /**
-             * @type {Highcharts.SeriesOrganizationDataLabelsOptionsObject|Array<Highcharts.SeriesOrganizationDataLabelsOptionsObject>}
+             * @declare Highcharts.SeriesOrganizationDataLabelsOptionsObject
+             *
              * @private
              */
             dataLabels: {
                 /* eslint-disable valid-jsdoc */
-                /** @ignore-option */
+                /**
+                 * A callback for defining the format for _nodes_ in the
+                 * organization chart. The `nodeFormat` option takes precedence
+                 * over `nodeFormatter`.
+                 *
+                 * In an organization chart, the `nodeFormatter` is a quite complex
+                 * function of the available options, striving for a good default
+                 * layout of cards with or without images. In organization chart,
+                 * the data labels come with `useHTML` set to true, meaning they
+                 * will be rendered as true HTML above the SVG.
+                 *
+                 * @sample highcharts/series-organization/datalabels-nodeformatter
+                 *         Modify the default label format output
+                 *
+                 * @type  {Highcharts.SeriesSankeyDataLabelsFormatterCallbackFunction}
+                 * @since 6.0.2
+                 */
                 nodeFormatter: function () {
                     var outerStyle = {
                         width: '100%',
@@ -198,12 +193,12 @@
                     return html;
                 },
                 /* eslint-enable valid-jsdoc */
-                /** @ignore-option */
                 style: {
+                    /** @internal */
                     fontWeight: 'normal',
+                    /** @internal */
                     fontSize: '13px'
                 },
-                /** @ignore-option */
                 useHTML: true
             },
             /**
@@ -272,7 +267,7 @@
                 var column = base.createNodeColumn.call(this);
                 // Wrap the offset function so that the hanging node's children are
                 // aligned to their parent
-                H.wrap(column, 'offset', function (proceed, node, factor) {
+                wrap(column, 'offset', function (proceed, node, factor) {
                     var offset = proceed.call(this, node, factor); // eslint-disable-line no-invalid-this
                     // Modify the default output if the parent's layout is 'hanging'
                     if (node.hangsFrom) {

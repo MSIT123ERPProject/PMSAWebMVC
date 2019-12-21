@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * Highcharts variwide module
  *
@@ -40,7 +40,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isNumber = U.isNumber, pick = U.pick;
+        var isNumber = U.isNumber, pick = U.pick, wrap = U.wrap;
         var addEvent = H.addEvent, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         /**
          * @private
@@ -194,7 +194,7 @@
                         '') + series.stackKey];
                     pointStack = stack[xValue];
                     if (stack && pointStack && !point.isNull) {
-                        pointStack.setOffset(-(pointWidth / 2) || 0, pointWidth || 0, undefined, undefined, point.plotX);
+                        pointStack.setOffset(-(pointWidth / 2) || 0, pointWidth || 0, void 0, void 0, point.plotX);
                     }
                 });
             }
@@ -246,7 +246,7 @@
                 this.postTranslate(e.pos, xOrY, this.pos);
             }
         });
-        H.wrap(H.Tick.prototype, 'getLabelPosition', function (proceed, x, y, label, horiz, labelOptions, tickmarkOffset, index) {
+        wrap(H.Tick.prototype, 'getLabelPosition', function (proceed, x, y, label, horiz, labelOptions, tickmarkOffset, index) {
             var args = Array.prototype.slice.call(arguments, 1), xy, xOrY = horiz ? 'x' : 'y';
             // Replace the x with the original x
             if (this.axis.variwide &&

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * 3D features for Highcharts JS
  *
@@ -260,9 +260,9 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, extend = U.extend, objectEach = U.objectEach, pick = U.pick;
+        var animObject = U.animObject, defined = U.defined, extend = U.extend, objectEach = U.objectEach, pick = U.pick;
         var cos = Math.cos, PI = Math.PI, sin = Math.sin;
-        var animObject = H.animObject, charts = H.charts, color = H.color, deg2rad = H.deg2rad, merge = H.merge, perspective = H.perspective, SVGElement = H.SVGElement, SVGRenderer = H.SVGRenderer, 
+        var charts = H.charts, color = H.color, deg2rad = H.deg2rad, merge = H.merge, perspective = H.perspective, SVGElement = H.SVGElement, SVGRenderer = H.SVGRenderer, 
         // internal:
         dFactor, element3dMethods, cuboidMethods;
         /*
@@ -509,7 +509,7 @@
                 if (args.shapeArgs || defined(args.x)) {
                     return this.singleSetterForParts('d', null, this.renderer[this.pathType + 'Path'](args.shapeArgs || args));
                 }
-                return SVGElement.prototype.attr.call(this, args, undefined, complete, continueAnimation);
+                return SVGElement.prototype.attr.call(this, args, void 0, complete, continueAnimation);
             },
             animate: function (args, duration, complete) {
                 if (defined(args.x) && defined(args.y)) {
@@ -1042,8 +1042,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isArray = U.isArray, pick = U.pick;
-        var addEvent = H.addEvent, Chart = H.Chart, merge = H.merge, perspective = H.perspective, wrap = H.wrap;
+        var isArray = U.isArray, pick = U.pick, wrap = U.wrap;
+        var addEvent = H.addEvent, Chart = H.Chart, merge = H.merge, perspective = H.perspective;
         /**
          * Shorthand to check the is3d flag.
          * @private
@@ -1167,7 +1167,7 @@
             }
             return scale;
         }
-        H.wrap(H.Chart.prototype, 'isInsidePlot', function (proceed) {
+        wrap(H.Chart.prototype, 'isInsidePlot', function (proceed) {
             return this.is3d() || proceed.apply(this, [].slice.call(arguments, 1));
         });
         var defaultOptions = H.getOptions();
@@ -2319,7 +2319,7 @@
                     for (var j = 0; j < sources.length; j++) {
                         if (typeof sources[j] === 'object') {
                             var val = sources[j][attr];
-                            if (val !== undefined && val !== null) {
+                            if (typeof val !== 'undefined' && val !== null) {
                                 options[attr] = val;
                                 break;
                             }
@@ -2608,8 +2608,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var extend = U.extend, pick = U.pick, splat = U.splat;
-        var ZAxis, addEvent = H.addEvent, Axis = H.Axis, Chart = H.Chart, deg2rad = H.deg2rad, merge = H.merge, perspective = H.perspective, perspective3D = H.perspective3D, shapeArea = H.shapeArea, Tick = H.Tick, wrap = H.wrap;
+        var extend = U.extend, pick = U.pick, splat = U.splat, wrap = U.wrap;
+        var ZAxis, addEvent = H.addEvent, Axis = H.Axis, Chart = H.Chart, deg2rad = H.deg2rad, merge = H.merge, perspective = H.perspective, perspective3D = H.perspective3D, shapeArea = H.shapeArea, Tick = H.Tick;
         /**
          * @optionparent xAxis
          */
@@ -3023,6 +3023,11 @@
         /*
         Z-AXIS
          */
+        Chart.prototype.addZAxis = function (options) {
+            return new ZAxis(this, options);
+        };
+        Chart.prototype.collectionsWithUpdate.push('zAxis');
+        Chart.prototype.collectionsWithInit.zAxis = [Chart.prototype.addZAxis];
         Axis.prototype.swapZ = function (p, insidePlotArea) {
             if (this.isZAxis) {
                 var plotLeft = insidePlotArea ? 0 : this.chart.plotLeft;
@@ -3095,7 +3100,7 @@
                 axisOptions.index = i;
                 // Z-Axis is shown horizontally, so it's kind of a X-Axis
                 axisOptions.isX = true;
-                var zAxis = new ZAxis(chart, axisOptions);
+                var zAxis = chart.addZAxis(axisOptions);
                 zAxis.setScale();
             });
         });
@@ -3220,8 +3225,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var pick = U.pick;
-        var addEvent = H.addEvent, perspective = H.perspective, Series = H.Series, seriesTypes = H.seriesTypes, svg = H.svg, wrap = H.wrap;
+        var pick = U.pick, wrap = U.wrap;
+        var addEvent = H.addEvent, perspective = H.perspective, Series = H.Series, seriesTypes = H.seriesTypes, svg = H.svg;
         /**
          * Depth of the columns in a 3D column chart.
          *
@@ -3438,7 +3443,7 @@
             if (series.chart.is3d()) {
                 series.data.forEach(function (point) {
                     point.visible = point.options.visible = vis =
-                        vis === undefined ?
+                        typeof vis === 'undefined' ?
                             !pick(series.visible, point.visible) : vis;
                     pointVis = vis ? 'visible' : 'hidden';
                     series.options.data[series.data.indexOf(point)] =
@@ -3458,7 +3463,8 @@
             if (this.chart.is3d() &&
                 this.handle3dGrouping) {
                 var seriesOptions = this.options, grouping = seriesOptions.grouping, stacking = seriesOptions.stacking, reversedStacks = pick(this.yAxis.options.reversedStacks, true), z = 0;
-                if (!(grouping !== undefined && !grouping)) {
+                // @todo grouping === true ?
+                if (!(typeof grouping !== 'undefined' && !grouping)) {
                     var stacks = this.chart.retrieveStacks(stacking), stack = seriesOptions.stack || 0, i; // position within the stack
                     for (i = 0; i < stacks[stack].series.length; i++) {
                         if (stacks[stack].series[i] === this) {
@@ -3576,8 +3582,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var pick = U.pick;
-        var deg2rad = H.deg2rad, seriesTypes = H.seriesTypes, svg = H.svg, wrap = H.wrap;
+        var pick = U.pick, wrap = U.wrap;
+        var deg2rad = H.deg2rad, seriesTypes = H.seriesTypes, svg = H.svg;
         /**
          * The thickness of a 3D pie.
          *
@@ -3738,7 +3744,7 @@
          *         Draggable 3d scatter
          *
          * @extends      plotOptions.scatter
-         * @excluding    dragDrop
+         * @excluding    dragDrop, cluster
          * @product      highcharts
          * @requires     highcharts-3d
          * @optionparent plotOptions.scatter3d
@@ -3769,7 +3775,7 @@
         }, {
             applyOptions: function () {
                 Point.prototype.applyOptions.apply(this, arguments);
-                if (this.z === undefined) {
+                if (typeof this.z === 'undefined') {
                     this.z = 0;
                 }
                 return this;

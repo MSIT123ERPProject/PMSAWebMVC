@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v8.0.0 (2019-12-10)
  *
  * (c) 2010-2019 Highsoft AS
  * Author: Sebastian Domas
@@ -155,8 +155,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, isNumber = U.isNumber, objectEach = U.objectEach;
-        var seriesType = H.seriesType, correctFloat = H.correctFloat, merge = H.merge;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, correctFloat = U.correctFloat, isNumber = U.isNumber, objectEach = U.objectEach;
+        var seriesType = H.seriesType, merge = H.merge;
         /* ************************************************************************** *
          *  HISTOGRAM
          * ************************************************************************** */
@@ -233,7 +233,7 @@
              *
              * @type {number}
              */
-            binWidth: undefined,
+            binWidth: void 0,
             pointPadding: 0,
             groupPadding: 0,
             grouping: false,
@@ -343,8 +343,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isNumber = U.isNumber;
-        var seriesType = H.seriesType, correctFloat = H.correctFloat, merge = H.merge;
+        var correctFloat = U.correctFloat, isNumber = U.isNumber;
+        var seriesType = H.seriesType, merge = H.merge;
         /* ************************************************************************** *
          *  BELL CURVE                                                                *
          * ************************************************************************** */

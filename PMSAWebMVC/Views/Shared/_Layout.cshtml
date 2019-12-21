@@ -106,14 +106,14 @@
                                 </a>
                             </li>
                             @*<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
-            </a>*@
+                                    <i class="fas fa-fw fa-folder"></i>
+                                    <span>@PMSAWebMVC.Resources.AppResource.Supplier</span>
+                                </a>*@
                             @*<div class="sidebar-submenu dropdown-menu" aria-labelledby="pagesDropdown">
-            @Html.ActionLink("訂單管理", "Index", "Orders", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-            @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-            @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
-            @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
+                                @Html.ActionLink("訂單管理", "Index", "Orders", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.ShipNotice, "Index", "ShipNotices", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                                @Html.ActionLink(PMSAWebMVC.Resources.AppResource.InventoryManagementSupplier, "Index", "SupplierStocks", new { Area = "SupplierArea" }, new { @class = "dropdown-item" })
+                                @*<a class="dropdown-item" href="~/Views/SupplierShipments/Index.cshtml">庫存管理(供應商)</a>*@
                             @* </div>*@
 
                         }
@@ -201,6 +201,9 @@
                                 <a class="nav-link" href="@Url.Action("Index", "PurchaseRequisitions",new { Area=""})">
                                     <i class="fas fa-fw fa-table"></i>
                                     <span>請購單</span>
+                                    <span id="prSignAlertIcon" class="d-none" data-toggle="tooltip" title="您有尚未簽核的請購單">
+                                        <i class="fas fa-clipboard-check bg-transparent text-danger"></i>
+                                    </span>
                                 </a>
                             </li>
                         }
@@ -210,6 +213,9 @@
                                 <a class="nav-link" href="@Url.Action("Index", "PurchaseOrders",new { Area=""})">
                                     <i class="fas fa-fw fa-table"></i>
                                     <span>採購單</span>
+                                    <span id="poSignAlertIcon" class="d-none" data-toggle="tooltip" title="您有尚未簽核的採購單">
+                                        <i class="fas fa-clipboard-check bg-transparent text-danger"></i>
+                                    </span>
                                 </a>
                             </li>
                         }
@@ -262,14 +268,52 @@
     @Scripts.Render("~/bundles/js")
     @Scripts.Render("~/bundles/form")
     @Scripts.Render("~/bundles/DataTables")
-    @*@Scripts.Render("~/bundles/HighCharts")*@
+    @Scripts.Render("~/bundles/HighCharts")
     @*bubbleChart還是需要引用此CDN*@
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    @*<script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/highcharts-more.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>*@
     @*//////////////////////////////////////////*@
     @Scripts.Render("~/bundles/Slick")
     @RenderSection("scripts", required: false)
+
+    @if (User.IsInRole("Buyer") && User.IsInRole("Manager"))
+    {
+        <script>
+            $(document).ready(function () {
+                querySignAlert();
+            });
+            async function querySignAlert() {
+                while (true) {
+                    //查詢未簽核的內容
+                    await fetch('@Url.Action("GetSignAlert", "Home")')
+                        .then(datas => {
+                            return datas.json();
+                        }).then(result => {
+                            let spanAlert;
+                            result.datas.forEach(function (item) {
+                                switch (item.SignEvent) {
+                                    case "PO":
+                                        spanAlert = $("#poSignAlertIcon");
+                                        break;
+                                    case "PR":
+                                        spanAlert = $("#prSignAlertIcon");
+                                        break;
+                                    default:
+                                }
+                                if (item.Count > 0) {
+                                    spanAlert.removeClass("d-none").show();
+                                } else {
+                                    spanAlert.hide();
+                                }
+                            });
+                        });
+                    //暫停
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                }
+            }
+        </script>
+    }
 </body>
 </html>

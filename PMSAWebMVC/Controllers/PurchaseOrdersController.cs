@@ -262,11 +262,12 @@ namespace PMSAWebMVC.Controllers
             PurchaseRequisition pr = null;
             if (session.PRDItems == null || session.PRDItems.Count == 0)
             {
-                vm = rep.GetPRDtlTableViewModel(id);
+                //先設定請購單至Session
                 pr = rep.GetPurchaseRequisition(id);
-                //存入Session
-                session.PRDItems = vm;
                 session.PRItems.Add(pr);
+                //再設定請購明細
+                vm = rep.GetPRDtlTableViewModel(id);                
+                session.PRDItems = vm;                
             }
             else
             {

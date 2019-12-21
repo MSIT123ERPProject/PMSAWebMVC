@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Gantt JS v7.2.1 (2019-10-31)
+ * @license Highcharts Gantt JS v8.0.0 (2019-12-10)
  *
  * Tree Grid
  *
@@ -39,19 +39,15 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick;
+        var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick, wrap = U.wrap;
         var addEvent = H.addEvent, argsToArray = function (args) {
             return Array.prototype.slice.call(args, 1);
         }, dateFormat = H.dateFormat, isObject = function (x) {
             // Always use strict mode
             return U.isObject(x, true);
-        }, merge = H.merge, wrap = H.wrap, Chart = H.Chart, Axis = H.Axis, Tick = H.Tick;
+        }, merge = H.merge, Chart = H.Chart, Axis = H.Axis, Tick = H.Tick;
         var applyGridOptions = function applyGridOptions(axis) {
-            var options = axis.options, gridOptions = options && isObject(options.grid) ? options.grid : {}, 
-            // TODO: Consider using cell margins defined in % of font size?
-            // 25 is optimal height for default fontSize (11px)
-            // 25 / 11 ≈ 2.28
-            fontSizeToCellHeightRatio = 25 / 11, fontSize = options.labels.style.fontSize, fontMetrics = axis.chart.renderer.fontMetrics(fontSize);
+            var options = axis.options;
             // Center-align by default
             if (!options.labels) {
                 options.labels = {};
@@ -65,12 +61,6 @@
                an "extra" label would appear. */
             if (!axis.categories) {
                 options.showLastLabel = false;
-            }
-            // Make tick marks taller, creating cell walls of a grid. Use cellHeight
-            // axis option if set
-            if (axis.horiz) {
-                options.tickLength = gridOptions.cellHeight ||
-                    fontMetrics.h * fontSizeToCellHeightRatio;
             }
             // Prevents rotation of labels when squished, as rotating them would not
             // help.
@@ -119,8 +109,10 @@
          */
         /**
          * Set cell height for grid axis labels. By default this is calculated from font
-         * size.
+         * size. This option only applies to horizontal axes.
          *
+         * @sample gantt/grid-axis/cellheight
+         *         Gant chart with custom cell height
          * @type      {number}
          * @apioption xAxis.grid.cellHeight
          */
@@ -302,13 +294,13 @@
         // Draw vertical axis ticks extra long to create cell floors and roofs.
         // Overrides the tickLength for vertical axes.
         addEvent(Axis, 'afterTickSize', function (e) {
-            var axis = this, dimensions = axis.maxLabelDimensions, options = axis.options, gridOptions = (options && isObject(options.grid)) ? options.grid : {}, labelPadding, distance;
-            if (gridOptions.enabled === true) {
-                labelPadding =
-                    (Math.abs(axis.defaultLeftAxisOptions.labels.x) * 2);
-                distance = labelPadding + (axis.horiz ?
-                    dimensions.height :
-                    dimensions.width);
+            var _a = this, defaultLeftAxisOptions = _a.defaultLeftAxisOptions, horiz = _a.horiz, _b = _a.options.grid, gridOptions = _b === void 0 ? {} : _b;
+            var dimensions = this.maxLabelDimensions;
+            if (gridOptions.enabled) {
+                var labelPadding = (Math.abs(defaultLeftAxisOptions.labels.x) * 2);
+                var distance = horiz ?
+                    gridOptions.cellHeight || labelPadding + dimensions.height :
+                    labelPadding + dimensions.width;
                 if (isArray(e.tickSize)) {
                     e.tickSize[0] = distance;
                 }
@@ -457,15 +449,17 @@
                                         break;
                                     }
                                 }
-                                // Spanning multiple years, go default
-                                if (!units[unitIdx][1]) {
-                                    return;
-                                }
                                 // Get the first allowed count on the next unit.
                                 if (units[unitIdx + 1]) {
                                     unitName = units[unitIdx + 1][0];
                                     count =
                                         (units[unitIdx + 1][1] || [1])[0];
+                                    // In case the base X axis shows years, make the
+                                    // secondary axis show ten times the years (#11427)
+                                }
+                                else if (parentInfo.unitName === 'year') {
+                                    unitName = 'year';
+                                    count = parentInfo.count * 10;
                                 }
                                 unitRange = H.timeUnits[unitName];
                                 this.tickInterval = unitRange * count;
@@ -773,7 +767,7 @@
          * @function Highcharts.Tree#getListOfParents
          *
          * @param {Array<*>} data
-         *        List of points set in options. `Array<*>.parent`is parent id of point.
+         *        List of points set in options. `Array.parent` is parent id of point.
          *
          * @param {Array<string>} ids
          *        List of all point ids.
@@ -784,7 +778,7 @@
         var getListOfParents = function (data, ids) {
             var listOfParents = data.reduce(function (prev, curr) {
                 var parent = pick(curr.parent, '');
-                if (prev[parent] === undefined) {
+                if (typeof prev[parent] === 'undefined') {
                     prev[parent] = [];
                 }
                 prev[parent].push(curr);
@@ -1198,6 +1192,10 @@
             axis.isBroken = isBroken;
             axis.options.breaks = axis.userOptions.breaks = breaks;
             axis.forceRedraw = true; // Force recalculation in setScale
+            // Recalculate series related to the axis.
+            axis.series.forEach(function (series) {
+                series.isDirty = true;
+            });
             if (!isBroken && axis.val2lin === breakVal2Lin) {
                 // Revert to prototype functions
                 delete axis.val2lin;
@@ -1319,21 +1317,23 @@
             }
         };
         addEvent(Series, 'afterGeneratePoints', function () {
-            var series = this, xAxis = series.xAxis, yAxis = series.yAxis, points = series.points, point, i = points.length, connectNulls = series.options.connectNulls, nullGap;
-            if (xAxis && yAxis && (xAxis.options.breaks || yAxis.options.breaks)) {
+            var _a = this, isDirty = _a.isDirty, connectNulls = _a.options.connectNulls, points = _a.points, xAxis = _a.xAxis, yAxis = _a.yAxis;
+            /* Set, or reset visibility of the points. Axis.setBreaks marks the series
+            as isDirty */
+            if (isDirty) {
+                var i = points.length;
                 while (i--) {
-                    point = points[i];
+                    var point = points[i];
                     // Respect nulls inside the break (#4275)
-                    nullGap = point.y === null && connectNulls === false;
-                    if (!nullGap &&
-                        (xAxis.isInAnyBreak(point.x, true) ||
-                            yAxis.isInAnyBreak(point.y, true))) {
-                        points.splice(i, 1);
-                        if (this.data[i]) {
-                            // Removes the graphics for this point if they exist
-                            this.data[i].destroyElements();
-                        }
-                    }
+                    var nullGap = point.y === null && connectNulls === false;
+                    var isPointInBreak = (!nullGap &&
+                        (xAxis && xAxis.isInAnyBreak(point.x, true) ||
+                            yAxis && yAxis.isInAnyBreak(point.y, true)));
+                    // Set point.visible if in any break.
+                    // If not in break, reset visible to original value.
+                    point.visible = isPointInBreak ?
+                        false :
+                        point.options.visible !== false;
                 }
             }
         });
@@ -1389,7 +1389,7 @@
          *         Gapped path
          */
         H.Series.prototype.gappedPath = function () {
-            var currentDataGrouping = this.currentDataGrouping, groupingSize = currentDataGrouping && currentDataGrouping.gapSize, gapSize = this.options.gapSize, points = this.points.slice(), i = points.length - 1, yAxis = this.yAxis, xRange, stack;
+            var currentDataGrouping = this.currentDataGrouping, groupingSize = currentDataGrouping && currentDataGrouping.gapSize, gapSize = this.options.gapSize, points = this.points.slice(), i = points.length - 1, yAxis = this.yAxis, stack;
             /**
              * Defines when to display a gap in the graph, together with the
              * [gapUnit](plotOptions.series.gapUnit) option.
@@ -1454,9 +1454,19 @@
                     gapSize = groupingSize;
                 }
                 // extension for ordinal breaks
+                var current = void 0, next = void 0;
                 while (i--) {
-                    if (points[i + 1].x - points[i].x > gapSize) {
-                        xRange = (points[i].x + points[i + 1].x) / 2;
+                    // Reassign next if it is not visible
+                    if (!(next && next.visible !== false)) {
+                        next = points[i + 1];
+                    }
+                    current = points[i];
+                    // Skip iteration if one of the points is not visible
+                    if (next.visible === false || current.visible === false) {
+                        continue;
+                    }
+                    if (next.x - current.x > gapSize) {
+                        var xRange = (current.x + next.x) / 2;
                         points.splice(// insert after this one
                         i + 1, 0, {
                             isNull: true,
@@ -1470,6 +1480,8 @@
                             stack.total = 0;
                         }
                     }
+                    // Assign current to next for the upcoming iteration
+                    next = current;
                 }
             }
             // Call base method
@@ -1489,7 +1501,7 @@
          *
          * */
         /* eslint no-console: 0 */
-        var defined = U.defined, extend = U.extend, isNumber = U.isNumber, isString = U.isString, pick = U.pick;
+        var defined = U.defined, extend = U.extend, isNumber = U.isNumber, isString = U.isString, pick = U.pick, wrap = U.wrap;
         var addEvent = H.addEvent, argsToArray = function (args) {
             return Array.prototype.slice.call(args, 1);
         }, find = H.find, fireEvent = H.fireEvent, getLevelOptions = mixinTreeSeries.getLevelOptions, merge = H.merge, isBoolean = function (x) {
@@ -1497,7 +1509,7 @@
         }, isObject = function (x) {
             // Always use strict mode.
             return U.isObject(x, true);
-        }, wrap = H.wrap, GridAxis = H.Axis, GridAxisTick = H.Tick;
+        }, GridAxis = H.Axis, GridAxisTick = H.Tick;
         var override = function (obj, methods) {
             var method, func;
             for (method in methods) {
@@ -1959,7 +1971,7 @@
                                     *
                                     * @private
                                     */
-                                    level: undefined
+                                    level: void 0
                                 }, {
                                     level: 1,
                                     /**
@@ -2006,7 +2018,7 @@
                         reversed: true,
                         // grid.columns is not supported in treegrid
                         grid: {
-                            columns: undefined
+                            columns: void 0
                         }
                     });
                 }
@@ -2061,7 +2073,7 @@
                     }
                     if (!tick) {
                         ticks[pos] = tick =
-                            new GridAxisTick(axis, pos, null, undefined, {
+                            new GridAxisTick(axis, pos, null, void 0, {
                                 category: gridNode.name,
                                 tickmarkOffset: gridNode.tickmarkOffset,
                                 options: options

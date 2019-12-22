@@ -199,8 +199,11 @@
                     }
                 },
                 credits: {
-                    enable: false
-                }
+                    enabled: false
+                },
+                exporting: {
+                    enabled: false
+                },
             });
             ////////////////////////////////////
         //庫存不足料件圖 column chart
@@ -269,6 +272,12 @@
                             borderWidth: 0
                         }
                     },
+                    credits: {
+                        enabled: false
+                    },
+                    exporting: {
+                        enabled: false
+                    },
                     //legend: {
                     //    layout: 'vertical',
                     //    align: 'right',
@@ -332,6 +341,12 @@
                             },
 
                         },
+                        credits: {
+                            enabled: false
+                        },
+                        exporting: {
+                            enabled: false
+                        },
                     });
                     chart.addSeries({
                         type: 'pie',
@@ -382,7 +397,13 @@
                             }
                         }
                     },
-                    series: datas
+                    series: datas,
+                    credits: {
+                        enabled: false
+                    },
+                    exporting: {
+                        enabled: false
+                    },
                 });
             });
             }

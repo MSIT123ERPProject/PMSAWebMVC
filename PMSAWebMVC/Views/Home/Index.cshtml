@@ -27,6 +27,9 @@
         }
     </style>
 }
+    <script>
+        document.body.style.backgroundColor = "white";
+    </script>
 @if (User.IsInRole("Admin"))
 {
     <h1 class="text-primary mt-4">系統管理員，您好。</h1>
@@ -401,22 +404,22 @@
         <h1 class="text-light">報表</h1>
         <p class="lead text-light">提供各項統計資訊。</p>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-12">
-            <h2><i class="fas fa-search-dollar"></i>每月採購金額</h2>
-            <div class="card" id="monthsum"></div>
+            @*<h2><i class="fas fa-search-dollar"></i>每月採購金額</h2>*@
+            <div class="card hichart shadow-none border-0 border-left-3" id="monthsum"></div>
         </div>
-        <div class="col-12 mt-3 hichart">
-            <h2><i class="fas fa-fw fa-table"></i>已採購未進貨表單</h2>
-            <div class="card" id="pco"></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            @*<h2><i class="fas fa-fw fa-table"></i>已採購未進貨表單</h2>*@
+            <div class="card hichart shadow-none border-0 border-left-3" id="pco"></div>
         </div>
 
-        
-            <div class="col-12 mt-3 ">
-                <h2><i class="fas fa-fw fa-table"></i>進貨單處於簽核中</h2>
-                <div class="card" id="sss"></div>
-            </div>
-        
+        @*<div class="col-6 mt-3 ">
+            <h2><i class="fas fa-fw fa-table"></i>進貨單處於簽核中</h2>
+            <div class="card hichart shadow-none border-0 border-left-3" id="sss"></div>
+        </div>*@
     </div>
     @*<hr />
         <div class="row">
@@ -939,19 +942,22 @@
         <h1 class="text-light">報表</h1>
         <p class="lead text-light">提供各項統計資訊。</p>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-12">
-            <h2><i class="fas fa-laptop"></i>最新十筆入庫明細</h2>
-            <div class="card" id="tenstk"></div>
+            @*<h2><i class="fas fa-laptop"></i>最新十筆入庫明細</h2>*@
+            <div class="card hichart shadow-none border-0 border-left-3" id="tenstk"></div>
         </div>
-        <div class="col-12 mt-3 hichart">
-            <h2><i class="fas fa-fw fa-table"></i>入庫但有缺件</h2>
-            <div class="card" id="pord"></div>
+        
+    </div>
+    <div class="row border-bottom border-bottom-dashed pt-3">
+        <div class="col-sm-12 col-md-6 col-12">
+            @*<h2><i class="fas fa-fw fa-table"></i>入庫但有缺件</h2>*@
+            <div class="card hichart shadow-none border-0 border-left-3" id="pord"></div>
         </div>
-  
-        <div class="col-12 mt-3 ">
-            <h2><i class="fas fa-fw fa-table"></i>查詢即將到期商品</h2>
-            <div class="card" id="sindtl"></div>
+
+        <div class="col-sm-12 col-md-6 col-12">
+            @*<h2><i class="fas fa-fw fa-table"></i>查詢即將到期商品</h2>*@
+            <div class="card hichart shadow-none border-0 border-left-3" id="sindtl"></div>
         </div>
     </div>
     @section scripts{
@@ -1147,52 +1153,6 @@
             }
 
             function GetSInDtl() {
-                @*$.getJSON('@Url.Action("GetSInDtl", "WSReports")', function (data) {
-                    var Names = [];
-                    var os = [];
-                    for (var i = 0; i < data.length; i++) {
-                        Names.push(data[i].name);
-                        os.push(data[i].y);
-                    }
-
-                    Highcharts.chart('sindtl', {
-                        chart: {
-                            type: 'column'
-                        },
-                        title: {
-                            text: '即將到期品'
-                        },
-                        xAxis: {
-                            categories: Names,
-                            crosshair: true
-                        },
-                        yAxis: {
-                            min: 0,
-                            title: {
-                                text: '數量'
-                            }
-                        },
-                        tooltip: {
-                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                                '<td style="padding:0"><b>{point.y:.f}</b></td></tr>',
-                            footerFormat: '</table>',
-                            shared: true,
-                            useHTML: true
-                        },
-                        plotOptions: {
-                            column: {
-                                pointPadding: 0.2,
-                                borderWidth: 0
-                            }
-                        },
-                        series: [{
-                            name: '庫存',
-                            data: os
-                        }]
-                    });
-                });*@
-
                 //泡沫
                 $.getJSON('@Url.Action("GetSInDtl", "WSReports")', function (datas) {
 
@@ -1200,7 +1160,7 @@
                     Highcharts.chart('sindtl', {
                         chart: {
                             type: 'packedbubble',
-                            height: '100%'
+                            //height: '100%'
                         },
                         title: {
                             text: '即將到期品'

@@ -700,18 +700,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_POChanged_PurchaseOrderDtl">
-          <End Role="PurchaseOrderDtl" Type="Self.PurchaseOrderDtl" Multiplicity="0..1" />
-          <End Role="POChanged" Type="Self.POChanged" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PurchaseOrderDtl">
-              <PropertyRef Name="PurchaseOrderDtlCode" />
-            </Principal>
-            <Dependent Role="POChanged">
-              <PropertyRef Name="PurchaseOrderDtlCode" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductPart_Part">
           <End Role="Part" Type="Self.Part" Multiplicity="1" />
           <End Role="ProductPart" Type="Self.ProductPart" Multiplicity="*" />
@@ -733,30 +721,6 @@
             </Principal>
             <Dependent Role="ProductPart">
               <PropertyRef Name="ProductNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PRPORelation_PurchaseOrder">
-          <End Role="PurchaseOrder" Type="Self.PurchaseOrder" Multiplicity="1" />
-          <End Role="PRPORelation" Type="Self.PRPORelation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PurchaseOrder">
-              <PropertyRef Name="PurchaseOrderID" />
-            </Principal>
-            <Dependent Role="PRPORelation">
-              <PropertyRef Name="PurchaseOrderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PRPORelation_PurchaseOrderDtl">
-          <End Role="PurchaseOrderDtl" Type="Self.PurchaseOrderDtl" Multiplicity="1" />
-          <End Role="PRPORelation" Type="Self.PRPORelation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PurchaseOrderDtl">
-              <PropertyRef Name="PurchaseOrderDtlCode" />
-            </Principal>
-            <Dependent Role="PRPORelation">
-              <PropertyRef Name="PurchaseOrderDtlCode" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -877,18 +841,6 @@
             </Principal>
             <Dependent Role="PurchaseOrderDtl">
               <PropertyRef Name="PartNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PurchaseOrderDtl_POChanged">
-          <End Role="POChanged" Type="Self.POChanged" Multiplicity="0..1" />
-          <End Role="PurchaseOrderDtl" Type="Self.PurchaseOrderDtl" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="POChanged">
-              <PropertyRef Name="POChangedOID" />
-            </Principal>
-            <Dependent Role="PurchaseOrderDtl">
-              <PropertyRef Name="POChangedOID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1659,10 +1611,6 @@
             <End Role="POChangedCategory" EntitySet="POChangedCategory" />
             <End Role="POChanged" EntitySet="POChanged" />
           </AssociationSet>
-          <AssociationSet Name="FK_POChanged_PurchaseOrderDtl" Association="Self.FK_POChanged_PurchaseOrderDtl">
-            <End Role="PurchaseOrderDtl" EntitySet="PurchaseOrderDtl" />
-            <End Role="POChanged" EntitySet="POChanged" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProductPart_Part" Association="Self.FK_ProductPart_Part">
             <End Role="Part" EntitySet="Part" />
             <End Role="ProductPart" EntitySet="ProductPart" />
@@ -1670,14 +1618,6 @@
           <AssociationSet Name="FK_ProductPart_Product" Association="Self.FK_ProductPart_Product">
             <End Role="Product" EntitySet="Product" />
             <End Role="ProductPart" EntitySet="ProductPart" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PRPORelation_PurchaseOrder" Association="Self.FK_PRPORelation_PurchaseOrder">
-            <End Role="PurchaseOrder" EntitySet="PurchaseOrder" />
-            <End Role="PRPORelation" EntitySet="PRPORelation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PRPORelation_PurchaseOrderDtl" Association="Self.FK_PRPORelation_PurchaseOrderDtl">
-            <End Role="PurchaseOrderDtl" EntitySet="PurchaseOrderDtl" />
-            <End Role="PRPORelation" EntitySet="PRPORelation" />
           </AssociationSet>
           <AssociationSet Name="FK_PRPORelation_PurchaseRequisition" Association="Self.FK_PRPORelation_PurchaseRequisition">
             <End Role="PurchaseRequisition" EntitySet="PurchaseRequisition" />
@@ -1717,10 +1657,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_PurchaseOrderDtl_Part" Association="Self.FK_PurchaseOrderDtl_Part">
             <End Role="Part" EntitySet="Part" />
-            <End Role="PurchaseOrderDtl" EntitySet="PurchaseOrderDtl" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PurchaseOrderDtl_POChanged" Association="Self.FK_PurchaseOrderDtl_POChanged">
-            <End Role="POChanged" EntitySet="POChanged" />
             <End Role="PurchaseOrderDtl" EntitySet="PurchaseOrderDtl" />
           </AssociationSet>
           <AssociationSet Name="FK_PurchaseOrderDtl_PurchaseOrder" Association="Self.FK_PurchaseOrderDtl_PurchaseOrder">

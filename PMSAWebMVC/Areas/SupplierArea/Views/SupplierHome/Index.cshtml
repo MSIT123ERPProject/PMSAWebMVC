@@ -223,9 +223,16 @@
                 var chart2 = new Highcharts.chart({
                     title: {
                         useHTML: true,
-                        text: '目前庫存量' ,
+                        text: '目前料件庫存量' ,
                     },
-                    subtitle: { text: '料件' },
+                    subtitle: {
+                        text: '料件編號',
+                        style: {
+                            fontWeight: 'bold',
+                            fontFamily: "微軟正黑體",
+                            fontSize: "18px"
+                        },
+                    },
                     chart: {
                         renderTo: 'container2',
                         type: 'column',
@@ -245,8 +252,8 @@
                     yAxis: {
                         min: 0,
                         title: {
-                            text: '庫存',
-                            align:'high'
+                            text: '庫存量',
+                            align:'middle'
                         },
                         labels: {
                             overflow:'justify'

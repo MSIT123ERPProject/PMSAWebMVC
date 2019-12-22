@@ -208,6 +208,7 @@
                             <button id="btnSave" name="btnSave" type="button" class="btn btn-primary">新增</button>
                             <button id="btnUpdate" name="btnUpdate" type="button" class="btn btn-success">修改</button>
                             <button id="btnDEMO" name="btnDEMO" type="button" class="btn btn-success">DEMO</button>
+                            <button id="btnDEMO2" name="btnDEMO2" type="button" class="btn btn-success">DEMO2</button>
                         </div>
 
                     </form>
@@ -260,6 +261,7 @@
                 $('*[name="dta"]').attr('disabled', true);
                 $('#btnSave').hide();
                 $('#btnDEMO').hide();
+                $('#btnDEMO2').hide();
                 $('#btnUpdate').hide();
                 $("#PartUnitName1").hide();
                 $('#CategoryName1').hide();
@@ -299,6 +301,7 @@
               $('#CategoryName1').show();
               $('#btnSave').show();
               $('#btnDEMO').show();
+              $('#btnDEMO2').show();
               $("#partImg2Div").show();
               $("#PartUnitName1").show();
               $("#CreatedDateDiv").hide();
@@ -316,6 +319,16 @@
             $("#PartSpec").val("22.1MM");
             $("#PartUnitName2").val(3);
             $("#QtyPerUnit").val(40);
+            $("#CategoryName2").val(5);
+        }); 
+        //DEMO2
+        $("#btnDEMO2").click(function () 
+        {
+            $("#PartNumber").val("ART526");
+            $("#PartName").val("越野坐墊");
+            $("#PartSpec").val("250x215x23MM");
+            $("#PartUnitName2").val(3);
+            $("#QtyPerUnit").val(30);
             $("#CategoryName2").val(5);
 
         }); 
@@ -416,6 +429,7 @@
                 $("#partImg2Div").show();
                 $("#PartUnitName1").show();
                 $('#btnDEMO').hide();
+                $('#btnDEMO2').hide();
                 $("#CreatedDateDiv").hide();
                 $("#partImg1").hide();
                 $('#PartUnitName').hide();

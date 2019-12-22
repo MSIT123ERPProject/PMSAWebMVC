@@ -215,9 +215,8 @@ namespace PMSAWebMVC.Controllers
                 return HttpNotFound();
             }
             db.Part.Remove(part);
-          var PartCategoryDtlOID = db.PartCategoryDtl.Where(x=>x.PartNumber==id).SingleOrDefault();
+            var PartCategoryDtlOID = db.PartCategoryDtl.Where(x=>x.PartNumber==id).SingleOrDefault();
             db.PartCategoryDtl.Remove(PartCategoryDtlOID);
-
             db.SaveChanges();
             string partname = $"{ part.PartNumber }-{ part.PartName}.jpg";
             string path = Path.Combine(Server.MapPath("~/assets/parts/"), partname);

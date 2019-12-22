@@ -6,247 +6,594 @@
 }
 @section styles
 {
-<style>
-    div 
-    {
-        margin:0;
-        padding:0;
-    }
-    .row 
-    {
-        margin: auto;
-        width: 80vw;
-        height: 70vh;
-        padding-bottom:20px;
-    }
-    h3
-    {
-        margin:5px;
-        padding:5px;
+    <style>
+        .jumbotron {
+            margin: 10px;
+            padding: 5px;
+            background-color: white;
+        }
 
-    }
-    p 
-    {
-        font-size:large;
-        margin: 5px;
-        padding: 5px;
-    }
-    .productImg1 
-    {
-        width: 95%;
-        height:80%;
-        border: solid 1px #666;
-        padding: 8px;
-        margin: 8px;
-        background-color: #fff;
-        
-    }
-    .productImg2 
-    {
-        width: 95%;
-        height: 90%;
-        border: solid 1px #666;
-        padding: 10px;
-        margin: 10px;
-        background-color: #fff;
-    }
-    .col-sm-6
-    {
-        border: solid 1px #666;
-        padding: 10px;
-    }   
-    .categorytitle 
-    {
-        font-size: 30px;
-    }
-    #categoryImg
-    {
-        width:312px;
-        height:212px;
-    }
-    .icon
-    {
-        width: 20px;
-        height: 20px;
-    }
+        .PPF.jumbotron {
+            /*background-image: Url("../../images/BikeMaterial/Bike_head.jpg");
+            background-size: cover;*/
+        }
 
-    .PP 
-    {
-        border: 1px solid black;
-        text-align: center;
-    }
+        .col-md-5 {
+            margin-left: 4.5vw;
+            padding-left: 0;
+            margin-bottom: 2vw;
+        }
 
-    .qq
-    {
-        width: 500px;
-    }
-
-    .modal-title
-    {
-        font-size: x-large;
-        font-weight: bold;
-    }
+        .row {
+            margin: 10px;
+            padding: 10px;
+            background-color: white;
+        }
 
 
-    h4 
-    {
-        font-weight: bold;
-    }
-    #pt1 
-    {
-        width: 200%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        border: 1px solid black;
-    }
-   
-   
+        .carousel-item active {
+            max-width: 100%;
+            height: 0;
+            overflow: hidden;
+            padding-bottom: 50%;
+            background-color: #ff0000;
+        }
 
-</style>
+        .carousel-item {
+            max-width: 100%;
+            height: 0;
+            overflow: hidden;
+            padding-bottom: 50%;
+            background-color: #ff0000;
+        }
+
+        .Biking {
+            /*height: 600px;*/
+            /*width: 1800px;*/
+            width: 100%;
+        }
+
+        .carousel-caption d-none d-md-block {
+            max-width: 100%;
+            height: 0;
+            overflow: hidden;
+            padding-bottom: 50%;
+            background-color: #ff0000;
+        }
+
+        .ProductNumber {
+            background-color: #27a2fc;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .PPFBG {
+            background-color: #27a2fc;
+            /*height: 500px;*/
+            /*min-height: 320px;*/
+        }
+
+        .PTB {
+            width: 40%;
+            /*height: 500px;*/
+            max-width: 100%;
+            /*min-height: 320px;*/
+            /*border: 1px solid black;*/
+        }
+
+        .PT.img-thumbnail {
+            width: 100%;
+            /*height: 500px;*/
+            /*min-height: 320px;*/
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        .PT1 {
+            margin-top: 50px;
+            box-shadow: 0 0 3px 1px rgba(51, 51, 51, 0.5);
+            transition: 0.3s;
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            /*padding-bottom: 40%;*/
+            overflow: hidden;
+        }
+
+            .PT1:hover {
+                margin-top: 40px;
+                margin-bottom: 0px;
+                box-shadow: 0 3px 15px 3px rgba(51, 51, 51, 0.5);
+            }
+
+        .pt1-tip {
+            position: absolute;
+            bottom: 0;
+            background: #333;
+            color: #fff;
+            opacity: 0.6;
+            display: none;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: large;
+        }
+
+        .PT1:hover .pt1-tip {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .ProductNumber {
+            margin: 0px;
+            padding: 0px;
+            color: white;
+            border: 1.5px solid black;
+        }
+
+        .img-thumbnail {
+            background-color: black;
+            border: solid 1px black;
+            /*background-image: Url("../../images/BikeMaterial/Bike_head.jpg");
+            background-size: cover;*/
+        }
+
+
+
+        /*通用STYLE*/
+        h1 {
+            background-color: #27a2fc;
+            margin: 0px;
+            font-weight: bold;
+            color: white;
+        }
+
+        h3 {
+            margin: 5px;
+            padding: 5px;
+        }
+
+        h4 {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        h5 {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        dt {
+            text-align: center;
+        }
+
+        dd {
+            text-align: center;
+        }
+
+        p {
+            width: 100%;
+            font-size: large;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .productImg {
+            width: 100%;
+            border: solid 2px #666;
+            background-color: #fff;
+        }
+
+        /*Model用STYLE*/
+
+        .productImg2 {
+            width: 95%;
+            height: 90%;
+            border: solid 1px #666;
+            padding: 10px;
+            margin: 10px;
+            background-color: #fff;
+        }
+
+
+        .categorytitle {
+            font-size: 30px;
+            color: white;
+        }
+
+        #ctcimg {
+            margin: 20px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #ctcimgleft {
+            margin: 20px;
+            width: 50px;
+            height: 50px;
+        }
+
+        #ctcimgright {
+            margin: 20px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .PartImg {
+            margin-left: 16px;
+            width: 280px;
+            height: 250px;
+            border: 2px solid black;
+        }
+
+        #categoryImg {
+            width: 312px;
+            overflow: hidden;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-body {
+            border: 3px solid black;
+            border-radius: 2px;
+        }
+
+        .modal-header {
+            background-color: #27a2fc;
+            border: 3px solid black;
+            border-radius: 2px;
+        }
+
+        .modal-title {
+            font-size: x-large;
+            font-weight: bold;
+            margin-left: 160px;
+            color: white;
+        }
+
+        .div3 {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #category1 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #category2 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #category3 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #category4 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #category5 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #category1.row {
+            background-color: transparent;
+            box-sizing: border-box;
+            margin: 0px;
+            border: 10px white solid;
+            box-shadow: 0 3px 15px 3px rgba(51, 51, 51, 0.5);
+            border: 2px solid black;
+        }
+
+
+        #category2.row {
+            background-color: transparent;
+            box-sizing: border-box;
+            margin: 0px;
+            border: 10px white solid;
+            box-shadow: 0 3px 15px 3px rgba(51, 51, 51, 0.5);
+            border: 2px solid black;
+        }
+
+        #category3.row {
+            background-color: transparent;
+            box-sizing: border-box;
+            margin: 0px;
+            border: 10px white solid;
+            box-shadow: 0 3px 15px 3px rgba(51, 51, 51, 0.5);
+            border: 2px solid black;
+        }
+
+        #category4.row {
+            background-color: transparent;
+            box-sizing: border-box;
+            margin: 0px;
+            border: 10px white solid;
+            box-shadow: 0 3px 15px 3px rgba(51, 51, 51, 0.5);
+            border: 2px solid black;
+        }
+
+        #category5.row {
+            background-color: transparent;
+            box-sizing: border-box;
+            margin: 0px;
+            border: 10px white solid;
+            box-shadow: 0 3px 15px 3px rgba(51, 51, 51, 0.5);
+            border: 2px solid black;
+        }
+
+        .xx {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .categorytitle {
+            margin: 0px;
+            padding: 0px;
+            background-color: #27a2fc;
+            text-align: center;
+            border: 2px solid black;
+        }
+
+        .PartTitle {
+            text-align: center;
+            width: 280px;
+            height: 60px;
+            border: 2px solid black;
+            background-color: #27a2fc;
+            font-size: large;
+            font-weight: bold;
+            color: white;
+        }
+
+        #Categoryname {
+            width: 140px;
+            text-align: center;
+            background-color: gold;
+            border: 1.5px solid black;
+            font-size: x-large;
+            font-weight: bold;
+        }
+
+        .productName {
+            margin: 0px;
+            padding: 0px;
+            font-size: large;
+            color: white;
+            font-size: large;
+            font-weight: bold;
+            font-family: Microsoft JhengHei;
+            background-color: white;
+            color: black;
+            border: 1.5px solid black;
+        }
+    </style>
 }
 @section scripts
 {
-<script>
-    function ChangeImgAndDivShow1() {
-        var divObj = document.getElementsByName("category1")
-        var imgObj = document.getElementsByName("icon1")
-       
-
-        for (var i = 0; i < divObj.length; i++)
+    <script>
+    function Open()
+    {
+        var div3 = $(`div[name='div3']`);
+        if (div3.hasClass("d-none"))
         {
-            if (divObj[i].style.display == "none")
-            {
-                divObj[i].style.display = "block";
-                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
-            }
-            else
-            {
-                divObj[i].style.display = "none";
-                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
-            }
+
+            div3.removeClass("d-none");
+
         }
-       
+        else
+        {
 
-    }
-    function ChangeImgAndDivShow2() {
-
-        var divObj = document.getElementsByName("category2")
-        var imgObj = document.getElementsByName("icon2")
-
-
-        for (var i = 0; i < divObj.length; i++) {
-            if (divObj[i].style.display == "none")
-            {
-                divObj[i].style.display = "block";
-                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
-            }
-            else {
-                divObj[i].style.display = "none";
-                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
-            }
+            div3.addClass("d-none");
         }
-
-
     }
-    function ChangeImgAndDivShow3() {
-        var divObj = document.getElementsByName("category3")
-        var imgObj = document.getElementsByName("icon3")
+    var x = `@Url.Content("~/images/BikeMaterial/BikeIcon/")`;
+    var PicIDindex =1;
+    function left()
+    {
+        PicIDindex--
 
+        if (PicIDindex < 1)
+        {
+            PicIDindex = 5;
 
-        for (var i = 0; i < divObj.length; i++) {
-            if (divObj[i].style.display == "none") {
-                divObj[i].style.display = "block";
-                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
-            }
-            else {
-                divObj[i].style.display = "none";
-                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
-            }
         }
+        var imgObj = document.getElementsByName("ctcimg");
+        var divObj = $(`div[name='category${PicIDindex + 1}']`);
+        var divObj2 = $(`div[name='category${PicIDindex}']`);
+        var divObj3 = $(`div[name='category${PicIDindex - 4}']`);
+        if (imgObj.length > 0)
+        {
+            imgObj.forEach
+            (
+                function (currentValue, currentIndex, listObj)
+                {
+                    currentValue.src = x + PicIDindex + ".png";
+                }
+            );
+        }
+        var xxx = $(".con1").src = x + PicIDindex + ".png";
+        if (divObj.hasClass("d-none"))
+        {
 
-    }
-    function ChangeImgAndDivShow4() {
-        var divObj = document.getElementsByName("category4")
-        var imgObj = document.getElementsByName("icon4")
-
-
-        for (var i = 0; i < divObj.length; i++) {
-            if (divObj[i].style.display == "none") {
-                divObj[i].style.display = "block";
-                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
-            }
-            else {
-                divObj[i].style.display = "none";
-                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
-            }
+            divObj.removeClass("d-none");
+            divObj3.addClass("d-none");
+        }
+        else
+        {
+            divObj.addClass("d-none");
+            divObj2.removeClass("d-none");
+            divObj3.addClass("d-none");
         }
 
 
     }
-    function ChangeImgAndDivShow5() {
-        var divObj = document.getElementsByName("category5")
-        var imgObj = document.getElementsByName("icon5")
+    function right()
+    {
+        PicIDindex++
 
+        if (PicIDindex > 5)
+        {
+            PicIDindex = 1;
+        }
+        var imgObj = document.getElementsByName("ctcimg");
+        var divObj = $(`div[name='category${PicIDindex - 1}']`);
+        var divObj2 = $(`div[name='category${PicIDindex}']`);
+        var divObj3 = $(`div[name='category${PicIDindex + 4}']`);
+        document.getElementsByName("picname").innerHTML = `${PicIDindexName[PicIDindex - 1]}`;
+        var d = $("img[name = 'ctcimg']").src = x + PicIDindex + ".png";
+        if (imgObj.length > 0)
+        {
+            imgObj.forEach
+            (
+                function (currentValue, currentIndex, listObj)
+                {
+                    currentValue.src = x + PicIDindex + ".png";
+                }
+            );
+        }
+        if (divObj.hasClass("d-none"))
+        {
 
-        for (var i = 0; i < divObj.length; i++) {
-            if (divObj[i].style.display == "none") {
-                divObj[i].style.display = "block";
-                imgObj[i].src =`@Url.Content("~/images/negative.png")`;
-            }
-            else {
-                divObj[i].style.display = "none";
-                imgObj[i].src =`@Url.Content("~/images/plus.png")`;
-            }
+            divObj.removeClass("d-none");
+            divObj3.addClass("d-none");
+        }
+        else
+        {
+            divObj.addClass("d-none");
+            divObj2.removeClass("d-none");
+            divObj3.addClass("d-none");
         }
 
+        }
 
-    }
-</script>
+    </script>
 }
-<h2>陸行鳥自行車</h2>
 
 <div class="jumbotron">
-    <h2>產品總覽</h2>
-    <h6><span></span></h6>
+    <h1>陸行鳥自行車產品總覽</h1>
+</div>
+<div class="jumbotron">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="Biking" src="/images/BikeMaterial/BeachBiking_1280x853.jpg" alt="First slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>厭倦每天</h5>
+                    <h5>忙碌卻單調的生活</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="Biking" src="/images/BikeMaterial/BeachBiking2_1280x854.jpg" alt="Second slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>想改變的念頭</h5>
+                    <h5>從踩下踏板開始</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="Biking" src="/images/BikeMaterial/WomanBikingWithDog_1280x749.jpg" alt="Third slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>做自己生活的主宰</h5>
+                    <h5>追尋自己心靈的渴望</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="Biking" src="/images/BikeMaterial/biking_1280x853.jpg" alt="Fourth slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>陸行鳥自行車</h5>
+                    <h5>是您最好的夥伴</h5>
+                </div>
+            </div>
+            <div class="pt1-tip"></div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
 </div>
 <div class="row">
+    @*<div class="PPF jumbotron">*@
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        var modalId = "modal-" + i;
+
+
+    }
+
     @foreach (var product in Model)
     {
         var modalId = "modal-" + product.ProductOID;
-
-        <div class="col-sm-6">
-            <div id="pt1" class="img-thumbnail">
-                <h3>產品編號:@product.ProductNumber</h3>
-                <div class="galary">
-                    <img class="productImg1" src="@Url.Content(product.PictureAdress)" alt="產品圖片" />
-                </div>
-                <div class="caption">
-                    <p>產品名稱:@product.ProductName</p>
-                    <p class=" deti">
-                        <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#@modalId" >詳細資訊</a>
-                    </p>
+        <div class="col-md-5 col-sm-12">
+            <div class="PT img-thumbnail">
+                <div class="PPFBG">
+                    <div class="ProductNumber">
+                        <h3>產品編號:@product.ProductNumber</h3>
+                    </div>
+                    <div class="caption">
+                        <p class="productName">產品名稱:@product.ProductName</p>
+                    </div>
+                    <div class="PT1">
+                        <img class="productImg" src="@Url.Content(product.PictureAdress)" alt="商品圖片" role="button" data-toggle="modal" data-target="#@modalId" />
+                        <div class="pt1-tip">@product.ProductName</div>
+                    </div>
                     <br />
                 </div>
             </div>
         </div>
+        <br />
         <!-- Modal -->
         <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content qq">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">陸行鳥自行車</h5>
+                        <h5 class="modal-title">陸行鳥自行車</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <h4>生產產品:</h4>
+                        <h4>生產產品</h4>
                         <hr />
                         <dl class="dl-horizontal">
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.ProductNumber)
+                                產品編號
                             </dt>
 
                             <dd>
@@ -258,131 +605,155 @@
                             </dd>
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.ProductName)
+                                產品名稱
                             </dt>
 
                             <dd>
                                 @Html.DisplayFor(p => product.ProductName)
                             </dd>
                         </dl>
+                        <div class="categorytitle"><h3 id="categorytitle" name="categorytitle" onclick="Open()">料件分類</h3></div>
+                        <hr />
+                        <div class="div3 d-none" name="div3">
+                            <img class="con" id="ctcimgleft" onclick="left()" src=@Url.Content("~/images/chevron-left.png")>
+                            <div>
+                                <img class="con1" id="ctcimg" name="ctcimg" src=@Url.Content("~/images/BikeMaterial/BikeIcon/1.png")>
+                                @*<img class="con1" id="ctcimg" name="ctcimg" src=@Url.Content("~/images/BikeMaterial/BikeIcon/2.png")>
+                                    <img class="con1" id="ctcimg" name="ctcimg" src=@Url.Content("~/images/BikeMaterial/BikeIcon/3.png")>
+                                    <img class="con1" id="ctcimg" name="ctcimg" src=@Url.Content("~/images/BikeMaterial/BikeIcon/4.png")>
+                                    <img class="con1" id="ctcimg" name="ctcimg" src=@Url.Content("~/images/BikeMaterial/BikeIcon/5.png")>*@
+                            </div>
+                            <img class="con" id="ctcimgright" onclick="right()" src=@Url.Content("~/images/chevron-right.png")>
+                        </div>
                         <hr />
                         <div>
-                            <div>
-                                <div>
-                                    <div class="categorytitle">
-                                        <img class="icon" id="icon1" name="icon1" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow1()" />
-                                        輪組
-                                    </div>
-                                    <div class="category" id="category1" name="category1" style="display:none" >
-                                        @foreach (var x in product.ProductPart)
+                            <div class="category1 row" id="category1" name="category1">
+                                <br />
+                                <div id="Categoryname" name="Categoryname">輪組</div>
+                                <br />
+
+                                @foreach (var x in product.ProductPart)
+                                {
+
+                                    foreach (var y in x.Part.PartCategoryDtl)
+                                    {
+
+                                        if (y.PartCategoryOID == 1)
                                         {
-
-                                            foreach (var y in x.Part.PartCategoryDtl)
-                                            {
-
-                                                if (y.PartCategoryOID == 1)
-                                                {
-                                                    <div>@x.Part.PartName</div>
-                                                    <div class="img-thumbnail"id="categoryImg"><img class="PartImg" id="PartImg"  src="@Url.Content(x.Part.PictureAdress)"  width="300" height="200" alt="產品料件圖片" /></div>
-                                                    <br />
-                                                }
-                                            }
-
+                                            <div class="col-sm-12 xx">
+                                                <br />
+                                                <div class="PartTitle">@x.Part.PartName</div>
+                                                <div id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" alt="產品料件圖片" /></div>
+                                                <br />
+                                            </div>
                                         }
-                                    </div>
-                                </div>
-                                <hr />
-                                <div>
-                                    <div class="categorytitle"><img class="icon" name="icon2" id="icon2" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow2()" />
-                                    傳動系統
-                                    </div>
-                                    <div class="category" id="category2" name="category2" style="display:none">
-                                        @foreach (var x in product.ProductPart)
+                                    }
+
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <div class="category2 row d-none" id="category2" name="category2">
+                                <br />
+                                <div id="Categoryname" name="Categoryname">傳動系統</div>
+                                <br />
+
+                                @foreach (var x in product.ProductPart)
+                                {
+
+                                    foreach (var y in x.Part.PartCategoryDtl)
+                                    {
+
+                                        if (y.PartCategoryOID == 2)
                                         {
-
-                                            foreach (var y in x.Part.PartCategoryDtl)
-                                            {
-
-                                                if (y.PartCategoryOID == 2)
-                                                {
-                                                    <div>@x.Part.PartName</div>
-                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
-                                                    <br />
-                                                }
-                                            }
-
+                                            <div class="col-sm-12 xx">
+                                                <br />
+                                                <div class="PartTitle">@x.Part.PartName</div>
+                                                <div id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" alt="產品料件圖片" /></div>
+                                                <br />
+                                            </div>
                                         }
-                                    </div>
-                                </div>
-                                <hr />
-                                <div>
-                                    <div class="categorytitle"><img class="icon" name="icon3" id="icon3" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow3()" />
-                                    煞車系統
-                                    </div>
-                                    <div class="category" id="category3" name="category3" style="display:none">
-                                        @foreach (var x in product.ProductPart)
+                                    }
+
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <div class="category3 row d-none" id="category3" name="category3">
+                                <br />
+                                <div id="Categoryname" name="Categoryname">煞車系統</div>
+                                <br />
+
+                                @foreach (var x in product.ProductPart)
+                                {
+
+                                    foreach (var y in x.Part.PartCategoryDtl)
+                                    {
+
+                                        if (y.PartCategoryOID == 3)
                                         {
-
-                                            foreach (var y in x.Part.PartCategoryDtl)
-                                            {
-
-                                                if (y.PartCategoryOID == 3)
-                                                {
-                                                    <div>@x.Part.PartName</div>
-                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
-                                                    <br />
-                                                }
-                                            }
-
+                                            <div class="col-sm-12 xx">
+                                                <br />
+                                                <div class="PartTitle">@x.Part.PartName</div>
+                                                <div id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" alt="產品料件圖片" /></div>
+                                                <br />
+                                            </div>
                                         }
-                                    </div>
-                                </div>
-                                <hr />
-                                <div>
-                                    <div class="categorytitle"><img class="icon" name="icon4" id="icon4" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow4()" />
-                                    配件裝置
-                                    </div>
-                                    <div class="category" id="category4" name="category4" style="display:none">
-                                        @foreach (var x in product.ProductPart)
+                                    }
+
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <div class="category4 row d-none" id="category4" name="category4">
+                                <br />
+                                <div id="Categoryname" name="Categoryname">配件裝置</div>
+                                <br />
+
+                                @foreach (var x in product.ProductPart)
+                                {
+
+                                    foreach (var y in x.Part.PartCategoryDtl)
+                                    {
+
+                                        if (y.PartCategoryOID == 4)
                                         {
-
-                                            foreach (var y in x.Part.PartCategoryDtl)
-                                            {
-
-                                                if (y.PartCategoryOID == 4)
-                                                {
-                                                    <div>@x.Part.PartName</div>
-                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
-                                                    <br />
-                                                }
-                                            }
-
+                                            <div class="col-sm-12 xx">
+                                                <br />
+                                                <div class="PartTitle">@x.Part.PartName</div>
+                                                <div id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" alt="產品料件圖片" /></div>
+                                                <br />
+                                            </div>
                                         }
-                                    </div>
-                                </div>
-                                <hr />
-                                <div>
-                                    <div class="categorytitle"><img class="icon" name="icon5" id="icon5" src=@Url.Content("~/images/plus.png") onclick="ChangeImgAndDivShow5()" />
-                                    車體裝置
-                                    </div>
-                                    <div class="category" id="category5" name="category5" style="display:none">
-                                        @foreach (var x in product.ProductPart)
+                                    }
+
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <div class="category5 row d-none" id="category5" name="category5">
+                                <br />
+                                <div id="Categoryname" name="Categoryname">車體裝置</div>
+                                <br />
+
+                                @foreach (var x in product.ProductPart)
+                                {
+
+                                    foreach (var y in x.Part.PartCategoryDtl)
+                                    {
+
+                                        if (y.PartCategoryOID == 5)
                                         {
-
-                                            foreach (var y in x.Part.PartCategoryDtl)
-                                            {
-
-                                                if (y.PartCategoryOID == 5)
-                                                {
-                                                    <div>@x.Part.PartName</div>
-                                                    <div class="img-thumbnail" style="display:block" id="categoryImg"><img id="PartImg" class="PartImg" src="@Url.Content(x.Part.PictureAdress)" width="300" height="200" alt="產品料件圖片" /></div>
-                                                    <br />
-                                                }
-                                            }
-
+                                            <div class="col-sm-12 xx">
+                                                <br />
+                                                <div class="PartTitle">@x.Part.PartName</div>
+                                                <div id="categoryImg"><img class="PartImg" id="PartImg" src="@Url.Content(x.Part.PictureAdress)" alt="產品料件圖片" /></div>
+                                                <br />
+                                            </div>
                                         }
-                                    </div>
-                                </div>
+                                    }
+
+                                }
                             </div>
                         </div>
                     </div>

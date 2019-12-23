@@ -10,7 +10,6 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
     <h2>@PMSAWebMVC.Resources.AppResource.ShipNotice</h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <h2 class="align-content-xl-end">@ViewBag.supplierName</h2>
-
 </nav>
 @*dropdownlist取得值得方法*@
 @*http://kevintsengtw.blogspot.com/2011/09/jquery-dropdownlist-1.html*@
@@ -71,15 +70,25 @@
         </div>
         <div class="form-group">
             <div class="d-flex justify-content-center">
-                <button type="submit" id="idbutton" class="btn btn-primary btn-block" value="出貨"><i class="fas fa-shipping-fast"></i>出貨</button>
+                <button type="submit" id="idbutton" class="btn btn-primary col-11" value="出貨"><i class="fas fa-shipping-fast"></i>出貨</button><button type="button" class="btn btn-primary" style="margin-left:5px" id="demo">DEMO</button>
             </div>
         </div>
     </div>
 }
 @section scripts{
-
+    
     <script>
         $(document).ready(function () {
+            $("#demo").click(x => {
+                console.log($("button[id*='Qty']"));
+                var demo = $('button[id*="Qty"]');
+                console.log(demo.length);
+                for (var i = 0; i < $("button[id*='Qty']").length; i++) {
+                    var demo = $("button[id*='Qty']")
+                    console.log(demo[i]);
+                    demo[i].val(100);
+                }
+            });
             toastr.options = {
                 "closeButton": true,
                 "debug": false,
@@ -103,6 +112,7 @@
             }
             $("#table").hide();
             $("#idbutton").hide();
+            $("#demo").hide();
             $("#idOrder").prop('disabled',true);
            // shipDatatable();
             $("#idStatus").change(function () {
@@ -145,6 +155,7 @@
                     if ($("#idStatus option:selected").val() == "W") {
                         $("#table").show();
                         $("#idbutton").show();
+                        $("#demo").show();
                     }
                     else {
                         $("#table").show();

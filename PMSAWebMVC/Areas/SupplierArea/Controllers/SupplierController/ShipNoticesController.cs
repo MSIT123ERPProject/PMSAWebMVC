@@ -194,7 +194,6 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             supplierAccount = supplier.SupplierAccountID;
             supplierCode = supplier.SupplierCode;
             ////////////////////////////////////////////////////
-            //ShipNoticesUtilities utilities = new ShipNoticesUtilities();
             string message = "";
             //此LIST要用來存放出貨明細ID 用來寄送電子郵件給公司採購員
             List<string> shipDtlList = new List<string>();
@@ -216,9 +215,18 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             //檢查是否至少一個被勾選，如沒有則跳回去UnshipOrderDtl頁面
             if (orderDtls.Count() == 0)
             {
-                TempData["message"] = "<script>toastr.error('請選擇欲出貨商品!','通知')</script>";
+                TempData["message"] = "請選擇欲出貨商品!";
                 message = "請選擇欲出貨商品!";
                 return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
+            }
+            //檢查出貨
+            for (int i = 0; i < unshipOrderDtl.orderDtlItemCheckeds.Count(); i++)
+            {
+                if (unshipOrderDtl.orderDtlItemCheckeds[i].Qty == 0) {
+                    TempData["message"] = "出貨數量不得為零!";
+                    message = "出貨數量不得為零!";
+                    return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
+                };
             }
             DateTime now = DateTime.Now;
             //檢查庫存是否足夠，不足則顯示庫存不足的訊息，足夠則扣掉該或源清單庫存
@@ -226,11 +234,11 @@ namespace PMSAWebMVC.Areas.SupplierArea.Controllers
             foreach (var dtl in orderDtls)
             {
                 SourceList sourceList = db.SourceList.Find(dtl.SourceListID);
-                if (sourceList.UnitsInStock < unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty)
+                if (dtl.Qty==0 ||sourceList.UnitsInStock < unshipOrderDtl.orderDtlItemCheckeds.Where(x => x.PurchaseOrderDtlCode == dtl.PurchaseOrderDtlCode).FirstOrDefault().Qty)
                 {
                     //這裡要return 錯誤訊息，並且回到原頁面
-                    TempData["message"] = "<script>Swal.fire({  icon: 'error',  title: 'Oops...',  text: '庫存不足!',  footer: '<a href>Why do I have this issue?</a>'})</script>";
-                    message = "庫存不足!";
+                    TempData["message"] = "出貨數量不得為零!";
+                    message = "出貨數量不得為零!";
                     // return Json(new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message }, JsonRequestBehavior.AllowGet);
                     return RedirectToAction("Index", "ShipNotices", new { PurchaseOrderID = unshipOrderDtl.PurchaseOrderID, message = message });
                 }

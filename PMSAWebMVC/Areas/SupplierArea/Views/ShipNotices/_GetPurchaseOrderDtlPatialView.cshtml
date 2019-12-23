@@ -72,7 +72,7 @@
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {
-                            @Html.TextBoxFor(x => Model.orderDtlItemCheckeds[i].Qty, new { onkeyup = "QtyText(this)", id = "Qty", name = "Qty" })
+                            @Html.TextBoxFor(x => Model.orderDtlItemCheckeds[i].Qty, new {style="width:30%", onkeyup = "QtyText(this)", id = "Qty", name = "Qty" })
                         }
                         else
                         {
@@ -101,19 +101,19 @@
                     {
                         if (Model.orderDtlItemCheckeds[i].IsEnough)
                         {
-                            <i class="fas fa-truck" style="color:blue"></i>
-                            @Html.Label("庫存足夠")
+                            @*<i class="fas fa-truck" style="color:blue"></i>*@
+                            @Html.Label("庫存足夠",new {@class="badge badge-primary" })
                         }
                         else
                         {
-                            <i class="fas fa-exclamation-triangle"  style="color:red"></i>
-                            @Html.Label("庫存不足")
+                            @*<i class="fas fa-exclamation-triangle"  style="color:red"></i>*@
+                            @Html.Label("庫存不足", new { @class = "badge badge-danger" })
                         }
                     }
                     else
                     {
-                        <i class="fas fa-check" style="color:darkseagreen"></i>
-                        @Html.Label("已出貨")
+                        @*<i class="fas fa-check" style="color:darkseagreen"></i>*@
+                        @Html.Label("已出貨", new { @class = "badge badge-success" })
                     }
                 </td>
             </tr>

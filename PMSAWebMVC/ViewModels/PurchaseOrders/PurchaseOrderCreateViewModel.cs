@@ -394,7 +394,8 @@ namespace PMSAWebMVC.ViewModels.PurchaseOrders
                               Display = g.Key.Display,
                               Value = g.Key.Value
                           };
-                return prq.ToList();
+                //最新的請購單顯示在最前
+                return prq.OrderByDescending(item => item.Display).ToList();
             }
         }
 

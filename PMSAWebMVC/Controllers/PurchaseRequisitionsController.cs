@@ -828,6 +828,7 @@ using System.Web.Mvc;
             signFlow.SignStatusCode= purchaseRequisitionDtlItem.SignStatus;
             signFlowDtl.SignStatusCode = purchaseRequisitionDtlItem.SignStatus;
             signFlowDtl.SignOpinion = purchaseRequisitionDtlItem.SignOpinion;
+            signFlowDtl.SignDate = DateTime.Now;
             string message = "修改成功!!";
             bool status = true;
 
